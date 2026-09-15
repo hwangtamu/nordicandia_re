@@ -1,0 +1,44 @@
+
+# ---- large binaries / decompiled artifacts (kept out of git) ----
+*.apk
+*.xapk
+*.aab
+*.so
+*.dat
+*.dex
+*.jar
+*.bundle
+*.assets
+*.resource
+*.resS
+*.dll
+*.pdb
+*.exe
+
+# extracted / generated trees
+/apktool_out/
+/jadx_out/
+/extracted/
+/bundles/
+/play_arm64/
+/patched/
+/patched_arm64/
+/arm64/lib/
+/arm64/out/
+/il2cpp_out/
+/textures_export/
+/arm64/
+
+# .NET build outputs
+[Bb]in/
+[Oo]bj/
+
+# secrets / TLS material (regenerate with server/gen_cert.sh)
+server/certs/
+*.pfx
+*.pem
+*.key
+
+# misc
+*.log
+/tmp/

@@ -1,0 +1,11 @@
+'use strict';
+var m=Process.findModuleByName('libil2cpp.so'); var base=m.base;
+console.log('[frida] base',base);
+var O={cctor:0x2daea68,ctor:0x2dae914,Init:0x2da1f0c,SignInWithDevice:0x2da21b8,Login:0x26f2434,ErrBranch:0x26f6708,LoadGameSM:0x25BFD80};
+Interceptor.attach(base.add(O.cctor),{onEnter:function(a){console.log('>>> cctor');}});
+Interceptor.attach(base.add(O.ctor),{onEnter:function(a){console.log('>>> ctor this='+a[0]);}});
+Interceptor.attach(base.add(O.Init),{onEnter:function(a){console.log('>>> Initialize this='+a[0]);}});
+Interceptor.attach(base.add(O.SignInWithDevice),{onEnter:function(a){console.log('>>> SignInWithDevice this='+a[0]);}});
+Interceptor.attach(base.add(O.Login),{onEnter:function(a){console.log('>>> Login this='+a[0]+' type='+a[1].toInt32());}});
+Interceptor.attach(base.add(O.ErrBranch),{onEnter:function(a){console.log('>>> LOGIN ERROR BRANCH');}});
+console.log('[frida] logonly ready');
