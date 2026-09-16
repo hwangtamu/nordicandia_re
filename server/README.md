@@ -9,10 +9,25 @@ reconstructed entirely from the APK (no original server source).
 |---|---|
 | Contract library (515 types + 24 service interfaces) | ✅ generated from the client's IL2CPP metadata |
 | MagicOnion gRPC host (all 24 services) | ✅ running |
-| `ILoginServiceApi` | ✅ real (device/steam/google/gamecenter/email/username/refresh) with accounts + sessions |
-| `ICharacterServiceApi`, `ILeaderboardServiceApi`, `IInventoryServiceApi`, `IGuildServiceApi`, … (23 services) | ⏳ valid auto-generated stubs returning default/empty DTOs |
-| Realtime WebSocket (`Envelope`/`Message`) | ⏳ not yet (unary RPC only) |
-| Persistence | in-memory (`GameStore`) — swap for a DB |
+| `ILoginServiceApi` | ✅ real (device/steam/google/gamecenter/email/username/refresh) with accounts + sessions + linked accounts |
+| `ICharacterServiceApi` (list/create/enter/delete/allocate) | ✅ real, persisted (attribute deltas accumulated) |
+| `ICharacterPowerServiceApi` (active/passive skills, training) | ✅ real, persisted |
+| `IGameModeServiceApi` (`GetSeasonInfo`, season characters) | ✅ real (`Season`/`SeasonHardcore` create + +100% exp buff) |
+| `IInventoryServiceApi.ItemOperation` | ✅ real, persisted |
+| `IVirtualCurrencyServiceApi` | ✅ real, persisted |
+| `ILeaderboardServiceApi` | ✅ real, derived from character standings |
+| `ISocialServiceApi.InspectCharacter` | ✅ real (equipped gear + stats + world progress) |
+| `IUserLinkedAccountServiceApi` | ✅ real (link/unlink/change password) |
+| `IOfferingServiceApi.GetCurrentBlessings` | ✅ real (returns no blessing) |
+| `ICharacterGameEventServiceApi` (dungeon/niflheim/helheim/odrs/vanaheim/death) | ✅ real, world progression persisted |
+| Other services (crafting, guilds, store, pets, …) | valid auto-generated stubs returning default/empty DTOs |
+| Realtime WebSocket (`Envelope`/`Message`) | ✅ `/ws` gateway (HTTP/1.1 upgrade or HTTP/2 CONNECT) |
+| Persistence | file-backed `GameStore` (`data/world.json`) — accounts, sessions, characters, items, silver, opals, experience, level, attributes, skills, world progression, season bonus |
+
+> **Note on stubs:** `Defaults.Create<T>()` recursively instantiates nested DTO members.
+> If a DTO nests a `SerializedBuff`, its `DefinitionIntegerId` defaults to `0` =
+> `MightBuff`, and the client will apply it. Hand-write those responses and return `null`
+> (see `Services/OfferingService.cs` / `Services/UseItemService.cs`).
 
 Verified end-to-end: login returns a user + tokens, `GetCharacterList` and
 `GetRelevantLeaderboards` answer over gRPC/HTTP2.
@@ -155,6 +170,55 @@ For a physical device on the same LAN, pick a 20/23-char name that resolves to t
 (e.g. via your router's DNS or a wildcard DNS service) and re-run with `--prod-host/--staging-host`.
 For a USB device, patch to `a.127-0-0-1.sslip.io` / `abcd.127-0-0-1.sslip.io` and use
 `adb reverse tcp:443 tcp:443`.
+
+## Pointing the desktop (Steam) client at this server
+
+The Steam build (Unity 6000.2 / IL2CPP, metadata v31) speaks the same MagicOnion
+protocol but with two desktop-specific quirks recovered on this machine:
+
+1. **TLS.** Its gRPC/HTTP stack (BestHTTP `TLSSecurity` + `SecureTlsClient`) validates
+the server certificate against a **bundled X509 root database**, not the OS store, so a
+private-CA/localhost cert is rejected mid-handshake (client sends a `user_canceled`
+alert). `prepare-desktop.mjs` now overwrites the first byte of
+`SecureTlsClient::NotifyServerCertificate` with `ret` (0xC3), turning validation into a
+no-op. (The gRPC target is `GrpcChannelTarget(host, 443, isInsecure:false)`, so the
+client always speaks TLS on :443.)
+2. **Serialization.** Requests are MessagePack **LZ4BlockArray**-compressed, i.e. the
+body is `[ext8(98, uint(uncompressedLen)), bin32(compressed)]`. The server must use the
+same options (see `Nordicandia.Server/Program.cs`):
+
+```csharp
+builder.Services.AddMagicOnion(options =>
+    options.MessageSerializer = MessagePackMagicOnionSerializerProvider.Default
+        .WithOptions(MessagePackSerializer.DefaultOptions
+            .WithCompression(MessagePackCompression.Lz4BlockArray)));
+```
+
+### Run
+
+```bash
+# 1. build a patched copy (hosts -> 127.0.0.1 + TLS-validation bypass)
+node server/prepare-desktop.mjs \
+  "C:/Program Files (x86)/Steam/steamapps/common/Nordicandia" dist/desktop
+
+# 2. server with TLS on :443 (needs a PFX; the patched client no longer checks it)
+cd server
+export DOTNET_ROOT="$PWD/../.tools/dotnet"
+NORD_CERT_PFX="$PWD/certs/nordicandia-server.pfx" NORD_CERT_PWD=nordpass \
+  "$DOTNET_ROOT/dotnet" Nordicandia.Server/bin/Release/net10.0/Nordicandia.Server.dll
+
+# 3. launch the client (Steam must be running)
+cd ../dist/desktop
+SteamAppId=1503790 SteamGameId=1503790 ./Nordicandia.exe
+```
+
+The smoke test (`Nordicandia.TestClient`) was updated to use the same LZ4 options, so
+`run.sh` still passes. Verified against the real client: `LoginWithSteamAsync`,
+`GetUserAccountData`, `SendDeviceInfo`, `GetSeasonInfo` and `GetCatalog` all return
+200 over TLS/HTTP2. The client then raises a `NullReferenceException` dialog because
+those services are still auto-generated stubs returning empty DTOs — implementing
+`ICatalogServiceApi` / `IGameModeServiceApi` / `ILoginServiceApi.GetUserAccountData`
+is the next step.
 
 ## Next steps
 

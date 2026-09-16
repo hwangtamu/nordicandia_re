@@ -42,3 +42,7 @@ server/certs/
 # misc
 *.log
 /tmp/
+/.tools/
+/dist/
+/steam_analysis/
+/server/data/

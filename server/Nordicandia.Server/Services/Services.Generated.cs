@@ -23,39 +23,17 @@ public sealed class ChannelServiceApiImpl : ServiceBase<IChannelServiceApi>, ICh
     public MagicOnion.UnaryResult<SharedNet.Api.ReportPlayerResponse> ReportPlayer(SharedNet.Api.ReportPlayerRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ReportPlayerResponse>());
 }
 
-public sealed class CharacterGameEventServiceApiImpl : ServiceBase<ICharacterGameEventServiceApi>, ICharacterGameEventServiceApi
+public sealed partial class CharacterGameEventServiceApiImpl : ServiceBase<ICharacterGameEventServiceApi>, ICharacterGameEventServiceApi
 {
-    public MagicOnion.UnaryResult<SharedNet.Api.CharacterDiedResponse> OnCharacterDied(SharedNet.Api.CharacterDiedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CharacterDiedResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.CharacterDungeonRunStartedResponse> OnDungeonRunStarted(SharedNet.Api.CharacterDungeonRunStartedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CharacterDungeonRunStartedResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.CharacterDungeonRunCompletedResponse> OnDungeonRunCompleted(SharedNet.Api.CharacterDungeonRunCompletedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CharacterDungeonRunCompletedResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.CharacterGolemGameModeEndedResponse> OnGolemGameModeEnded(SharedNet.Api.CharacterGolemGameModeEndedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CharacterGolemGameModeEndedResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.CharacterNiflheimStartedResponse> OnNiflheimStarted(SharedNet.Api.CharacterNiflheimStartedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CharacterNiflheimStartedResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.CharacterNiflheimCompletedResponse> OnNiflheimCompleted(SharedNet.Api.CharacterNiflheimCompletedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CharacterNiflheimCompletedResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.CharacterHelheimStartedResponse> OnHelheimStarted(SharedNet.Api.CharacterHelheimStartedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CharacterHelheimStartedResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.CharacterHelheimCompletedResponse> OnHelheimCompleted(SharedNet.Api.CharacterHelheimCompletedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CharacterHelheimCompletedResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.CharacterOdrsTrailStartedResponse> OnOdrsTrailStarted(SharedNet.Api.CharacterOdrsTrailStartedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CharacterOdrsTrailStartedResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.CharacterOdrsTrailCompletedResponse> OnOdrsTrailCompleted(SharedNet.Api.CharacterOdrsTrailCompletedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CharacterOdrsTrailCompletedResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.CharacterVanaheimStartedResponse> OnVanaheimStarted(SharedNet.Api.CharacterVanaheimStartedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CharacterVanaheimStartedResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.CharacterVanaheimCompletedResponse> OnVanaheimCompleted(SharedNet.Api.CharacterVanaheimCompletedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CharacterVanaheimCompletedResponse>());
 }
 
-public sealed class CharacterPowerServiceApiImpl : ServiceBase<ICharacterPowerServiceApi>, ICharacterPowerServiceApi
+public sealed partial class CharacterPowerServiceApiImpl : ServiceBase<ICharacterPowerServiceApi>, ICharacterPowerServiceApi
 {
-    public MagicOnion.UnaryResult<SharedNet.Api.AssignCharacterActiveSkillResponse> AssignActiveSkill(SharedNet.Api.AssignCharacterActiveSkillRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.AssignCharacterActiveSkillResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.AssignCharacterPassiveSkillResponse> AssignPassiveSkill(SharedNet.Api.AssignCharacterPassiveSkillRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.AssignCharacterPassiveSkillResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.AssignCharacterPassiveSkillTrainingResponse> AssignPassiveSkillTraining(SharedNet.Api.AssignCharacterPassiveSkillTrainingRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.AssignCharacterPassiveSkillTrainingResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.LevelUpCharacterSkillMasteryResponse> LevelUpSkillMastery(SharedNet.Api.LevelUpCharacterSkillMasteryRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.LevelUpCharacterSkillMasteryResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.ResetCharacterSkillMasteryTreeResponse> ResetSkillMastery(SharedNet.Api.ResetCharacterSkillMasteryTreeRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ResetCharacterSkillMasteryTreeResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.ResetAllCharacterSkillMasteryTreesResponse> ResetAllSkillMasteries(SharedNet.Api.ResetAllCharacterSkillMasteryTreesRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ResetAllCharacterSkillMasteryTreesResponse>());
 }
 
-public sealed class CharacterServiceApiImpl : ServiceBase<ICharacterServiceApi>, ICharacterServiceApi
+public sealed partial class CharacterServiceApiImpl : ServiceBase<ICharacterServiceApi>, ICharacterServiceApi
 {
-    public MagicOnion.UnaryResult<SharedNet.Api.CreateCharacterResponse> CreateCharacter(SharedNet.Api.CreateCharacterRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CreateCharacterResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.DeleteCharacterResponse> DeleteCharacter(SharedNet.Api.DeleteCharacterRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.DeleteCharacterResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.GetCharacterListResponse> GetCharacterList(SharedNet.Api.GetCharacterListRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GetCharacterListResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.EnterGameWithCharacterResponse> EnterGameWithCharacter(SharedNet.Api.EnterGameWithCharacterRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.EnterGameWithCharacterResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.AllocateCharacterAttributesResponse> AllocateCharacterAttributes(SharedNet.Api.AllocateCharacterAttributesRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.AllocateCharacterAttributesResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ClaimCharacterOfflineRewardsResponse> ClaimCharacterOfflineRewards(SharedNet.Api.ClaimCharacterOfflineRewardsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ClaimCharacterOfflineRewardsResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ClaimRegularChristmasItemResponse> ClaimRegularChristmasItem(SharedNet.Api.ClaimRegularChristmasItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ClaimRegularChristmasItemResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ClaimAdChristmasItemResponse> ClaimAdChristmasItem(SharedNet.Api.ClaimAdChristmasItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ClaimAdChristmasItemResponse>());
@@ -82,12 +60,6 @@ public sealed class CharacterServiceApiImpl : ServiceBase<ICharacterServiceApi>,
     public MagicOnion.UnaryResult<SharedNet.Api.OnPetDiedResponse> OnPetDied(SharedNet.Api.OnPetDiedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.OnPetDiedResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.OnPetExpPotionConsumedResponse> OnPetExpPotionConsumed(SharedNet.Api.OnPetExpPotionConsumedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.OnPetExpPotionConsumedResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ChangeRaceResponse> ChangeRace(SharedNet.Api.ChangeRaceRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ChangeRaceResponse>());
-}
-
-public sealed class GameModeServiceApiImpl : ServiceBase<IGameModeServiceApi>, IGameModeServiceApi
-{
-    public MagicOnion.UnaryResult<SharedNet.Api.GetSeasonInfoResponse> GetSeasonInfo(SharedNet.Api.GetSeasonInfoRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GetSeasonInfoResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.ClaimSeasonRewardResponse> ClaimSeasonReward(SharedNet.Api.ClaimSeasonRewardRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ClaimSeasonRewardResponse>());
 }
 
 public sealed class GameModeUserServiceApiImpl : ServiceBase<IGameModeUserServiceApi>, IGameModeUserServiceApi
@@ -138,9 +110,8 @@ public sealed class GuildSiegeServiceApiImpl : ServiceBase<IGuildSiegeServiceApi
     public MagicOnion.UnaryResult<SharedNet.Api.SetCharacterGuildSiegeOptionsResponse> SetCharacterGuildSiegeOptions(SharedNet.Api.SetCharacterGuildSiegeOptionsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.SetCharacterGuildSiegeOptionsResponse>());
 }
 
-public sealed class InventoryServiceApiImpl : ServiceBase<IInventoryServiceApi>, IInventoryServiceApi
+public sealed partial class InventoryServiceApiImpl : ServiceBase<IInventoryServiceApi>, IInventoryServiceApi
 {
-    public MagicOnion.UnaryResult<SharedNet.Api.ItemOperationResponse> ItemOperation(SharedNet.Api.ItemOperationRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ItemOperationResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.SortInventoryResponse> SortInventory(SharedNet.Api.SortInventoryRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.SortInventoryResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.GetInventoryResponse> GetInventory(SharedNet.Api.GetInventoryRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GetInventoryResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.CraftRelicItemResponse> CraftRelicItem(SharedNet.Api.CraftRelicItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CraftRelicItemResponse>());
@@ -155,11 +126,8 @@ public sealed class InventoryServiceApiImpl : ServiceBase<IInventoryServiceApi>,
     public MagicOnion.UnaryResult<SharedNet.Api.AddSocketItemResponse> ItemAddNewSocket(SharedNet.Api.AddSocketItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.AddSocketItemResponse>());
 }
 
-public sealed class LeaderboardServiceApiImpl : ServiceBase<ILeaderboardServiceApi>, ILeaderboardServiceApi
+public sealed partial class LeaderboardServiceApiImpl : ServiceBase<ILeaderboardServiceApi>, ILeaderboardServiceApi
 {
-    public MagicOnion.UnaryResult<SharedNet.Api.GetRelevantLeaderboardsAndTournamentsResponse> GetRelevantLeaderboards(SharedNet.Api.GetRelevantLeaderboardsAndTournamentsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GetRelevantLeaderboardsAndTournamentsResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.ListLeaderboardRecordsResponse> ListLeaderboardRecords(SharedNet.Api.ListLeaderboardRecordsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ListLeaderboardRecordsResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.ListLeaderboardRecordsAroundOwnerResponse> ListLeaderboardRecordsAroundOwner(SharedNet.Api.ListLeaderboardRecordsAroundOwnerRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ListLeaderboardRecordsAroundOwnerResponse>());
 }
 
 public sealed class MigrationServiceApiImpl : ServiceBase<IMigrationServiceApi>, IMigrationServiceApi
@@ -172,9 +140,8 @@ public sealed class ModeratorServiceApiImpl : ServiceBase<IModeratorServiceApi>,
     public MagicOnion.UnaryResult<SharedNet.Api.MuteUserResponse> MuteUser(SharedNet.Api.MuteUserRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.MuteUserResponse>());
 }
 
-public sealed class OfferingServiceApiImpl : ServiceBase<IOfferingServiceApi>, IOfferingServiceApi
+public sealed partial class OfferingServiceApiImpl : ServiceBase<IOfferingServiceApi>, IOfferingServiceApi
 {
-    public MagicOnion.UnaryResult<SharedNet.Api.GetCurrentBlessingsResponse> GetCurrentBlessings(SharedNet.Api.GetCurrentBlessingsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GetCurrentBlessingsResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.MakeOfferingResponse> MakeOffering(SharedNet.Api.MakeOfferingRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.MakeOfferingResponse>());
 }
 
@@ -191,9 +158,8 @@ public sealed class PlayfabServiceApiImpl : ServiceBase<IPlayfabServiceApi>, IPl
     public MagicOnion.UnaryResult<SharedNet.Api.SkipMigrationResponse> SkipMigrationAsync(SharedNet.Api.SkipMigrationRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.SkipMigrationResponse>());
 }
 
-public sealed class SocialServiceApiImpl : ServiceBase<ISocialServiceApi>, ISocialServiceApi
+public sealed partial class SocialServiceApiImpl : ServiceBase<ISocialServiceApi>, ISocialServiceApi
 {
-    public MagicOnion.UnaryResult<SharedNet.Api.InspectCharacterResponse> InspectCharacter(SharedNet.Api.InspectCharacterRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.InspectCharacterResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.RedeemReferralResponse> RedeemReferral(SharedNet.Api.RedeemReferralRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.RedeemReferralResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.GetReferralsResponse> GetReferrals(SharedNet.Api.GetReferralsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GetReferralsResponse>());
 }
@@ -214,22 +180,13 @@ public sealed class TournamentServiceApiImpl : ServiceBase<ITournamentServiceApi
     public MagicOnion.UnaryResult<SharedNet.Api.ListTournamentRecordsAroundOwnerResponse> ListTournamentRecordsAroundOwner(SharedNet.Api.ListTournamentRecordsAroundOwnerRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ListTournamentRecordsAroundOwnerResponse>());
 }
 
-public sealed class UseItemServiceApiImpl : ServiceBase<IUseItemServiceApi>, IUseItemServiceApi
+public sealed partial class UseItemServiceApiImpl : ServiceBase<IUseItemServiceApi>, IUseItemServiceApi
 {
     public MagicOnion.UnaryResult<SharedNet.Api.UseItemAttributeRespecResponse> UseAttributeRespec(SharedNet.Api.UseItemAttributeRespecRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UseItemAttributeRespecResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.UseItemWithBuffResponse> UseItemWithBuff(SharedNet.Api.UseItemWithBuffRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UseItemWithBuffResponse>());
 }
 
-public sealed class UserLinkedAccountServiceApiImpl : ServiceBase<IUserLinkedAccountServiceApi>, IUserLinkedAccountServiceApi
+public sealed partial class UserLinkedAccountServiceApiImpl : ServiceBase<IUserLinkedAccountServiceApi>, IUserLinkedAccountServiceApi
 {
-    public MagicOnion.UnaryResult<SharedNet.Api.ChangeLinkedAccountPasswordResponse> ChangeLinkedAccountPassword(SharedNet.Api.ChangeLinkedAccountPasswordRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ChangeLinkedAccountPasswordResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.LinkAccountResponse> LinkSteamAccount(SharedNet.Api.LinkSteamAccountRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.LinkAccountResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.LinkAccountResponse> LinkGoogleAccountAccount(SharedNet.Api.LinkGoogleAccountRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.LinkAccountResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.LinkAccountResponse> LinkGameCenterAccount(SharedNet.Api.LinkGameCenterAccountRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.LinkAccountResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.UnlinkAccountResponse> UnlinkSteamAccount(SharedNet.Api.UnlinkSteamAccountRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UnlinkAccountResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.UnlinkAccountResponse> UnlinkGoogleAccount(SharedNet.Api.UnlinkGoogleAccountRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UnlinkAccountResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.UnlinkAccountResponse> UnlinkGameCenterAccount(SharedNet.Api.UnlinkGameCenterAccountRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UnlinkAccountResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.RegisterGameAccountResponse> RegisterGameAccount(SharedNet.Api.RegisterGameAccountRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.RegisterGameAccountResponse>());
 }
 
 public sealed class UserServiceApiImpl : ServiceBase<IUserServiceApi>, IUserServiceApi
@@ -251,11 +208,8 @@ public sealed class UserServiceApiImpl : ServiceBase<IUserServiceApi>, IUserServ
     public MagicOnion.UnaryResult<SharedNet.Api.GetUserTransactionsResponse> GetUserTransactions(SharedNet.Api.GetUserTransactionsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GetUserTransactionsResponse>());
 }
 
-public sealed class VirtualCurrencyServiceApiImpl : ServiceBase<IVirtualCurrencyServiceApi>, IVirtualCurrencyServiceApi
+public sealed partial class VirtualCurrencyServiceApiImpl : ServiceBase<IVirtualCurrencyServiceApi>, IVirtualCurrencyServiceApi
 {
-    public MagicOnion.UnaryResult<SharedNet.Api.GainVirtualCurrencyResponse> GainVirtualCurrency(SharedNet.Api.GainVirtualCurrencyRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GainVirtualCurrencyResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.SpendVirtualCurrencyResponse> SpendVirtualCurrency(SharedNet.Api.SpendVirtualCurrencyRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.SpendVirtualCurrencyResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.GainSilverResponse> GainSilver(SharedNet.Api.GainSilverRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GainSilverResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.SpendSilverResponse> SpendSilver(SharedNet.Api.SpendSilverRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.SpendSilverResponse>());
 }
+
 

@@ -1160,8 +1160,10 @@ namespace Game
     ErrorReimburse = 4,
     }
     [MessagePackObject(false)]
+    [MessagePackFormatter(typeof(Nordicandia.Contracts.AttributeValueFormatter))]
     public struct GameAttributeValue
     {
+    [IgnoreMember]
     public CodeStage.AntiCheat.ObscuredTypes.ObscuredDouble _ValueD;
     [IgnoreMember]
     public int Value { get; set; }
@@ -1169,8 +1171,11 @@ namespace Game
     public double ValueD { get; set; }
     }
     [MessagePackObject(false)]
+    [MessagePackFormatter(typeof(Nordicandia.Contracts.AttributeArrayFormatter))]
     public class GameAttributeValueDoubleArray
     {
+    [IgnoreMember]
+    public byte[] WireData { get; set; }
     [IgnoreMember]
     public bool IsNull { get; }
     [IgnoreMember]
@@ -3476,6 +3481,8 @@ namespace SharedNet.Api
     [MessagePackObject(false)]
     public class AddItemOperationEntry : SharedNet.Api.ItemOperationEntry
     {
+    [Key(3)]
+    public Game.SerializedItem Item { get; set; }
     }
     [MessagePackObject(false)]
     public class DeleteItemOperationEntry : SharedNet.Api.ItemOperationEntry
@@ -4999,18 +5006,434 @@ namespace SharedNet.Dto
     }
 }
 
+namespace SharedNet.Constants.Game
+{
+    public enum ConversationEventType : short
+    {
+    Unknown = 0,
+    Started = 1,
+    Completed = 2,
+    }
+    public enum QuestEventType : short
+    {
+    Unknown = 0,
+    QuestStarted = 1,
+    QuestCompleted = 2,
+    StepStarted = 3,
+    StepCompleted = 4,
+    StepObjectiveCounterUpdate = 5,
+    }
+}
+
+namespace SharedNet.Constants.Realtime
+{
+    public enum ErrorCodes : int
+    {
+    RUNTIME_EXCEPTION = 0,
+    UNRECOGNIZED_PAYLOAD = 1,
+    MISSING_PAYLOAD = 2,
+    BAD_INPUT = 3,
+    MATCH_NOT_FOUND = 4,
+    MATCH_JOIN_REJECTED = 5,
+    RUNTIME_FUNCTION_NOT_FOUND = 6,
+    RUNTIME_FUNCTION_EXCEPTION = 7,
+    STREAM_ALREADY_JOINED = 8,
+    }
+    public enum ChannelJoinType : int
+    {
+    Unspecified = 0,
+    Room = 1,
+    DirectMessage = 2,
+    Group = 3,
+    }
+}
+
+namespace SharedNet.Dto
+{
+    [MessagePackObject(false)]
+    public class PositionDto
+    {
+    [Key(0)]
+    public float X { get; set; }
+    [Key(1)]
+    public float Y { get; set; }
+    [Key(2)]
+    public float Z { get; set; }
+    }
+}
+
 namespace SharedNet.Dto.Realtime
 {
     [MessagePackObject(false)]
-    public class NotificationListMessage
+    public class Envelope
+    {
+    [Key(0)]
+    public int RequestId { get; set; }
+    [Key(1)]
+    public SharedNet.Dto.Realtime.Message Message { get; set; }
+    }
+    [Union(0, typeof(SharedNet.Dto.Realtime.ErrorMessage))]
+    [Union(1, typeof(SharedNet.Dto.Realtime.NotificationListMessage))]
+    [Union(2, typeof(SharedNet.Dto.Realtime.ChannelPresenceEventMessage))]
+    [Union(3, typeof(SharedNet.Dto.Realtime.StreamPresenceEventMessage))]
+    [Union(4, typeof(SharedNet.Dto.Realtime.ChannelMessageSendMessage))]
+    [Union(5, typeof(SharedNet.Dto.Realtime.ChannelMessageMessage))]
+    [Union(6, typeof(SharedNet.Dto.Realtime.ChannelMessageAckMessage))]
+    [Union(7, typeof(SharedNet.Dto.Realtime.ChannelJoinResponse))]
+    [Union(8, typeof(SharedNet.Dto.Realtime.ChannelJoinMessage))]
+    [Union(9, typeof(SharedNet.Dto.Realtime.ChannelLeaveMessage))]
+    [Union(10, typeof(SharedNet.Dto.Realtime.UpdateCharacterMetadataMessage))]
+    [Union(11, typeof(SharedNet.Dto.Realtime.UpdateCharacterMetadataResponse))]
+    [Union(12, typeof(SharedNet.Dto.Realtime.ClientConversationEventMessage))]
+    [Union(13, typeof(SharedNet.Dto.Realtime.ClientConversationEventMessageResponse))]
+    [Union(14, typeof(SharedNet.Dto.Realtime.ClientQuestEventMessage))]
+    [Union(15, typeof(SharedNet.Dto.Realtime.ClientQuestEventMessageResponse))]
+    [Union(16, typeof(SharedNet.Dto.Realtime.BuffReceivedMessage))]
+    [Union(17, typeof(SharedNet.Dto.Realtime.PartyCharacterStateMessage))]
+    [Union(18, typeof(SharedNet.Dto.Realtime.CharacterVisualUpdateMessage))]
+    [Union(19, typeof(SharedNet.Dto.Realtime.PartyMessage))]
+    [Union(20, typeof(SharedNet.Dto.Realtime.PartyJoinMessage))]
+    [Union(21, typeof(SharedNet.Dto.Realtime.PartyLeaveMessage))]
+    [Union(22, typeof(SharedNet.Dto.Realtime.ClientGuildSiegeProgressMessage))]
+    public interface Message
+    {
+    }
+    [MessagePackObject(false)]
+    public class NotificationListMessage : SharedNet.Dto.Realtime.Message
     {
     [Key(0)]
     public System.Collections.Generic.List<SharedNet.Dto.Realtime.Messages.Payloads.NotificationPayload> Notifications { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ErrorMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Constants.Realtime.ErrorCodes Code { get; set; }
+    [Key(1)]
+    public string Message { get; set; }
+    [Key(2)]
+    public System.Collections.Generic.Dictionary<string, string> Context { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ChannelPresenceEventMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Dto.Realtime.Messages.Payloads.ChannelPresenceEventPayload ChannelPresenceEvent { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class StreamPresenceEventMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Dto.Realtime.Messages.Payloads.StreamPresenceEventPayload StreamPresenceEvent { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ChannelMessageSendMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public string ChannelId { get; set; }
+    [Key(1)]
+    public string Content { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ChannelMessageMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Dto.ChannelMessageDto ChannelMessage { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ChannelMessageAckMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Dto.Realtime.ChannelMessageAckDto ChannelMessageAck { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ChannelJoinResponse : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Dto.Realtime.ChannelDto Channel { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ChannelJoinMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Dto.Realtime.Messages.Payloads.ChannelJoinPayload ChannelJoin { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ChannelLeaveMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Dto.Realtime.Messages.Payloads.ChannelLeavePayload ChannelLeave { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class UpdateCharacterMetadataMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Dto.Realtime.Messages.Payloads.CharacterMetadataPayload Metadata { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class UpdateCharacterMetadataResponse : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public double FinalExperienceGained { get; set; }
+    [Key(1)]
+    public double NewExperience { get; set; }
+    [Key(2)]
+    public System.DateTime ServerTime { get; set; }
+    [Key(3)]
+    public int NewOpals { get; set; }
+    [Key(4)]
+    public int NewSilver { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ClientConversationEventMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Constants.Game.ConversationEventType EventType { get; set; }
+    [Key(1)]
+    public int ConversationHashSafe { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ClientConversationEventMessageResponse : SharedNet.Dto.Realtime.Message
+    {
+    }
+    [MessagePackObject(false)]
+    public class ClientQuestEventMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Constants.Game.QuestEventType EventType { get; set; }
+    [Key(1)]
+    public int QuestHashSafe { get; set; }
+    [Key(2)]
+    public int? QuestStepIndex { get; set; }
+    [Key(3)]
+    public int? QuestStepObjectiveIndex { get; set; }
+    [Key(4)]
+    public int? QuestStepObjectiveCounter { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ClientQuestEventMessageResponse : SharedNet.Dto.Realtime.Message
+    {
+    }
+    [MessagePackObject(false)]
+    public class BuffReceivedMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public Game.SerializedCharacterData.SerializedBuff Buff { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class PartyCharacterStateMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public System.Guid PartyId { get; set; }
+    [Key(1)]
+    public System.Guid UserId { get; set; }
+    [Key(2)]
+    public System.Guid CharacterId { get; set; }
+    [Key(3)]
+    public SharedNet.Dto.PositionDto Position { get; set; }
+    [Key(4)]
+    public float AngleRadians { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class CharacterVisualUpdateMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public System.Guid CharacterId { get; set; }
+    [Key(1)]
+    public int AvatarIntegerId { get; set; }
+    [Key(2)]
+    public int AvatarFrameIntegerId { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class PartyMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Dto.Realtime.PartyDto Party { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class PartyJoinMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public System.Guid PartyId { get; set; }
+    [Key(1)]
+    public bool Hidden { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class PartyLeaveMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public System.Guid PartyId { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ClientGuildSiegeProgressMessage : SharedNet.Dto.Realtime.Message
+    {
+    [Key(0)]
+    public SharedNet.Dto.GuildSiegeMemberProgressDto Progress { get; set; }
+    [Key(1)]
+    public System.DateTime TimeSentUtc { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ChannelMessageAckDto
+    {
+    [Key(0)]
+    public string ChannelId { get; set; }
+    [Key(1)]
+    public System.Guid MessageId { get; set; }
+    [Key(2)]
+    public SharedNet.Constants.Realtime.ChannelMessageType Type { get; set; }
+    [Key(3)]
+    public string UserDisplayName { get; set; }
+    [Key(4)]
+    public SharedNet.Constants.MessageSenderType SenderType { get; set; }
+    [Key(5)]
+    public SharedNet.Constants.UserRole SenderRole { get; set; }
+    [Key(6)]
+    public System.DateTime CreateTime { get; set; }
+    [Key(7)]
+    public System.DateTime UpdateTime { get; set; }
+    [Key(8)]
+    public bool Persistent { get; set; }
+    [Key(9)]
+    public string RoomName { get; set; }
+    [Key(10)]
+    public System.Guid? GroupId { get; set; }
+    [Key(11)]
+    public System.Guid? CharacterIdOne { get; set; }
+    [Key(12)]
+    public System.Guid? CharacterIdTwo { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ChannelDto
+    {
+    [Key(0)]
+    public string Id { get; set; }
+    [Key(1)]
+    public System.Collections.Generic.List<SharedNet.Dto.Realtime.UserPresenceDto> Presences { get; set; }
+    [Key(2)]
+    public SharedNet.Dto.Realtime.UserPresenceDto Self { get; set; }
+    [Key(3)]
+    public string RoomName { get; set; }
+    [Key(4)]
+    public string GroupId { get; set; }
+    [Key(5)]
+    public System.Guid? UserIdOne { get; set; }
+    [Key(6)]
+    public System.Guid? UserIdTwo { get; set; }
+    }
+    [MessagePackObject(true)]
+    public class PartyDto
+    {
+    public System.Guid PartyId { get; set; }
+    public bool Open { get; set; }
+    public int MaxSize { get; set; }
+    public SharedNet.Dto.Realtime.UserPresenceDto Self { get; set; }
+    public SharedNet.Dto.Realtime.UserPresenceDto Leader { get; set; }
+    public System.Collections.Generic.List<SharedNet.Dto.Realtime.UserPresenceDto> Presences { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class UserPresenceDto
+    {
+    [Key(0)]
+    public System.Guid UserId { get; set; }
+    [Key(1)]
+    public System.Guid? CharacterId { get; set; }
+    [Key(2)]
+    public System.Guid SessionId { get; set; }
+    [Key(3)]
+    public string UserDisplayName { get; set; }
+    [Key(4)]
+    public string CharacterDisplayName { get; set; }
+    [Key(5)]
+    public bool Persistence { get; set; }
+    [Key(6)]
+    public string Status { get; set; }
+    [Key(7)]
+    public int AvatarIntegerId { get; set; }
+    [Key(8)]
+    public int AvatarFrameIntegerId { get; set; }
+    [Key(9)]
+    public SharedNet.Constants.UserRole UserRole { get; set; }
+    [Key(10)]
+    public int CurrentPetIntegerId { get; set; }
+    [Key(11)]
+    public int CurrentCombatPetIntegerId { get; set; }
+    [Key(12)]
+    public int CombatPetLevel { get; set; }
     }
 }
 
 namespace SharedNet.Dto.Realtime.Messages.Payloads
 {
+    [MessagePackObject(false)]
+    public class ChannelPresenceEventPayload
+    {
+    [Key(0)]
+    public string ChannelId { get; set; }
+    [Key(1)]
+    public System.Collections.Generic.List<SharedNet.Dto.Realtime.UserPresenceDto> Joins { get; set; }
+    [Key(2)]
+    public System.Collections.Generic.List<SharedNet.Dto.Realtime.UserPresenceDto> Leaves { get; set; }
+    [Key(3)]
+    public string RoomName { get; set; }
+    [Key(4)]
+    public string GroupId { get; set; }
+    [Key(5)]
+    public System.Guid UserIdOne { get; set; }
+    [Key(6)]
+    public System.Guid UserIdTwo { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class StreamPresenceEventPayload
+    {
+    [Key(0)]
+    public SharedNet.Dto.Realtime.Messages.Payloads.StreamPayload Stream { get; set; }
+    [Key(1)]
+    public System.Collections.Generic.List<SharedNet.Dto.Realtime.UserPresenceDto> Joins { get; set; }
+    [Key(2)]
+    public System.Collections.Generic.List<SharedNet.Dto.Realtime.UserPresenceDto> Leaves { get; set; }
+    [Key(3)]
+    public System.Collections.Generic.List<SharedNet.Dto.Realtime.UserPresenceDto> Updates { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ChannelJoinPayload
+    {
+    [Key(0)]
+    public string Target { get; set; }
+    [Key(1)]
+    public SharedNet.Constants.Realtime.ChannelJoinType Type { get; set; }
+    [Key(2)]
+    public bool Persistence { get; set; }
+    [Key(3)]
+    public bool Hidden { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class ChannelLeavePayload
+    {
+    [Key(0)]
+    public string ChannelId { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class CharacterMetadataPayload
+    {
+    [Key(0)]
+    public double BaseExperienceGained { get; set; }
+    [Key(1)]
+    public int NumMonsterKills { get; set; }
+    [Key(2)]
+    public int NumItemsLooted { get; set; }
+    [Key(3)]
+    public int LastSeenOpals { get; set; }
+    [Key(4)]
+    public double Offense { get; set; }
+    [Key(5)]
+    public double Defense { get; set; }
+    [Key(6)]
+    public double Recovery { get; set; }
+    [Key(7)]
+    public System.DateTime TimeSentUtc { get; set; }
+    [Key(8)]
+    public int LastSeenSilver { get; set; }
+    }
     [MessagePackObject(false)]
     public class NotificationPayload
     {
@@ -5030,6 +5453,18 @@ namespace SharedNet.Dto.Realtime.Messages.Payloads
     public System.DateTime CreateTime { get; set; }
     [Key(7)]
     public bool Persistent { get; set; }
+    }
+    [MessagePackObject(false)]
+    public class StreamPayload
+    {
+    [Key(0)]
+    public SharedNet.Constants.Realtime.StreamMode Mode { get; set; }
+    [Key(1)]
+    public System.Guid? Subject { get; set; }
+    [Key(2)]
+    public System.Guid? Subcontext { get; set; }
+    [Key(3)]
+    public string Label { get; set; }
     }
 }
 

@@ -1,8 +1,9 @@
 using Mono.Cecil;
 using System.Text;
 
-var dir = "/local_disk/nordicandia_re/il2cpp_out/dll";
-var outFile = "/local_disk/nordicandia_re/server/Nordicandia.Contracts/GeneratedContracts.cs";
+if (args.Length != 3) throw new ArgumentException("Usage: ContractGen <shim-directory> <contracts-output.cs> <services-output.cs>");
+var dir = Path.GetFullPath(args[0]);
+var outFile = Path.GetFullPath(args[1]);
 Directory.CreateDirectory(Path.GetDirectoryName(outFile)!);
 
 var r = new DefaultAssemblyResolver();
@@ -24,6 +25,7 @@ var q = new Queue<TypeReference>();
 void Enq(TypeReference tr) { if (tr != null) q.Enqueue(tr); }
 foreach (var s in services) foreach (var m in s.Methods) { Enq(m.ReturnType); foreach (var p in m.Parameters) Enq(p.ParameterType); }
 
+Enq(byName["SharedNet.Dto.Realtime.Envelope"]);
 var ordered = new List<TypeDefinition>();
 while (q.Count > 0)
 {
@@ -109,6 +111,8 @@ string CtorArg(ICustomAttribute a, int i)
 }
 void EmitTypeAttrs(IndentWriter w, TypeDefinition td)
 {
+    if (td.FullName == "Game.GameAttributeValue") w.Line("[MessagePackFormatter(typeof(Nordicandia.Contracts.AttributeValueFormatter))]");
+    if (td.FullName == "Game.GameAttributeValueDoubleArray") w.Line("[MessagePackFormatter(typeof(Nordicandia.Contracts.AttributeArrayFormatter))]");
     var mp = td.CustomAttributes.FirstOrDefault(a => a.AttributeType.Name == "MessagePackObjectAttribute");
     if (mp != null)
     {
@@ -153,16 +157,18 @@ void Emit(TypeDefinition td, IndentWriter w)
         w.BraceClose();
         return;
     }
-    var kind = td.IsValueType ? "struct" : "class";
+    var kind = td.IsInterface ? "interface" : td.IsValueType ? "struct" : "class";
     var mods = "public ";
     if (td.IsAbstract && !td.IsInterface) mods += "abstract ";
     if (td.IsSealed && !td.IsValueType && !td.IsAbstract) mods += "sealed ";
     var baseType = "";
     if (td.BaseType != null && td.BaseType.FullName is not ("System.Object" or "System.ValueType" or "System.Enum"))
         baseType = " : " + Render(td.BaseType);
+    if (td.Interfaces.Any(i => i.InterfaceType.FullName == "SharedNet.Dto.Realtime.Message")) baseType += (baseType == "" ? " : " : ", ") + "SharedNet.Dto.Realtime.Message";
     EmitTypeAttrs(w, td);
     w.Line($"{mods}{kind} {SimpleName(td)}{gen}{baseType}");
     w.BraceOpen();
+    if (td.FullName == "Game.GameAttributeValueDoubleArray") w.Line("[IgnoreMember] public byte[] WireData { get; set; }");
     // nested types first
     foreach (var nt in td.NestedTypes) Emit(nt, w);
     if (td.IsValueType)
@@ -171,12 +177,16 @@ void Emit(TypeDefinition td, IndentWriter w)
         {
             if (f.Name.StartsWith("<") || f.Name.Contains("k__BackingField")) continue;
             EmitMemberAttrs(w, f);
+            if (td.FullName == "Game.GameAttributeValue" && f.Name == "_ValueD" && !f.CustomAttributes.Any(a => a.AttributeType.Name == "IgnoreMemberAttribute")) w.Line("[IgnoreMember]");
             w.Line($"public {Render(f.FieldType)} {f.Name};");
         }
     }
     foreach (var p in td.Properties)
     {
-        if (p.Name == "Item") continue;
+        // `Item` used to be skipped wholesale, which silently dropped
+        // AddItemOperationEntry.Item (the only place the client sends full item
+        // payloads). Keep the exception narrow so other generated DTOs are unaffected.
+        if (p.Name == "Item" && td.FullName != "SharedNet.Api.AddItemOperationEntry") continue;
         var backed = td.Fields.FirstOrDefault(f => f.Name == "<" + p.Name + ">k__BackingField");
         var hasMpAttr = p.CustomAttributes.Any(a => a.AttributeType.Name is "KeyAttribute" or "IgnoreMemberAttribute");
         if (hasMpAttr || backed == null) EmitMemberAttrs(w, p);
@@ -242,19 +252,31 @@ foreach (var s in services)
     if (handled.Contains(s.Name)) continue;
     stubCount++;
     var cls = s.Name.Substring(1) + "Impl";
-    s2.AppendLine($"public sealed class {cls} : ServiceBase<{s.Name}>, {s.Name}");
+    s2.AppendLine($"public sealed partial class {cls} : ServiceBase<{s.Name}>, {s.Name}");
     s2.AppendLine("{");
     foreach (var m in s.Methods)
     {
         var ret = Render(m.ReturnType);
         var ps = string.Join(", ", m.Parameters.Select(p => $"{Render(p.ParameterType)} {p.Name}"));
+        if (s.Name == "ICharacterServiceApi" && m.Name is "CreateCharacter" or "GetCharacterList" or "EnterGameWithCharacter" or "DeleteCharacter" or "AllocateCharacterAttributes") continue;
+        if (s.Name == "ICharacterGameEventServiceApi" && m.Name is not "OnGolemGameModeEnded") continue;
+        if (s.Name == "ISocialServiceApi" && m.Name is "InspectCharacter") continue;
+        if (s.Name == "ICharacterPowerServiceApi") continue;
+        if (s.Name == "IGameModeServiceApi") continue;
+        if (s.Name == "IOfferingServiceApi" && m.Name is "GetCurrentBlessings") continue;
+        if (s.Name == "IUseItemServiceApi" && m.Name is "UseItemWithBuff") continue;
+        if (s.Name == "IUserLinkedAccountServiceApi") continue;
+        if (s.Name == "IInventoryServiceApi" && m.Name is "ItemOperation") continue;
+        if (s.Name == "IVirtualCurrencyServiceApi") continue;
+        if (s.Name == "ILeaderboardServiceApi") continue;
         var argType = ret.Substring(ret.IndexOf('<') + 1, ret.LastIndexOf('>') - ret.IndexOf('<') - 1);
         s2.AppendLine($"    public {ret} {m.Name}({ps}) => UnaryResult.FromResult(Defaults.Create<{argType}>());");
     }
     s2.AppendLine("}");
     s2.AppendLine();
 }
-var servicesOut = "/local_disk/nordicandia_re/server/Nordicandia.Server/Services/Services.Generated.cs";
+var servicesOut = Path.GetFullPath(args[2]);
+Directory.CreateDirectory(Path.GetDirectoryName(servicesOut)!);
 File.WriteAllText(servicesOut, s2.ToString());
 
 Console.WriteLine($"Wrote {outFile}");
