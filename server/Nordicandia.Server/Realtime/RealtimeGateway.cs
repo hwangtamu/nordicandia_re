@@ -59,7 +59,19 @@ public static class RealtimeGateway
 
         using var socket = await context.WebSockets.AcceptWebSocketAsync();
         var session = new RealtimeSession(socket, user, characterId, appearOnline);
-        if (characterId is { } id) Sessions[id] = session;
+        if (characterId is { } id)
+        {
+            // The game enforces one live socket per character. If this character already has a
+            // session, tell the previous client so it can show its "signed in elsewhere" dialog
+            // and disconnect; otherwise the two clients silently fight over the same character.
+            if (Sessions.TryGetValue(id, out var previous) && !ReferenceEquals(previous, session))
+            {
+                Console.WriteLine($"[WS] duplicate socket for character={id}; notifying previous session");
+                NotifySession(previous, NotificationCodes.SingleSocket, "Signed in elsewhere",
+                    "This character was signed in on another device.");
+            }
+            Sessions[id] = session;
+        }
         try
         {
             await session.RunAsync(context.RequestAborted);
@@ -76,13 +88,31 @@ public static class RealtimeGateway
         return header.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) ? header[7..].Trim() : header.Trim();
     }
 
+    // MessagePack-CSharp's LZ4BlockArray wrapper writes a two-element array whose first
+    // element is an extension carrying the compression marker. For a small compressed block
+    // that header is fixext1 (0xd4 0x62); larger blocks use ext8/16/32 (0xc7/0xc8/0xc9).
+    // The old check only looked for the variable-length headers, so the normal case where the
+    // game client compresses a chat frame was misdetected as uncompressed and failed to decode.
     internal static bool LooksCompressed(ReadOnlySpan<byte> data) =>
-        data.Length > 2 && data[0] == 0x92 && data[1] is 0xc7 or 0xc8 or 0xc9;
+        data.Length > 2 && data[0] == 0x92
+        && ((data[1] == 0xd4 && data[2] == 0x62) || data[1] is 0xc7 or 0xc8 or 0xc9);
 
-    internal static Envelope Decode(ReadOnlyMemory<byte> data)
+    internal static Envelope Decode(ReadOnlyMemory<byte> data, out bool compressed)
     {
-        var options = LooksCompressed(data.Span) ? Lz4 : Plain;
-        return MessagePackSerializer.Deserialize<Envelope>(data, options);
+        if (LooksCompressed(data.Span))
+        {
+            try { compressed = true; return MessagePackSerializer.Deserialize<Envelope>(data, Lz4); }
+            catch (Exception) { /* not actually compressed; fall through */ }
+        }
+
+        try { compressed = false; return MessagePackSerializer.Deserialize<Envelope>(data, Plain); }
+        catch (Exception)
+        {
+            // Header detection can miss unusual block layouts, and LZ4BlockArray is the
+            // client's normal wire format, so retry it before giving up on the frame.
+            compressed = true;
+            return MessagePackSerializer.Deserialize<Envelope>(data, Lz4);
+        }
     }
 
     internal static byte[] Encode(Envelope envelope, bool compressed) =>
@@ -136,6 +166,54 @@ public static class RealtimeGateway
         var who = anonymous || string.IsNullOrEmpty(characterName) ? "An anonymous hero" : characterName;
         PublishSystemMessage("5", $"{who} has made an offering to {aesir}!");
     }
+
+    /// <summary>Pushes a server notification to every live session for one character. The
+    /// client surfaces these through <c>NetSocket.OnNotificationReceived</c>; the codes it
+    /// switches on are <see cref="NotificationCodes.SingleSocket"/>, <c>CharacterAvatarFrameUpdated</c>,
+    /// <c>GroupAdd</c> and <c>GroupKick</c>.</summary>
+    public static void NotifyCharacter(Guid characterId, NotificationCodes code, string subject, string content)
+    {
+        var envelope = new Envelope { RequestId = 0, Message = BuildNotification(code, subject, content) };
+        Console.WriteLine($"[NOTIFY] character={characterId} code={code} subject={subject}");
+        _ = Task.Run(async () =>
+        {
+            foreach (var session in Sessions.Values)
+            {
+                if (session.characterId != characterId) continue;
+                try { await session.SendAsync(envelope, CancellationToken.None); }
+                catch (Exception ex) { Console.WriteLine($"[WS] notification to {characterId} failed: {ex.Message}"); }
+            }
+        });
+    }
+
+    private static void NotifySession(RealtimeSession session, NotificationCodes code, string subject, string content)
+    {
+        var envelope = new Envelope { RequestId = 0, Message = BuildNotification(code, subject, content) };
+        _ = Task.Run(async () =>
+        {
+            try { await session.SendAsync(envelope, CancellationToken.None); }
+            catch (Exception ex) { Console.WriteLine($"[WS] notification to {session.characterId} failed: {ex.Message}"); }
+        });
+    }
+
+    private static NotificationListMessage BuildNotification(NotificationCodes code, string subject, string content) =>
+        new()
+        {
+            Notifications = new List<NotificationPayload>
+            {
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Subject = subject,
+                    Content = content,
+                    Code = code,
+                    SenderId = Guid.Empty,
+                    SenderType = NotificationSenderType.System,
+                    CreateTime = DateTime.UtcNow,
+                    Persistent = false,
+                },
+            },
+        };
 
     private static string BuildAnnouncementText(State.GameStore.WorldAnnouncement a)
     {
@@ -263,7 +341,6 @@ public static class RealtimeGateway
                     var payload = message.ToArray();
                     message.SetLength(0);
                     if (payload.Length == 0) continue;
-                    compressed = LooksCompressed(payload);
                     await DispatchAsync(payload, cancellationToken);
                 }
             }
@@ -283,11 +360,14 @@ public static class RealtimeGateway
             Envelope request;
             try
             {
-                request = Decode(payload);
+                // Remember which wire format the client used so replies/relays mirror it.
+                request = Decode(payload, out var wasCompressed);
+                compressed = wasCompressed;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[WS] undecodable frame ({payload.Length}B): {ex.Message}");
+                var head = Convert.ToHexString(payload.AsSpan(0, Math.Min(24, payload.Length)));
+                Console.WriteLine($"[WS] undecodable frame ({payload.Length}B head={head}): {ex.Message}");
                 await SendAsync(new Envelope { RequestId = 0, Message = Error(ErrorCodes.UNRECOGNIZED_PAYLOAD, "Undecodable payload") }, cancellationToken);
                 return;
             }

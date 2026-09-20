@@ -166,16 +166,24 @@ public static class WebSocketProbe
         }, pushes);
         Print(join);
 
+        // Deliberately long enough that the client's LZ4BlockArray options actually compress
+        // the frame (the small fixext1 header the server used to misdetect as uncompressed).
+        var chatContent = "hello from the probe " + new string('x', 200);
         var chat = await SendAsync(socket, new Envelope
         {
             RequestId = 3,
-            Message = new ChannelMessageSendMessage { ChannelId = "Global", Content = "hello from the probe" },
+            Message = new ChannelMessageSendMessage { ChannelId = "Global", Content = chatContent },
         }, pushes);
         Print(chat);
+        if (chat.Message is not ChannelMessageAckMessage)
+        {
+            Console.WriteLine($"FAIL  chat ack was {chat.Message?.GetType().Name ?? "<null>"}");
+            return 6;
+        }
 
         // The relay must fan the sender's own message back out (RequestId 0).
         var relayed = pushes.Select(p => p.Message).OfType<ChannelMessageMessage>()
-            .FirstOrDefault(m => m.ChannelMessage?.Content == "hello from the probe");
+            .FirstOrDefault(m => m.ChannelMessage?.Content == chatContent);
         if (relayed == null)
         {
             Console.WriteLine("FAIL  chat was not relayed back to the sender");
@@ -388,9 +396,15 @@ public static class WebSocketProbe
         return 0;
     }
 
+    // The Unity client serializes with LZ4BlockArray (which only compresses frames that are
+    // worth it) and decodes with the same options, so use that here to match the real wire
+    // format instead of the uncompressed path that hid the server's decode bug.
+    private static readonly MessagePackSerializerOptions WireOptions =
+        MessagePackSerializer.DefaultOptions.WithCompression(MessagePackCompression.Lz4BlockArray);
+
     private static async Task<Envelope> SendAsync(ClientWebSocket socket, Envelope envelope, List<Envelope> pushes = null)
     {
-        var bytes = MessagePackSerializer.Serialize(envelope);
+        var bytes = MessagePackSerializer.Serialize(envelope, WireOptions);
         await socket.SendAsync(bytes, WebSocketMessageType.Binary, true, CancellationToken.None);
 
         // Interleaved server pushes (RequestId 0) may arrive before the reply; stash them
@@ -451,7 +465,7 @@ public static class WebSocketProbe
             ms.Write(buffer, 0, result.Count);
         } while (!result.EndOfMessage);
 
-        return MessagePackSerializer.Deserialize<Envelope>(ms.ToArray());
+        return MessagePackSerializer.Deserialize<Envelope>(ms.ToArray(), WireOptions);
     }
 
     private static void Print(Envelope envelope)
