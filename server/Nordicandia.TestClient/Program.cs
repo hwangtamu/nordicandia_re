@@ -26,6 +26,9 @@ if (args.Length >= 2 && args[0] == "persist")
 if (args.Length >= 2 && args[0] == "season")
     Environment.Exit(await Nordicandia.TestClient.SeasonProbe.RunAsync(args[1]));
 
+if (args.Length >= 2 && args[0] == "merchant")
+    Environment.Exit(await Nordicandia.TestClient.MerchantProbe.RunAsync(args[1]));
+
 var address = args.Length > 0 ? args[0] : "http://localhost:50051";
 
 // The real client does not validate the server certificate; mirror that for HTTPS tests.

@@ -1,0 +1,37 @@
+name: nordicandia
+services:
+  server:
+    image: ${NORD_IMAGE:?Set NORD_IMAGE to the image tag from the build artifact}
+    platform: linux/amd64
+    pull_policy: never
+    restart: unless-stopped
+    init: true
+    user: "1654:1654"
+    ports:
+      - "${NORD_BIND_IP:-127.0.0.1}:${NORD_PUBLIC_PORT:-443}:8443"
+    environment:
+      # Override the image's Cloud Run mode: Kestrel terminates TLS here.
+      PORT: ""
+      NORD_LISTEN_ANY: "1"
+      NORD_HTTPS_PORT: "8443"
+      NORD_CERT_PFX: /certs/server.pfx
+      NORD_CERT_PWD: ${NORD_CERT_PWD:?Set NORD_CERT_PWD}
+      NORD_DATA_DIR: /data
+      NORD_DUMP_BODY: "0"
+      DOTNET_GCHeapHardLimitPercent: "60"
+    volumes:
+      - ${NORD_HOME:-/opt/nordicandia}/data:/data
+      - ${NORD_HOME:-/opt/nordicandia}/certs:/certs:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 700m
+    pids_limit: 256
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -1,0 +1,17 @@
+# Only backend source belongs in the image build context.
+**
+!Dockerfile
+!server/
+!server/Nordicandia.Contracts/
+!server/Nordicandia.Contracts/**
+!server/Nordicandia.Server/
+!server/Nordicandia.Server/**
+**/bin
+**/obj
+**/data
+**/certs
+**/.env*
+**/*.pfx
+**/*.pem
+**/*.key
+**/*.log

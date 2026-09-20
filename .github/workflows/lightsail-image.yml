@@ -1,0 +1,66 @@
+name: Build Lightsail image
+on:
+  push:
+    branches: [deploy/lightsail]
+    paths: ['server/**', 'Dockerfile', '.dockerignore', 'deploy/lightsail/**', '.github/workflows/lightsail-image.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lightsail-image-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build Linux image
+        run: docker build --platform linux/amd64 -t nordicandia-server:${GITHUB_SHA} .
+      - name: Check deployment scripts
+        run: bash -n deploy/lightsail/install-docker.sh
+      - name: Test container TLS, merchant, and persistence
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NORD_IMAGE=nordicandia-server:${GITHUB_SHA}
+          export NORD_HOME=${RUNNER_TEMP}/nordicandia
+          export NORD_CERT_PWD=ci-ephemeral-certificate
+          export NORD_PUBLIC_PORT=8443
+          mkdir -p "$NORD_HOME/data" "$NORD_HOME/certs"
+          openssl req -x509 -newkey rsa:2048 -nodes -days 1 \
+            -subj '/CN=localhost' -addext 'subjectAltName=DNS:localhost,IP:127.0.0.1' \
+            -keyout "$NORD_HOME/certs/server.key" -out "$NORD_HOME/certs/server.crt"
+          openssl pkcs12 -export -in "$NORD_HOME/certs/server.crt" \
+            -inkey "$NORD_HOME/certs/server.key" -out "$NORD_HOME/certs/server.pfx" \
+            -passout env:NORD_CERT_PWD
+          sudo cp "$NORD_HOME/certs/server.crt" /usr/local/share/ca-certificates/nordicandia-ci.crt
+          sudo update-ca-certificates
+          sudo chown -R 1654:1654 "$NORD_HOME/data" "$NORD_HOME/certs"
+          docker compose -f deploy/lightsail/compose.yaml config --quiet
+          trap 'docker compose -f deploy/lightsail/compose.yaml logs; docker compose -f deploy/lightsail/compose.yaml down' EXIT
+          docker compose -f deploy/lightsail/compose.yaml up -d
+          curl --fail --retry 20 --retry-connrefused --retry-delay 1 https://localhost:8443/healthz
+          dotnet run --project server/Nordicandia.TestClient -c Release -- merchant https://localhost:8443
+          sudo cp "$NORD_HOME/data/world.json" "$NORD_HOME/before-recreate.json"
+          docker compose -f deploy/lightsail/compose.yaml up -d --force-recreate
+          curl --fail --retry 20 --retry-connrefused --retry-delay 1 https://localhost:8443/healthz
+          sudo cmp "$NORD_HOME/before-recreate.json" "$NORD_HOME/data/world.json"
+      - name: Export deployment bundle
+        run: |
+          mkdir -p artifact
+          docker save nordicandia-server:${GITHUB_SHA} | gzip > artifact/nordicandia-server.tar.gz
+          cp deploy/lightsail/compose.yaml deploy/lightsail/install-docker.sh deploy/lightsail/README.md artifact/
+          cp deploy/lightsail/.env.example artifact/env.example
+          printf 'nordicandia-server:%s\n' "$GITHUB_SHA" > artifact/image-tag.txt
+          cd artifact
+          sha256sum nordicandia-server.tar.gz > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nordicandia-lightsail-${{ github.sha }}
+          path: artifact/
+          compression-level: 0
+          retention-days: 7

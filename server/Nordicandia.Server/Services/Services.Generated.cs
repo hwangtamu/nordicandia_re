@@ -7,16 +7,6 @@ using Nordicandia.Server.State;
 
 namespace Nordicandia.Server.Services;
 
-public sealed class CatalogServiceApiImpl : ServiceBase<ICatalogServiceApi>, ICatalogServiceApi
-{
-    public MagicOnion.UnaryResult<SharedNet.Api.GetCatalogResponse> GetCatalog(SharedNet.Api.GetCatalogRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GetCatalogResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.PurchaseCatalogItemResponse> PurchaseCatalogItem(SharedNet.Api.PurchaseCatalogItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.PurchaseCatalogItemResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.PurchaseCatalogItemForSilverResponse> PurchaseCatalogItemForSilver(SharedNet.Api.PurchaseCatalogItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.PurchaseCatalogItemForSilverResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.TradeWithMerchantResponse> TradeWithMerchant(SharedNet.Api.TradeWithMerchantRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.TradeWithMerchantResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.GenerateSetItemMerchantOffersResponse> ViewSetItemMerchantOffers(SharedNet.Api.GenerateSetItemMerchantOffersRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GenerateSetItemMerchantOffersResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.TradeWithSetItemMerchantResponse> TradeWithSetItemMerchant(SharedNet.Api.TradeWithSetItemMerchantRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.TradeWithSetItemMerchantResponse>());
-}
-
 public sealed class ChannelServiceApiImpl : ServiceBase<IChannelServiceApi>, IChannelServiceApi
 {
     public MagicOnion.UnaryResult<SharedNet.Api.ListChannelMessageListResponse> ListChannelMessages(SharedNet.Api.ListChannelMessageListRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ListChannelMessageListResponse>());

@@ -449,6 +449,62 @@ public sealed class GameStore : IDisposable
         }
     }
 
+    public readonly record struct MerchantPurchase(SerializedItems Items, int NewBalance);
+
+    /// <summary>
+    /// Atomically charges a character and adds a merchant item. The merchant UI replaces
+    /// inventory page 1 with the returned list, so return a complete snapshot of that page.
+    /// </summary>
+    public MerchantPurchase BuyMerchantItem(Guid owner, Guid characterId, SerializedItem item, int price, bool useOpals)
+    {
+        if (item == null || price < 0)
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid merchant purchase"));
+
+        return Change(s =>
+        {
+            var c = Owned(s, owner, characterId);
+            var balance = useOpals ? c.Opals : c.Silver;
+            if (balance < price)
+                throw new RpcException(new Status(StatusCode.FailedPrecondition,
+                    useOpals ? "Not enough opals" : "Not enough silver"));
+
+            var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+            data.Items ??= new SerializedItems();
+            data.Items.Items ??= new List<SerializedItem>();
+
+            var used = new HashSet<(int Row, int Column)>(data.Items.Items
+                .Where(i => i?.Location != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Inventory && i.Location.Page == 1)
+                .Select(i => (i.Location.Row, i.Location.Column)));
+            SerializedItemInventoryLocation location = null;
+            for (var row = 0; row < 40 && location == null; row++)
+                for (var column = 0; column < 20; column++)
+                    if (!used.Contains((row, column)))
+                    {
+                        location = new SerializedItemInventoryLocation { Page = 1, Row = row, Column = column };
+                        break;
+                    }
+            if (location == null)
+                throw new RpcException(new Status(StatusCode.ResourceExhausted, "Inventory is full"));
+
+            item = Unpack<SerializedItem>(Pack(item));
+            item.Id = item.Id == Guid.Empty ? Guid.NewGuid() : item.Id;
+            item.Slot = SharedNet.Constants.Game.ItemSlotTypes.Inventory;
+            item.Location = location;
+            data.Items.Items.Add(item);
+
+            if (useOpals) c.Opals -= price;
+            else c.Silver -= price;
+            c.HasRealtimeProgress = true;
+            c.LastRealtimeUpdate = Now;
+            c.Data = Pack(data);
+
+            var page = data.Items.Items
+                .Where(i => i?.Location != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Inventory && i.Location.Page == 1)
+                .Select(i => Unpack<SerializedItem>(Pack(i))).ToList();
+            return new MerchantPurchase(new SerializedItems { Items = page }, useOpals ? c.Opals : c.Silver);
+        });
+    }
+
     public int AddSilver(Guid owner, Guid id, int amount) => Change(s =>
     {
         var c = Owned(s, owner, id);

@@ -46,3 +46,11 @@ server/certs/
 /dist/
 /steam_analysis/
 /server/data/
+
+# Deployment configuration and runtime state
+.env
+.env.*
+!.env.example
+/deploy/lightsail/data/
+/deploy/lightsail/certs/
+/deploy/lightsail/backups/
