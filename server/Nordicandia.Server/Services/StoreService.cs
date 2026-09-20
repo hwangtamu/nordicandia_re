@@ -19,41 +19,39 @@ public sealed partial class StoreServiceApiImpl
     private static readonly Dictionary<ulong, string> Orders = new();
     private static ulong nextOrderId = 1;
 
+    // The client's IAP catalog (the IAPProductCatalog JSON in resources.assets) identifies these
+    // products by their Sku, so the server must mirror those ids exactly. WindowSeasonProgress
+    // looks up the season pass with StoreItem.Sku == "556" and buys it by the same id, so the
+    // pass uses "556"; the opal bundles reuse the catalog's *_opal_bundle ids and official prices.
     private static readonly Guid SeasonPassId = Guid.Parse("a1000000-0000-4000-8000-000000000001");
     private static readonly List<StoreItemDto> Products = new()
     {
         new StoreItemDto
         {
-            StoreItemId = SeasonPassId, Sku = "season_pass", ItemClass = "SeasonPass",
+            StoreItemId = SeasonPassId, Sku = "556", ItemClass = "SeasonPass",
             ProductType = StoreItemProductType.NonConsumable,
             LocalizedName = "Season Pass", LocalizedDescription = "Unlock the season-pass reward track.",
             LocalizedPrice = 4.99m, PriceUSD = 4.99m, LocalizedPriceString = "$4.99", Currency = Currency.USD,
             Tags = new List<string> { "season_pass" },
         },
-        new StoreItemDto
-        {
-            StoreItemId = Guid.Parse("a1000000-0000-4000-8000-000000000002"), Sku = "opals_100", ItemClass = "Opals",
-            ProductType = StoreItemProductType.Consumable,
-            LocalizedName = "100 Opals", LocalizedDescription = "A small pouch of opals.",
-            LocalizedPrice = 0.99m, PriceUSD = 0.99m, LocalizedPriceString = "$0.99", Currency = Currency.USD,
-            ContainedOpals = 100, Tags = new List<string> { "opals" },
-        },
-        new StoreItemDto
-        {
-            StoreItemId = Guid.Parse("a1000000-0000-4000-8000-000000000003"), Sku = "opals_500", ItemClass = "Opals",
-            ProductType = StoreItemProductType.Consumable,
-            LocalizedName = "500 Opals", LocalizedDescription = "A chest of opals.",
-            LocalizedPrice = 4.99m, PriceUSD = 4.99m, LocalizedPriceString = "$4.99", Currency = Currency.USD,
-            ContainedOpals = 500, Tags = new List<string> { "opals" },
-        },
-        new StoreItemDto
-        {
-            StoreItemId = Guid.Parse("a1000000-0000-4000-8000-000000000004"), Sku = "opals_1200", ItemClass = "Opals",
-            ProductType = StoreItemProductType.Consumable,
-            LocalizedName = "1200 Opals", LocalizedDescription = "A vault of opals.",
-            LocalizedPrice = 9.99m, PriceUSD = 9.99m, LocalizedPriceString = "$9.99", Currency = Currency.USD,
-            ContainedOpals = 1200, Tags = new List<string> { "opals" },
-        },
+        OpalBundle("000000000002", "tiny_opal_bundle", 100, 1.49m),
+        OpalBundle("000000000003", "small_opal_bundle", 500, 4.99m),
+        OpalBundle("000000000004", "medium_opal_bundle", 1200, 9.99m),
+        OpalBundle("000000000005", "large_opal_bundle", 2600, 19.99m),
+        OpalBundle("000000000006", "extralarge_opal_bundle", 7500, 49.99m),
+        OpalBundle("000000000007", "mega_opal_bundle", 17000, 99.99m),
+    };
+
+    private static StoreItemDto OpalBundle(string idSuffix, string sku, uint opals, decimal priceUsd) => new()
+    {
+        StoreItemId = Guid.Parse("a1000000-0000-4000-8000-" + idSuffix), Sku = sku, ItemClass = "Opals",
+        ProductType = StoreItemProductType.Consumable,
+        LocalizedName = $"{opals} Opals", LocalizedDescription = $"A bundle of {opals} opals.",
+        LocalizedPrice = priceUsd, PriceUSD = priceUsd,
+        // InvariantGlobalization is on, so build the display string without a culture lookup.
+        LocalizedPriceString = "$" + priceUsd.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture),
+        Currency = Currency.USD,
+        ContainedOpals = opals, Tags = new List<string> { "opals" },
     };
 
     private Guid Owner => GameStore.Instance.RequireUser(Context.CallContext.RequestHeaders.GetValue("authorization"));

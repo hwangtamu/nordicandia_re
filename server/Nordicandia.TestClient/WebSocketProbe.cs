@@ -346,6 +346,20 @@ public static class WebSocketProbe
         var catalogs = MagicOnionClient.Create<ICatalogServiceApi>(channel, serializerProvider);
         var regular = await catalogs.GetCatalog(new GetCatalogRequest { Category = SharedNet.Constants.CatalogCategory.SeasonProgress, Name = "season_rewards_regular" });
         var passCatalog = await catalogs.GetCatalog(new GetCatalogRequest { Category = SharedNet.Constants.CatalogCategory.SeasonProgress, Name = "season_rewards_season_pass" });
+        // The client matches the item Name against (\d+)_(\d+)_(\d+); a two-part name throws
+        // while building the reward tab. Also derive the combined milestone level the client
+        // computes (season*1000 + level) and sends back when claiming.
+        var rewardName = regular.Catalog?.Items?.FirstOrDefault()?.Name;
+        var rewardParts = rewardName?.Split('_');
+        if (rewardParts is not { Length: 3 }
+            || !int.TryParse(rewardParts[0], out var seasonNumber)
+            || !int.TryParse(rewardParts[1], out var firstRewardLevel)
+            || !int.TryParse(rewardParts[2], out _))
+        {
+            Console.WriteLine($"FAIL  season reward name '{rewardName}' is not season_level_slot");
+            return 12;
+        }
+        var combinedMilestoneLevel = seasonNumber * 1000 + firstRewardLevel;
         var userApi = MagicOnionClient.Create<IUserServiceApi>(channel, serializerProvider);
         var seasonChar = (await characters.GetCharacterList(new GetCharacterListRequest())).Characters?.FirstOrDefault(c => c.GameMode is SharedNet.Constants.Game.GameMode.Season);
         if (seasonChar == null)
@@ -369,14 +383,23 @@ public static class WebSocketProbe
             })).Character;
         }
         var seasonMeta = await userApi.GetSeasonMetadata(new GetSeasonMetadataRequest());
-        var claim = await gameModes.ClaimSeasonReward(new ClaimSeasonRewardRequest { SeasonLevelReward = 1, IsSeasonPassReward = false, CharacterId = seasonChar.CharacterId });
+        var claim = await gameModes.ClaimSeasonReward(new ClaimSeasonRewardRequest { SeasonLevelReward = combinedMilestoneLevel, IsSeasonPassReward = false, CharacterId = seasonChar.CharacterId });
         if ((regular.Catalog?.Items?.Count ?? 0) == 0 || (passCatalog.Catalog?.Items?.Count ?? 0) == 0
-            || (seasonMeta.SeasonMetadata?.SeasonLevel ?? 0) < 1 || (claim.ReceivedRewards?.Items?.Count ?? 0) == 0)
+            || (seasonMeta.SeasonMetadata?.SeasonLevel ?? 0) < combinedMilestoneLevel || (claim.ReceivedRewards?.Items?.Count ?? 0) == 0)
         {
-            Console.WriteLine($"FAIL  season regular={regular.Catalog?.Items?.Count} pass={passCatalog.Catalog?.Items?.Count} level={seasonMeta.SeasonMetadata?.SeasonLevel} claim={claim.ReceivedRewards?.Items?.Count}");
+            Console.WriteLine($"FAIL  season name='{rewardName}' regular={regular.Catalog?.Items?.Count} pass={passCatalog.Catalog?.Items?.Count} level={seasonMeta.SeasonMetadata?.SeasonLevel} expected>={combinedMilestoneLevel} claim={claim.ReceivedRewards?.Items?.Count}");
             return 12;
         }
-        Console.WriteLine($"SEASON catalogs={regular.Catalog.Items.Count}/{passCatalog.Catalog.Items.Count} level={seasonMeta.SeasonMetadata.SeasonLevel} claim={claim.ReceivedRewards.Items[0].Name}");
+        // The client marks a milestone claimed with ClaimedSeasonRewardsByLevel.Exists(x =>
+        // x == combinedMilestoneLevel), so the stored key must be the combined value, not the
+        // plain track level.
+        var seasonMetaAfter = await userApi.GetSeasonMetadata(new GetSeasonMetadataRequest());
+        if (seasonMetaAfter.SeasonMetadata?.ClaimedSeasonRewardsByLevel?.Contains(combinedMilestoneLevel) != true)
+        {
+            Console.WriteLine($"FAIL  claimed key {combinedMilestoneLevel} not stored: {string.Join(",", seasonMetaAfter.SeasonMetadata?.ClaimedSeasonRewardsByLevel ?? new List<int>())}");
+            return 12;
+        }
+        Console.WriteLine($"SEASON name='{rewardName}' combined={combinedMilestoneLevel} level={seasonMeta.SeasonMetadata.SeasonLevel} claim={claim.ReceivedRewards.Items[0].Name}");
 
         // 10. The remote store the client's IAP module reads its products from.
         var store = MagicOnionClient.Create<IStoreServiceApi>(channel, serializerProvider);
@@ -384,12 +407,16 @@ public static class WebSocketProbe
         {
             StoreName = "RM_2.0", StoreProvider = SharedNet.Constants.StoreProvider.Steam,
         });
-        if ((storeItems.StoreItems?.Count ?? 0) == 0)
+        // The season tab finds the pass with StoreItem.Sku == "556" and buys that id; the opal
+        // bundles must use the ids from the client's bundled IAPProductCatalog.
+        if ((storeItems.StoreItems?.Count ?? 0) == 0
+            || !storeItems.StoreItems.Any(i => i.Sku == "556")
+            || !storeItems.StoreItems.Any(i => i.Sku == "small_opal_bundle"))
         {
-            Console.WriteLine("FAIL  store items empty");
+            Console.WriteLine($"FAIL  store items missing expected SKUs: {string.Join(",", storeItems.StoreItems?.Select(i => i.Sku) ?? new List<string>())}");
             return 15;
         }
-        Console.WriteLine($"STORE  items={storeItems.StoreItems.Count} first={storeItems.StoreItems[0].Sku}");
+        Console.WriteLine($"STORE  items={storeItems.StoreItems.Count} skus={string.Join(",", storeItems.StoreItems.Select(i => i.Sku))}");
 
         await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "done", CancellationToken.None);
         Console.WriteLine("WS OK");

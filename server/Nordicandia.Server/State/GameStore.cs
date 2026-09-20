@@ -21,6 +21,21 @@ public sealed class GameStore : IDisposable
     private readonly TimeProvider clock;
     private State state;
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
+
+    /// <summary>The season wheel is deterministic (365-day seasons anchored at 2024-01-01), so a
+    /// season is always active without persisting a schedule. <c>Number</c> is the 1-based index
+    /// used by the season reward item names and by the client's combined season level.</summary>
+    public static (int Number, string Name, DateTime Start, DateTime End) SeasonAt(DateTime utc)
+    {
+        var epoch = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var length = TimeSpan.FromDays(365);
+        var index = (long)Math.Floor((utc - epoch).Ticks / (double)length.Ticks);
+        var start = epoch.AddTicks(index * length.Ticks);
+        var number = (int)(index + 1);
+        return (number, $"Season {number}", start, start + length);
+    }
+
+    public static int CurrentSeasonNumber() => SeasonAt(DateTime.UtcNow).Number;
     public sealed class State
     {
         public int Version { get; set; } = 1;
@@ -892,7 +907,12 @@ public sealed class GameStore : IDisposable
         var season = GetAccountData(owner).SeasonData;
         season.ClaimedSeasonRewardsByLevel ??= new();
         season.ClaimedSeasonPassRewardsByLevel ??= new();
-        season.SeasonLevel = Math.Max(season.SeasonLevel, SeasonLevel(owner));
+        // The client stores/looks up the season level as a combined value: seasonNumber*1000
+        // plus the reward level (see WindowSeasonProgress.LoadSeasonRewards and the
+        // combinedMilestoneLevel it sends back on claim). Keep the stored value in the same
+        // encoding so reward milestones unlock and claimed state matches.
+        var combined = CurrentSeasonNumber() * 1000 + SeasonLevel(owner);
+        season.SeasonLevel = Math.Max(season.SeasonLevel, combined);
         return season;
     }
 

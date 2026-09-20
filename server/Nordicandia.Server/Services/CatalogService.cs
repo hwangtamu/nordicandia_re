@@ -68,9 +68,11 @@ public sealed class CatalogServiceApiImpl : ServiceBase<ICatalogServiceApi>, ICa
     };
 
     // ---- Season reward tracks -------------------------------------------------
-    // The client requests these two catalogs with CatalogCategory.SeasonProgress and
-    // parses each item's Name as "{level}_{slot}", then renders the item behind
-    // DefinitionId. 30 levels each; the pass track uses the pet potions.
+    // The client requests these two catalogs with CatalogCategory.SeasonProgress and matches
+    // each item's Name against the regex (\d+)_(\d+)_(\d+), extracting the first two groups
+    // as combinedMilestoneLevel = season*1000 + level. A two-part name fails the regex and
+    // throws while building the tab, so always emit three parts: season, level, reward slot.
+    // 30 levels each; the pass track uses the pet potions.
     public const int SeasonRewardLevels = 30;
     private static readonly Guid SeasonRewardCatalogId = Guid.Parse("5e4a3b21-0f6d-4c1a-9b7e-0d2c4f6a8b10");
     private static readonly Guid SeasonPassRewardCatalogId = Guid.Parse("7c9d5e32-1a8b-4d2f-8e60-3b5d7a9c1e20");
@@ -99,7 +101,7 @@ public sealed class CatalogServiceApiImpl : ServiceBase<ICatalogServiceApi>, ICa
         {
             CatalogId = pass ? SeasonPassRewardCatalogId : SeasonRewardCatalogId,
             CatalogItemId = SeasonRewardItemId(pass, level, slot),
-            Name = $"{level}_{slot}",
+            Name = $"{GameStore.CurrentSeasonNumber()}_{level}_{slot}",
             StackSize = 1,
             DefinitionId = product.DefinitionId,
             Prices = new Dictionary<string, object>(),

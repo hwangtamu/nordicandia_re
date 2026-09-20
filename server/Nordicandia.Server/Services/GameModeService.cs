@@ -18,14 +18,10 @@ namespace Nordicandia.Server.Services;
 /// </summary>
 public sealed class GameModeServiceApiImpl : ServiceBase<IGameModeServiceApi>, IGameModeServiceApi
 {
-    private static readonly DateTime Epoch = new(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-    private static readonly TimeSpan Length = TimeSpan.FromDays(365);
-
     private static (string Name, DateTime Start, DateTime End) SeasonAt(DateTime utc)
     {
-        var index = (long)Math.Floor((utc - Epoch).Ticks / (double)Length.Ticks);
-        var start = Epoch.AddTicks(index * Length.Ticks);
-        return ($"Season {index + 1}", start, start + Length);
+        var (_, name, start, end) = GameStore.SeasonAt(utc);
+        return (name, start, end);
     }
 
     public UnaryResult<GetSeasonInfoResponse> GetSeasonInfo(GetSeasonInfoRequest req)
@@ -54,7 +50,12 @@ public sealed class GameModeServiceApiImpl : ServiceBase<IGameModeServiceApi>, I
     public UnaryResult<ClaimSeasonRewardResponse> ClaimSeasonReward(ClaimSeasonRewardRequest req)
     {
         var owner = GameStore.Instance.RequireUser(Context.CallContext.RequestHeaders.GetValue("authorization"));
-        var level = req?.SeasonLevelReward ?? 0;
+        // The client sends the reward milestone's combined level (seasonNumber*1000 + level),
+        // the value it parsed from the reward name's first two parts. Strip the season prefix
+        // to get the plain track level, but keep the combined value as the claim key so the
+        // client's ClaimedSeasonRewardsByLevel comparison matches.
+        var combined = req?.SeasonLevelReward ?? 0;
+        var level = combined % 1000;
         var pass = req?.IsSeasonPassReward ?? false;
         var empty = new ClaimSeasonRewardResponse
         {
@@ -65,7 +66,7 @@ public sealed class GameModeServiceApiImpl : ServiceBase<IGameModeServiceApi>, I
         // Only award levels the player has actually reached and has not already claimed.
         var maxLevel = Math.Min(GameStore.Instance.SeasonLevel(owner), CatalogServiceApiImpl.SeasonRewardLevels);
         if (level <= 0 || level > maxLevel) return UnaryResult.FromResult(empty);
-        if (!GameStore.Instance.ClaimSeasonReward(owner, level, pass)) return UnaryResult.FromResult(empty);
+        if (!GameStore.Instance.ClaimSeasonReward(owner, combined, pass)) return UnaryResult.FromResult(empty);
         var item = CatalogServiceApiImpl.CreateSeasonRewardItem(level, pass);
         var granted = GameStore.Instance.GrantItems(owner, req.CharacterId, new List<Game.SerializedItem> { item });
         Console.WriteLine($"[SEASON] claimed level={level} pass={pass} items={granted.Count}");
