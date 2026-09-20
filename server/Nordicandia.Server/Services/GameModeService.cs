@@ -1,5 +1,7 @@
+using Game;
 using MagicOnion;
 using MagicOnion.Server;
+using Nordicandia.Server.State;
 using SharedNet.Api;
 
 namespace Nordicandia.Server.Services;
@@ -51,13 +53,27 @@ public sealed class GameModeServiceApiImpl : ServiceBase<IGameModeServiceApi>, I
 
     public UnaryResult<ClaimSeasonRewardResponse> ClaimSeasonReward(ClaimSeasonRewardRequest req)
     {
-        // Rewards are granted by the cartridge/catalog on the real server; acknowledge so the
-        // client's claim flow completes without a NullReferenceException on the response graph.
+        var owner = GameStore.Instance.RequireUser(Context.CallContext.RequestHeaders.GetValue("authorization"));
+        var level = req?.SeasonLevelReward ?? 0;
+        var pass = req?.IsSeasonPassReward ?? false;
+        var empty = new ClaimSeasonRewardResponse
+        {
+            ReceivedRewards = new Game.SerializedItems { Items = new() },
+            NewOpals = 0,
+            IsSeasonPassReward = pass,
+        };
+        // Only award levels the player has actually reached and has not already claimed.
+        var maxLevel = Math.Min(GameStore.Instance.SeasonLevel(owner), CatalogServiceApiImpl.SeasonRewardLevels);
+        if (level <= 0 || level > maxLevel) return UnaryResult.FromResult(empty);
+        if (!GameStore.Instance.ClaimSeasonReward(owner, level, pass)) return UnaryResult.FromResult(empty);
+        var item = CatalogServiceApiImpl.CreateSeasonRewardItem(level, pass);
+        var granted = GameStore.Instance.GrantItems(owner, req.CharacterId, new List<Game.SerializedItem> { item });
+        Console.WriteLine($"[SEASON] claimed level={level} pass={pass} items={granted.Count}");
         return UnaryResult.FromResult(new ClaimSeasonRewardResponse
         {
-            ReceivedRewards = new Game.SerializedItems(),
+            ReceivedRewards = new Game.SerializedItems { Items = granted },
             NewOpals = 0,
-            IsSeasonPassReward = req?.IsSeasonPassReward ?? false,
+            IsSeasonPassReward = pass,
         });
     }
 }

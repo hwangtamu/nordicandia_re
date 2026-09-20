@@ -650,6 +650,19 @@ public sealed class GameStore : IDisposable
         return true;
     });
 
+    /// <summary>Persists the global rarity thresholds (the Settings dropdowns) on the
+    /// character header so they survive a relogin.</summary>
+    public void SaveCharacterSettings(Guid owner, Guid characterId, SharedNet.Constants.Game.Rarity low, SharedNet.Constants.Game.Rarity high) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var header = Unpack<CharacterHeaderDto>(c.Header);
+        header.Metadata ??= new();
+        header.Metadata["LowRarityThreshold"] = (int)low;
+        header.Metadata["HighRarityThreshold"] = (int)high;
+        c.Header = Pack(header);
+        return true;
+    });
+
     public void SaveUserLootFilters(Guid userId, SerializedLootFilters filters) => Change(s =>
     {
         var data = NormalizeAccountData(s.UserAccountData.TryGetValue(userId, out var bytes) && bytes is { Length: > 0 }
@@ -710,6 +723,169 @@ public sealed class GameStore : IDisposable
                 : null;
             return (Buff(1), Buff(2), Buff(3), Buff(4));
         });
+
+    private static SerializedCharacterData.SerializedPets EnsurePets(SerializedCharacterData.SerializedData data)
+    {
+        data.Pets ??= new SerializedCharacterData.SerializedPets { Pets = new() };
+        data.Pets.Pets ??= new();
+        return data.Pets;
+    }
+
+    private static SerializedCharacterData.SerializedCombatPets EnsureCombatPets(SerializedCharacterData.SerializedData data)
+    {
+        data.CombatPets ??= new SerializedCharacterData.SerializedCombatPets { CombatPets = new() };
+        data.CombatPets.CombatPets ??= new();
+        return data.CombatPets;
+    }
+
+    public void UpdatePet(Guid owner, Guid characterId, int petDefinitionIntegerId) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        var pets = EnsurePets(data);
+        if (pets.Pets.Any(p => p != null && p.DefinitionIntegerId == petDefinitionIntegerId))
+            pets.CurrentPetDefinitionIntegerId = petDefinitionIntegerId;
+        c.Data = Pack(data);
+        return true;
+    });
+
+    public int UnlockPet(Guid owner, Guid characterId, int petDefinitionIntegerId, int opalCost) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        var pets = EnsurePets(data);
+        if (!pets.Pets.Any(p => p != null && p.DefinitionIntegerId == petDefinitionIntegerId))
+        {
+            c.Opals -= Math.Clamp(opalCost, 0, c.Opals);
+            pets.Pets.Add(new SerializedCharacterData.SerializedPet
+            {
+                DefinitionIntegerId = petDefinitionIntegerId,
+                Items = new SerializedItems { Items = new() },
+                InventoryColumns = 10,
+            });
+        }
+        pets.CurrentPetDefinitionIntegerId = petDefinitionIntegerId;
+        c.HasRealtimeProgress = true;
+        c.LastRealtimeUpdate = Now;
+        c.Data = Pack(data);
+        return c.Opals;
+    });
+
+    public void UpdateCombatPet(Guid owner, Guid characterId, int combatPetDefinitionIntegerId) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        var pets = EnsureCombatPets(data);
+        if (pets.CombatPets.Any(p => p != null && p.DefinitionIntegerId == combatPetDefinitionIntegerId))
+            pets.CurrentCombatPetDefinitionIntegerId = combatPetDefinitionIntegerId;
+        c.Data = Pack(data);
+        return true;
+    });
+
+    public (int NewCurrency, bool PayWithOpals) UnlockCombatPet(Guid owner, Guid characterId, bool payWithOpals, int combatPetDefinitionIntegerId, int cost) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        var pets = EnsureCombatPets(data);
+        if (!pets.CombatPets.Any(p => p != null && p.DefinitionIntegerId == combatPetDefinitionIntegerId))
+        {
+            var spend = Math.Max(0, cost);
+            if (payWithOpals) c.Opals -= Math.Clamp(spend, 0, c.Opals);
+            else c.Silver -= Math.Clamp(spend, 0, c.Silver);
+            pets.CombatPets.Add(new SerializedCharacterData.SerializedCombatPet
+            {
+                DefinitionIntegerId = combatPetDefinitionIntegerId,
+                Level = 1,
+                Experience = 0,
+                IsAlive = true,
+                AdsLeftToWatch = 3,
+            });
+        }
+        pets.CurrentCombatPetDefinitionIntegerId = combatPetDefinitionIntegerId;
+        c.HasRealtimeProgress = true;
+        c.LastRealtimeUpdate = Now;
+        c.Data = Pack(data);
+        return (payWithOpals ? c.Opals : c.Silver, payWithOpals);
+    });
+
+    public (bool IsAlive, DateTime? LastDeath, int AdsLeft) CheckCombatPet(Guid owner, Guid characterId, int petDefinitionId)
+    {
+        lock (gate)
+        {
+            var c = Owned(state, owner, characterId);
+            var pets = Unpack<SerializedCharacterData.SerializedData>(c.Data).CombatPets?.CombatPets;
+            var pet = pets?.FirstOrDefault(x => x != null && x.DefinitionIntegerId == petDefinitionId);
+            return pet == null ? (false, null, 0) : (pet.IsAlive, pet.LastDeathTime, pet.AdsLeftToWatch);
+        }
+    }
+
+    public void MutateCombatPet(Guid owner, Guid characterId, int petDefinitionId, Action<SerializedCharacterData.SerializedCombatPet> mutate) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        var pet = data.CombatPets?.CombatPets?.FirstOrDefault(x => x != null && x.DefinitionIntegerId == petDefinitionId);
+        if (pet != null) mutate(pet);
+        c.Data = Pack(data);
+        return true;
+    });
+
+    /// <summary>Adds items to a character's inventory (used by season rewards). Returns the
+    /// exact instances persisted so the caller can echo them to the client.</summary>
+    public List<SerializedItem> GrantItems(Guid owner, Guid characterId, IList<SerializedItem> items) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        data.Items ??= new SerializedItems { Items = new() };
+        data.Items.Items ??= new();
+        foreach (var item in items ?? Array.Empty<SerializedItem>())
+            if (item != null) data.Items.Items.Add(item);
+        c.Data = Pack(data);
+        return (items ?? new List<SerializedItem>()).Where(i => i != null).ToList();
+    });
+
+    /// <summary>Highest level among the account's Season / Season-Hardcore characters, used
+    /// as the season reward track level.</summary>
+    public int SeasonLevel(Guid owner)
+    {
+        lock (gate)
+        {
+            var max = 0.0;
+            foreach (var c in state.Characters.Values)
+            {
+                if (c.Owner != owner) continue;
+                var header = Unpack<CharacterHeaderDto>(c.Header);
+                if (header.GameMode is SharedNet.Constants.Game.GameMode.Season or SharedNet.Constants.Game.GameMode.SeasonHardcore)
+                    max = Math.Max(max, header.Level);
+            }
+            return (int)max;
+        }
+    }
+
+    /// <summary>Records a season reward level as claimed. Returns false if it was already
+    /// claimed (so the caller does not double-grant).</summary>
+    public bool ClaimSeasonReward(Guid userId, int level, bool seasonPass) => Change(s =>
+    {
+        var data = NormalizeAccountData(s.UserAccountData.TryGetValue(userId, out var bytes) && bytes is { Length: > 0 }
+            ? Unpack<SerializedUserAccountData>(bytes) : null);
+        var list = seasonPass
+            ? data.SeasonData.ClaimedSeasonPassRewardsByLevel ??= new()
+            : data.SeasonData.ClaimedSeasonRewardsByLevel ??= new();
+        if (list.Contains(level)) return false;
+        list.Add(level);
+        s.UserAccountData[userId] = Pack(data);
+        return true;
+    });
+
+    /// <summary>Season UI metadata: the stored claim state plus the current season level
+    /// (highest Season/Season-Hardcore character).</summary>
+    public SerializedPlayerAccountData.SerializedSeasonData GetSeasonData(Guid owner)
+    {
+        var season = GetAccountData(owner).SeasonData;
+        season.ClaimedSeasonRewardsByLevel ??= new();
+        season.ClaimedSeasonPassRewardsByLevel ??= new();
+        season.SeasonLevel = Math.Max(season.SeasonLevel, SeasonLevel(owner));
+        return season;
+    }
 
     /// <summary>Linked external identities shown on the account screen. An empty list makes
     /// the client show the account as "unregistered", so `LoginWithSteam*` also links Steam.</summary>

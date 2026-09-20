@@ -36,18 +36,8 @@ public sealed partial class CharacterServiceApiImpl : ServiceBase<ICharacterServ
     public MagicOnion.UnaryResult<SharedNet.Api.ExpandCharacterStashPageResponse> ExpandCharacterStashPage(SharedNet.Api.ExpandCharacterStashPageRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ExpandCharacterStashPageResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ExpandCharacterInventoryRowResponse> ExpandCharacterInventoryRow(SharedNet.Api.ExpandCharacterInventoryRowRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ExpandCharacterInventoryRowResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ExpandCharacterSkillSlotsResponse> ExpandCharacterSkillSlots(SharedNet.Api.ExpandCharacterSkillSlotsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ExpandCharacterSkillSlotsResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.UpdateCharacterSettingsResponse> UpdateCharacterSettings(SharedNet.Api.UpdateCharacterSettingsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UpdateCharacterSettingsResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.UpdateCharacterOnlineStatusResponse> UpdateCharacterOnlineStatus(SharedNet.Api.UpdateCharacterOnlineStatusRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UpdateCharacterOnlineStatusResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.UpdateAvatarResponse> UpdateAvatar(SharedNet.Api.UpdateAvatarRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UpdateAvatarResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.UpdatePetResponse> UpdatePet(SharedNet.Api.UpdatePetRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UpdatePetResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.UnlockPetResponse> UnlockPet(SharedNet.Api.UnlockPetRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UnlockPetResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.UpdateCombatPetResponse> UpdateCombatPet(SharedNet.Api.UpdateCombatPetRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UpdateCombatPetResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.UnlockCombatPetResponse> UnlockCombatPet(SharedNet.Api.UnlockCombatPetRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UnlockCombatPetResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.CheckCombatPetStateResponse> CheckCombatPetState(SharedNet.Api.CheckCombatPetStateRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CheckCombatPetStateResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.OnCombatPetAdWatchResponse> OnCombatPetAdWatch(SharedNet.Api.OnCombatPetAdWatchRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.OnCombatPetAdWatchResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.ResurrectCombatPetResponse> ResurrectCombatPet(SharedNet.Api.ResurrectCombatPetRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ResurrectCombatPetResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.OnPetDiedResponse> OnPetDied(SharedNet.Api.OnPetDiedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.OnPetDiedResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.OnPetExpPotionConsumedResponse> OnPetExpPotionConsumed(SharedNet.Api.OnPetExpPotionConsumedRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.OnPetExpPotionConsumedResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ChangeRaceResponse> ChangeRace(SharedNet.Api.ChangeRaceRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ChangeRaceResponse>());
 }
 
@@ -177,7 +167,7 @@ public sealed partial class UserLinkedAccountServiceApiImpl : ServiceBase<IUserL
 {
 }
 
-public sealed class UserServiceApiImpl : ServiceBase<IUserServiceApi>, IUserServiceApi
+public sealed partial class UserServiceApiImpl : ServiceBase<IUserServiceApi>, IUserServiceApi
 {
     public MagicOnion.UnaryResult<SharedNet.Api.UnlockCharacterSlotResponse> UnlockCharacterSlot(SharedNet.Api.UnlockCharacterSlotRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UnlockCharacterSlotResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.UpdateCheatInfoResponse> UpdateCheatInfo(SharedNet.Api.UpdateCheatInfoRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UpdateCheatInfoResponse>());
@@ -186,7 +176,6 @@ public sealed class UserServiceApiImpl : ServiceBase<IUserServiceApi>, IUserServ
     public MagicOnion.UnaryResult<SharedNet.Api.UnlockAvatarFrameResponse> UnlockAvatarFrame(SharedNet.Api.UnlockAvatarFrameRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UnlockAvatarFrameResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ChangeDisplayNameResponse> ChangeDisplayName(SharedNet.Api.ChangeDisplayNameRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ChangeDisplayNameResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.SendDeviceInfoResponse> SendDeviceInfo(SharedNet.Api.SendDeviceInfoRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.SendDeviceInfoResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.GetSeasonMetadataResponse> GetSeasonMetadata(SharedNet.Api.GetSeasonMetadataRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GetSeasonMetadataResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ExportItemFilterResponse> ExportItemFilter(SharedNet.Api.ExportItemFilterRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ExportItemFilterResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.FindItemFilterResponse> FindItemFilter(SharedNet.Api.FindItemFilterRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.FindItemFilterResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.DownloadItemFilterResponse> DownloadItemFilter(SharedNet.Api.DownloadItemFilterRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.DownloadItemFilterResponse>());

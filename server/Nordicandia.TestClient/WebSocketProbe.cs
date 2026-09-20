@@ -201,9 +201,37 @@ public static class WebSocketProbe
         }
         Console.WriteLine($"ANNOUNCE type={announcement.ChannelMessage.SenderRole} content={announcement.ChannelMessage.Content}");
 
-        // 5. Loot filter persistence: push a named filter, then re-enter and read it back.
+        // 5. Loot filter persistence: push a filter with advanced per-item-type visibility,
+        // then re-enter and read every field back.
         var filterId = Guid.NewGuid();
-        var filter = new SerializedLootFilter { Id = filterId, Name = "ProbeFilter", IsShared = false };
+        var filter = new SerializedLootFilter
+        {
+            Id = filterId,
+            Name = "ProbeFilter",
+            IsShared = false,
+            MainFilter = new SerializedLootFilterEntry
+            {
+                Blacklist = false,
+                FilterEnabled = true,
+                LootFilterItemTypeIntegerId = 3,
+                RarityFilterEnabled = true,
+                MinRarityInclusive = SharedNet.Constants.Game.Rarity.A,
+                AffixesFilterEnabled = true,
+                MinNumAffixesInclusive = 2,
+                IncludedAffixIntegerIds = new List<int> { 11, 22 },
+                ExcludedAffixIntegerIds = new List<int> { 33 },
+                DurabilityFilterEnabled = true,
+                MinDurability = 50,
+            },
+            FilterOverrides = new List<SerializedLootFilterEntry>
+            {
+                new()
+                {
+                    Blacklist = true, FilterEnabled = true, LootFilterItemTypeIntegerId = 7,
+                    RarityFilterEnabled = true, MinRarityInclusive = SharedNet.Constants.Game.Rarity.SS,
+                },
+            },
+        };
         await characters.UpdateItemFilter(new UpdateItemFilterRequest
         {
             CharacterId = character.CharacterId,
@@ -217,12 +245,16 @@ public static class WebSocketProbe
         var reentered = await characters.EnterGameWithCharacter(new EnterGameWithCharacterRequest { CharacterId = character.CharacterId });
         var storedFilter = reentered.Character?.LootFilters?.Filters?.Filters?.FirstOrDefault();
         var account0 = await login.GetUserAccountData(new GetUserAccountDataRequest());
-        if (storedFilter?.Name != "ProbeFilter" || account0.AccountData?.LootFilters?.Filters?.FirstOrDefault()?.Name != "ProbeFilter")
+        var accountFilter = account0.AccountData?.LootFilters?.Filters?.FirstOrDefault();
+        var main = storedFilter?.MainFilter;
+        if (storedFilter?.Name != "ProbeFilter" || accountFilter?.Name != "ProbeFilter"
+            || main?.LootFilterItemTypeIntegerId != 3 || main.MinRarityInclusive != SharedNet.Constants.Game.Rarity.A
+            || main.MinDurability != 50 || storedFilter.FilterOverrides?.Count != 1)
         {
-            Console.WriteLine($"FAIL  loot filter not persisted (char='{storedFilter?.Name}' account='{account0.AccountData?.LootFilters?.Filters?.FirstOrDefault()?.Name}')");
+            Console.WriteLine($"FAIL  loot filter not persisted (char='{storedFilter?.Name}' type={main?.LootFilterItemTypeIntegerId} rarity={main?.MinRarityInclusive} dur={main?.MinDurability} overrides={storedFilter?.FilterOverrides?.Count})");
             return 8;
         }
-        Console.WriteLine($"FILTER persisted char+account id={storedFilter.Id} name={storedFilter.Name}");
+        Console.WriteLine($"FILTER persisted char+account type={main.LootFilterItemTypeIntegerId} rarity={main.MinRarityInclusive} dur={main.MinDurability} overrides={storedFilter.FilterOverrides.Count}");
 
         // 6. Aesir offering: grant opals, make an offering, expect the opal sink + typeCode=5 push.
         var currency = MagicOnionClient.Create<IVirtualCurrencyServiceApi>(channel, serializerProvider);
@@ -258,6 +290,59 @@ public static class WebSocketProbe
             return 10;
         }
         Console.WriteLine($"SPEND  opals persisted after sync={afterSync.NewOpals} (offered {offering.NewOpals} + 1)");
+
+        // 8. Pets: unlock with opals, select, die, and persist across a re-enter.
+        var opalsBefore = afterSync.NewOpals;
+        var petUnlock = await characters.UnlockPet(new UnlockPetRequest { CharacterId = character.CharacterId, PetDefinitionIntegerId = 101, OpalCost = 20 });
+        var combatUnlock = await characters.UnlockCombatPet(new UnlockCombatPetRequest { CharacterId = character.CharacterId, PayWithOpals = true, CombatPetDefinitionIntegerId = 201, Cost = 30 });
+        await characters.UpdateCombatPet(new UpdateCombatPetRequest { CharacterId = character.CharacterId, CombatPetDefinitionIntegerId = 201 });
+        await characters.OnPetDied(new OnPetDiedRequest { CharacterId = character.CharacterId, PetDefinitionId = 201 });
+        var petState = await characters.CheckCombatPetState(new CheckCombatPetStateRequest { CharacterId = character.CharacterId, PetDefinitionId = 201 });
+        var enteredPet = await characters.EnterGameWithCharacter(new EnterGameWithCharacterRequest { CharacterId = character.CharacterId });
+        if (petUnlock.NewOpals != opalsBefore - 20 || combatUnlock.NewCurrencyValue != opalsBefore - 50
+            || petState.IsAlive || (enteredPet.Character?.Pets?.Pets?.Count ?? 0) == 0 || (enteredPet.Character?.CombatPets?.CombatPets?.Count ?? 0) == 0)
+        {
+            Console.WriteLine($"FAIL  pets opals {opalsBefore}->{petUnlock.NewOpals}->{combatUnlock.NewCurrencyValue} alive={petState.IsAlive} pets={enteredPet.Character?.Pets?.Pets?.Count} combat={enteredPet.Character?.CombatPets?.CombatPets?.Count}");
+            return 11;
+        }
+        Console.WriteLine($"PET    opals {opalsBefore}->{combatUnlock.NewCurrencyValue} persisted pets={enteredPet.Character.Pets.Pets.Count} combat={enteredPet.Character.CombatPets.CombatPets.Count} alive={petState.IsAlive}");
+
+        // 9. Season reward track: catalogs + metadata + claim.
+        var gameModes = MagicOnionClient.Create<IGameModeServiceApi>(channel, serializerProvider);
+        var catalogs = MagicOnionClient.Create<ICatalogServiceApi>(channel, serializerProvider);
+        var regular = await catalogs.GetCatalog(new GetCatalogRequest { Category = SharedNet.Constants.CatalogCategory.SeasonProgress, Name = "season_rewards_regular" });
+        var passCatalog = await catalogs.GetCatalog(new GetCatalogRequest { Category = SharedNet.Constants.CatalogCategory.SeasonProgress, Name = "season_rewards_season_pass" });
+        var userApi = MagicOnionClient.Create<IUserServiceApi>(channel, serializerProvider);
+        var seasonChar = (await characters.GetCharacterList(new GetCharacterListRequest())).Characters?.FirstOrDefault(c => c.GameMode is SharedNet.Constants.Game.GameMode.Season);
+        if (seasonChar == null)
+        {
+            seasonChar = (await characters.CreateCharacter(new CreateCharacterRequest
+            {
+                DisplayName = "Season" + Random.Shared.Next(1000, 9999),
+                CharacterClass = SharedNet.Constants.Game.CharacterClass.Mage,
+                CharacterRace = SharedNet.Constants.Game.CharacterRace.HighElf,
+                CharacterGameMode = SharedNet.Constants.Game.GameMode.Season,
+                Data = new Game.SerializedCharacterData
+                {
+                    Header = new Game.SerializedCharacterData.SerializedHeader { Name = "Season", Level = 1 },
+                    Data = new Game.SerializedCharacterData.SerializedData
+                    {
+                        Attributes = new SerializedAttributes { Values = new(), MultiplicativeValues = new() },
+                        Items = new SerializedItems { Items = new() },
+                        CombatStats = new Game.SerializedCharacterData.SerializedCombatStats { HelheimAttempts = new() },
+                    },
+                },
+            })).Character;
+        }
+        var seasonMeta = await userApi.GetSeasonMetadata(new GetSeasonMetadataRequest());
+        var claim = await gameModes.ClaimSeasonReward(new ClaimSeasonRewardRequest { SeasonLevelReward = 1, IsSeasonPassReward = false, CharacterId = seasonChar.CharacterId });
+        if ((regular.Catalog?.Items?.Count ?? 0) == 0 || (passCatalog.Catalog?.Items?.Count ?? 0) == 0
+            || (seasonMeta.SeasonMetadata?.SeasonLevel ?? 0) < 1 || (claim.ReceivedRewards?.Items?.Count ?? 0) == 0)
+        {
+            Console.WriteLine($"FAIL  season regular={regular.Catalog?.Items?.Count} pass={passCatalog.Catalog?.Items?.Count} level={seasonMeta.SeasonMetadata?.SeasonLevel} claim={claim.ReceivedRewards?.Items?.Count}");
+            return 12;
+        }
+        Console.WriteLine($"SEASON catalogs={regular.Catalog.Items.Count}/{passCatalog.Catalog.Items.Count} level={seasonMeta.SeasonMetadata.SeasonLevel} claim={claim.ReceivedRewards.Items[0].Name}");
 
         await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "done", CancellationToken.None);
         Console.WriteLine("WS OK");

@@ -258,12 +258,13 @@ foreach (var s in services)
     {
         var ret = Render(m.ReturnType);
         var ps = string.Join(", ", m.Parameters.Select(p => $"{Render(p.ParameterType)} {p.Name}"));
-        if (s.Name == "ICharacterServiceApi" && m.Name is "CreateCharacter" or "GetCharacterList" or "EnterGameWithCharacter" or "DeleteCharacter" or "AllocateCharacterAttributes" or "UpdateItemFilter") continue;
+        if (s.Name == "ICharacterServiceApi" && m.Name is "CreateCharacter" or "GetCharacterList" or "EnterGameWithCharacter" or "DeleteCharacter" or "AllocateCharacterAttributes" or "UpdateItemFilter" or "UpdateCharacterSettings" or "UpdatePet" or "UnlockPet" or "UpdateCombatPet" or "UnlockCombatPet" or "CheckCombatPetState" or "OnCombatPetAdWatch" or "ResurrectCombatPet" or "OnPetDied" or "OnPetExpPotionConsumed") continue;
         if (s.Name == "ICharacterGameEventServiceApi" && m.Name is not "OnGolemGameModeEnded") continue;
         if (s.Name == "ISocialServiceApi" && m.Name is "InspectCharacter") continue;
         if (s.Name == "ICharacterPowerServiceApi") continue;
         if (s.Name == "IGameModeServiceApi") continue;
         if (s.Name == "IOfferingServiceApi" && m.Name is "GetCurrentBlessings" or "MakeOffering") continue;
+        if (s.Name == "IUserServiceApi" && m.Name is "GetSeasonMetadata") continue;
         if (s.Name == "IUseItemServiceApi" && m.Name is "UseItemWithBuff") continue;
         if (s.Name == "IUserLinkedAccountServiceApi") continue;
         if (s.Name == "IInventoryServiceApi" && m.Name is "ItemOperation") continue;

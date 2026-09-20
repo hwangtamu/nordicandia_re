@@ -67,10 +67,69 @@ public sealed class CatalogServiceApiImpl : ServiceBase<ICatalogServiceApi>, ICa
         ["merchant_petPotionsOpals2"] = new(Guid.Parse("1df49839-6f6c-46db-b3b5-74fbaf90595c"), Opals, PetPotions),
     };
 
+    // ---- Season reward tracks -------------------------------------------------
+    // The client requests these two catalogs with CatalogCategory.SeasonProgress and
+    // parses each item's Name as "{level}_{slot}", then renders the item behind
+    // DefinitionId. 30 levels each; the pass track uses the pet potions.
+    public const int SeasonRewardLevels = 30;
+    private static readonly Guid SeasonRewardCatalogId = Guid.Parse("5e4a3b21-0f6d-4c1a-9b7e-0d2c4f6a8b10");
+    private static readonly Guid SeasonPassRewardCatalogId = Guid.Parse("7c9d5e32-1a8b-4d2f-8e60-3b5d7a9c1e20");
+
+    private static Guid SeasonRewardItemId(bool pass, int level, int slot)
+    {
+        var bytes = new byte[16];
+        BitConverter.TryWriteBytes(bytes.AsSpan(0, 4), (pass ? 0x9E3779B9u : 0x51ED2701u) ^ (uint)(level * 131 + slot));
+        bytes[0] ^= 0xA5;
+        bytes[15] ^= 0x5A;
+        return new Guid(bytes);
+    }
+
+    private static Product SeasonProduct(int level, bool pass)
+    {
+        var pool = pass ? PetPotions : Potions;
+        return pool[((level - 1) % pool.Length + pool.Length) % pool.Length];
+    }
+
+    public static SerializedItem CreateSeasonRewardItem(int level, bool pass) => CreateItem(SeasonProduct(level, pass));
+
+    private static CatalogItemDto SeasonRewardDto(int level, bool pass, int slot)
+    {
+        var product = SeasonProduct(level, pass);
+        return new CatalogItemDto
+        {
+            CatalogId = pass ? SeasonPassRewardCatalogId : SeasonRewardCatalogId,
+            CatalogItemId = SeasonRewardItemId(pass, level, slot),
+            Name = $"{level}_{slot}",
+            StackSize = 1,
+            DefinitionId = product.DefinitionId,
+            Prices = new Dictionary<string, object>(),
+            Metadata = new Dictionary<string, object>
+            {
+                ["SeasonLevel"] = level,
+                ["SeasonPass"] = pass,
+                ["DefinitionIntegerId"] = product.DefinitionIntegerId,
+            },
+        };
+    }
+
     private Guid Owner => GameStore.Instance.RequireUser(Context.CallContext.RequestHeaders.GetValue("authorization"));
 
     public UnaryResult<GetCatalogResponse> GetCatalog(GetCatalogRequest req)
     {
+        if (req != null && req.Category == CatalogCategory.SeasonProgress)
+        {
+            var pass = req.Name == "season_rewards_season_pass";
+            if (pass || req.Name == "season_rewards_regular")
+                return UnaryResult.FromResult(new GetCatalogResponse
+                {
+                    Catalog = new CatalogDto
+                    {
+                        Id = pass ? SeasonPassRewardCatalogId : SeasonRewardCatalogId,
+                        Items = Enumerable.Range(1, SeasonRewardLevels).Select(l => SeasonRewardDto(l, pass, 1)).ToList(),
+                    },
+                });
+        }
+
         if (req == null || req.Category != CatalogCategory.Merchant || !Catalogs.TryGetValue(req.Name ?? "", out var catalog))
             return UnaryResult.FromResult(new GetCatalogResponse { Catalog = new CatalogDto { Items = new() } });
 
