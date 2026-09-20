@@ -989,19 +989,31 @@ public sealed class GameStore : IDisposable
         data.Skills.Skills ??= new List<SerializedCharacterData.SerializedSkill>();
         data.Powers ??= new SerializedCharacterData.SerializedPowers { Powers = new() };
         data.Powers.Powers ??= new List<SerializedCharacterData.SerializedPower>();
-        data.Skills.Skills.RemoveAll(k => k != null && k.Slot == slotType);
+        int SlotIndex(SerializedCharacterData.SerializedSkill k) =>
+            slotType == SharedNet.Constants.Game.PowerSlotTypes.SkillTraining ? k.Row : k.Column;
+
+        // The client sends only the slot(s) it changed, not the whole bar, so merge by slot
+        // index. Wiping the slot type first erased every previously assigned skill (the
+        // "only the last modified skill survives" bug). An empty PowerId clears the slot.
         foreach (var entry in skills ?? Array.Empty<CharacterSkillEntry>())
         {
-            if (entry == null || !PowerCatalog.TryGet(entry.PowerId, out var info)) continue;
-            var skill = new SerializedCharacterData.SerializedSkill
+            if (entry == null) continue;
+            var existing = data.Skills.Skills.FirstOrDefault(k => k != null && k.Slot == slotType && SlotIndex(k) == entry.SkillSlot);
+            if (entry.PowerId == Guid.Empty)
             {
-                PowerHash = info.HashSafe,
-                PowerHashSafe = info.HashSafe,
-                Slot = slotType,
-            };
-            if (slotType == SharedNet.Constants.Game.PowerSlotTypes.SkillTraining) skill.Row = entry.SkillSlot;
-            else skill.Column = entry.SkillSlot;
-            data.Skills.Skills.Add(skill);
+                if (existing != null) data.Skills.Skills.Remove(existing);
+                continue;
+            }
+            if (!PowerCatalog.TryGet(entry.PowerId, out var info)) continue;
+            if (existing == null)
+            {
+                existing = new SerializedCharacterData.SerializedSkill { Slot = slotType };
+                data.Skills.Skills.Add(existing);
+            }
+            existing.PowerHash = info.HashSafe;
+            existing.PowerHashSafe = info.HashSafe;
+            if (slotType == SharedNet.Constants.Game.PowerSlotTypes.SkillTraining) existing.Row = entry.SkillSlot;
+            else existing.Column = entry.SkillSlot;
             if (!data.Powers.Powers.Any(p => p != null && p.PowerHashSafe == info.HashSafe))
                 data.Powers.Powers.Add(new SerializedCharacterData.SerializedPower
                 {

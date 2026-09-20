@@ -1,4 +1,5 @@
 using System.Net.WebSockets;
+using System.Text.Json;
 using Game;
 using Grpc.Net.Client;
 using MagicOnion.Client;
@@ -291,7 +292,32 @@ public static class WebSocketProbe
         }
         Console.WriteLine($"SPEND  opals persisted after sync={afterSync.NewOpals} (offered {offering.NewOpals} + 1)");
 
-        // 8. Pets: unlock with opals, select, die, and persist across a re-enter.
+        // 8. Skills must merge by slot: assigning one slot must not erase the others.
+        var powerIds = LoadPowerIds(3);
+        var powerApi = MagicOnionClient.Create<ICharacterPowerServiceApi>(channel, serializerProvider);
+        for (var i = 0; i < powerIds.Count; i++)
+            await powerApi.AssignActiveSkill(new AssignCharacterActiveSkillRequest
+            {
+                CharacterId = character.CharacterId,
+                Skills = new List<CharacterSkillEntry> { new() { PowerId = powerIds[i], SkillSlot = i } },
+            });
+        var afterSkills = await characters.EnterGameWithCharacter(new EnterGameWithCharacterRequest { CharacterId = character.CharacterId });
+        var active = afterSkills.Character?.Skills?.Skills?.Where(s => s != null && s.Slot == SharedNet.Constants.Game.PowerSlotTypes.ActiveSkill).ToList() ?? new();
+        await powerApi.AssignActiveSkill(new AssignCharacterActiveSkillRequest
+        {
+            CharacterId = character.CharacterId,
+            Skills = new List<CharacterSkillEntry> { new() { PowerId = Guid.Empty, SkillSlot = 1 } },
+        });
+        var afterClear = await characters.EnterGameWithCharacter(new EnterGameWithCharacterRequest { CharacterId = character.CharacterId });
+        var activeAfterClear = afterClear.Character?.Skills?.Skills?.Count(s => s != null && s.Slot == SharedNet.Constants.Game.PowerSlotTypes.ActiveSkill) ?? 0;
+        if (powerIds.Count < 3 || active.Count != powerIds.Count || activeAfterClear != powerIds.Count - 1)
+        {
+            Console.WriteLine($"FAIL  skills powers={powerIds.Count} persisted={active.Count} afterClear={activeAfterClear}");
+            return 13;
+        }
+        Console.WriteLine($"SKILLS merged persisted={active.Count} afterClear={activeAfterClear}");
+
+        // 9. Pets: unlock with opals, select, die, and persist across a re-enter.
         var opalsBefore = afterSync.NewOpals;
         var petUnlock = await characters.UnlockPet(new UnlockPetRequest { CharacterId = character.CharacterId, PetDefinitionIntegerId = 101, OpalCost = 20 });
         var combatUnlock = await characters.UnlockCombatPet(new UnlockCombatPetRequest { CharacterId = character.CharacterId, PayWithOpals = true, CombatPetDefinitionIntegerId = 201, Cost = 30 });
@@ -362,6 +388,28 @@ public static class WebSocketProbe
             if (reply.RequestId == envelope.RequestId) return reply;
             if (reply.RequestId == 0) { pushes?.Add(reply); continue; }
         }
+    }
+
+    private static List<Guid> LoadPowerIds(int count)
+    {
+        foreach (var dir in new[]
+        {
+            Environment.GetEnvironmentVariable("NORD_GAMEDATA_DIR"),
+            "gamedata_decrypted",
+            Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "gamedata_decrypted"),
+        })
+        {
+            if (string.IsNullOrEmpty(dir)) continue;
+            var path = Path.Combine(dir, "Powers.json");
+            if (!File.Exists(path)) continue;
+            using var doc = JsonDocument.Parse(File.ReadAllBytes(path));
+            return doc.RootElement.EnumerateArray()
+                .Select(e => e.TryGetProperty("Id", out var id) && Guid.TryParse(id.GetString(), out var g) ? g : Guid.Empty)
+                .Where(g => g != Guid.Empty)
+                .Take(count)
+                .ToList();
+        }
+        return new List<Guid>();
     }
 
     private static async Task<ChannelMessageMessage> WaitForPushAsync(ClientWebSocket socket,
