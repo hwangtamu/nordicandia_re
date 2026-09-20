@@ -54,3 +54,4 @@ server/certs/
 /deploy/lightsail/data/
 /deploy/lightsail/certs/
 /deploy/lightsail/backups/
+/deploy/lightsail/bundle/
