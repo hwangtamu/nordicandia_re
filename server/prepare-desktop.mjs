@@ -1,13 +1,20 @@
-import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, renameSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
 
 const source = resolve(process.argv[2] ?? 'C:/Program Files (x86)/Steam/steamapps/common/Nordicandia');
 const destination = resolve(process.argv[3] ?? 'dist/desktop');
+const backendHost = process.argv[4] ?? '127.0.0.1';
+if (!/^[a-zA-Z0-9.-]+$/.test(backendHost) || backendHost.length > 253) throw Error('Backend host must be a valid DNS name or IPv4 address');
 if (source === destination || destination.startsWith(source + '/')) throw Error('Use a separate output directory');
 if (!existsSync(join(source, 'Nordicandia.exe'))) throw Error('Nordicandia.exe is missing from source');
-mkdirSync(destination, { recursive: true });
-cpSync(source, destination, { recursive: true });
+// Copy into a clean staging directory and swap it in at the end. A merge-copy straight
+// into an existing destination fails on Windows (EPIPE/ERROR_BROKEN_PIPE) once the tree
+// already contains files such as dev artifacts, so never merge here.
+const staging = `${destination}.staging-${process.pid}`;
+if (existsSync(staging)) rmSync(staging, { recursive: true, force: true });
+mkdirSync(staging, { recursive: true });
+cpSync(source, staging, { recursive: true });
 
 // --- Disable BestHTTP's bundled-root TLS validation -------------------------
 // The game's gRPC/HTTP stack (BestHTTP TLSSecurity + SecureTlsClient) validates the
@@ -40,32 +47,57 @@ function applyTlsBypass(dllPath) {
   }
   throw Error('TLS patch site not found in GameAssembly.dll');
 }
-const tlsPatchOffset = applyTlsBypass(join(destination, 'GameAssembly.dll'));
+const tlsPatchOffset = applyTlsBypass(join(staging, 'GameAssembly.dll'));
 
 const relative = 'Nordicandia_Data/il2cpp_data/Metadata/global-metadata.dat';
-const metadata = readFileSync(join(source, relative));
+let metadata = readFileSync(join(source, relative));
 const before = createHash('sha256').update(metadata).digest('hex');
 if (metadata.readUInt32LE(0) !== 0xfab11baf) throw Error('Unknown IL2CPP metadata format');
 const table = metadata.readUInt32LE(8), size = metadata.readUInt32LE(12);
 const strings = metadata.readUInt32LE(16);
 const targets = new Set(['prod.nordicandia.net', 'staging.nordicandia.net']);
 const patched = [];
+const replacement = Buffer.from(backendHost);
+let relocatedOffset = null;
 for (let offset = table; offset < table + size; offset += 8) {
   const length = metadata.readUInt32LE(offset), start = strings + metadata.readUInt32LE(offset + 4);
   const value = metadata.toString('utf8', start, start + length);
   if (!targets.has(value)) continue;
-  const replacement = Buffer.from('127.0.0.1');
-  metadata.fill(0, start, start + length);
-  replacement.copy(metadata, start);
-  metadata.writeUInt32LE(replacement.length, offset);
+  if (replacement.length <= length) {
+    metadata.fill(0, start, start + length);
+    replacement.copy(metadata, start);
+    metadata.writeUInt32LE(replacement.length, offset);
+  } else {
+    // String literal records store an offset relative to the literal-data table. A
+    // Cloud Run hostname does not fit in the shipped 21-byte slot, so point both
+    // records at one copy appended to the metadata file instead of overwriting the
+    // next literal. The data-size field is widened to include the appended bytes.
+    if (relocatedOffset === null) {
+      relocatedOffset = metadata.length;
+      const expanded = Buffer.concat([metadata, replacement]);
+      expanded.writeUInt32LE(expanded.length - strings, 20);
+      metadata = expanded;
+    }
+    metadata.writeUInt32LE(replacement.length, offset);
+    metadata.writeUInt32LE(relocatedOffset - strings, offset + 4);
+  }
   patched.push(value);
 }
 if (patched.length !== 2 || new Set(patched).size !== 2) throw Error('Expected exactly two server host literals');
-writeFileSync(join(destination, relative), metadata);
-writeFileSync(join(destination, 'private-build.json'), JSON.stringify({
+writeFileSync(join(staging, relative), metadata);
+writeFileSync(join(staging, 'private-build.json'), JSON.stringify({
   source, sourceMetadataSha256: before, metadataVersion: metadata.readUInt32LE(4),
-  patchedHosts: patched, backend: 'https://127.0.0.1:443',
+  patchedHosts: patched, backend: `https://${backendHost}:443`,
   tlsValidationBypass: { function: 'SecureTlsClient::NotifyServerCertificate', va: `0x${TLS_PATCH_VA.toString(16)}`, fileOffset: `0x${tlsPatchOffset.toString(16)}` },
   status: 'Development build; backend compatibility requires verification'
 }, null, 2));
+// Launch outside Steam's UI and allow running alongside the original install.
+writeFileSync(join(staging, 'steam_appid.txt'), '1503790\n');
+const bootConfigPath = join(staging, 'Nordicandia_Data', 'boot.config');
+if (existsSync(bootConfigPath)) {
+  const bootLines = readFileSync(bootConfigPath, 'utf8').split(/\r?\n/).filter((line) => !line.startsWith('single-instance'));
+  writeFileSync(bootConfigPath, bootLines.join('\n'));
+}
+if (existsSync(destination)) rmSync(destination, { recursive: true, force: true });
+renameSync(staging, destination);
 console.log(`Prepared desktop copy: ${destination}`);
