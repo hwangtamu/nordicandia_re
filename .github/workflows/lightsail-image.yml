@@ -41,13 +41,28 @@ jobs:
           sudo update-ca-certificates
           sudo chown -R 1654:1654 "$NORD_HOME/data" "$NORD_HOME/certs"
           docker compose -f deploy/lightsail/compose.yaml config --quiet
-          trap 'docker compose -f deploy/lightsail/compose.yaml logs; docker compose -f deploy/lightsail/compose.yaml down' EXIT
+
+          # Docker opens the published host port before Kestrel is listening, and
+          # curl's --retry-connrefused does not retry TLS-layer failures, so poll.
+          wait_healthz() {
+            for attempt in $(seq 1 60); do
+              if curl -fsS --max-time 3 --cacert "$NORD_HOME/certs/server.crt" \
+                  https://localhost:8443/healthz >/dev/null; then
+                return 0
+              fi
+              sleep 1
+            done
+            echo 'healthz never became ready' >&2
+            return 1
+          }
+
+          trap 'docker compose -f deploy/lightsail/compose.yaml logs --no-color --tail=200; docker compose -f deploy/lightsail/compose.yaml down' EXIT
           docker compose -f deploy/lightsail/compose.yaml up -d
-          curl --fail --retry 20 --retry-connrefused --retry-delay 1 https://localhost:8443/healthz
+          wait_healthz
           dotnet run --project server/Nordicandia.TestClient -c Release -- merchant https://localhost:8443
           sudo cp "$NORD_HOME/data/world.json" "$NORD_HOME/before-recreate.json"
           docker compose -f deploy/lightsail/compose.yaml up -d --force-recreate
-          curl --fail --retry 20 --retry-connrefused --retry-delay 1 https://localhost:8443/healthz
+          wait_healthz
           sudo cmp "$NORD_HOME/before-recreate.json" "$NORD_HOME/data/world.json"
       - name: Export deployment bundle
         run: |
