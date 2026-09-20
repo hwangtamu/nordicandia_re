@@ -157,14 +157,21 @@ public static class WebSocketProbe
             return 3;
         }
 
-        // 2. Channel join + chat send.
+        // 2. Channel join + chat send. Use the locale-specific global room the real client
+        // joins ("Global_en") so the announcement routing below is exercised like production.
         var pushes = new List<Envelope>();
         var join = await SendAsync(socket, new Envelope
         {
             RequestId = 2,
-            Message = new ChannelJoinMessage { ChannelJoin = new ChannelJoinPayload { Target = "Global", Type = SharedNet.Constants.Realtime.ChannelJoinType.Room } },
+            Message = new ChannelJoinMessage { ChannelJoin = new ChannelJoinPayload { Target = "Global_en", Type = SharedNet.Constants.Realtime.ChannelJoinType.Room } },
         }, pushes);
         Print(join);
+        var joinedChannelId = (join.Message as ChannelJoinResponse)?.Channel?.Id;
+        if (string.IsNullOrEmpty(joinedChannelId))
+        {
+            Console.WriteLine($"FAIL  channel join returned {join.Message?.GetType().Name ?? "<null>"}");
+            return 6;
+        }
 
         // Deliberately long enough that the client's LZ4BlockArray options actually compress
         // the frame (the small fixext1 header the server used to misdetect as uncompressed).
@@ -172,7 +179,7 @@ public static class WebSocketProbe
         var chat = await SendAsync(socket, new Envelope
         {
             RequestId = 3,
-            Message = new ChannelMessageSendMessage { ChannelId = "Global", Content = chatContent },
+            Message = new ChannelMessageSendMessage { ChannelId = joinedChannelId, Content = chatContent },
         }, pushes);
         Print(chat);
         if (chat.Message is not ChannelMessageAckMessage)
@@ -208,7 +215,14 @@ public static class WebSocketProbe
             Console.WriteLine("FAIL  first-to-reach announcement was not pushed");
             return 7;
         }
-        Console.WriteLine($"ANNOUNCE type={announcement.ChannelMessage.SenderRole} content={announcement.ChannelMessage.Content}");
+        // The client files chat by RoomName, so the notice must be addressed to the room the
+        // client joined, not the hardcoded "Global".
+        if (announcement.ChannelMessage.RoomName != "Global_en")
+        {
+            Console.WriteLine($"FAIL  announcement filed under room '{announcement.ChannelMessage.RoomName}', expected 'Global_en'");
+            return 7;
+        }
+        Console.WriteLine($"ANNOUNCE room={announcement.ChannelMessage.RoomName} type={announcement.ChannelMessage.SenderRole} content={announcement.ChannelMessage.Content}");
 
         // 5. Loot filter persistence: push a filter with advanced per-item-type visibility,
         // then re-enter and read every field back.

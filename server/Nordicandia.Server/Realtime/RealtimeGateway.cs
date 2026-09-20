@@ -237,30 +237,36 @@ public static class RealtimeGateway
             ["avatarId"] = "0",
             ["frameId"] = "0",
         };
-        var message = new ChannelMessageMessage
-        {
-            ChannelMessage = new ChannelMessageDto
-            {
-                ChannelId = "Global",
-                MessageId = Guid.NewGuid(),
-                Type = ChannelMessageType.Chat,
-                SenderType = MessageSenderType.GameModeUser,
-                SenderRole = UserRole.System,
-                SenderUserDisplayName = "System",
-                SenderCharacterDisplayName = "System",
-                Content = JsonSerializer.Serialize(payload),
-                CreateTime = now,
-                UpdateTime = now,
-                Persistent = false,
-                RoomName = "Global",
-            },
-        };
+        var content = JsonSerializer.Serialize(payload);
+        var messageId = Guid.NewGuid();
         Console.WriteLine($"[ANNOUNCE] type={typeCode} {text}");
         _ = Task.Run(async () =>
         {
-            var envelope = new Envelope { RequestId = 0, Message = message };
             foreach (var session in Sessions.Values)
             {
+                // The client files chat by RoomName, and its "global" room is locale-specific
+                // (e.g. "Global_en"). Addressing the fixed name "Global" made the client unable
+                // to find the room, so first-to-reach/hardcore/offering notices were dropped.
+                var (roomName, channelId) = session.AnnouncementChannel();
+                var message = new ChannelMessageMessage
+                {
+                    ChannelMessage = new ChannelMessageDto
+                    {
+                        ChannelId = channelId,
+                        MessageId = messageId,
+                        Type = ChannelMessageType.Chat,
+                        SenderType = MessageSenderType.GameModeUser,
+                        SenderRole = UserRole.System,
+                        SenderUserDisplayName = "System",
+                        SenderCharacterDisplayName = "System",
+                        Content = content,
+                        CreateTime = now,
+                        UpdateTime = now,
+                        Persistent = false,
+                        RoomName = roomName,
+                    },
+                };
+                var envelope = new Envelope { RequestId = 0, Message = message };
                 try
                 {
                     await session.SendAsync(envelope, CancellationToken.None);
@@ -291,6 +297,8 @@ public static class RealtimeGateway
         private readonly object channelGate = new();
         private readonly HashSet<string> channels = new(StringComparer.OrdinalIgnoreCase);
         private readonly SemaphoreSlim sendGate = new(1, 1);
+        private string announcementRoom = "Global";
+        private string announcementChannel = "Global";
         private State.GameStore.RealtimeProgress progress;
         private bool compressed;
 
@@ -547,7 +555,24 @@ public static class RealtimeGateway
         private void JoinChannel(string channelId)
         {
             var key = NormalizeChannel(channelId);
-            lock (channelGate) channels.Add(key);
+            var room = RoomOf(channelId);
+            lock (channelGate)
+            {
+                channels.Add(key);
+                // Remember the client's own global room ("Global" or "Global_en") so system
+                // announcements are filed under a room the client actually has open.
+                if (room.Equals("Global", StringComparison.OrdinalIgnoreCase)
+                    || room.StartsWith("Global_", StringComparison.OrdinalIgnoreCase))
+                {
+                    announcementRoom = room;
+                    announcementChannel = channelId;
+                }
+            }
+        }
+
+        internal (string RoomName, string ChannelId) AnnouncementChannel()
+        {
+            lock (channelGate) return (announcementRoom, announcementChannel);
         }
 
         private void LeaveChannel(string channelId)
