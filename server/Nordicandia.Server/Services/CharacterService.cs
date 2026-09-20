@@ -36,4 +36,18 @@ public sealed partial class CharacterServiceApiImpl
         GameStore.Instance.Delete(Owner, req.CharacterId);
         return UnaryResult.FromResult(new DeleteCharacterResponse());
     }
+
+    // The client pushes its per-character filter set and its account-wide shared filters
+    // whenever the player edits the loot filter. Persisting both is what stops the filter
+    // from resetting to default on the next login.
+    public UnaryResult<UpdateItemFilterResponse> UpdateItemFilter(UpdateItemFilterRequest req)
+    {
+        var owner = Owner;
+        if (req?.CharacterFilters != null)
+            GameStore.Instance.SaveCharacterLootFilters(owner, req.CharacterId, req.CharacterFilters);
+        if (req?.UserFilters != null)
+            GameStore.Instance.SaveUserLootFilters(owner, req.UserFilters);
+        Console.WriteLine($"[FILTER] char={req?.CharacterId} charFilters={(req?.CharacterFilters?.Filters?.Filters?.Count ?? 0)} userFilters={(req?.UserFilters?.Filters?.Count ?? 0)}");
+        return UnaryResult.FromResult(new UpdateItemFilterResponse());
+    }
 }

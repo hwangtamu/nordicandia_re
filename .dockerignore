@@ -6,6 +6,8 @@
 !server/Nordicandia.Contracts/**
 !server/Nordicandia.Server/
 !server/Nordicandia.Server/**
+!gamedata_decrypted/
+!gamedata_decrypted/Powers.json
 **/bin
 **/obj
 **/data

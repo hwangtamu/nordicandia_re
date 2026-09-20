@@ -188,10 +188,10 @@ public static class WebSocketProbe
 
         // 4. A brand-new world level must produce a server-pushed first-to-reach announcement.
         var gameEvents = MagicOnionClient.Create<ICharacterGameEventServiceApi>(channel, serializerProvider);
-        var tier = 90 + (Environment.TickCount % 9);
+        var tier = 200 + Random.Shared.Next(0, 900);
         await gameEvents.OnDungeonRunStarted(new CharacterDungeonRunStartedRequest
         {
-            CharacterId = character.CharacterId, WorldTier = tier, WorldWaypoint = 99,
+            CharacterId = character.CharacterId, WorldTier = tier, WorldWaypoint = 900 + Random.Shared.Next(0, 90),
         });
         var announcement = await WaitForPushAsync(socket, m => m.ChannelMessage?.Content?.Contains("is the first to reach") == true, TimeSpan.FromSeconds(5));
         if (announcement == null)
@@ -200,6 +200,64 @@ public static class WebSocketProbe
             return 7;
         }
         Console.WriteLine($"ANNOUNCE type={announcement.ChannelMessage.SenderRole} content={announcement.ChannelMessage.Content}");
+
+        // 5. Loot filter persistence: push a named filter, then re-enter and read it back.
+        var filterId = Guid.NewGuid();
+        var filter = new SerializedLootFilter { Id = filterId, Name = "ProbeFilter", IsShared = false };
+        await characters.UpdateItemFilter(new UpdateItemFilterRequest
+        {
+            CharacterId = character.CharacterId,
+            CharacterFilters = new SerializedCharacterData.SerializedCharacterLootFilters
+            {
+                ActiveFilterId = filterId,
+                Filters = new SerializedLootFilters { Filters = new List<SerializedLootFilter> { filter } },
+            },
+            UserFilters = new SerializedLootFilters { Filters = new List<SerializedLootFilter> { filter } },
+        });
+        var reentered = await characters.EnterGameWithCharacter(new EnterGameWithCharacterRequest { CharacterId = character.CharacterId });
+        var storedFilter = reentered.Character?.LootFilters?.Filters?.Filters?.FirstOrDefault();
+        var account0 = await login.GetUserAccountData(new GetUserAccountDataRequest());
+        if (storedFilter?.Name != "ProbeFilter" || account0.AccountData?.LootFilters?.Filters?.FirstOrDefault()?.Name != "ProbeFilter")
+        {
+            Console.WriteLine($"FAIL  loot filter not persisted (char='{storedFilter?.Name}' account='{account0.AccountData?.LootFilters?.Filters?.FirstOrDefault()?.Name}')");
+            return 8;
+        }
+        Console.WriteLine($"FILTER persisted char+account id={storedFilter.Id} name={storedFilter.Name}");
+
+        // 6. Aesir offering: grant opals, make an offering, expect the opal sink + typeCode=5 push.
+        var currency = MagicOnionClient.Create<IVirtualCurrencyServiceApi>(channel, serializerProvider);
+        await currency.GainVirtualCurrency(new GainVirtualCurrencyRequest { CharacterId = character.CharacterId, Amount = 100 });
+        var offeringApi = MagicOnionClient.Create<IOfferingServiceApi>(channel, serializerProvider);
+        var offering = await offeringApi.MakeOffering(new MakeOfferingRequest
+        {
+            CharacterId = character.CharacterId, IsAnonymous = false,
+            OfferingType = AesirOfferingTypes.Odin, OfferingSize = AesirOfferingSizes.Small, OfferedOpals = 10,
+        });
+        var blessings = await offeringApi.GetCurrentBlessings(new GetCurrentBlessingsRequest { CharacterId = character.CharacterId });
+        var offered = await WaitForPushAsync(socket, m => m.ChannelMessage?.Content?.Contains("has made an offering") == true, TimeSpan.FromSeconds(5));
+        if (offered == null || blessings.BlessingOdin == null)
+        {
+            Console.WriteLine($"FAIL  offering push={offered?.ChannelMessage?.Content} blessing={blessings.BlessingOdin?.DefinitionIntegerId}");
+            return 9;
+        }
+        Console.WriteLine($"OFFERING opals={offering.NewOpals} buffId={blessings.BlessingOdin.DefinitionIntegerId} push={offered.ChannelMessage.Content}");
+
+        // 7. A server-side spend must survive the next periodic sync (no refund).
+        await SendAsync(socket, new Envelope
+        {
+            RequestId = 5,
+            Message = new UpdateCharacterMetadataMessage
+            {
+                Metadata = new CharacterMetadataPayload { LastSeenOpals = offering.NewOpals, LastSeenSilver = 0 },
+            },
+        }, pushes);
+        var afterSync = await currency.GainVirtualCurrency(new GainVirtualCurrencyRequest { CharacterId = character.CharacterId, Amount = 1 });
+        if (afterSync.NewOpals != offering.NewOpals + 1)
+        {
+            Console.WriteLine($"FAIL  opals refunded by sync: offered={offering.NewOpals} afterSync={afterSync.NewOpals}");
+            return 10;
+        }
+        Console.WriteLine($"SPEND  opals persisted after sync={afterSync.NewOpals} (offered {offering.NewOpals} + 1)");
 
         await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "done", CancellationToken.None);
         Console.WriteLine("WS OK");

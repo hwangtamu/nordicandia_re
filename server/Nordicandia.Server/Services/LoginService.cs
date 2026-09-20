@@ -137,7 +137,7 @@ public sealed class LoginService : ServiceBase<ILoginServiceApi>, ILoginServiceA
     {
         var owner = GameStore.Instance.RequireUser(Context.CallContext.RequestHeaders.GetValue("authorization"));
         var response = Defaults.Create<GetUserAccountDataResponse>();
-        response.AccountData.NumCharacterSlots = 3;
+        response.AccountData = GameStore.Instance.GetAccountData(owner);
         response.LinkedAccounts = new UserLinkedAccountListDto { LinkedAccounts = GameStore.Instance.GetLinkedAccounts(owner) };
         return UnaryResult.FromResult(response);
     }

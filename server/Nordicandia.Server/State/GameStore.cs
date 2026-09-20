@@ -31,6 +31,8 @@ public sealed class GameStore : IDisposable
         public Dictionary<string, AccountCredential> Credentials { get; set; } = new();
         // "{gameMode}|{tier}|{waypoint}" -> the first character to reach that world level.
         public Dictionary<string, Guid> WorldFirsts { get; set; } = new();
+        // Account-level blob (SerializedUserAccountData): loot filters, season data, cosmetics.
+        public Dictionary<Guid, byte[]> UserAccountData { get; set; } = new();
     }
 
     /// <summary>Server-only password credential. Deliberately not part of any client DTO,
@@ -59,6 +61,8 @@ public sealed class GameStore : IDisposable
         public DateTime LastRealtimeUpdate { get; set; }
         // Guards the one-time +100% season experience bonus so repeated logins don't stack it.
         public bool SeasonBonusApplied { get; set; }
+        // Aesir blessing expiries keyed by AesirOfferingTypes (1=Odin, 2=Tyr, 3=Frigg, 4=Thor).
+        public Dictionary<int, DateTime> Blessings { get; set; } = new();
     }
 
     /// <summary>Read-only projection used by the leaderboard services.</summary>
@@ -179,6 +183,7 @@ public sealed class GameStore : IDisposable
             state.LinkedAccounts ??= new();
             state.Credentials ??= new();
             state.WorldFirsts ??= new();
+            state.UserAccountData ??= new();
         }
         catch { lease.Dispose(); throw; }
     }
@@ -597,6 +602,114 @@ public sealed class GameStore : IDisposable
 
     public int GetSilver(Guid owner, Guid id) { lock (gate) return Owned(state, owner, id).Silver; }
     public int GetOpals(Guid owner, Guid id) { lock (gate) return Owned(state, owner, id).Opals; }
+    public string CharacterDisplayName(Guid owner, Guid id)
+    {
+        lock (gate) return state.Characters.TryGetValue(id, out var c) && c.Owner == owner
+            ? Unpack<CharacterHeaderDto>(c.Header).DisplayName : null;
+    }
+
+    /// <summary>Account-level data blob (loot filters, season progress, cosmetics). The
+    /// client reads it from <c>GetUserAccountData.AccountData</c>; missing blobs get a
+    /// fully-populated default so the client never walks a null graph.</summary>
+    public SerializedUserAccountData GetAccountData(Guid userId)
+    {
+        lock (gate)
+        {
+            var data = state.UserAccountData.TryGetValue(userId, out var bytes) && bytes is { Length: > 0 }
+                ? Unpack<SerializedUserAccountData>(bytes)
+                : null;
+            return NormalizeAccountData(data);
+        }
+    }
+
+    private static SerializedUserAccountData NormalizeAccountData(SerializedUserAccountData data)
+    {
+        data ??= new SerializedUserAccountData();
+        data.LootFilters ??= new SerializedLootFilters { Filters = new() };
+        data.SeasonData ??= new Game.SerializedPlayerAccountData.SerializedSeasonData
+        {
+            ClaimedSeasonRewardsByLevel = new(), ClaimedSeasonPassRewardsByLevel = new(),
+        };
+        data.SeasonalInfo ??= new Game.SerializedPlayerAccountData.SerializedSeasonalInfo();
+        data.CharactersByGameMode ??= new();
+        data.UnlockedAvatarIntegerIds ??= new();
+        data.UnlockedAvatarFrameIntegerIds ??= new();
+        data.UnclaimedPurchases ??= new();
+        data.PermanentPurchases ??= new();
+        data.RewardedAdsWatched ??= new();
+        data.NumCharacterSlots ??= 3;
+        return data;
+    }
+
+    public void SaveCharacterLootFilters(Guid owner, Guid characterId, SerializedCharacterData.SerializedCharacterLootFilters filters) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        data.LootFilters = filters;
+        c.Data = Pack(data);
+        return true;
+    });
+
+    public void SaveUserLootFilters(Guid userId, SerializedLootFilters filters) => Change(s =>
+    {
+        var data = NormalizeAccountData(s.UserAccountData.TryGetValue(userId, out var bytes) && bytes is { Length: > 0 }
+            ? Unpack<SerializedUserAccountData>(bytes) : null);
+        data.LootFilters = filters;
+        s.UserAccountData[userId] = Pack(data);
+        return true;
+    });
+
+    /// <summary>Consumes the offering's opals and stamps a blessing expiry. The client owns
+    /// the blessing duration/effect; the server only needs to remember whether one is active.</summary>
+    public (int NewOpals, bool Applied) MakeOffering(Guid owner, Guid characterId, int offeringType, int offeringSize, int offeredOpals) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var spent = Math.Clamp(offeredOpals, 0, c.Opals);
+        c.Opals -= spent;
+        c.HasRealtimeProgress = true;
+        c.LastRealtimeUpdate = Now;
+        c.Blessings ??= new();
+        var duration = offeringSize switch
+        {
+            1 => TimeSpan.FromHours(1),
+            2 => TimeSpan.FromHours(6),
+            3 => TimeSpan.FromDays(1),
+            4 => TimeSpan.FromDays(3),
+            _ => TimeSpan.FromHours(1),
+        };
+        if (offeringType > 0) c.Blessings[offeringType] = Now.Add(duration);
+        return (c.Opals, spent > 0);
+    });
+
+    private static readonly Dictionary<int, int> BlessingBuffIds = new()
+    {
+        [1] = 276, // AesirOdinBuff
+        [2] = 278, // AesirTyrBuff
+        [3] = 280, // AesirFriggBuff
+        [4] = 282, // AesirThorBuff
+    };
+
+    /// <summary>Returns the four Aesir blessing buffs that have not expired, pruning the
+    /// expired ones. The buff carries only the definition id; the client applies its effect.</summary>
+    public (SerializedCharacterData.SerializedBuff Odin, SerializedCharacterData.SerializedBuff Tyr,
+        SerializedCharacterData.SerializedBuff Frigg, SerializedCharacterData.SerializedBuff Thor)
+        GetActiveBlessings(Guid owner, Guid characterId) => Change(s =>
+        {
+            var c = Owned(s, owner, characterId);
+            c.Blessings ??= new();
+            var now = Now;
+            foreach (var expired in c.Blessings.Where(kv => kv.Value <= now).Select(kv => kv.Key).ToList())
+                c.Blessings.Remove(expired);
+            SerializedCharacterData.SerializedBuff Buff(int type) => c.Blessings.ContainsKey(type) && BlessingBuffIds.TryGetValue(type, out var id)
+                ? new SerializedCharacterData.SerializedBuff
+                {
+                    DefinitionIntegerId = id,
+                    IsCharacterContext = true,
+                    Attributes = new SerializedAttributes { Values = new(), MultiplicativeValues = new() },
+                }
+                : null;
+            return (Buff(1), Buff(2), Buff(3), Buff(4));
+        });
 
     /// <summary>Linked external identities shown on the account screen. An empty list makes
     /// the client show the account as "unregistered", so `LoginWithSteam*` also links Steam.</summary>

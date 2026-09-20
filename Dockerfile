@@ -16,5 +16,8 @@ ENV DOTNET_EnableDiagnostics=0 \
     ASPNETCORE_ENVIRONMENT=Production \
     PORT=8080
 COPY --from=build /app/publish/ .
+# PowerCatalog resolves the PowerId the client sends in skill-assignment calls to a
+# PowerHashSafe; without this file every skill/passive assignment is silently dropped.
+COPY gamedata_decrypted/Powers.json /app/gamedata_decrypted/Powers.json
 USER $APP_UID
 ENTRYPOINT ["dotnet", "Nordicandia.Server.dll"]

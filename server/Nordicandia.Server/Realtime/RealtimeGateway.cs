@@ -126,9 +126,39 @@ public static class RealtimeGateway
     }
 
     /// <summary>Publishes a server-generated world milestone to every connected client.</summary>
-    public static void Announce(State.GameStore.WorldAnnouncement announcement)
+    public static void Announce(State.GameStore.WorldAnnouncement a) =>
+        PublishSystemMessage(a.Kind == "hardcore" ? "6" : "4", BuildAnnouncementText(a));
+
+    /// <summary>Publishes an Aesir-offering chat announcement (<c>typeCode=5</c>).</summary>
+    public static void AnnounceOffering(string characterName, int offeringType, bool anonymous)
+    {
+        var aesir = offeringType switch { 1 => "Odin", 2 => "Tyr", 3 => "Frigg", 4 => "Thor", _ => "the Aesir" };
+        var who = anonymous || string.IsNullOrEmpty(characterName) ? "An anonymous hero" : characterName;
+        PublishSystemMessage("5", $"{who} has made an offering to {aesir}!");
+    }
+
+    private static string BuildAnnouncementText(State.GameStore.WorldAnnouncement a)
+    {
+        var mode = ModeName(a.GameMode);
+        return a.Kind == "hardcore"
+            ? $"{a.CharacterName} has died in {mode} Hardcore!"
+            : $"{a.CharacterName} is the first to reach {mode} world tier {a.WorldTier}-{a.WorldWaypoint}!";
+    }
+
+    /// <summary>Mirrors the client's chat envelope shape. <c>typeCode</c> maps to
+    /// <c>ChatPresentationType</c> (4 = first to reach a world level, 5 = Aesir offering,
+    /// 6 = hardcore death). Omitted keys are tolerated by the client's formatter.</summary>
+    private static void PublishSystemMessage(string typeCode, string text)
     {
         var now = DateTime.UtcNow;
+        var payload = new Dictionary<string, string>
+        {
+            ["typeCode"] = typeCode,
+            ["message"] = text,
+            ["itemlink"] = "",
+            ["avatarId"] = "0",
+            ["frameId"] = "0",
+        };
         var message = new ChannelMessageMessage
         {
             ChannelMessage = new ChannelMessageDto
@@ -140,14 +170,14 @@ public static class RealtimeGateway
                 SenderRole = UserRole.System,
                 SenderUserDisplayName = "System",
                 SenderCharacterDisplayName = "System",
-                Content = BuildAnnouncementContent(announcement),
+                Content = JsonSerializer.Serialize(payload),
                 CreateTime = now,
                 UpdateTime = now,
                 Persistent = false,
                 RoomName = "Global",
             },
         };
-        Console.WriteLine($"[ANNOUNCE] {announcement.Kind} {announcement.CharacterName} mode={announcement.GameMode} tier={announcement.WorldTier}-{announcement.WorldWaypoint}");
+        Console.WriteLine($"[ANNOUNCE] type={typeCode} {text}");
         _ = Task.Run(async () =>
         {
             var envelope = new Envelope { RequestId = 0, Message = message };
@@ -163,26 +193,6 @@ public static class RealtimeGateway
                 }
             }
         });
-    }
-
-    /// <summary>Mirrors the client's chat envelope shape. <c>typeCode</c> maps to
-    /// <c>ChatPresentationType</c> (4 = first to reach a world level, 6 = hardcore death).
-    /// Omitted keys are tolerated by the client's formatter.</summary>
-    private static string BuildAnnouncementContent(State.GameStore.WorldAnnouncement a)
-    {
-        var mode = ModeName(a.GameMode);
-        var text = a.Kind == "hardcore"
-            ? $"{a.CharacterName} has died in {mode} Hardcore!"
-            : $"{a.CharacterName} is the first to reach {mode} world tier {a.WorldTier}-{a.WorldWaypoint}!";
-        var payload = new Dictionary<string, string>
-        {
-            ["typeCode"] = a.Kind == "hardcore" ? "6" : "4",
-            ["message"] = text,
-            ["itemlink"] = "",
-            ["avatarId"] = "0",
-            ["frameId"] = "0",
-        };
-        return JsonSerializer.Serialize(payload);
     }
 
     private static string ModeName(int gameMode) => gameMode switch
@@ -355,13 +365,15 @@ public static class RealtimeGateway
             lock (progressGate)
             {
                 var experience = progress.Experience + gain;
-                // Seed the wallet from the client's first sync, then treat the server as
-                // authoritative (accept increases, never regress). Silver/opals earned via
-                // the currency RPCs are already persisted, so a periodic metadata sync must
-                // not roll them back to a stale LastSeen value.
-                var first = progress.UpdatedUtc == default;
-                var silver = first ? payload.LastSeenSilver : Math.Max(progress.Silver, payload.LastSeenSilver);
-                var opals = first ? payload.LastSeenOpals : Math.Max(progress.Opals, payload.LastSeenOpals);
+                // Base the wallet on the *persisted* value, not this session's cache. A
+                // server-side spend (Aesir offering, merchant, currency RPC) lowers the
+                // stored balance while the cache still holds the pre-spend value; maxing
+                // against the cache would refund every purchase on the next periodic sync.
+                var stored = characterId is { } storedId
+                    ? State.GameStore.Instance.GetRealtimeProgress(user.UserId, storedId)
+                    : new State.GameStore.RealtimeProgress(0, 0, 0, default);
+                var silver = Math.Max(stored.Silver, payload.LastSeenSilver);
+                var opals = Math.Max(stored.Opals, payload.LastSeenOpals);
                 if (characterId is { } cid)
                     updated = State.GameStore.Instance.SaveRealtimeProgress(user.UserId, cid, experience, silver, opals);
                 else

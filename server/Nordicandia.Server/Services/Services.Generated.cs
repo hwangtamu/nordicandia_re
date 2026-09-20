@@ -36,7 +36,6 @@ public sealed partial class CharacterServiceApiImpl : ServiceBase<ICharacterServ
     public MagicOnion.UnaryResult<SharedNet.Api.ExpandCharacterStashPageResponse> ExpandCharacterStashPage(SharedNet.Api.ExpandCharacterStashPageRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ExpandCharacterStashPageResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ExpandCharacterInventoryRowResponse> ExpandCharacterInventoryRow(SharedNet.Api.ExpandCharacterInventoryRowRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ExpandCharacterInventoryRowResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ExpandCharacterSkillSlotsResponse> ExpandCharacterSkillSlots(SharedNet.Api.ExpandCharacterSkillSlotsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ExpandCharacterSkillSlotsResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.UpdateItemFilterResponse> UpdateItemFilter(SharedNet.Api.UpdateItemFilterRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UpdateItemFilterResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.UpdateCharacterSettingsResponse> UpdateCharacterSettings(SharedNet.Api.UpdateCharacterSettingsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UpdateCharacterSettingsResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.UpdateCharacterOnlineStatusResponse> UpdateCharacterOnlineStatus(SharedNet.Api.UpdateCharacterOnlineStatusRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UpdateCharacterOnlineStatusResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.UpdateAvatarResponse> UpdateAvatar(SharedNet.Api.UpdateAvatarRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UpdateAvatarResponse>());
@@ -132,7 +131,6 @@ public sealed class ModeratorServiceApiImpl : ServiceBase<IModeratorServiceApi>,
 
 public sealed partial class OfferingServiceApiImpl : ServiceBase<IOfferingServiceApi>, IOfferingServiceApi
 {
-    public MagicOnion.UnaryResult<SharedNet.Api.MakeOfferingResponse> MakeOffering(SharedNet.Api.MakeOfferingRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.MakeOfferingResponse>());
 }
 
 public sealed class PartyServiceApiImpl : ServiceBase<IPartyServiceApi>, IPartyServiceApi
