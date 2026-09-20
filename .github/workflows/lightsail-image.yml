@@ -61,6 +61,9 @@ jobs:
           wait_healthz
           dotnet run --project server/Nordicandia.TestClient -c Release -- auth https://localhost:8443
           dotnet run --project server/Nordicandia.TestClient -c Release -- merchant https://localhost:8443
+          # Exercises the realtime WebSocket with the client's LZ4BlockArray wire format:
+          # channel join, a compressed chat send/relay, announcements, and server pushes.
+          dotnet run --project server/Nordicandia.TestClient -c Release -- ws https://localhost:8443
           sudo cp "$NORD_HOME/data/world.json" "$NORD_HOME/before-recreate.json"
           docker compose -f deploy/lightsail/compose.yaml up -d --force-recreate
           wait_healthz
