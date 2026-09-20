@@ -876,6 +876,15 @@ public sealed class GameStore : IDisposable
         return true;
     });
 
+    public bool SetSeasonPass(Guid userId, bool owned) => Change(s =>
+    {
+        var data = NormalizeAccountData(s.UserAccountData.TryGetValue(userId, out var bytes) && bytes is { Length: > 0 }
+            ? Unpack<SerializedUserAccountData>(bytes) : null);
+        data.SeasonData.HasSeasonPass = owned;
+        s.UserAccountData[userId] = Pack(data);
+        return true;
+    });
+
     /// <summary>Season UI metadata: the stored claim state plus the current season level
     /// (highest Season/Season-Hardcore character).</summary>
     public SerializedPlayerAccountData.SerializedSeasonData GetSeasonData(Guid owner)

@@ -265,6 +265,7 @@ foreach (var s in services)
         if (s.Name == "IGameModeServiceApi") continue;
         if (s.Name == "IOfferingServiceApi" && m.Name is "GetCurrentBlessings" or "MakeOffering") continue;
         if (s.Name == "IUserServiceApi" && m.Name is "GetSeasonMetadata") continue;
+        if (s.Name == "IStoreServiceApi" && m.Name is "GetStoreItems" or "StartPurchase" or "PayForPurchase" or "ConfirmPurchase") continue;
         if (s.Name == "IUseItemServiceApi" && m.Name is "UseItemWithBuff") continue;
         if (s.Name == "IUserLinkedAccountServiceApi") continue;
         if (s.Name == "IInventoryServiceApi" && m.Name is "ItemOperation") continue;

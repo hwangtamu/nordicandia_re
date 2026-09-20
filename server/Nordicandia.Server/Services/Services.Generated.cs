@@ -142,12 +142,8 @@ public sealed partial class SocialServiceApiImpl : ServiceBase<ISocialServiceApi
     public MagicOnion.UnaryResult<SharedNet.Api.GetReferralsResponse> GetReferrals(SharedNet.Api.GetReferralsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GetReferralsResponse>());
 }
 
-public sealed class StoreServiceApiImpl : ServiceBase<IStoreServiceApi>, IStoreServiceApi
+public sealed partial class StoreServiceApiImpl : ServiceBase<IStoreServiceApi>, IStoreServiceApi
 {
-    public MagicOnion.UnaryResult<SharedNet.Api.GetStoreItemsResponse> GetStoreItems(SharedNet.Api.GetStoreItemsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.GetStoreItemsResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.StartPurchaseResponse> StartPurchase(SharedNet.Api.StartPurchaseRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.StartPurchaseResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.PayForPurchaseResponse> PayForPurchase(SharedNet.Api.PayForPurchaseRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.PayForPurchaseResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.ConfirmPurchaseResponse> ConfirmPurchase(SharedNet.Api.ConfirmPurchaseRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ConfirmPurchaseResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ValidatedPurchaseResponse> ValidateGooglePlayPurchase(SharedNet.Api.ValidateGooglePlayPurchaseRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ValidatedPurchaseResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ValidatedPurchaseResponse> ValidateIOSPurchase(SharedNet.Api.ValidateIOSPurchaseRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ValidatedPurchaseResponse>());
 }

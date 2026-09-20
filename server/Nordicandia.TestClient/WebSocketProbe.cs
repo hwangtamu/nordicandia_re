@@ -370,6 +370,19 @@ public static class WebSocketProbe
         }
         Console.WriteLine($"SEASON catalogs={regular.Catalog.Items.Count}/{passCatalog.Catalog.Items.Count} level={seasonMeta.SeasonMetadata.SeasonLevel} claim={claim.ReceivedRewards.Items[0].Name}");
 
+        // 10. The remote store the client's IAP module reads its products from.
+        var store = MagicOnionClient.Create<IStoreServiceApi>(channel, serializerProvider);
+        var storeItems = await store.GetStoreItems(new GetStoreItemsRequest
+        {
+            StoreName = "RM_2.0", StoreProvider = SharedNet.Constants.StoreProvider.Steam,
+        });
+        if ((storeItems.StoreItems?.Count ?? 0) == 0)
+        {
+            Console.WriteLine("FAIL  store items empty");
+            return 15;
+        }
+        Console.WriteLine($"STORE  items={storeItems.StoreItems.Count} first={storeItems.StoreItems[0].Sku}");
+
         await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "done", CancellationToken.None);
         Console.WriteLine("WS OK");
         return 0;
