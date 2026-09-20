@@ -1,4 +1,5 @@
 using System.Net.WebSockets;
+using Game;
 using Grpc.Net.Client;
 using MagicOnion.Client;
 using MagicOnion.Serialization;
@@ -38,8 +39,31 @@ public static class WebSocketProbe
         var character = list.Characters?.FirstOrDefault();
         if (character == null)
         {
-            Console.WriteLine("No character on this account; create one in the game first.");
-            return 2;
+            var created = await characters.CreateCharacter(new CreateCharacterRequest
+            {
+                DisplayName = "Probe" + Random.Shared.Next(1000, 9999),
+                CharacterClass = SharedNet.Constants.Game.CharacterClass.Warrior,
+                CharacterRace = SharedNet.Constants.Game.CharacterRace.Human,
+                CharacterGameMode = SharedNet.Constants.Game.GameMode.Normal,
+                Data = new Game.SerializedCharacterData
+                {
+                    Header = new Game.SerializedCharacterData.SerializedHeader { Name = "Probe", Level = 1 },
+                    Data = new Game.SerializedCharacterData.SerializedData
+                    {
+                        Attributes = new SerializedAttributes { Values = new(), MultiplicativeValues = new() },
+                        Items = new SerializedItems { Items = new() },
+                        CombatStats = new Game.SerializedCharacterData.SerializedCombatStats { HelheimAttempts = new() },
+                    },
+                },
+            });
+            character = created.Character;
+            Console.WriteLine($"CREATED character {character?.CharacterId} name={character?.DisplayName}");
+            character ??= (await characters.GetCharacterList(new GetCharacterListRequest())).Characters?.FirstOrDefault();
+            if (character == null)
+            {
+                Console.WriteLine("No character on this account; create one in the game first.");
+                return 2;
+            }
         }
         var account = await login.GetUserAccountData(new GetUserAccountDataRequest());
         Console.WriteLine($"ACCOUNT linked={(account.LinkedAccounts?.LinkedAccounts?.Count ?? 0)} ["
@@ -133,40 +157,93 @@ public static class WebSocketProbe
         }
 
         // 2. Channel join + chat send.
+        var pushes = new List<Envelope>();
         var join = await SendAsync(socket, new Envelope
         {
             RequestId = 2,
             Message = new ChannelJoinMessage { ChannelJoin = new ChannelJoinPayload { Target = "Global", Type = SharedNet.Constants.Realtime.ChannelJoinType.Room } },
-        });
+        }, pushes);
         Print(join);
 
         var chat = await SendAsync(socket, new Envelope
         {
             RequestId = 3,
             Message = new ChannelMessageSendMessage { ChannelId = "Global", Content = "hello from the probe" },
-        });
+        }, pushes);
         Print(chat);
 
+        // The relay must fan the sender's own message back out (RequestId 0).
+        var relayed = pushes.Select(p => p.Message).OfType<ChannelMessageMessage>()
+            .FirstOrDefault(m => m.ChannelMessage?.Content == "hello from the probe");
+        if (relayed == null)
+        {
+            Console.WriteLine("FAIL  chat was not relayed back to the sender");
+            return 6;
+        }
+        Console.WriteLine($"CHAT   relayed from {relayed.ChannelMessage.SenderUserDisplayName}: {relayed.ChannelMessage.Content}");
+
         // 3. Quest event round-trip.
-        var quest = await SendAsync(socket, new Envelope { RequestId = 4, Message = new ClientQuestEventMessage() });
+        var quest = await SendAsync(socket, new Envelope { RequestId = 4, Message = new ClientQuestEventMessage() }, pushes);
         Print(quest);
+
+        // 4. A brand-new world level must produce a server-pushed first-to-reach announcement.
+        var gameEvents = MagicOnionClient.Create<ICharacterGameEventServiceApi>(channel, serializerProvider);
+        var tier = 90 + (Environment.TickCount % 9);
+        await gameEvents.OnDungeonRunStarted(new CharacterDungeonRunStartedRequest
+        {
+            CharacterId = character.CharacterId, WorldTier = tier, WorldWaypoint = 99,
+        });
+        var announcement = await WaitForPushAsync(socket, m => m.ChannelMessage?.Content?.Contains("is the first to reach") == true, TimeSpan.FromSeconds(5));
+        if (announcement == null)
+        {
+            Console.WriteLine("FAIL  first-to-reach announcement was not pushed");
+            return 7;
+        }
+        Console.WriteLine($"ANNOUNCE type={announcement.ChannelMessage.SenderRole} content={announcement.ChannelMessage.Content}");
 
         await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "done", CancellationToken.None);
         Console.WriteLine("WS OK");
         return 0;
     }
 
-    private static async Task<Envelope> SendAsync(ClientWebSocket socket, Envelope envelope)
+    private static async Task<Envelope> SendAsync(ClientWebSocket socket, Envelope envelope, List<Envelope> pushes = null)
     {
         var bytes = MessagePackSerializer.Serialize(envelope);
         await socket.SendAsync(bytes, WebSocketMessageType.Binary, true, CancellationToken.None);
 
+        // Interleaved server pushes (RequestId 0) may arrive before the reply; stash them
+        // and keep waiting for the frame whose RequestId matches the request.
+        while (true)
+        {
+            var reply = await ReceiveAsync(socket);
+            if (reply.RequestId == envelope.RequestId) return reply;
+            if (reply.RequestId == 0) { pushes?.Add(reply); continue; }
+        }
+    }
+
+    private static async Task<ChannelMessageMessage> WaitForPushAsync(ClientWebSocket socket,
+        Func<ChannelMessageMessage, bool> predicate, TimeSpan timeout)
+    {
+        using var cts = new CancellationTokenSource(timeout);
+        try
+        {
+            while (true)
+            {
+                var envelope = await ReceiveAsync(socket, cts.Token);
+                if (envelope.Message is ChannelMessageMessage push && predicate(push)) return push;
+            }
+        }
+        catch (OperationCanceledException) { return null; }
+    }
+
+    private static async Task<Envelope> ReceiveAsync(ClientWebSocket socket, CancellationToken cancellationToken = default)
+    {
         var buffer = new byte[64 * 1024];
         using var ms = new MemoryStream();
         WebSocketReceiveResult result;
         do
         {
-            result = await socket.ReceiveAsync(buffer, CancellationToken.None);
+            result = await socket.ReceiveAsync(buffer, cancellationToken);
             ms.Write(buffer, 0, result.Count);
         } while (!result.EndOfMessage);
 

@@ -1,5 +1,6 @@
 using MagicOnion;
 using SharedNet.Api;
+using Nordicandia.Server.Realtime;
 using Nordicandia.Server.State;
 
 namespace Nordicandia.Server.Services;
@@ -74,7 +75,10 @@ public sealed partial class CharacterGameEventServiceApiImpl
 
     public UnaryResult<CharacterDiedResponse> OnCharacterDied(CharacterDiedRequest req)
     {
-        Progress(req?.CharacterId ?? Guid.Empty, req?.WorldTier ?? 0, req?.WorldWaypoint ?? 0, default);
+        var characterId = req?.CharacterId ?? Guid.Empty;
+        Progress(characterId, req?.WorldTier ?? 0, req?.WorldWaypoint ?? 0, default);
+        var death = GameStore.Instance.RegisterHardcoreDeath(Owner, characterId);
+        if (death != null) RealtimeGateway.Announce(death);
         return UnaryResult.FromResult(new CharacterDiedResponse());
     }
 
@@ -82,6 +86,7 @@ public sealed partial class CharacterGameEventServiceApiImpl
     {
         if (characterId == Guid.Empty || (tier <= 0 && waypoint <= 0 && depth <= 0)) return;
         Console.WriteLine($"[PROG] {Context.CallContext.Method} character={characterId} tier={tier} waypoint={waypoint} depth={depth}");
-        GameStore.Instance.ApplyWorldProgress(Owner, characterId, tier, waypoint, duration, depth);
+        var announcement = GameStore.Instance.ApplyWorldProgress(Owner, characterId, tier, waypoint, duration, depth);
+        if (announcement != null) RealtimeGateway.Announce(announcement);
     }
 }

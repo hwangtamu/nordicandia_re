@@ -29,6 +29,8 @@ public sealed class GameStore : IDisposable
         public Dictionary<Guid, SavedCharacter> Characters { get; set; } = new();
         public Dictionary<Guid, List<UserLinkedAccountDto>> LinkedAccounts { get; set; } = new();
         public Dictionary<string, AccountCredential> Credentials { get; set; } = new();
+        // "{gameMode}|{tier}|{waypoint}" -> the first character to reach that world level.
+        public Dictionary<string, Guid> WorldFirsts { get; set; } = new();
     }
 
     /// <summary>Server-only password credential. Deliberately not part of any client DTO,
@@ -70,6 +72,12 @@ public sealed class GameStore : IDisposable
     {
         public static readonly RealtimeProgress Empty = new(0, 0, 0, default);
     }
+
+    /// <summary>A world milestone announced to every player over the realtime channel.
+    /// <c>Kind</c> is <c>first</c> (first to reach a world level) or <c>hardcore</c> (a
+    /// hardcore character died).</summary>
+    public sealed record WorldAnnouncement(string Kind, int GameMode, int WorldTier, int WorldWaypoint,
+        string CharacterName, Guid CharacterId);
 
     // Attribute ids recovered from the client's GameAttributes static ctor (see
     // steam_analysis and the SaveDump tool). Keep in sync with Progression/InventoryService.
@@ -170,6 +178,7 @@ public sealed class GameStore : IDisposable
                 throw new InvalidDataException("Invalid world snapshot; restore a valid backup.");
             state.LinkedAccounts ??= new();
             state.Credentials ??= new();
+            state.WorldFirsts ??= new();
         }
         catch { lease.Dispose(); throw; }
     }
@@ -715,10 +724,11 @@ public sealed class GameStore : IDisposable
         return true;
     });
 
-    public void ApplyWorldProgress(Guid owner, Guid characterId, int worldTier, int worldWaypoint, TimeSpan duration, int depth = 0)
+    public WorldAnnouncement ApplyWorldProgress(Guid owner, Guid characterId, int worldTier, int worldWaypoint, TimeSpan duration, int depth = 0)
         => Change(s =>
         {
             var c = Owned(s, owner, characterId);
+            var header = Unpack<CharacterHeaderDto>(c.Header);
             var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
             if (worldTier > 0)
             {
@@ -745,7 +755,34 @@ public sealed class GameStore : IDisposable
                 SetAttribute(data, AttrMaxHelheimDepth, Math.Max(GetAttribute(data, AttrMaxHelheimDepth) ?? 0, depth));
             }
             c.Data = Pack(data);
-            return true;
+
+            // The first character ever to reach a given world level gets a global
+            // announcement. Keyed per game mode so Season/Hardcore have separate races.
+            if (worldTier > 0 && worldWaypoint > 0)
+            {
+                var key = $"{(int)header.GameMode}|{worldTier}|{worldWaypoint}";
+                if (!s.WorldFirsts.ContainsKey(key))
+                {
+                    s.WorldFirsts[key] = characterId;
+                    return new WorldAnnouncement("first", (int)header.GameMode, worldTier, worldWaypoint,
+                        header.DisplayName ?? "Someone", characterId);
+                }
+            }
+            return null;
+        });
+
+    /// <summary>Signals a hardcore character's death; returns an announcement when the
+    /// character really is hardcore (normal deaths are not public).</summary>
+    public WorldAnnouncement RegisterHardcoreDeath(Guid owner, Guid characterId)
+        => Change(s =>
+        {
+            var c = Owned(s, owner, characterId);
+            var header = Unpack<CharacterHeaderDto>(c.Header);
+            if (header.GameMode is not (SharedNet.Constants.Game.GameMode.NormalHardcore
+                or SharedNet.Constants.Game.GameMode.SeasonHardcore
+                or SharedNet.Constants.Game.GameMode.ChallengeHardcore)) return null;
+            return new WorldAnnouncement("hardcore", (int)header.GameMode, 0, 0,
+                header.DisplayName ?? "Someone", characterId);
         });
 
     /// <summary>Copies the authoritative progress back into a character's serialized data

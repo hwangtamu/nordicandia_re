@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
 using Game;
 using MessagePack;
 using Microsoft.AspNetCore.Http;
@@ -87,14 +88,121 @@ public static class RealtimeGateway
     internal static byte[] Encode(Envelope envelope, bool compressed) =>
         MessagePackSerializer.Serialize(envelope, compressed ? Lz4 : Plain);
 
+    /// <summary>Collapses a channel id such as <c>Room:Global</c> or <c>1:Global</c> to the
+    /// case-insensitive room key <c>global</c>, so joins and sends match regardless of the
+    /// enum/int prefix the client used.</summary>
+    private static string NormalizeChannel(string channelId)
+    {
+        if (string.IsNullOrWhiteSpace(channelId)) return "global";
+        var room = RoomOf(channelId);
+        return room.Trim().ToLowerInvariant();
+    }
+
+    private static string RoomOf(string channelId)
+    {
+        if (string.IsNullOrEmpty(channelId)) return "Global";
+        var idx = channelId.LastIndexOf(':');
+        return idx >= 0 && idx < channelId.Length - 1 ? channelId[(idx + 1)..] : channelId;
+    }
+
+    private static async Task BroadcastAsync(string normalizedChannel, Message message, CancellationToken cancellationToken)
+    {
+        var envelope = new Envelope { RequestId = 0, Message = message };
+        var delivered = 0;
+        foreach (var session in Sessions.Values)
+        {
+            if (!session.InChannel(normalizedChannel)) continue;
+            try
+            {
+                await session.SendAsync(envelope, cancellationToken);
+                delivered++;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[WS] broadcast to {session.characterId} failed: {ex.Message}");
+            }
+        }
+        Console.WriteLine($"[WS] broadcast room='{normalizedChannel}' sessions={Sessions.Count} delivered={delivered}");
+    }
+
+    /// <summary>Publishes a server-generated world milestone to every connected client.</summary>
+    public static void Announce(State.GameStore.WorldAnnouncement announcement)
+    {
+        var now = DateTime.UtcNow;
+        var message = new ChannelMessageMessage
+        {
+            ChannelMessage = new ChannelMessageDto
+            {
+                ChannelId = "Global",
+                MessageId = Guid.NewGuid(),
+                Type = ChannelMessageType.Chat,
+                SenderType = MessageSenderType.GameModeUser,
+                SenderRole = UserRole.System,
+                SenderUserDisplayName = "System",
+                SenderCharacterDisplayName = "System",
+                Content = BuildAnnouncementContent(announcement),
+                CreateTime = now,
+                UpdateTime = now,
+                Persistent = false,
+                RoomName = "Global",
+            },
+        };
+        Console.WriteLine($"[ANNOUNCE] {announcement.Kind} {announcement.CharacterName} mode={announcement.GameMode} tier={announcement.WorldTier}-{announcement.WorldWaypoint}");
+        _ = Task.Run(async () =>
+        {
+            var envelope = new Envelope { RequestId = 0, Message = message };
+            foreach (var session in Sessions.Values)
+            {
+                try
+                {
+                    await session.SendAsync(envelope, CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[WS] announcement to {session.characterId} failed: {ex.Message}");
+                }
+            }
+        });
+    }
+
+    /// <summary>Mirrors the client's chat envelope shape. <c>typeCode</c> maps to
+    /// <c>ChatPresentationType</c> (4 = first to reach a world level, 6 = hardcore death).
+    /// Omitted keys are tolerated by the client's formatter.</summary>
+    private static string BuildAnnouncementContent(State.GameStore.WorldAnnouncement a)
+    {
+        var mode = ModeName(a.GameMode);
+        var text = a.Kind == "hardcore"
+            ? $"{a.CharacterName} has died in {mode} Hardcore!"
+            : $"{a.CharacterName} is the first to reach {mode} world tier {a.WorldTier}-{a.WorldWaypoint}!";
+        var payload = new Dictionary<string, string>
+        {
+            ["typeCode"] = a.Kind == "hardcore" ? "6" : "4",
+            ["message"] = text,
+            ["itemlink"] = "",
+            ["avatarId"] = "0",
+            ["frameId"] = "0",
+        };
+        return JsonSerializer.Serialize(payload);
+    }
+
+    private static string ModeName(int gameMode) => gameMode switch
+    {
+        2 or 5 => "Season",
+        3 or 6 => "Challenge",
+        _ => "Normal",
+    };
+
     private sealed class RealtimeSession
     {
         private readonly WebSocket socket;
         private readonly SharedNet.Dto.UserDto user;
-        private readonly Guid? characterId;
+        internal readonly Guid? characterId;
         private readonly bool appearOnline;
         private readonly Guid sessionId = Guid.NewGuid();
         private readonly object progressGate = new();
+        private readonly object channelGate = new();
+        private readonly HashSet<string> channels = new(StringComparer.OrdinalIgnoreCase);
+        private readonly SemaphoreSlim sendGate = new(1, 1);
         private State.GameStore.RealtimeProgress progress;
         private bool compressed;
 
@@ -195,11 +303,12 @@ public static class RealtimeGateway
                 case ChannelJoinMessage join:
                     return HandleChannelJoin(join);
 
-                case ChannelLeaveMessage:
+                case ChannelLeaveMessage leave:
+                    LeaveChannel(leave.ChannelLeave?.ChannelId);
                     return new ChannelJoinResponse();
 
                 case ChannelMessageSendMessage send:
-                    return HandleChatSend(send);
+                    return await HandleChatSendAsync(send, cancellationToken);
 
                 case ClientQuestEventMessage:
                     return new ClientQuestEventMessageResponse();
@@ -276,11 +385,20 @@ public static class RealtimeGateway
         {
             var payload = join.ChannelJoin ?? new ChannelJoinPayload();
             var target = string.IsNullOrEmpty(payload.Target) ? "Global" : payload.Target;
+            var id = $"{payload.Type}:{target}";
+            JoinChannel(id);
+            var normalized = NormalizeChannel(id);
             var self = SelfPresence(target);
+            var presences = Sessions.Values
+                .Where(s => s.InChannel(normalized))
+                .Select(s => s.SelfPresence(target))
+                .Where(p => p.SessionId != self.SessionId)
+                .ToList();
+            presences.Add(self);
             var channel = new ChannelDto
             {
-                Id = $"{payload.Type}:{target}",
-                Presences = new List<UserPresenceDto> { self },
+                Id = id,
+                Presences = presences,
                 Self = self,
                 RoomName = target,
                 GroupId = null,
@@ -288,23 +406,74 @@ public static class RealtimeGateway
             return new ChannelJoinResponse { Channel = channel };
         }
 
-        private ChannelMessageAckMessage HandleChatSend(ChannelMessageSendMessage send)
+        private async Task<Message> HandleChatSendAsync(ChannelMessageSendMessage send, CancellationToken cancellationToken)
         {
-            var channelId = send.ChannelId ?? "Global";
-            var ack = new ChannelMessageAckDto
+            var channelId = string.IsNullOrEmpty(send.ChannelId) ? "Global" : send.ChannelId;
+            // Self-heal: if the client never sent an explicit join, treat the send itself as
+            // one so future broadcasts reach this session.
+            JoinChannel(channelId);
+            var now = DateTime.UtcNow;
+            var room = RoomOf(channelId);
+            var message = new ChannelMessageDto
             {
                 ChannelId = channelId,
                 MessageId = Guid.NewGuid(),
                 Type = ChannelMessageType.Chat,
+                SenderUserId = user.UserId,
+                SenderCharacterId = characterId,
+                SenderType = MessageSenderType.User,
+                SenderUserDisplayName = user.DisplayName,
+                SenderCharacterDisplayName = CharacterName() ?? user.DisplayName,
+                SenderRole = user.Role,
+                Content = send.Content,
+                CreateTime = now,
+                UpdateTime = now,
+                Persistent = false,
+                RoomName = room,
+            };
+
+            // Relay the client's JSON verbatim (it carries avatarId/frameId/gameMode/typeCode)
+            // to every session in the same room, including the sender so it renders once.
+            await BroadcastAsync(NormalizeChannel(channelId), new ChannelMessageMessage { ChannelMessage = message }, cancellationToken);
+
+            var ack = new ChannelMessageAckDto
+            {
+                ChannelId = channelId,
+                MessageId = message.MessageId,
+                Type = ChannelMessageType.Chat,
                 UserDisplayName = user.DisplayName,
                 SenderType = MessageSenderType.User,
                 SenderRole = user.Role,
-                CreateTime = DateTime.UtcNow,
-                UpdateTime = DateTime.UtcNow,
+                CreateTime = now,
+                UpdateTime = now,
                 Persistent = false,
-                RoomName = channelId.Contains(':') ? channelId[(channelId.IndexOf(':') + 1)..] : channelId,
+                RoomName = room,
             };
             return new ChannelMessageAckMessage { ChannelMessageAck = ack };
+        }
+
+        private void JoinChannel(string channelId)
+        {
+            var key = NormalizeChannel(channelId);
+            lock (channelGate) channels.Add(key);
+        }
+
+        private void LeaveChannel(string channelId)
+        {
+            var key = NormalizeChannel(channelId);
+            lock (channelGate) channels.Remove(key);
+        }
+
+        internal bool InChannel(string normalized)
+        {
+            lock (channelGate) return channels.Contains(normalized);
+        }
+
+        private string CharacterName()
+        {
+            if (characterId is not { } cid) return null;
+            return State.GameStore.Instance.Characters(user.UserId)
+                .FirstOrDefault(h => h.CharacterId == cid)?.DisplayName;
         }
 
         private UserPresenceDto SelfPresence(string status) => new()
@@ -336,11 +505,22 @@ public static class RealtimeGateway
             Context = new Dictionary<string, string>(),
         };
 
-        private async Task SendAsync(Envelope envelope, CancellationToken cancellationToken)
+        internal async Task SendAsync(Envelope envelope, CancellationToken cancellationToken)
         {
             if (socket.State != WebSocketState.Open) return;
             var bytes = Encode(envelope, compressed);
-            await socket.SendAsync(bytes, WebSocketMessageType.Binary, true, cancellationToken);
+            // A socket may be written from its own request loop and from a broadcast on
+            // another connection's thread; the semaphore serializes those writes.
+            await sendGate.WaitAsync(cancellationToken);
+            try
+            {
+                if (socket.State != WebSocketState.Open) return;
+                await socket.SendAsync(bytes, WebSocketMessageType.Binary, true, cancellationToken);
+            }
+            finally
+            {
+                sendGate.Release();
+            }
         }
     }
 }
