@@ -25,8 +25,7 @@ public static class PersistenceProbe
 
         using var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions { HttpHandler = http });
         var login = MagicOnionClient.Create<ILoginServiceApi>(channel, serializerProvider);
-        var account = "persist-" + Guid.NewGuid().ToString("N")[..8];
-        var session = await login.LoginWithStandaloneDeviceIdAsync(new LoginWithStandaloneDeviceIdRequest { DeviceId = account });
+        var session = await TestAuth.RegisterAndLoginAsync(login, "persist");
         var token = session.Session.AuthToken;
         var auth = new HttpHeaderHandler(http, token);
         using var authed = GrpcChannel.ForAddress(address, new GrpcChannelOptions { HttpHandler = auth });

@@ -21,10 +21,7 @@ public static class MerchantProbe
 
         using var loginChannel = GrpcChannel.ForAddress(address, new GrpcChannelOptions { HttpHandler = http });
         var login = MagicOnionClient.Create<ILoginServiceApi>(loginChannel, serializer);
-        var session = await login.LoginWithStandaloneDeviceIdAsync(new LoginWithStandaloneDeviceIdRequest
-        {
-            DeviceId = "merchant-" + Guid.NewGuid().ToString("N"),
-        });
+        var session = await TestAuth.RegisterAndLoginAsync(login, "merchant");
         using var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
         {
             HttpHandler = new HttpHeaderHandler(new HttpClientHandler(), session.Session.AuthToken),

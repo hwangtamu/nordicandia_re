@@ -18,6 +18,13 @@ services:
       NORD_CERT_PWD: ${NORD_CERT_PWD:?Set NORD_CERT_PWD}
       NORD_DATA_DIR: /data
       NORD_DUMP_BODY: "0"
+      # 0 = require verified provider tokens or email/username credentials.
+      NORD_AUTH_ALLOW_UNVERIFIED_PROVIDERS: ${NORD_AUTH_ALLOW_UNVERIFIED_PROVIDERS:-0}
+      NORD_ALLOW_REGISTRATION: ${NORD_ALLOW_REGISTRATION:-1}
+      NORD_ADMIN_TOKEN: ${NORD_ADMIN_TOKEN:-}
+      NORD_STEAM_WEBAPI_KEY: ${NORD_STEAM_WEBAPI_KEY:-}
+      NORD_GOOGLE_CLIENT_ID: ${NORD_GOOGLE_CLIENT_ID:-}
+      NORD_GOOGLE_CLIENT_SECRET: ${NORD_GOOGLE_CLIENT_SECRET:-}
       DOTNET_GCHeapHardLimitPercent: "60"
     volumes:
       - ${NORD_HOME:-/opt/nordicandia}/data:/data

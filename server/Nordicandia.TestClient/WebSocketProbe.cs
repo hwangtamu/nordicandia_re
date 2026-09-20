@@ -29,7 +29,7 @@ public static class WebSocketProbe
 
         using var channel = GrpcChannel.ForAddress(grpcAddress, new GrpcChannelOptions { HttpHandler = auth });
         var login = MagicOnionClient.Create<ILoginServiceApi>(channel, serializerProvider);
-        var session = await login.LoginWithSteamAsync(new LoginWithSteamRequest { DeviceId = steamId });
+        var session = await TestAuth.EnsureAccountAsync(login, $"ws-{steamId}@nord.local");
         auth.Token = session.Session?.AuthToken;
         Console.WriteLine($"LOGIN  userId={session.User?.UserId} token={(session.Session?.AuthToken is { Length: > 8 } t ? t[..8] + "..." : "<none>")}");
 

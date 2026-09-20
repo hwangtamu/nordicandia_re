@@ -28,7 +28,20 @@ public sealed class GameStore : IDisposable
         public Dictionary<string, SessionDto> Sessions { get; set; } = new();
         public Dictionary<Guid, SavedCharacter> Characters { get; set; } = new();
         public Dictionary<Guid, List<UserLinkedAccountDto>> LinkedAccounts { get; set; } = new();
+        public Dictionary<string, AccountCredential> Credentials { get; set; } = new();
     }
+
+    /// <summary>Server-only password credential. Deliberately not part of any client DTO,
+    /// so the hash is never serialized into a login/account response.</summary>
+    public sealed class AccountCredential
+    {
+        public Guid UserId { get; set; }
+        public string Identity { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
+        public DateTime Created { get; set; }
+        public DateTime? Updated { get; set; }
+    }
+
     public sealed class SavedCharacter
     {
         public Guid Owner { get; set; }
@@ -156,6 +169,7 @@ public sealed class GameStore : IDisposable
             if (state == null || state.Version != 1 || state.Users == null || state.Sessions == null || state.Characters == null)
                 throw new InvalidDataException("Invalid world snapshot; restore a valid backup.");
             state.LinkedAccounts ??= new();
+            state.Credentials ??= new();
         }
         catch { lease.Dispose(); throw; }
     }
@@ -185,6 +199,55 @@ public sealed class GameStore : IDisposable
             return Unpack<UserDto>(Pack(user));
         });
     }
+    public bool HasCredential(string identity)
+    {
+        lock (gate) return state.Credentials.ContainsKey(identity);
+    }
+
+    /// <summary>Verifies an email/username credential and returns the owning user, or null.</summary>
+    public UserDto VerifyCredential(string identity, string password)
+    {
+        lock (gate)
+        {
+            if (!state.Credentials.TryGetValue(identity, out var credential)) return null;
+            if (!PasswordHasher.Verify(password, credential.PasswordHash)) return null;
+            var user = state.Users.Values.FirstOrDefault(u => u.UserId == credential.UserId);
+            return user == null ? null : Unpack<UserDto>(Pack(user));
+        }
+    }
+
+    /// <summary>Creates a new account with a password credential (fails if the identity exists).</summary>
+    public UserDto RegisterCredential(string identity, string password, string displayName = null) => Change(s =>
+    {
+        if (s.Credentials.ContainsKey(identity))
+            throw new RpcException(new Status(StatusCode.AlreadyExists, "Account already exists"));
+        if (!s.Users.TryGetValue(identity, out var user))
+            s.Users[identity] = user = new UserDto { UserId = Guid.NewGuid(), DisplayName = displayName ?? identity, Created = Now, Role = UserRole.Player };
+        s.Credentials[identity] = new AccountCredential { UserId = user.UserId, Identity = identity, PasswordHash = PasswordHasher.Hash(password), Created = Now };
+        user.LastLogin = Now;
+        return Unpack<UserDto>(Pack(user));
+    });
+
+    /// <summary>Attaches (or replaces) a password credential for an existing user.</summary>
+    public void SetCredentialForUser(Guid userId, string identity, string password) => Change(s =>
+    {
+        if (!s.Users.Values.Any(u => u.UserId == userId))
+            throw new RpcException(new Status(StatusCode.NotFound, "Unknown user"));
+        if (s.Credentials.TryGetValue(identity, out var existing) && existing.UserId != userId)
+            throw new RpcException(new Status(StatusCode.AlreadyExists, "Account already exists"));
+        s.Credentials[identity] = new AccountCredential { UserId = userId, Identity = identity, PasswordHash = PasswordHasher.Hash(password), Created = Now };
+        return true;
+    });
+
+    /// <summary>Replaces the password for an existing credential (used by change-password).</summary>
+    public bool UpdateCredentialPassword(string identity, string password) => Change(s =>
+    {
+        if (!s.Credentials.TryGetValue(identity, out var credential)) return false;
+        credential.PasswordHash = PasswordHasher.Hash(password);
+        credential.Updated = Now;
+        return true;
+    });
+
     public SessionDto CreateSession(Guid userId) => Change(s => {
         if (!s.Users.Values.Any(u => u.UserId == userId)) throw new InvalidOperationException("Unknown user");
         foreach (var key in s.Sessions.Where(p => p.Value.RefreshExpireTimestamp <= Now).Select(p => p.Key).ToArray()) s.Sessions.Remove(key);

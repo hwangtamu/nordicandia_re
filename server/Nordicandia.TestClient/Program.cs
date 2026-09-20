@@ -29,6 +29,9 @@ if (args.Length >= 2 && args[0] == "season")
 if (args.Length >= 2 && args[0] == "merchant")
     Environment.Exit(await Nordicandia.TestClient.MerchantProbe.RunAsync(args[1]));
 
+if (args.Length >= 2 && args[0] == "auth")
+    Environment.Exit(await Nordicandia.TestClient.AuthProbe.RunAsync(args[1]));
+
 var address = args.Length > 0 ? args[0] : "http://localhost:50051";
 
 // The real client does not validate the server certificate; mirror that for HTTPS tests.
@@ -44,18 +47,32 @@ Console.WriteLine($"Connecting to {address} ...");
 using var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions { HttpHandler = handler });
 var client = MagicOnionClient.Create<ILoginServiceApi>(channel, serializerProvider);
 
-var req = new LoginWithStandaloneDeviceIdRequest { DeviceId = "test-device-1", ClientVersion = "1.9.3" };
-var res = await client.LoginWithStandaloneDeviceIdAsync(req);
+var res = await Nordicandia.TestClient.TestAuth.RegisterAndLoginAsync(client);
 Console.WriteLine("LOGIN OK");
 Console.WriteLine($"  UserId      : {res.User?.UserId}");
 Console.WriteLine($"  DisplayName : {res.User?.DisplayName}");
 Console.WriteLine($"  AuthToken   : {res.Session?.AuthToken}");
 Console.WriteLine($"  ServerTime  : {res.ServerTime}");
 
-var characters = MagicOnionClient.Create<ICharacterServiceApi>(channel, serializerProvider);
+using var authed = GrpcChannel.ForAddress(address, new GrpcChannelOptions
+{
+    HttpHandler = new AuthHeaderHandler(new HttpClientHandler(), res.Session?.AuthToken),
+});
+var characters = MagicOnionClient.Create<ICharacterServiceApi>(authed, serializerProvider);
 var list = await characters.GetCharacterList(new GetCharacterListRequest());
 Console.WriteLine($"CHARACTERS: {list.Characters?.Count ?? 0}");
 
-var lb = MagicOnionClient.Create<ILeaderboardServiceApi>(channel, serializerProvider);
+var lb = MagicOnionClient.Create<ILeaderboardServiceApi>(authed, serializerProvider);
 await lb.GetRelevantLeaderboards(new GetRelevantLeaderboardsAndTournamentsRequest());
 Console.WriteLine("LEADERBOARDS OK");
+
+internal sealed class AuthHeaderHandler : DelegatingHandler
+{
+    private readonly string token;
+    public AuthHeaderHandler(HttpMessageHandler inner, string token) : base(inner) => this.token = token;
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        return base.SendAsync(request, cancellationToken);
+    }
+}

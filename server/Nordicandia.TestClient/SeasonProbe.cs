@@ -25,8 +25,7 @@ public static class SeasonProbe
 
         using var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions { HttpHandler = http });
         var login = MagicOnionClient.Create<ILoginServiceApi>(channel, serializerProvider);
-        var account = "season-" + Guid.NewGuid().ToString("N")[..8];
-        var session = await login.LoginWithStandaloneDeviceIdAsync(new LoginWithStandaloneDeviceIdRequest { DeviceId = account });
+        var session = await TestAuth.RegisterAndLoginAsync(login, "season");
         var token = session.Session.AuthToken;
         using var authed = GrpcChannel.ForAddress(address, new GrpcChannelOptions { HttpHandler = new HttpHeaderHandler(http, token) });
 
