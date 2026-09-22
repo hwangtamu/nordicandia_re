@@ -585,3 +585,34 @@ Conclusion: this build ships the registration/login windows as dead code; the
 in-client entry point is gone. Making registration usable requires either
 reconstructing the window at runtime or calling the client's authenticated
 `IUserLinkedAccountServiceApi` client directly.
+
+## 20. A2 result (link email) + offline-reconcile trace
+
+**A2 (production validation):** added a `Game`/email credential
+(`s25prod@nord.local`, PBKDF2-210000) and linked it to the phone's user
+`e3830e15-…` in `world.json`. Restart + Play still produced
+"Cannot synchronize online account". **Registering/linking does not change the
+Play flow** — `OnPlayClicked` is hardcoded to `NetAuth.Logout` →
+`UnityGame.SignInNew(LocalDevice)` → `UnityGame.LoadOfflineProfile`.
+
+**Offline reconcile trace (assert `0x026FB754` NOPed so SPSM proceeds):**
+
+```
+SPSM b__4          (offline entry)
+SPSM b__5_d        LoadDeviceAccountMatchingDeviceId
+  SaveManager.LoadLocalDeviceAccounts_MessagePack
+  CloudProfileSync.TryRestoreAsync
+SPSM b__5_d        (again)
+  SilentMigrationAttempt.TryImportAsync
+SPSM b__6_d        LoadDeviceCharacters
+  SaveManager.LoadLocalDeviceCharacters_MessagePack
+```
+
+`OnlineProfilePuller.PullAsync`, `ClientSaveStore.ImportOnlineProfile` and
+`SilentMigrationAttempt.WriteOnlineProfile` are **never reached**, so the local
+device profile stays empty (=> new-character flow).
+
+=> Making the offline path produce the server characters requires the server to
+satisfy `CloudProfileSync` / `SilentMigrationAttempt` (the "online game account
+files" / cloud snapshot), i.e. the previously-declined option C; OR the client
+must be patched to skip the offline reconcile and take the online entry.
