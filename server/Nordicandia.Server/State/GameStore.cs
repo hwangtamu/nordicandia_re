@@ -642,18 +642,14 @@ public sealed class GameStore : IDisposable
             // rebuild it from the character headers we actually store.
             var mine = state.Characters.Values.Where(c => c.Owner == userId).ToList();
             var byMode = new Dictionary<int, List<Guid>>();
-            CharacterHeaderDto? last = null;
             foreach (var c in mine)
             {
                 var h = Unpack<CharacterHeaderDto>(c.Header);
                 var mode = (int)h.GameMode;
                 if (!byMode.TryGetValue(mode, out var list)) byMode[mode] = list = new();
                 list.Add(h.CharacterId);
-                if (last is null || (h.LastLogin ?? h.Created ?? DateTime.MinValue) > (last.LastLogin ?? last.Created ?? DateTime.MinValue))
-                    last = h;
             }
             data.CharactersByGameMode = byMode;
-            if (last is not null) data.LastPlayedCharacterId = last.CharacterId;
             return data;
         }
     }
