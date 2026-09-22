@@ -647,3 +647,36 @@ manualLogin)` (`0x02DA2398`) installs `GooglePlayAuthenticationFilter`
 to `LoginWithGooglePlayAsync` (server already implements it). The game never
 calls it (no UI), and Frida-injected calls into these NetClient async methods do
 not observably execute, so finishing this still needs a native patch.
+
+## 22. Native code injection: Google sign-in stub (validated)
+
+`BestHTTP.Examples.TestHubSample.Hub_OnConnected` (`0x344EBFC`, 5.9 KB, unused
+sample) provides room to inject code. A stub was written at `0x344EC24`:
+
+```
+stp x29,x30,[sp,#-16]!
+bl  NetClient.get_Current        ; x0 = NetClient.Current
+mov w1,#1                        ; createAccountIfPossible
+mov w2,#1                        ; manualLogin
+bl  NetClient.SignInWithGooglePlay
+ldp x29,x30,[sp],#16
+ret
+```
+
+and `WindowSelectGameMode.OnSignInClicked` (`0x026340E0`) is patched to
+`b 0x344EC24`, so the (re-enabled) Sign In button runs the stub. Applied
+together with the standard 13 patches via Frida; the PGS profile now exists, so
+`PlayGamesPlatform.IsAuthenticated == 1`.
+
+Runtime trace proves the injected stub runs from the game's own code (Frida
+hooks fire):
+`GOOGLE STUB → NetClient.SignInWithGooglePlay → GooglePlayAuthenticationFilter
+ctor → NetClient.GetUserAccountData`.
+
+Remaining gap: `GooglePlayAuthenticationFilter._SendAsync` only calls
+`AuthenticateAsync` when the net session is expiring/invalid
+(`NetSession.IsRefreshExpiring` / `IsExpiring`, `_SendAsync_d__2.MoveNext`
+`0x02E4D2DC`); while the device session is valid it skips Google auth. So the
+stub must invalidate the session first (or the filter must run with no session)
+for `AuthenticateAsync` → `GetGooglePlayAuthCodeAsync` → `RequestServerSideAccess`
+→ `LoginWithGooglePlayAsync` to execute.
