@@ -680,3 +680,43 @@ Remaining gap: `GooglePlayAuthenticationFilter._SendAsync` only calls
 stub must invalidate the session first (or the filter must run with no session)
 for `AuthenticateAsync` → `GetGooglePlayAuthCodeAsync` → `RequestServerSideAccess`
 → `LoginWithGooglePlayAsync` to execute.
+
+## 23. Google sign-in works end-to-end (native patch)
+
+Final patch set (runtime, original Google-signed APK):
+
+1. Standard 13 patches (device login, TLS, HTTP/1.1 gRPC, season UI, provider).
+2. `RefreshSignInButton` (`0x02633BD0`) -> `ret` (keeps the Sign In button).
+3. Injected Google stub at `0x344EC24` (unused BestHTTP sample):
+   `stp; bl NetClient.get_Current; mov w1,#1; mov w2,#1; bl
+   NetClient.SignInWithGooglePlay; ldp; ret`.
+4. `WindowSelectGameMode.OnSignInClicked` (`0x026340E0`) -> `b 0x344EC24`.
+5. `GooglePlayAuthenticationFilter._SendAsync` only authenticates when the
+   session is expiring; NOP the two checks so it always authenticates:
+   - `0x2E4D660` `tbz w0,#0,...` -> `nop`
+   - `0x2E4D6FC` `tbz w0,#0,...` -> `nop`
+
+Result (real S25, PGS profile created, `IsAuthenticated=1`):
+tapping **Sign In** on the Game Mode screen runs PGS
+(`RequestServerSideAccess`) and the server receives and answers:
+
+```
+ACCESS POST /ILoginServiceApi/LoginWithGooglePlayAsync HTTP/1.1 code=200
+```
+
+and created the Google-linked account:
+
+```
+Users:          google:422c99c23ada82f8ff05bc6dfd233e3e -> aa47e0ab-…
+LinkedAccounts: aa47e0ab-… { Platform: 4 (GooglePlay),
+                             PlatformUserId: "google:422c99c2…" }
+```
+
+Caveat: because `NORD_GOOGLE_CLIENT_ID/SECRET` are not configured, the server
+uses the unverified path and keys the account by device id
+(`req.DeviceId ?? req.ServerAuthCode`). Configuring real Google credentials
+would let it verify the Play Games server auth code instead.
+
+So the complete chain works on the **original signature**: original APK +
+`/system/etc/hosts` redirect + runtime native patches => Google/PGS login that
+lands in the private server.
