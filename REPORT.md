@@ -616,3 +616,34 @@ device profile stays empty (=> new-character flow).
 satisfy `CloudProfileSync` / `SilentMigrationAttempt` (the "online game account
 files" / cloud snapshot), i.e. the previously-declined option C; OR the client
 must be patched to skip the offline reconcile and take the online entry.
+
+## 21. Original (Google-signed) APK works with the private server; PGS auth confirmed
+
+Ran the **unmodified, Google-signed** APK (`dist/android-arm64-src/`, signer SHA-1
+`f162ee2b…`) against the private server **without re-signing**:
+- `/system/etc/hosts`: `prod.nordicandia.net` / `staging.nordicandia.net` →
+  server IP (overlayfs remount makes `/system` writable).
+- Frida applies the same 13 runtime patches to the genuine `libil2cpp.so`
+  (`Memory.protect` + `writeByteArray`), so no APK modification is needed.
+
+Result: login chain all 200 (`GetNonce → LoginWithStandaloneDeviceIdAsync →
+GetUserAccountData → SkipMigrationAsync → GetCharacterList`), stable process,
+character list shown.
+
+Google Play Games on the original signature:
+- `PlayGamesPlatform.Authenticate` → **PGS sign-in UI launched**, account
+  `smiblecs@gmail.com` recognized. First attempt failed (`SignInOnResult
+  success=0`) because the account had no Play Games profile.
+- After creating the profile (gamer tag `StrenuousArch149`),
+  `PlayGamesPlatform.IsAuthenticated == 1`.
+
+=> The Google/PGS auth problem is **purely caused by re-signing**. The original
+signature authenticates fine; the re-signed private build cannot.
+
+Game-side Google login entry: `NetClient.SignInWithGooglePlay(createAccountIfPossible,
+manualLogin)` (`0x02DA2398`) installs `GooglePlayAuthenticationFilter`
+(`0x02E4ACDC`), whose `GetGooglePlayAuthCodeAsync` (`0x02E4AF40`) does
+`PlayGamesPlatform.Authenticate` → `RequestServerSideAccess` and sends the code
+to `LoginWithGooglePlayAsync` (server already implements it). The game never
+calls it (no UI), and Frida-injected calls into these NetClient async methods do
+not observably execute, so finishing this still needs a native patch.
