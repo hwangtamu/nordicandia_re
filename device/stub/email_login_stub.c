@@ -154,8 +154,8 @@ __attribute__((naked)) void email_capture_trampoline(void) {
     );
 }
 
-/* Seed g_windowMgr from UIWindowManager.Init (runs at startup, x0 = instance).
- * Displaces `str x30,[sp,#-0x50]!` and resumes at 0x0278CD90. */
+/* Seed g_windowMgr from UIWindowManager.Update (called every frame, x0 = instance).
+ * Displaces `sub sp,sp,#0xb0` and resumes at 0x0278D73C. Cheap: one load + test. */
 __attribute__((naked)) void email_capture_wm_trampoline(void) {
     __asm__ volatile(
         "stp x9, x10, [sp, #-16]!\n"
@@ -166,7 +166,7 @@ __attribute__((naked)) void email_capture_wm_trampoline(void) {
         "str  x0, [x9]\n"
         "1:\n"
         "ldp x9, x10, [sp], #16\n"
-        "str x30, [sp, #-0x50]!\n"
+        "sub sp, sp, #0xb0\n"
         "adrp x9, WMGR_RESUME\n"
         "add  x9, x9, :lo12:WMGR_RESUME\n"
         "br   x9\n"

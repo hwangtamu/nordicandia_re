@@ -26,7 +26,7 @@ ENTRY_VA = 0x344EC24
 SHOWDLG = 0x0279075C
 ONSIGNIN = 0x026340E0
 REFRESH = 0x02633BD0
-WMGR_INIT = 0x0278CD8C
+WMGR_INIT = 0x0278D738
 WMGR_TRAMP = 0x344F0E0
 
 
@@ -48,8 +48,10 @@ def _off_for(segs, va):
     raise ValueError(f"{va:#x} not in any segment")
 
 
-def _bl(frm, to):
-    return struct.pack("<I", 0x94000000 | (((to - frm) // 4) & 0x3FFFFFF))
+def _b(frm, to):
+    # plain branch (B, opcode 0x14...): must NOT set x30 or the patched
+    # function would return to the patch site instead of its caller.
+    return struct.pack("<I", 0x14000000 | (((to - frm) // 4) & 0x3FFFFFF))
 
 
 def build(src: Path, out: Path, stub_bin: Path):
@@ -66,16 +68,18 @@ def build(src: Path, out: Path, stub_bin: Path):
     o = _off_for(segs, SHOWDLG)
     original = bytes(result[o:o + 4])
     assert original == bytes.fromhex("ffc301d1"), f"unexpected prologue {original.hex()}"
-    result[o:o + 4] = _bl(SHOWDLG, TRAMPOLINE_VA)
+    result[o:o + 4] = _b(SHOWDLG, TRAMPOLINE_VA)
 
     # OnSignInClicked -> email login entry
     o = _off_for(segs, ONSIGNIN)
-    result[o:o + 4] = _bl(ONSIGNIN, ENTRY_VA)
+    result[o:o + 4] = _b(ONSIGNIN, ENTRY_VA)
 
-    # NOTE: seeding UIWindowManager from UIWindowManager.Init was tried and
-    # crashes at startup (Init is entered before the object is fully usable in
-    # this build); the windowMgr is instead captured by the ShowSingleInputDialog
-    # trampoline below. WMGR_INIT/WMGR_TRAMP kept for reference.
+    # Seed the UIWindowManager instance from UIWindowManager.Update (called every
+    # frame with x0 = instance). A first attempt through Init crashed, so Update
+    # is used instead.
+    o = _off_for(segs, WMGR_INIT)
+    assert bytes(result[o:o+4]) == bytes.fromhex("ffc302d1"), "unexpected UIWindowManager.Update prologue"
+    result[o:o + 4] = _b(WMGR_INIT, WMGR_TRAMP)
 
     # RefreshSignInButton normally destroys the "Sign in" button; keep it.
     o = _off_for(segs, REFRESH)
