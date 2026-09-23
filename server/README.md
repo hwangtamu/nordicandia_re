@@ -15,12 +15,13 @@ reconstructed entirely from the APK (no original server source).
 | `IGameModeServiceApi` (`GetSeasonInfo`, season characters) | ✅ real (`Season`/`SeasonHardcore` create + +100% exp buff) |
 | `IInventoryServiceApi.ItemOperation` | ✅ real, persisted |
 | `IVirtualCurrencyServiceApi` | ✅ real, persisted |
+| `ICatalogServiceApi` | ✅ potion + combat-pet elixir catalogs; silver/opal purchases persisted |
 | `ILeaderboardServiceApi` | ✅ real, derived from character standings |
 | `ISocialServiceApi.InspectCharacter` | ✅ real (equipped gear + stats + world progress) |
 | `IUserLinkedAccountServiceApi` | ✅ real (link/unlink/change password) |
 | `IOfferingServiceApi.GetCurrentBlessings` | ✅ real (returns no blessing) |
 | `ICharacterGameEventServiceApi` (dungeon/niflheim/helheim/odrs/vanaheim/death) | ✅ real, world progression persisted |
-| Other services (crafting, guilds, store, pets, …) | valid auto-generated stubs returning default/empty DTOs |
+| Other services (crafting, guilds, store, pet state, …) | valid auto-generated stubs returning default/empty DTOs |
 | Realtime WebSocket (`Envelope`/`Message`) | ✅ `/ws` gateway (HTTP/1.1 upgrade or HTTP/2 CONNECT) |
 | Persistence | file-backed `GameStore` (`data/world.json`) — accounts, sessions, characters, items, silver, opals, experience, level, attributes, skills, world progression, season bonus |
 
@@ -212,13 +213,11 @@ cd ../dist/desktop
 SteamAppId=1503790 SteamGameId=1503790 ./Nordicandia.exe
 ```
 
-The smoke test (`Nordicandia.TestClient`) was updated to use the same LZ4 options, so
-`run.sh` still passes. Verified against the real client: `LoginWithSteamAsync`,
-`GetUserAccountData`, `SendDeviceInfo`, `GetSeasonInfo` and `GetCatalog` all return
-200 over TLS/HTTP2. The client then raises a `NullReferenceException` dialog because
-those services are still auto-generated stubs returning empty DTOs — implementing
-`ICatalogServiceApi` / `IGameModeServiceApi` / `ILoginServiceApi.GetUserAccountData`
-is the next step.
+The smoke test (`Nordicandia.TestClient`) uses the same LZ4 options. Verified against
+the real client: `LoginWithSteamAsync`, `GetUserAccountData`, `SendDeviceInfo`,
+`GetSeasonInfo` and `GetCatalog` all return 200 over TLS/HTTP2. The potion and
+combat-pet merchants expose silver and opal catalogs, validate the displayed price,
+deduct currency, and persist the purchased elixir on inventory page 1.
 
 ## Next steps
 

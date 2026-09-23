@@ -27,9 +27,11 @@ BASE_NAME = "com.IterativeStudios.Nordicandia.apk"
 ASSETS_NAME = "UnityDataAssetPack.apk"
 METADATA = "assets/bin/Data/Managed/Metadata/global-metadata.dat"
 
+_WIN = os.name == "nt"
 BUILD_TOOLS = os.environ.get("ANDROID_BUILD_TOOLS", "/home/han.wang1/Android/Sdk/build-tools/36.0.0")
-ZIPALIGN = os.path.join(BUILD_TOOLS, "zipalign")
-APKSIGNER = os.path.join(BUILD_TOOLS, "apksigner")
+ZIPALIGN = os.path.join(BUILD_TOOLS, "zipalign.exe" if _WIN else "zipalign")
+APKSIGNER = os.path.join(BUILD_TOOLS, "apksigner.bat" if _WIN else "apksigner")
+KEYTOOL = os.environ.get("KEYTOOL", "keytool.exe" if _WIN else "keytool")
 
 
 def patch_metadata(data: bytes, prod_host: str, staging_host: str) -> bytes:
@@ -99,6 +101,7 @@ def main():
     ap.add_argument("--prod-host", default="ab.10-0-2-2.sslip.io")
     ap.add_argument("--staging-host", default="abcde.10-0-2-2.sslip.io")
     ap.add_argument("--config-apk", default=None, help="config split filename (default: auto-detect config.*.apk)")
+    ap.add_argument("--online-arm64", action="store_true", help="Patch original 1.9.3 ARM64 device login and online entry")
     ap.add_argument("--keystore", default=None)
     ap.add_argument("--ks-pass", default="nordpass")
     ap.add_argument("--alias", default="nord")
@@ -120,7 +123,7 @@ def main():
     keystore = args.keystore or os.path.join(args.outdir, "nordicandia.keystore")
     if not os.path.exists(keystore):
         print("Generating keystore", keystore)
-        run("keytool", "-genkeypair", "-keystore", keystore, "-alias", args.alias,
+        run(KEYTOOL, "-genkeypair", "-keystore", keystore, "-alias", args.alias,
             "-keyalg", "RSA", "-keysize", "2048", "-validity", "10000",
             "-storepass", args.ks_pass, "-keypass", args.ks_pass,
             "-dname", "CN=Nordicandia Private Server, O=RE")
@@ -135,14 +138,25 @@ def main():
     print(f"  prod    -> {args.prod_host}")
     print(f"  staging -> {args.staging_host}")
 
+    config_tmp = None
+    if args.online_arm64:
+        from patch_android_online import patch
+        library = "lib/arm64-v8a/libil2cpp.so"
+        with zipfile.ZipFile(config_src) as z:
+            patched_library = patch(z.read(library))
+        config_tmp = os.path.join(args.outdir, os.path.basename(config_src) + ".patched-unsigned")
+        rewrite_apk(config_src, config_tmp, {library: patched_library})
+
     jobs = [(base_tmp, os.path.join(args.outdir, BASE_NAME)),
-            (config_src, os.path.join(args.outdir, os.path.basename(config_src))),
+            (config_tmp or config_src, os.path.join(args.outdir, os.path.basename(config_src))),
             (assets_src, os.path.join(args.outdir, ASSETS_NAME))]
     for src, dst in jobs:
         print("Signing", os.path.basename(dst))
         sign(src, dst, keystore, args.ks_pass, args.alias)
     if os.path.exists(base_tmp):
         os.remove(base_tmp)
+    if config_tmp:
+        os.remove(config_tmp)
 
     members = [(BASE_NAME, jobs[0][1]), ("icon.png", os.path.join(args.indir, "icon.png")),
                (os.path.basename(config_src), jobs[1][1]), (ASSETS_NAME, jobs[2][1]),

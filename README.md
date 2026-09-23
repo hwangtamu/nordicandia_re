@@ -171,6 +171,17 @@ inventory/currency/experience/level/attribute/world progression changes are pers
 
 The patched copy records what was changed in `dist/desktop/private-build.json`.
 
+To apply the optional 10x magic-find gameplay patch to that desktop copy:
+
+```bash
+node server/patch-desktop-magic-find.mjs dist/desktop 10
+```
+
+This changes the `magicFindFactorMultiplier` used by the 1.9.3 desktop client's
+random-item generator. The script keeps a one-time backup at
+`dist/desktop/GameAssembly.dll.magic-find.orig` and records the patch in
+`dist/desktop/private-build.json`.
+
 ---
 
 ## Connecting the Android client
