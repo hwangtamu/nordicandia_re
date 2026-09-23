@@ -799,3 +799,51 @@ Together with an existing on-device local profile
   would need the import call baked in as a native stub.
 - Google/PGS login still requires the original signature; a re-signed private
   package needs the email/password native login stub instead (see Sections 16/19).
+
+## 25. Standalone XAPK — no root, no Frida, no hosts edit
+
+Goal: a user installs only `Nordicandia_1.9.3_private.xapk` and can log in and
+play (Normal and Season) against the private server.
+
+What was needed and how it is now self-contained:
+
+1. **Server host** — the client's gRPC host literals live in
+   `global-metadata.dat` and are patched **length-preserving** by
+   `server/patch_xapk.py`. The previous approach edited `/system/etc/hosts`
+   (root only). It is now replaced by a DNS alias baked into the APK:
+   * `prod.nordicandia.net` (20) -> `3.140.50.136.nip.io.` (20)
+   * `staging.nordicandia.net` (23) -> `stg.3.140.50.136.nip.io` (23)
+
+   `nip.io` resolves both names to the Lightsail server `3.140.50.136`. The
+   listener is not SNI-restricted (`virtual_hosts.domains = ["*"]`), and the
+   client's certificate check is already patched, so any hostname works.
+2. **Library patches** — all 15 online patches (device login, TLS,
+   HTTP/1.1 gRPC, Season UI, and the Section 24 world-entry patches) are applied
+   by `--online-arm64` and shipped inside `config.arm64_v8a.apk`.
+3. **Local profile** — **not required.** With the Section 24 branch patch the
+   client enters the world from the online `EnterGameWithCharacter` data; a
+   device with the profile directory deleted still entered the world and did not
+   recreate one.
+
+Build:
+
+```
+ANDROID_BUILD_TOOLS=$ANDROID_HOME/build-tools/36.0.0 \
+JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" \
+python3 server/patch_xapk.py \
+  --indir dist/android-arm64-src \
+  --outdir dist/android-arm64-online-patched \
+  --online-arm64 \
+  --prod-host "3.140.50.136.nip.io." \
+  --staging-host "stg.3.140.50.136.nip.io"
+```
+
+Verified on a **clean emulator install** (no `/system/etc/hosts` entry, no
+Frida, no pre-existing profile):
+`Terms of Service -> Analytics -> Play -> New character (Season)
+-> Create "EmuHero" -> restart -> Play -> character Play -> "Skip the
+Tutorial?" -> live world`.
+
+Note: the re-signed package cannot use Google Play Games (signature mismatch),
+so login is the patched Device/StandaloneDeviceId flow. For real user accounts
+the email/password native login stub (Sections 16/19) is still the follow-up.
