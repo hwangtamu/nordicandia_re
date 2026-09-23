@@ -72,10 +72,10 @@ def build(src: Path, out: Path, stub_bin: Path):
     o = _off_for(segs, ONSIGNIN)
     result[o:o + 4] = _bl(ONSIGNIN, ENTRY_VA)
 
-    # Seed the UIWindowManager instance from UIWindowManager.Init(x0 = instance).
-    o = _off_for(segs, WMGR_INIT)
-    assert bytes(result[o:o+4]) == bytes.fromhex("fe0f1bf8"), "unexpected UIWindowManager.Init prologue"
-    result[o:o + 4] = _bl(WMGR_INIT, WMGR_TRAMP)
+    # NOTE: seeding UIWindowManager from UIWindowManager.Init was tried and
+    # crashes at startup (Init is entered before the object is fully usable in
+    # this build); the windowMgr is instead captured by the ShowSingleInputDialog
+    # trampoline below. WMGR_INIT/WMGR_TRAMP kept for reference.
 
     # RefreshSignInButton normally destroys the "Sign in" button; keep it.
     o = _off_for(segs, REFRESH)

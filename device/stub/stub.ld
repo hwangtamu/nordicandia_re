@@ -8,7 +8,7 @@ SECTIONS {
   . = ALIGN(16);
   rodata_start = .;
   .rodata : { *(.rodata*) }
-  . = 0x5DE5000;
+  . = 0x5DDE000;
   .bss : { *(.bss*) *(COMMON) }
   /DISCARD/ : { *(.comment) *(.note*) *(.llvm_addrsig) }
 }
