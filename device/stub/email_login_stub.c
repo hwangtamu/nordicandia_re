@@ -38,11 +38,11 @@ extern ptr NetClient_RegisterGameAccount(ptr self, ptr email, ptr pw, ptr repeat
 #define STAGE_REG_PW         4
 #define STAGE_REG_REPEAT     5
 
-static ptr g_realAction;   /* a real System.Action<string> to clone (captured) */
-static ptr g_windowMgr;    /* UIWindowManager instance                        */
-static ptr g_email;
-static ptr g_pw;
-static int g_stage;
+ptr g_realAction;   /* a real System.Action<string> to clone (captured) */
+ptr g_windowMgr;    /* UIWindowManager instance                        */
+ptr g_email;
+ptr g_pw;
+int g_stage;
 
 /* ---- helpers ---------------------------------------------------------- */
 static void memcpy8(ptr dst, ptr src, u64 n) {
@@ -102,14 +102,14 @@ static void on_input(ptr self, ptr arg, ptr method) {
 /* ---- entry points ----------------------------------------------------- */
 /* Called (branch patch) from WindowSelectGameMode.OnSignInClicked. */
 void email_login_entry(ptr self) {
-    g_windowMgr = self;
+    (void)self;                       /* real UIWindowManager comes from the capture trampoline */
     g_stage = STAGE_LOGIN_EMAIL;
     show("Email", on_input);
 }
 
 /* A second entry for a Register button. */
 void email_register_entry(ptr self) {
-    g_windowMgr = self;
+    (void)self;
     g_stage = STAGE_REG_EMAIL;
     show("Email (register)", on_input);
 }
@@ -120,3 +120,55 @@ void email_register_entry(ptr self) {
  * a Frida script while developing.)
  */
 void email_stub_capture(ptr action) { g_realAction = action; }
+/* ------------------------------------------------------------------ *
+ * Capture trampoline (step 3):  patch ShowSingleInputDialogOkCancel's
+ * first instruction (sub sp,sp,#0x70) with `b email_capture_trampoline`.
+ *
+ * The trampoline seeds g_realAction with the first real System.Action<string>
+ * the game passes to the dialog, then re-executes the displaced instruction and
+ * resumes the original function at 0x02790764.
+ *
+ * Register use: only x9/x10 (volatile) are touched, and they are saved/restored
+ * so the original function sees the entry register state it expects.
+ * ------------------------------------------------------------------ */
+__attribute__((naked)) void email_capture_trampoline(void) {
+    __asm__ volatile(
+        "stp x9, x10, [sp, #-16]!\n"
+        "adrp x9, g_realAction\n"
+        "add  x9, x9, :lo12:g_realAction\n"
+        "ldr  x10, [x9]\n"
+        "cbnz x10, 1f\n"
+        "str  x5, [x9]\n"
+        "1:\n"
+        "adrp x9, g_windowMgr\n"
+        "add  x9, x9, :lo12:g_windowMgr\n"
+        "ldr  x10, [x9]\n"
+        "cbnz x10, 2f\n"
+        "str  x0, [x9]\n"
+        "2:\n"
+        "ldp x9, x10, [sp], #16\n"
+        "sub sp, sp, #0x70\n"          /* the displaced original instruction */
+        "adrp x9, SHOWDLG_RESUME\n"
+        "add  x9, x9, :lo12:SHOWDLG_RESUME\n"
+        "br   x9\n"
+    );
+}
+
+/* Seed g_windowMgr from UIWindowManager.Init (runs at startup, x0 = instance).
+ * Displaces `str x30,[sp,#-0x50]!` and resumes at 0x0278CD90. */
+__attribute__((naked)) void email_capture_wm_trampoline(void) {
+    __asm__ volatile(
+        "stp x9, x10, [sp, #-16]!\n"
+        "adrp x9, g_windowMgr\n"
+        "add  x9, x9, :lo12:g_windowMgr\n"
+        "ldr  x10, [x9]\n"
+        "cbnz x10, 1f\n"
+        "str  x0, [x9]\n"
+        "1:\n"
+        "ldp x9, x10, [sp], #16\n"
+        "str x30, [sp, #-0x50]!\n"
+        "adrp x9, WMGR_RESUME\n"
+        "add  x9, x9, :lo12:WMGR_RESUME\n"
+        "br   x9\n"
+    );
+}

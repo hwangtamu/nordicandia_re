@@ -16,6 +16,7 @@ DEFSYMS=(
   --defsym=il2cpp_string_new=0x02318588
   --defsym=NetClient_get_Current=0x02DA1E28
   --defsym=UIWindowManager_ShowSingleInputDialogOkCancel=0x0279075C
+  --defsym=SHOWDLG_RESUME=0x02790764
   --defsym=NetClient_SignInWithEmail=0x02DA2584
   --defsym=NetClient_RegisterGameAccount=0x02DA46E0
 )
