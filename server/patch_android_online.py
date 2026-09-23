@@ -88,6 +88,27 @@ def patch(data):
     #    orr w9, w20, w0  ->  mov w9, w20
     replace(0x2633D5C, bytes.fromhex("8902002a"), bytes.fromhex("e903142a"))
 
+    # --- Offline profile reconcile -> enter world ---
+    # OnPlayClicked signs the account into a local device profile and calls
+    # UnityGame.LoadOfflineProfile. SynchronizeProfileStateMachine (SPSM) then
+    # asserts "Cannot synchronize online account" for any account that the
+    # client classifies as online, so the Play flow aborts before building the
+    # local profile and never schedules the world-entry coroutine
+    # (WindowCharacterList._OnPlayClicked_b__0 -> Player.EnterGame).
+    #
+    # 1) SPSM __c__DisplayClass9_0.<SetupStateMachine>b__4: drop the online
+    #    guard so the state machine proceeds to load the device account.
+    #    tbnz w0,#0,0x26fb774  ->  nop
+    replace(0x26FB754, bytes.fromhex("00010037"), bytes.fromhex("1f2003d5"))
+    # 2) WindowCharacterList._OnPlayClicked_d__52.MoveNext: after the account is
+    #    classified, the client branches online -> 0x257DAE8, offline ->
+    #    0x257E610. Only the offline block initialises the loading UI
+    #    (displayClass.loadingComponent / loadingWindow) and drives
+    #    _OnPlayClicked_b__0 (world entry). The online branch never does, so the
+    #    coroutine is never scheduled. Force the offline block.
+    #    cbnz w8,0x257dae8  ->  nop
+    replace(0x257D29C, bytes.fromhex("68420035"), bytes.fromhex("1f2003d5"))
+
     # MagicOnion.Unity.GrpcChannelProvider.get_Default is never assigned on
     # this build because the GrpcChannelProviderHost scene object is absent
     # when online login is forced from a cold start. Redirect get_Default into

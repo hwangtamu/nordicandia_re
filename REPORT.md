@@ -720,3 +720,82 @@ would let it verify the Play Games server auth code instead.
 So the complete chain works on the **original signature**: original APK +
 `/system/etc/hosts` redirect + runtime native patches => Google/PGS login that
 lands in the private server.
+
+## 24. Entering the world (online account) — the missing link found
+
+### Symptom chain
+"Play" for an online account (Normal or Season) ran:
+
+```
+WindowCharacterList.OnPlayClicked
+  -> NetClient.EnterGameWithCharacter            (200)
+  -> UnityGame.SignInNew(LocalDevice)
+  -> UnityGame.LoadOfflineProfile
+       -> SynchronizeProfileStateMachine (SPSM)
+          -> b__4: if (PlayerAccount.IsOnline) throw "Cannot synchronize online account"
+```
+
+Tracing after NOPing that guard (`0x026FB754`) showed the offline reconcile
+completes (`b__5_d SUCCESS`, `0x26FC034`) but the game just returns to the title
+menu and never opens the realtime WebSocket.
+
+### The world-entry code exists but was never scheduled
+`Player.EnterGame` is only reached from one place:
+
+```
+WindowCharacterList.__c__DisplayClass52_0._OnPlayClicked_b__0      (0x025779F8)
+   _OnPlayClicked_b__0_d.MoveNext                                 (0x02577A98)
+       -> Player.EnterGame(PlayerGameModeAccount, Character)      (0x02C0AF10)
+```
+
+`_OnPlayClicked_b__0` is the "show loading UI -> build GameWorld/Character ->
+`Player.EnterGame` -> show in-game window" coroutine. In our path it was **never
+invoked** (verified with Frida hooks on both the wrapper and MoveNext).
+
+### Why it is never invoked
+`_OnPlayClicked_d__52.MoveNext` classifies the account and branches:
+
+```
+0x0257D298  ldrb w8,[x20,#0x20]        ; isOnline
+0x0257D29C  cbnz w8, 0x0257DAE8        ; online
+0x0257D2A0  b 0x0257E610               ; offline
+```
+
+Only the **offline** block (`0x0257E610`) initialises the loading UI on the
+closure (`str x1,[x20,#0x30]!` = `loadingWindow`, `str x1,[x20,#0x18]!` =
+`loadingComponent`) and drives `_OnPlayClicked_b__0`. The **online** branch never
+does, so the world-entry coroutine is never scheduled. Forcing `b__0` manually
+(without the loading UI) produced `Error (1)` because
+`displayClass+0x18` and `displayClass+0x30` were still null.
+
+### Fix
+Two native patches, added to `server/patch_android_online.py`:
+
+| VA | meaning | original (file bytes) | patched |
+|---|---|---|---|
+| `0x026FB754` | `SPSM b__4`: `tbnz w0,#0,<throw>` (online guard) | `00010037` | `1f2003d5` (nop) |
+| `0x0257D29C` | `OnPlayClicked`: `cbnz w8,0x257dae8` (online branch) | `68420035` | `1f2003d5` (nop) |
+
+The second patch forces the account-classification branch to the offline block,
+which sets up the loading UI and schedules `_OnPlayClicked_b__0`, which finally
+calls `Player.EnterGame`.
+
+Together with an existing on-device local profile
+(`files/Profiles/Local_<deviceId>/{manifest.bin,slot-a.snapshot}`, produced by
+`device/frida_online_profile_inject.js`), the flow now enters the world.
+
+### Verified
+- Real Galaxy S25, **lib patch only, no Frida**: original Google-signed APK +
+  replaced `libil2cpp.so` (sha256 `f5645194c0d10e953d5be5ef94039778808e8e22e8c5a5db98e8e810b6a48e50`)
+  + `/system/etc/hosts` redirect + local profile.
+- Character `Pumpkin` (GameMode = Season) presses **Play** and enters the world:
+  loading -> "Skip the Tutorial?" dialog -> live map with health bar, skill bar,
+  minimap, chat, monsters; character can be moved.
+
+### Remaining notes
+- The local profile is required. It is created once by the injected online
+  profile puller (`OnlineProfilePuller.PullAsync` -> `WriteOnlineProfile` ->
+  `ClientSaveStore.ImportOnlineProfile`). Building it in-client without Frida
+  would need the import call baked in as a native stub.
+- Google/PGS login still requires the original signature; a re-signed private
+  package needs the email/password native login stub instead (see Sections 16/19).
