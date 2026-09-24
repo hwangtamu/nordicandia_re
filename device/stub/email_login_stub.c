@@ -367,7 +367,7 @@ void auto_email_signin(void)
     char* p = 0;
     if (g_autologin_done) return;
     g_frames++;
-    if (g_frames < 900) return;                 /* ~15s: boot + startup device login */
+    if (g_frames < 2700) return;                /* ~45s: past the main menu, client fully up */
     g_autologin_done = 1;
     if (!read_credentials(g_filebuf, sizeof(g_filebuf), &e, &p)) { g_dbg[6] = 0x9999; return; }
     g_dbg[6] = 0xAAAA;
