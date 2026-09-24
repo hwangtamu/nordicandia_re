@@ -59,6 +59,8 @@ extern int  il2cpp_image_get_class_count(ptr image);
 extern ptr il2cpp_image_get_class(ptr image, int index);
 extern const char* il2cpp_class_get_name(ptr klass);
 extern const char* il2cpp_class_get_namespace(ptr klass);
+extern ptr il2cpp_class_get_methods(ptr klass, ptr* iter);
+extern const char* il2cpp_method_get_name(ptr method);
 extern ptr il2cpp_method_get_param(ptr method, unsigned int index);
 extern ptr il2cpp_class_from_type(ptr type);
 extern ptr il2cpp_object_new(ptr klass);
@@ -127,6 +129,10 @@ static int read_credentials(char* buf, int cap, char** email, char** pw)
 #define STAGE_REG_REPEAT     5
 
 volatile long g_dbg[8];  /* diagnostics: make_delegate step results */
+/* Published method table for a class of interest (function pointer + name pointer) */
+volatile long g_meth_fn[64];
+volatile long g_meth_name[64];
+volatile long g_meth_n;
 
 /* ---- SaveManager.SaveCharacter resolver ---------------------------------
  * The client keeps character progress in a LOCAL, encrypted MessagePack file
@@ -164,6 +170,16 @@ void resolve_save_character(void)
             if (!k) continue;
             cn = il2cpp_class_get_name(k);
             if (!cn || !sceq(cn, "SaveManager")) continue;
+            {   /* publish every SaveManager method: pointer + name */
+                ptr it = 0, mm;
+                int n = 0;
+                while ((mm = il2cpp_class_get_methods(k, &it)) != 0 && n < 64) {
+                    g_meth_fn[n] = *(long*)mm;
+                    g_meth_name[n] = (long)(u64)il2cpp_method_get_name(mm);
+                    n++;
+                }
+                g_meth_n = n;
+            }
             m = il2cpp_class_get_method_from_name(k, "SaveCharacter", 5);
             if (!m) m = il2cpp_class_get_method_from_name(k, "SaveCharacter", 3);
             if (!m) { g_dbg[5] = 0xDEAF; return; }
