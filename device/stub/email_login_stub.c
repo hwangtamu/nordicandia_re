@@ -169,8 +169,9 @@ void resolve_save_character(void)
             ptr m, fn;
             if (!k) continue;
             cn = il2cpp_class_get_name(k);
+            if (!cn) continue;
             if (!cn || !sceq(cn, "NetSocket")) continue;
-            {   /* publish every SaveManager method: pointer + name */
+            {   /* publish every method: pointer + name */
                 ptr it = 0, mm;
                 int n = 0;
                 while ((mm = il2cpp_class_get_methods(k, &it)) != 0 && n < 64) {
