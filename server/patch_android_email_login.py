@@ -80,6 +80,10 @@ def _stub_symbols(stub_bin: Path) -> dict:
 SHOWDLG = 0x0279075C
 ONSIGNIN = 0x026340E0
 REFRESH = 0x02633BD0
+# LoadGame.SignInNew drives the *startup* sign-in (device flow). Routing it through the
+# stub makes the credential-file email login the default, so the account is online from
+# the very first frame instead of only after tapping "Sign in".
+LOADGAME_SIGNIN = 0x025B7918
 WMGR_INIT = 0x0278D738
 WMGR_TRAMP = 0x344EE44      # email_capture_wm_trampoline
 
@@ -142,6 +146,10 @@ def build(src: Path, out: Path, stub_bin: Path):
     result[o:o + 4] = _b(WMGR_INIT, wm_tramp)
 
     # RefreshSignInButton normally destroys the "Sign in" button; keep it.
+    # NOTE: hooking LoadGame.SignInNew to switch the *startup* sign-in to the email
+    # flow runs before NetClient exists and the client then reports "Client not
+    # initialized", so the online login is triggered from the UI instead.
+
     o = _off_for(segs, REFRESH)
     result[o:o + 4] = bytes.fromhex("c0035fd6")   # ret
 
