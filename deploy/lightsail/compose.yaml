@@ -9,11 +9,14 @@ services:
     user: "1654:1654"
     ports:
       - "${NORD_BIND_IP:-127.0.0.1}:${NORD_PUBLIC_PORT:-443}:8443"
+      # Plain HTTP/1.1 leaderboard JSON feed for the patched mobile client.
+      - "${NORD_BIND_IP:-127.0.0.1}:${NORD_PLAIN_PORT:-8081}:8081"
     environment:
       # Override the image's Cloud Run mode: Kestrel terminates TLS here.
       PORT: ""
       NORD_LISTEN_ANY: "1"
       NORD_HTTPS_PORT: "8443"
+      NORD_PLAIN_PORT: "8081"
       NORD_CERT_PFX: /certs/server.pfx
       NORD_CERT_PWD: ${NORD_CERT_PWD:?Set NORD_CERT_PWD}
       NORD_DATA_DIR: /data

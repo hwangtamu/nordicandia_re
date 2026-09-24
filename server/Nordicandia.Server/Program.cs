@@ -2,6 +2,7 @@ using MagicOnion.Server;
 using MagicOnion.Serialization;
 using MessagePack;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Nordicandia.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddGrpc();
@@ -17,6 +18,9 @@ var certPfx = Environment.GetEnvironmentVariable("NORD_CERT_PFX");
 var certPwd = Environment.GetEnvironmentVariable("NORD_CERT_PWD");
 var httpsPort = int.TryParse(Environment.GetEnvironmentVariable("NORD_HTTPS_PORT"), out var hp) ? hp : 443;
 var h2cPort = int.TryParse(Environment.GetEnvironmentVariable("NORD_H2C_PORT"), out var hp2) ? hp2 : 50051;
+// Plain HTTP/1.1 port serving the leaderboard JSON feed consumed by the patched mobile
+// client (which cannot reach the MagicOnion gRPC leaderboard API). See LeaderboardHttp.
+var plainPort = int.TryParse(Environment.GetEnvironmentVariable("NORD_PLAIN_PORT"), out var pp) ? pp : 8081;
 var cloudRun = int.TryParse(Environment.GetEnvironmentVariable("PORT"), out var cloudPort);
 var listenAny = Environment.GetEnvironmentVariable("NORD_LISTEN_ANY") == "1";
 
@@ -35,6 +39,9 @@ builder.WebHost.ConfigureKestrel(o =>
 
     // plaintext HTTP/2 (dev / test client)
     o.ListenLocalhost(h2cPort, l => l.Protocols = HttpProtocols.Http2);
+
+    // Plain HTTP/1.1 JSON feed for the patched mobile client.
+    if (listenAny && plainPort > 0) o.ListenAnyIP(plainPort, l => l.Protocols = HttpProtocols.Http1);
 
     // TLS + HTTP/2 (real APK). Cert must be valid for the patched hostname.
     if (!string.IsNullOrEmpty(certPfx) && File.Exists(certPfx))
@@ -71,6 +78,7 @@ if (Environment.GetEnvironmentVariable("NORD_DUMP_BODY") == "1")
 }
 
 app.MapMagicOnionService();
+app.MapLeaderboardJson();
 app.MapGet("/", () => "Nordicandia private server (MagicOnion 5.1.8)");
 app.MapGet("/healthz", () => Results.Ok(new { status = "ok" }));
 

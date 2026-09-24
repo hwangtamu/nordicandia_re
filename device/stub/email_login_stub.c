@@ -30,6 +30,10 @@ extern void UIWindowManager_ShowSingleInputDialogOkCancel(
         ptr self, ptr msg, ptr initial, ptr a, ptr b, ptr onOk, ptr onCancel, ptr onValidate);
 extern ptr NetClient_SignInWithEmail(ptr self, ptr email, ptr pw);
 extern ptr NetClient_RegisterGameAccount(ptr self, ptr email, ptr pw, ptr repeat);
+extern ptr il2cpp_class_get_method_from_name(ptr klass, const char* name, int argc);
+extern ptr il2cpp_method_get_param(ptr method, unsigned int index);
+extern ptr il2cpp_class_from_type(ptr type);
+extern ptr il2cpp_object_new(ptr klass);
 
 /* ---- state ------------------------------------------------------------ */
 #define STAGE_LOGIN_EMAIL    1
@@ -62,14 +66,28 @@ static void memcpy8(ptr dst, ptr src, u64 n) {
  */
 static u8 g_fake[0x48] __attribute__((aligned(16)));
 
+/* Build a System.Action<string> at runtime, without a template instance:
+ * UIWindowManager klass -> ShowSingleInputDialogOkCancel MethodInfo ->
+ * parameter 4 (Action<string>) type -> klass -> il2cpp_object_new. */
 static ptr make_delegate(void (*cb)(ptr, ptr, ptr)) {
-    if (!g_realAction) return 0;
-    memcpy8(g_fake, g_realAction, 0x48);
-    *(ptr*)(g_fake + 0x10) = (ptr)cb;
-    *(ptr*)(g_fake + 0x18) = (ptr)cb;
-    *(ptr*)(g_fake + 0x20) = 0;
-    *(ptr*)(g_fake + 0x40) = (ptr)g_fake;
-    return (ptr)g_fake;
+    if (!g_windowMgr) return 0;
+    ptr klass = *(ptr*)g_windowMgr;
+    if (!klass) return 0;
+    ptr method = il2cpp_class_get_method_from_name(klass, "ShowSingleInputDialogOkCancel", 7);
+    if (!method) return 0;
+    ptr type = il2cpp_method_get_param(method, 4);
+    if (!type) return 0;
+    ptr aklass = il2cpp_class_from_type(type);
+    if (!aklass) return 0;
+    ptr obj = il2cpp_object_new(aklass);
+    if (!obj) return 0;
+    *(ptr*)((u8*)obj + 0x10) = (ptr)cb;   /* method_ptr  */
+    *(ptr*)((u8*)obj + 0x18) = (ptr)cb;   /* invoke_impl */
+    *(ptr*)((u8*)obj + 0x20) = 0;         /* target      */
+    *(ptr*)((u8*)obj + 0x28) = 0;         /* method      */
+    *(ptr*)((u8*)obj + 0x40) = obj;       /* self        */
+    g_realAction = obj;                   /* keep a ref for debugging */
+    return obj;
 }
 
 static void show(const char* title, void (*cb)(ptr, ptr, ptr)) {

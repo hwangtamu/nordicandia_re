@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using MagicOnion;
 using SharedNet.Api;
@@ -18,30 +16,11 @@ namespace Nordicandia.Server.Services;
 /// </summary>
 public sealed partial class LeaderboardServiceApiImpl
 {
-    private static readonly SharedNet.Constants.Game.GameMode[] Modes =
-    {
-        SharedNet.Constants.Game.GameMode.Normal,
-        SharedNet.Constants.Game.GameMode.NormalHardcore,
-        SharedNet.Constants.Game.GameMode.Season,
-        SharedNet.Constants.Game.GameMode.SeasonHardcore,
-        SharedNet.Constants.Game.GameMode.Challenge,
-        SharedNet.Constants.Game.GameMode.ChallengeHardcore,
-    };
+    private static readonly SharedNet.Constants.Game.GameMode[] Modes = LeaderboardQuery.Modes;
+    private static readonly SharedNet.Constants.Game.CharacterClass[] Classes = LeaderboardQuery.Classes;
 
-    private static readonly SharedNet.Constants.Game.CharacterClass[] Classes =
-    {
-        SharedNet.Constants.Game.CharacterClass.Warrior,
-        SharedNet.Constants.Game.CharacterClass.Paladin,
-        SharedNet.Constants.Game.CharacterClass.Assassin,
-        SharedNet.Constants.Game.CharacterClass.Barbarian,
-        SharedNet.Constants.Game.CharacterClass.Hunter,
-        SharedNet.Constants.Game.CharacterClass.Mage,
-        SharedNet.Constants.Game.CharacterClass.Necromancer,
-        SharedNet.Constants.Game.CharacterClass.Priest,
-    };
-
-    private static string Mode(SharedNet.Constants.Game.GameMode mode) => mode.ToString().ToLowerInvariant();
-    private static string Cls(SharedNet.Constants.Game.CharacterClass cls) => cls.ToString().ToLowerInvariant();
+    private static string Mode(SharedNet.Constants.Game.GameMode mode) => LeaderboardQuery.Mode(mode);
+    private static string Cls(SharedNet.Constants.Game.CharacterClass cls) => LeaderboardQuery.Cls(cls);
 
     public UnaryResult<GetRelevantLeaderboardsAndTournamentsResponse> GetRelevantLeaderboards(GetRelevantLeaderboardsAndTournamentsRequest req)
     {
@@ -90,13 +69,7 @@ public sealed partial class LeaderboardServiceApiImpl
 
     private static LeaderboardRecordListDto Records(string name, int? limit)
     {
-        var (mode, classFilter) = Parse(name);
-        var ranked = GameStore.Instance.Standings()
-            .Where(s => mode == null || s.GameMode == mode)
-            .Where(s => classFilter == null || s.Class == classFilter)
-            .OrderByDescending(s => s.Level)
-            .ThenByDescending(s => s.Experience)
-            .ToList();
+        var ranked = LeaderboardQuery.Ranked(name);
 
         var records = ranked.Take(Math.Clamp(limit ?? 50, 1, 200))
             .Select((s, i) => ToRecord(name, s, i + 1))
@@ -113,13 +86,7 @@ public sealed partial class LeaderboardServiceApiImpl
 
     private static LeaderboardRecordListDto AroundOwner(string name, Guid ownerId, int? limit)
     {
-        var (mode, classFilter) = Parse(name);
-        var ranked = GameStore.Instance.Standings()
-            .Where(s => mode == null || s.GameMode == mode)
-            .Where(s => classFilter == null || s.Class == classFilter)
-            .OrderByDescending(s => s.Level)
-            .ThenByDescending(s => s.Experience)
-            .ToList();
+        var ranked = LeaderboardQuery.Ranked(name);
 
         var index = ranked.FindIndex(s => s.CharacterId == ownerId || s.Owner == ownerId);
         if (index < 0) index = 0;
@@ -156,33 +123,7 @@ public sealed partial class LeaderboardServiceApiImpl
         OwnerType = SharedNet.Constants.LeaderboardScoreOwnerType.Character,
     };
 
-    private static long EncodeScore(string name, GameStore.CharacterStanding s)
-    {
-        if (name != null && name.StartsWith("character_level", StringComparison.Ordinal))
-            return (long)Math.Round(1_000_000.0 * Math.Log(Math.Max(1.0, s.Level)));
-        if (name != null && name.StartsWith("helheim_depth", StringComparison.Ordinal))
-            return (long)s.WorldTier * 1_000_000 + (long)s.WorldWaypoint * 1_000;
-        return (long)Math.Round(s.Level);
-    }
+    private static long EncodeScore(string name, GameStore.CharacterStanding s) => LeaderboardQuery.EncodeScore(name, s);
 
-    private static (SharedNet.Constants.Game.GameMode? mode, SharedNet.Constants.Game.CharacterClass? cls) Parse(string name)
-    {
-        if (string.IsNullOrEmpty(name)) return (null, null);
-        SharedNet.Constants.Game.GameMode? mode = null;
-        foreach (var m in Modes)
-            if (name.EndsWith("_" + Mode(m), StringComparison.Ordinal)) { mode = m; break; }
-
-        SharedNet.Constants.Game.CharacterClass? cls = null;
-        if (name.StartsWith("character_level_", StringComparison.Ordinal) && !name.StartsWith("character_level_overall_", StringComparison.Ordinal))
-            foreach (var c in Classes)
-                if (name.Contains("_" + Cls(c) + "_", StringComparison.Ordinal)) { cls = c; break; }
-
-        return (mode, cls);
-    }
-
-    private static Guid DeterministicGuid(string name)
-    {
-        var hash = MD5.HashData(Encoding.UTF8.GetBytes("nordicandia.lb." + name));
-        return new Guid(hash);
-    }
+    private static Guid DeterministicGuid(string name) => LeaderboardQuery.DeterministicGuid(name);
 }
