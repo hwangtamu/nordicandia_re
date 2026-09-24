@@ -377,8 +377,9 @@ void auto_email_signin(void)
     g_autologin_tries++;
     if (!read_credentials(g_filebuf, sizeof(g_filebuf), &e, &p)) { g_dbg[6] = 0x9999; return; }
     g_dbg[6] = 0xA000 + g_autologin_tries;
-    LoginStateMachineNew_Initialize();
-    g_dbg[6] = 0xA500 + g_autologin_tries;
+    /* NOTE: calling LoginStateMachineNew.Initialize() here is NOT possible - it is an
+     * instance method and we have no instance in this context, so it faults. The
+     * machine's reset has to come from the UI path instead. */
     UnityGame_SignInNew(2, 1, 0, il2cpp_string_new(e), il2cpp_string_new(p));
     g_dbg[6] = 0xB000 + g_autologin_tries;
 }
