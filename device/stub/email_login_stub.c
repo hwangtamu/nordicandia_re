@@ -390,9 +390,15 @@ void auto_email_signin(void)
     {
         ptr es = il2cpp_string_new(e);
         ptr ps = il2cpp_string_new(p);
-        NetClient_SignInWithEmail(NetClient_get_Current(), es, ps);   /* fresh session */
+        ptr cur;
+        /* The login machine is the proven path, so it runs first. */
+        UnityGame_SignInNew(2, 1, 0, es, ps);
         g_dbg[6] = 0xA800 + g_autologin_tries;
-        UnityGame_SignInNew(2, 1, 0, es, ps);                         /* account online */
+        /* Then an explicit server login so the realtime socket has a fresh session;
+         * NetClient.Current can be null this early, so guard it. */
+        cur = NetClient_get_Current();
+        if (cur) { NetClient_SignInWithEmail(cur, es, ps); g_dbg[6] = 0xAA00 + g_autologin_tries; }
+        else     { g_dbg[6] = 0xAB00 + g_autologin_tries; }
     }
     g_dbg[6] = 0xB000 + g_autologin_tries;
 }
