@@ -27,8 +27,12 @@ typedef void*         ptr;
 /* ---- client functions (absolute VAs; resolved with --defsym) ---------- */
 extern ptr il2cpp_string_new(const char* utf8);
 extern ptr NetClient_get_Current(void);
+/* (this, title, message, initialText, placeholder, Action<string> onOk,
+ *  Action onCancel, Action<WindowDialogSingleInputOkCancel,string> onValidate,
+ *  bool, bool, int) — ten parameters after `this`. */
 extern void UIWindowManager_ShowSingleInputDialogOkCancel(
-        ptr self, ptr msg, ptr initial, ptr a, ptr b, ptr onOk, ptr onCancel, ptr onValidate);
+        ptr self, ptr title, ptr message, ptr initial, ptr placeholder,
+        ptr onOk, ptr onCancel, ptr onValidate, int a, int b, int c);
 /* The official entry point used by WindowLogin.OnLoginClicked:
  *   UnityGame.SignInNew(LoginAccountTypes type, bool createAccountIfPossible,
  *                       bool isSilentLogin, string email, string password)
@@ -83,7 +87,7 @@ static u8 g_fake[0x48] __attribute__((aligned(16)));
  *    Action<WindowDialogSingleInputOkCancel,string>, bool, bool, int)
  * so the lookup must use argc = 10; 7 silently yields a null MethodInfo and the
  * dialog then invokes a null callback. */
-static ptr make_delegate(void (*cb)(ptr, ptr, ptr)) {
+static ptr make_delegate_for(int paramIndex, int invokeArity, void (*cb)(ptr, ptr, ptr)) {
     ptr klass, method, type, aklass, obj;
     g_dbg[0] = (long)(u64)g_windowMgr;
     if (!g_windowMgr) return 0;
@@ -93,7 +97,7 @@ static ptr make_delegate(void (*cb)(ptr, ptr, ptr)) {
     method = il2cpp_class_get_method_from_name(klass, "ShowSingleInputDialogOkCancel", 10);
     g_dbg[2] = (long)(u64)method;
     if (!method) return 0;
-    type = il2cpp_method_get_param(method, 4);
+    type = il2cpp_method_get_param(method, (unsigned)paramIndex);
     g_dbg[3] = (long)(u64)type;
     if (!type) return 0;
     aklass = il2cpp_class_from_type(type);
@@ -105,25 +109,43 @@ static ptr make_delegate(void (*cb)(ptr, ptr, ptr)) {
     *(ptr*)((u8*)obj + 0x10) = (ptr)cb;   /* method_ptr  */
     *(ptr*)((u8*)obj + 0x18) = (ptr)cb;   /* invoke_impl */
     *(ptr*)((u8*)obj + 0x20) = 0;         /* target      */
-    *(ptr*)((u8*)obj + 0x28) = 0;         /* method      */
+    /* The dialog inspects Delegate.Method, and a null there faults inside it, so
+     * point it at the target delegate type's own Invoke MethodInfo. */
+    *(ptr*)((u8*)obj + 0x28) = il2cpp_class_get_method_from_name(aklass, "Invoke", invokeArity);
     *(ptr*)((u8*)obj + 0x40) = obj;       /* self        */
     g_realAction = obj;                   /* keep a ref for debugging */
     return obj;
 }
 
+static ptr make_delegate(void (*cb)(ptr, ptr, ptr)) { return make_delegate_for(4, 1, cb); }
+
+/* No-op used for the dialog's optional callbacks; the framework always supplies the
+ * delegate itself plus its arguments, which are ignored here. */
+static void on_noop(ptr self, ptr arg, ptr method) { (void)self; (void)arg; (void)method; }
+
 static void show(const char* title, void (*cb)(ptr, ptr, ptr)) {
-    ptr dlg, msg;
+    ptr dlg, cancel, validate, msg, empty;
     g_dbg[6] = 0xA1;                       /* show() entered */
-    dlg = make_delegate(cb);
-    g_dbg[6] = 0xA2;                       /* delegate built */
+    dlg = make_delegate_for(4, 1, cb);     /* Action<string>  (ok)     */
+    g_dbg[6] = 0xA2;
+    cancel = make_delegate_for(5, 0, on_noop); /* Action      (cancel) */
+    validate = make_delegate_for(6, 2, on_noop); /* Action<..,string>   */
+    g_dbg[5] = (long)(u64)cancel;
+    g_dbg[3] = (long)(u64)validate;
     msg = il2cpp_string_new(title);
-    g_dbg[4] = (long)(u64)msg;             /* il2cpp_string_new result */
-    g_dbg[6] = 0xA3;                       /* string built */
+    empty = il2cpp_string_new("");
+    g_dbg[4] = (long)(u64)msg;
+    g_dbg[6] = 0xA3;                       /* strings built */
     UIWindowManager_ShowSingleInputDialogOkCancel(
         g_windowMgr,
-        msg,
-        il2cpp_string_new(""), 0, 0,
-        dlg, 0, 0);
+        msg,            /* title        */
+        empty,          /* message      */
+        empty,          /* initial text */
+        empty,          /* placeholder  */
+        dlg,            /* onOk   Action<string>                   */
+        cancel,         /* onCancel Action                         */
+        validate,       /* validate Action<WindowDialog..,string>  */
+        0, 0, 0);       /* bool, bool, int                         */
     g_dbg[6] = 0xA4;                       /* dialog call returned */
 }
 
