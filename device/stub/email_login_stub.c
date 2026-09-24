@@ -383,6 +383,7 @@ void auto_email_signin(void)
 {
     char* e = 0;
     char* p = 0;
+    g_dbg[0] = (long)(u64)g_autologin_tries;     /* observe the counter itself */
     if (g_autologin_tries >= 3) return;
     g_autologin_tries++;
     if (!read_credentials(g_filebuf, sizeof(g_filebuf), &e, &p)) { g_dbg[6] = 0x9999; return; }
@@ -393,12 +394,12 @@ void auto_email_signin(void)
         ptr cur;
         /* The login machine is the proven path, so it runs first. */
         UnityGame_SignInNew(2, 1, 0, es, ps);
-        g_dbg[6] = 0xA800 + g_autologin_tries;
+        g_dbg[1] = 0xA800;                       /* SignInNew returned */
         /* Then an explicit server login so the realtime socket has a fresh session;
          * NetClient.Current can be null this early, so guard it. */
         cur = NetClient_get_Current();
-        if (cur) { NetClient_SignInWithEmail(cur, es, ps); g_dbg[6] = 0xAA00 + g_autologin_tries; }
-        else     { g_dbg[6] = 0xAB00 + g_autologin_tries; }
+        g_dbg[1] = cur ? 0xAA00 : 0xAB00;        /* dedicated slot: never overwritten */
+        if (cur) { NetClient_SignInWithEmail(cur, es, ps); g_dbg[1] = 0xAC00; }
     }
     g_dbg[6] = 0xB000 + g_autologin_tries;
 }
