@@ -1,0 +1,24 @@
+digraph "SynchronizeProfile" {
+   label="SynchronizeProfile";
+   edge [penwidth=2.0];
+   node [shape=octagon width=1 penwidth=2.0];
+   compound=true;
+   "Idle" [shape=doubleoctagon width=1 penwidth=2.0];
+   "Initialize" [color="#0075dc"];
+   "LoadDeviceAccountMatchingDeviceId" [color="#993f00"];
+   "LoadDeviceCharacters" [color="#4c005c"];
+   "Finished" [color="#191919"];
+   "Error" [color="#005c31"];
+   "Idle" -> "Initialize" [label="Start" color="#0075dc" fontcolor="#0075dc"];
+   "Idle" -> "Error" [label="UnrecoverableErrorEvent" color="#005c31" fontcolor="#005c31"];
+   "Initialize" -> "LoadDeviceAccountMatchingDeviceId" [label="OfflineAccount" color="#993f00" fontcolor="#993f00"];
+   "Initialize" -> "Error" [label="UnrecoverableErrorEvent" color="#005c31" fontcolor="#005c31"];
+   "LoadDeviceAccountMatchingDeviceId" -> "LoadDeviceCharacters" [label="OperationSuccessful" color="#4c005c" fontcolor="#4c005c"];
+   "LoadDeviceAccountMatchingDeviceId" -> "LoadDeviceAccountMatchingDeviceId" [label="Retry" color="#993f00" fontcolor="#993f00"];
+   "LoadDeviceAccountMatchingDeviceId" -> "Error" [label="UnrecoverableErrorEvent" color="#005c31" fontcolor="#005c31"];
+   "LoadDeviceCharacters" -> "Finished" [label="OperationSuccessful*" color="#191919" fontcolor="#191919"];
+   "LoadDeviceCharacters" -> "LoadDeviceCharacters" [label="Retry" color="#4c005c" fontcolor="#4c005c"];
+   "LoadDeviceCharacters" -> "Error" [label="UnrecoverableErrorEvent" color="#005c31" fontcolor="#005c31"];
+   "Error" -> "Initialize" [label="Retry" color="#0075dc" fontcolor="#0075dc"];
+   "Error" -> "LoadDeviceAccountMatchingDeviceId" [label="PlayOffline" color="#993f00" fontcolor="#993f00"];
+}
