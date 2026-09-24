@@ -41,6 +41,11 @@ extern void UIWindowManager_ShowSingleInputDialogOkCancel(
  * FetchAdditionalData -> Finished. That path yields an *online* PlayerAccount
  * (AccountType in {1,2,3}) and never touches SynchronizeProfileStateMachine. */
 extern void UnityGame_SignInNew(int acctType, int createIfPossible, int silent, ptr email, ptr pw);
+/* LoginStateMachineNew.Initialize() resets/re-creates the login state machine. The
+ * machine is single-shot: once it has reached Finished, calling Login() again is a
+ * silent no-op, which is why an automatic sign-in has to reset it first (the UI path
+ * gets this for free because WindowSelectGameMode re-opens the machine). */
+extern void LoginStateMachineNew_Initialize(void);
 extern ptr il2cpp_class_get_method_from_name(ptr klass, const char* name, int argc);
 extern ptr il2cpp_method_get_param(ptr method, unsigned int index);
 extern ptr il2cpp_class_from_type(ptr type);
@@ -359,20 +364,23 @@ __attribute__((naked)) void email_capture_trampoline(void) {
  * failure that overriding the startup login causes, and it is what flips the account
  * to an online one - opening the realtime /ws channel that persists experience. */
 static int g_frames;
-static int g_autologin_done;
+static int g_autologin_tries;
 
 void auto_email_signin(void)
 {
     char* e = 0;
     char* p = 0;
-    if (g_autologin_done) return;
     g_frames++;
-    if (g_frames < 2700) return;                /* ~45s: past the main menu, client fully up */
-    g_autologin_done = 1;
+    if (g_frames < 600) return;                 /* let the startup device login finish */
+    if (g_frames % 300) return;                 /* retry about every 5 seconds */
+    if (g_autologin_tries >= 12) return;        /* give up after ~60s of attempts */
+    g_autologin_tries++;
     if (!read_credentials(g_filebuf, sizeof(g_filebuf), &e, &p)) { g_dbg[6] = 0x9999; return; }
-    g_dbg[6] = 0xAAAA;
+    g_dbg[6] = 0xA000 + g_autologin_tries;
+    LoginStateMachineNew_Initialize();
+    g_dbg[6] = 0xA500 + g_autologin_tries;
     UnityGame_SignInNew(2, 1, 0, il2cpp_string_new(e), il2cpp_string_new(p));
-    g_dbg[6] = 0xBBBB;
+    g_dbg[6] = 0xB000 + g_autologin_tries;
 }
 
 __attribute__((naked)) void email_capture_wm_trampoline(void) {

@@ -24,6 +24,7 @@ DEFSYMS=(
   --defsym=il2cpp_object_new=0x02318514
   --defsym=WMGR_RESUME=0x0278D73C
   --defsym=login_resume=0x026F2438
+  --defsym=LoginStateMachineNew_Initialize=0x026F21F0
 )
 
 CC=clang
