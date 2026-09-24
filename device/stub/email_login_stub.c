@@ -76,7 +76,13 @@ static u8 g_fake[0x48] __attribute__((aligned(16)));
 
 /* Build a System.Action<string> at runtime, without a template instance:
  * UIWindowManager klass -> ShowSingleInputDialogOkCancel MethodInfo ->
- * parameter 4 (Action<string>) type -> klass -> il2cpp_object_new. */
+ * parameter 4 (Action<string>) type -> klass -> il2cpp_object_new.
+ *
+ * ShowSingleInputDialogOkCancel has TEN parameters:
+ *   (string, string, string, string, Action<string>, Action,
+ *    Action<WindowDialogSingleInputOkCancel,string>, bool, bool, int)
+ * so the lookup must use argc = 10; 7 silently yields a null MethodInfo and the
+ * dialog then invokes a null callback. */
 static ptr make_delegate(void (*cb)(ptr, ptr, ptr)) {
     ptr klass, method, type, aklass, obj;
     g_dbg[0] = (long)(u64)g_windowMgr;
@@ -84,7 +90,7 @@ static ptr make_delegate(void (*cb)(ptr, ptr, ptr)) {
     klass = *(ptr*)g_windowMgr;
     g_dbg[1] = (long)(u64)klass;
     if (!klass) return 0;
-    method = il2cpp_class_get_method_from_name(klass, "ShowSingleInputDialogOkCancel", 7);
+    method = il2cpp_class_get_method_from_name(klass, "ShowSingleInputDialogOkCancel", 10);
     g_dbg[2] = (long)(u64)method;
     if (!method) return 0;
     type = il2cpp_method_get_param(method, 4);
@@ -106,12 +112,19 @@ static ptr make_delegate(void (*cb)(ptr, ptr, ptr)) {
 }
 
 static void show(const char* title, void (*cb)(ptr, ptr, ptr)) {
-    ptr dlg = make_delegate(cb);
+    ptr dlg, msg;
+    g_dbg[6] = 0xA1;                       /* show() entered */
+    dlg = make_delegate(cb);
+    g_dbg[6] = 0xA2;                       /* delegate built */
+    msg = il2cpp_string_new(title);
+    g_dbg[4] = (long)(u64)msg;             /* il2cpp_string_new result */
+    g_dbg[6] = 0xA3;                       /* string built */
     UIWindowManager_ShowSingleInputDialogOkCancel(
         g_windowMgr,
-        il2cpp_string_new(title),
+        msg,
         il2cpp_string_new(""), 0, 0,
         dlg, 0, 0);
+    g_dbg[6] = 0xA4;                       /* dialog call returned */
 }
 
 /* ---- callbacks -------------------------------------------------------- */
@@ -138,8 +151,11 @@ static void on_input(ptr self, ptr arg, ptr method) {
 /* Called (branch patch) from WindowSelectGameMode.OnSignInClicked. */
 void email_login_entry(ptr self) {
     (void)self;                       /* real UIWindowManager comes from the capture trampoline */
+    g_dbg[7] = 0x1111;                /* stub entered */
     g_stage = STAGE_LOGIN_EMAIL;
+    g_dbg[7] = 0x2222;                /* g_stage written */
     show("Email", on_input);
+    g_dbg[7] = 0x3333;                /* show() returned */
 }
 
 /* A second entry for a Register button. */

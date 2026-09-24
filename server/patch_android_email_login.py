@@ -21,8 +21,62 @@ from pathlib import Path
 from patch_android_online import patch as patch_online
 
 STUB_VA = 0x344EC24
-TRAMPOLINE_VA = 0x344EE04   # email_capture_trampoline (read from device/stub/stub.elf)
-ENTRY_VA = 0x344EC24
+
+# The stub moves whenever it is edited, which shifts both the entry point and the
+# capture trampolines. Hard-coding them silently produced a branch into the middle
+# of the blob (crash at the patched call site), so they are read from the linked
+# ELF instead.
+_DEFAULT_SYMS = {
+    "email_capture_trampoline": 0x344EE9C,
+    "email_capture_wm_trampoline": 0x344EEDC,
+    "email_login_entry": 0x344EC24,
+}
+
+
+def _read_symbols(elf: Path) -> dict:
+    """Minimal ELF64 symbol-table reader (no external tools required)."""
+    data = elf.read_bytes()
+    if data[:4] != b"\x7fELF":
+        raise ValueError(f"{elf} is not an ELF file")
+    shoff = struct.unpack_from("<Q", data, 0x28)[0]
+    shentsize, shnum, shstrndx = struct.unpack_from("<HHH", data, 0x3A)
+    sections = []
+    for i in range(shnum):
+        o = shoff + i * shentsize
+        sections.append(struct.unpack_from("<IIQQQQIIQQ", data, o))
+
+    def sname(i):
+        o = sections[shstrndx][4] + i
+        return data[o:data.index(b"\x00", o)].decode()
+
+    out = {}
+    for i, sec in enumerate(sections):
+        name, typ, flags, addr, off, size, link, info, align, entsize = sec
+        if typ not in (2, 11) or entsize == 0:          # SYMTAB / DYNSYM
+            continue
+        stroff = sections[link][4]
+        for j in range(size // entsize):
+            o = off + j * entsize
+            st_name, _, _, _, st_value, _ = struct.unpack_from("<IBBHQQ", data, o)
+            if st_name == 0 or st_value == 0:
+                continue
+            nm = data[stroff + st_name:data.index(b"\x00", stroff + st_name)].decode()
+            out.setdefault(nm, st_value)
+    return out
+
+
+def _stub_symbols(stub_bin: Path) -> dict:
+    syms = dict(_DEFAULT_SYMS)
+    elf = stub_bin.with_suffix(".elf")
+    if elf.exists():
+        try:
+            found = _read_symbols(elf)
+            for k in syms:
+                if k in found:
+                    syms[k] = found[k]
+        except Exception as exc:
+            print(f"warning: falling back to default stub symbols ({exc})")
+    return syms
 SHOWDLG = 0x0279075C
 ONSIGNIN = 0x026340E0
 REFRESH = 0x02633BD0
@@ -59,27 +113,33 @@ def build(src: Path, out: Path, stub_bin: Path):
     result = bytearray(data)
     segs = _segments(bytes(data))
 
+    syms = _stub_symbols(stub_bin)
+    tramp = syms["email_capture_trampoline"]
+    entry = syms["email_login_entry"]
+    wm_tramp = syms["email_capture_wm_trampoline"]
     blob = stub_bin.read_bytes()
     o = _off_for(segs, STUB_VA)
     assert len(blob) <= 0x345031C - STUB_VA, "stub does not fit the code cave"
+    for label, va in (("trampoline", tramp), ("entry", entry), ("wm trampoline", wm_tramp)):
+        assert STUB_VA <= va < STUB_VA + len(blob), f"{label} {va:#x} lies outside the injected blob"
     result[o:o + len(blob)] = blob
 
     # ShowSingleInputDialogOkCancel -> capture trampoline
     o = _off_for(segs, SHOWDLG)
     original = bytes(result[o:o + 4])
     assert original == bytes.fromhex("ffc301d1"), f"unexpected prologue {original.hex()}"
-    result[o:o + 4] = _b(SHOWDLG, TRAMPOLINE_VA)
+    result[o:o + 4] = _b(SHOWDLG, tramp)
 
     # OnSignInClicked -> email login entry
     o = _off_for(segs, ONSIGNIN)
-    result[o:o + 4] = _b(ONSIGNIN, ENTRY_VA)
+    result[o:o + 4] = _b(ONSIGNIN, entry)
 
     # Seed the UIWindowManager instance from UIWindowManager.Update (called every
     # frame with x0 = instance). A first attempt through Init crashed, so Update
     # is used instead.
     o = _off_for(segs, WMGR_INIT)
     assert bytes(result[o:o+4]) == bytes.fromhex("ffc302d1"), "unexpected UIWindowManager.Update prologue"
-    result[o:o + 4] = _b(WMGR_INIT, WMGR_TRAMP)
+    result[o:o + 4] = _b(WMGR_INIT, wm_tramp)
 
     # RefreshSignInButton normally destroys the "Sign in" button; keep it.
     o = _off_for(segs, REFRESH)
@@ -87,8 +147,8 @@ def build(src: Path, out: Path, stub_bin: Path):
 
     out.write_bytes(bytes(result))
     print(f"injected {len(blob)} bytes at {STUB_VA:#x}")
-    print(f"showdlg   {SHOWDLG:#x} -> b {TRAMPOLINE_VA:#x}")
-    print(f"signin    {ONSIGNIN:#x} -> b {ENTRY_VA:#x}")
+    print(f"showdlg   {SHOWDLG:#x} -> b {tramp:#x}")
+    print(f"signin    {ONSIGNIN:#x} -> b {entry:#x}")
     print(f"wrote {out}")
 
 
