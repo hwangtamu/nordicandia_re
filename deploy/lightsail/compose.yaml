@@ -8,7 +8,7 @@ services:
     init: true
     user: "1654:1654"
     ports:
-      - "${NORD_BIND_IP:-127.0.0.1}:${NORD_PUBLIC_PORT:-443}:8443"
+      # TLS/gRPC 443 is terminated by Envoy below; the server itself stays internal.
       # Plain HTTP/1.1 leaderboard JSON feed for the patched mobile client.
       - "${NORD_BIND_IP:-127.0.0.1}:${NORD_PLAIN_PORT:-8081}:8081"
     environment:
@@ -40,6 +40,36 @@ services:
     mem_limit: 700m
     pids_limit: 256
     stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # HTTP/1.1 -> gRPC bridge in front of the server. The mobile client's transport is
+  # HTTP/1.1 only, so this converts its calls and terminates TLS on 443.
+  #
+  # The Lua filter is load-bearing: grpc_http1_bridge appends the gRPC trailers to the
+  # HTTP/1.1 response headers, and grpc-dotnet then treats a header grpc-status of OK
+  # as a trailers-only response and rejects the message body ("Failed to deserialize
+  # response message ... contains a gRPC status of OK"). Dropping the OK status lets
+  # the client read the message; real errors keep their status.
+  envoy:
+    image: envoyproxy/envoy:distroless-v1.29-latest
+    platform: linux/amd64
+    pull_policy: missing
+    restart: unless-stopped
+    depends_on:
+      - server
+    user: "0:0"
+    ports:
+      - "${NORD_BIND_IP:-127.0.0.1}:${NORD_PUBLIC_PORT:-443}:8443"
+    volumes:
+      - ${NORD_HOME:-/opt/nordicandia}/envoy.yaml:/etc/envoy/envoy.yaml:ro
+      - ${NORD_HOME:-/opt/nordicandia}/certs:/certs:ro
+    command: ["-c", "/etc/envoy/envoy.yaml", "--log-level", "info"]
+    mem_limit: 256m
+    stop_grace_period: 10s
     logging:
       driver: json-file
       options:

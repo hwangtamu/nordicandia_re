@@ -1,0 +1,112 @@
+admin:
+  address:
+    socket_address: { address: 127.0.0.1, port_value: 9901 }
+
+static_resources:
+  listeners:
+  - name: main
+    address:
+      socket_address: { address: 0.0.0.0, port_value: 8443 }
+    filter_chains:
+    - filters:
+      - name: envoy.filters.network.http_connection_manager
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: ingress
+          access_log:
+          - name: envoy.access_loggers.stdout
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+              log_format:
+                text_format_source:
+                  inline_string: "ACCESS %REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL% code=%RESPONSE_CODE% gs=%RESP(grpc-status)% gm=%RESP(grpc-message)% ct=%RESP(content-type)% flags=%RESPONSE_FLAGS% dur=%DURATION%ms\n"
+          codec_type: AUTO
+          upgrade_configs:
+          - upgrade_type: websocket
+          http_filters:
+          # Response headers pass through the filters in reverse order, so a filter
+          # listed *before* the bridge sees the headers after the bridge has appended
+          # the gRPC trailers. grpc-dotnet treats a header grpc-status of OK as a
+          # trailers-only response and then rejects the accompanying message body
+          # ("Failed to deserialize response message ... contains a gRPC status of OK").
+          # Dropping it for successful calls lets the client read the message normally
+          # while real errors keep their status.
+          - name: envoy.filters.http.lua
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+              inline_code: |
+                function envoy_on_response(response_handle)
+                  local gs = response_handle:headers():get("grpc-status")
+                  if gs == "0" then
+                    response_handle:headers():remove("grpc-status")
+                    response_handle:headers():remove("grpc-message")
+                  end
+                end
+          - name: envoy.filters.http.grpc_http1_bridge
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.grpc_http1_bridge.v3.Config
+          - name: envoy.filters.http.router
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+          route_config:
+            name: r
+            virtual_hosts:
+            - name: vh
+              domains: ["*"]
+              routes:
+              - match: { prefix: "/ws" }
+                route:
+                  cluster: server_ws
+                  timeout: 0s
+                  idle_timeout: 0s
+                  upgrade_configs:
+                  - upgrade_type: websocket
+              - match: { prefix: "/" }
+                route:
+                  cluster: server_grpc
+                  timeout: 0s
+                  idle_timeout: 0s
+      transport_socket:
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+          common_tls_context:
+            alpn_protocols: ["h2", "http/1.1"]
+            tls_certificates:
+            - certificate_chain: { filename: /certs/server.crt }
+              private_key: { filename: /certs/server.key }
+
+  clusters:
+  - name: server_grpc
+    type: STRICT_DNS
+    dns_lookup_family: V4_ONLY
+    connect_timeout: 5s
+    http2_protocol_options: {}
+    load_assignment:
+      cluster_name: server_grpc
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address: { address: server, port_value: 8443 }
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        sni: prod.038c3288.nip.io
+  - name: server_ws
+    type: STRICT_DNS
+    dns_lookup_family: V4_ONLY
+    connect_timeout: 5s
+    load_assignment:
+      cluster_name: server_ws
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address: { address: server, port_value: 8443 }
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+        sni: prod.038c3288.nip.io
