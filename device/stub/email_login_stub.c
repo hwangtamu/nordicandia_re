@@ -363,6 +363,11 @@ __attribute__((naked)) void email_capture_trampoline(void) {
  * instead of inside LoginStateMachineNew.Login avoids the "Client not initialized"
  * failure that overriding the startup login causes, and it is what flips the account
  * to an online one - opening the realtime /ws channel that persists experience. */
+/* Bump on every change. The per-frame hook publishes it into g_dbg[0] so the build
+ * actually running on the device can be confirmed before trusting any test result
+ * (silently testing a stale lib wasted a full iteration once). */
+#define STUB_VERSION 0x0002
+
 static int g_autologin_tries;
 
 /* Credential-file sign-in. It MUST run from the Game Mode window's own callback:
@@ -404,6 +409,8 @@ __attribute__((naked)) void email_capture_wm_trampoline(void) {
         "cbnz x10, 1f\n"
         "str  x0, [x9]\n"
         "1:\n"
+        "mov  w10, #0x0002\n"
+        "str  w10, [x9, #-0x58]\n"   /* g_dbg[0] = STUB_VERSION */
         "ldp x0, x30, [sp, #0x10]\n"
         "ldp x9, x10, [sp], #0x20\n"
         "sub sp, sp, #0xb0\n"
