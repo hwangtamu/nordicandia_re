@@ -8,8 +8,9 @@
  * (UIWindowManager.ShowSingleInputDialogOkCancel) to collect email/password and
  * calls the client's own login APIs:
  *
- *   login:    email -> password -> NetClient.SignInWithEmail(current, email, pw)
- *   register: email -> password -> repeat -> NetClient.RegisterGameAccount(current, email, pw, repeat)
+ *   login:    email -> password -> UnityGame.SignInNew(2, 1, 0, email, pw)
+ *             (createAccountIfPossible=1: new email registers via GotoCreateAccountFlow)
+ *   register: email -> password -> repeat -> UnityGame.SignInNew(2, 1, 0, email, pw)
  *
  * All calls are PC-relative to other functions inside the same shared object, so
  * the raw code is position independent (works at any ASLR base) as long as it is
@@ -28,8 +29,14 @@ extern ptr il2cpp_string_new(const char* utf8);
 extern ptr NetClient_get_Current(void);
 extern void UIWindowManager_ShowSingleInputDialogOkCancel(
         ptr self, ptr msg, ptr initial, ptr a, ptr b, ptr onOk, ptr onCancel, ptr onValidate);
-extern ptr NetClient_SignInWithEmail(ptr self, ptr email, ptr pw);
-extern ptr NetClient_RegisterGameAccount(ptr self, ptr email, ptr pw, ptr repeat);
+/* The official entry point used by WindowLogin.OnLoginClicked:
+ *   UnityGame.SignInNew(LoginAccountTypes type, bool createAccountIfPossible,
+ *                       bool isSilentLogin, string email, string password)
+ * WindowLogin passes type = 2 (username/email) with both bools false, which drives
+ * LoginStateMachineNew -> GotoUsernameFlow -> LoginWithUsername --LoggedInOnline-->
+ * FetchAdditionalData -> Finished. That path yields an *online* PlayerAccount
+ * (AccountType in {1,2,3}) and never touches SynchronizeProfileStateMachine. */
+extern void UnityGame_SignInNew(int acctType, int createIfPossible, int silent, ptr email, ptr pw);
 extern ptr il2cpp_class_get_method_from_name(ptr klass, const char* name, int argc);
 extern ptr il2cpp_method_get_param(ptr method, unsigned int index);
 extern ptr il2cpp_class_from_type(ptr type);
@@ -106,14 +113,16 @@ static void on_input(ptr self, ptr arg, ptr method) {
     case STAGE_LOGIN_EMAIL: g_email = arg; g_stage = STAGE_LOGIN_PW;
         show("Password", on_input); break;
     case STAGE_LOGIN_PW:    g_pw = arg;
-        NetClient_SignInWithEmail(NetClient_get_Current(), g_email, g_pw); break;
+        UnityGame_SignInNew(2, 1, 0, g_email, g_pw); break;
 
     case STAGE_REG_EMAIL:   g_email = arg; g_stage = STAGE_REG_PW;
         show("Password", on_input); break;
     case STAGE_REG_PW:      g_pw = arg; g_stage = STAGE_REG_REPEAT;
         show("Repeat password", on_input); break;
     case STAGE_REG_REPEAT:
-        NetClient_RegisterGameAccount(NetClient_get_Current(), g_email, g_pw, arg); break;
+        /* createAccountIfPossible = 1 -> LoginStateMachineNew drives
+         * GotoCreateAccountFlow -> RegisterGameAccount when the login is rejected. */
+        UnityGame_SignInNew(2, 1, 0, g_email, g_pw); break;
     }
 }
 

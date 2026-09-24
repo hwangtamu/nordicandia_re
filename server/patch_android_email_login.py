@@ -21,13 +21,13 @@ from pathlib import Path
 from patch_android_online import patch as patch_online
 
 STUB_VA = 0x344EC24
-TRAMPOLINE_VA = 0x344F0A0
+TRAMPOLINE_VA = 0x344EE04   # email_capture_trampoline (read from device/stub/stub.elf)
 ENTRY_VA = 0x344EC24
 SHOWDLG = 0x0279075C
 ONSIGNIN = 0x026340E0
 REFRESH = 0x02633BD0
 WMGR_INIT = 0x0278D738
-WMGR_TRAMP = 0x344F0E0
+WMGR_TRAMP = 0x344EE44      # email_capture_wm_trampoline
 
 
 def _segments(data):
