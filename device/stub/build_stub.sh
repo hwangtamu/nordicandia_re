@@ -26,6 +26,8 @@ DEFSYMS=(
   --defsym=login_resume=0x026F2438
   --defsym=GM_ONENABLE_RESUME=0x0263356C
   --defsym=GM_START_RESUME=0x026337B8
+  --defsym=NetClient_get_Current=0x02DA1E28
+  --defsym=NetClient_SignInWithEmail=0x02DA2584
 )
 
 CC=clang

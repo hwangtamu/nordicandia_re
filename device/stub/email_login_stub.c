@@ -45,7 +45,12 @@ extern void UnityGame_SignInNew(int acctType, int createIfPossible, int silent, 
  * machine is single-shot: once it has reached Finished, calling Login() again is a
  * silent no-op, which is why an automatic sign-in has to reset it first (the UI path
  * gets this for free because WindowSelectGameMode re-opens the machine). */
-extern void LoginStateMachineNew_Initialize(void);
+extern ptr NetClient_get_Current(void);
+/* Explicit server-side email login. SignInNew alone short-circuits onto the existing
+ * startup session (the machine fires LoggedInOnline without any network call), which
+ * leaves the realtime socket's first await parked forever. This call establishes the
+ * session/token the socket needs. */
+extern ptr NetClient_SignInWithEmail(ptr self, ptr email, ptr pw);
 extern ptr il2cpp_class_get_method_from_name(ptr klass, const char* name, int argc);
 extern ptr il2cpp_method_get_param(ptr method, unsigned int index);
 extern ptr il2cpp_class_from_type(ptr type);
@@ -382,7 +387,13 @@ void auto_email_signin(void)
     g_autologin_tries++;
     if (!read_credentials(g_filebuf, sizeof(g_filebuf), &e, &p)) { g_dbg[6] = 0x9999; return; }
     g_dbg[6] = 0xA000 + g_autologin_tries;
-    UnityGame_SignInNew(2, 1, 0, il2cpp_string_new(e), il2cpp_string_new(p));
+    {
+        ptr es = il2cpp_string_new(e);
+        ptr ps = il2cpp_string_new(p);
+        NetClient_SignInWithEmail(NetClient_get_Current(), es, ps);   /* fresh session */
+        g_dbg[6] = 0xA800 + g_autologin_tries;
+        UnityGame_SignInNew(2, 1, 0, es, ps);                         /* account online */
+    }
     g_dbg[6] = 0xB000 + g_autologin_tries;
 }
 
