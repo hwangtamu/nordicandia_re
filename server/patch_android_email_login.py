@@ -71,9 +71,10 @@ def _stub_symbols(stub_bin: Path) -> dict:
     if elf.exists():
         try:
             found = _read_symbols(elf)
-            for k in syms:
-                if k in found:
-                    syms[k] = found[k]
+            # Merge EVERY symbol the linked stub exposes: the defaults are only a
+            # fallback for when stub.elf is unavailable. Filtering by the default key
+            # set silently dropped newly added trampolines and produced KeyError.
+            syms.update(found)
         except Exception as exc:
             print(f"warning: falling back to default stub symbols ({exc})")
     return syms
