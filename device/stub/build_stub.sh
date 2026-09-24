@@ -23,6 +23,7 @@ DEFSYMS=(
   --defsym=il2cpp_class_from_type=0x02317D14
   --defsym=il2cpp_object_new=0x02318514
   --defsym=WMGR_RESUME=0x0278D73C
+  --defsym=login_resume=0x026F2438
 )
 
 CC=clang

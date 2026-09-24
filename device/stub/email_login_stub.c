@@ -225,9 +225,66 @@ static void on_input(ptr self, ptr arg, ptr method) {
     }
 }
 
+/* ---- startup login override -------------------------------------------
+ * LoginStateMachineNew.Login(LoginAccountTypes, bool createIfPossible, bool silent,
+ *                            string a, string b, bool c)
+ * is the single funnel every sign-in goes through (startup device login and the UI).
+ * Replacing its arguments makes the credential-file email login the default, so the
+ * account is online from the first frame - which is what sets PlayerAccount.IsOnline
+ * and therefore opens the realtime /ws channel that persists experience.
+ * The entry is tail-called (not called), so the first instruction is replicated here
+ * and control resumes at the following one.
+ * ---------------------------------------------------------------------- */
+extern char g_filebuf[256];          /* defined with the credential helpers below */
+static int read_credentials(char* buf, int cap, char** email, char** pw);
+
+long g_fa[8];
+
+void login_force_helper(long x0, long x1, long x2, long x3, long x4, long x5, long x6)
+{
+    char* e = 0;
+    char* p = 0;
+    g_fa[0] = x0; g_fa[1] = x1; g_fa[2] = x2; g_fa[3] = x3;
+    g_fa[4] = x4; g_fa[5] = x5; g_fa[6] = x6;
+    if (!read_credentials(g_filebuf, sizeof(g_filebuf), &e, &p)) { g_dbg[7] = 0x8888; return; }
+    g_dbg[7] = 0x7777;                 /* startup login overridden to the email flow */
+    g_fa[1] = 2;                       /* LoginAccountTypes: username/email -> online */
+    g_fa[2] = 1;                       /* createAccountIfPossible */
+    g_fa[3] = 0;                       /* isSilentLogin */
+    g_fa[4] = (long)(u64)il2cpp_string_new(e);
+    g_fa[5] = (long)(u64)il2cpp_string_new(p);
+}
+
+__attribute__((naked)) void login_force_trampoline(void)
+{
+    __asm__ volatile(
+        "sub sp, sp, #0x50\n"
+        "stp x0, x1, [sp, #0x00]\n"
+        "stp x2, x3, [sp, #0x10]\n"
+        "stp x4, x5, [sp, #0x20]\n"
+        "str x6, [sp, #0x30]\n"
+        "str x30, [sp, #0x40]\n"          /* keep the caller's return address */
+        "ldp x0, x1, [sp, #0x00]\n"       /* pass the original args through */
+        "ldp x2, x3, [sp, #0x10]\n"
+        "ldp x4, x5, [sp, #0x20]\n"
+        "ldr x6, [sp, #0x30]\n"
+        "bl  login_force_helper\n"
+        "ldr x30, [sp, #0x40]\n"          /* restore it for the target function */
+        "adrp x9, g_fa\n"
+        "add  x9, x9, :lo12:g_fa\n"
+        "ldp x0, x1, [x9, #0x00]\n"
+        "ldp x2, x3, [x9, #0x10]\n"
+        "ldp x4, x5, [x9, #0x20]\n"
+        "ldr x6, [x9, #0x30]\n"
+        "add sp, sp, #0x50\n"
+        "sub sp, sp, #0xd0\n"             /* displaced original instruction */
+        "b   login_resume\n"
+    );
+}
+
 /* ---- entry points ----------------------------------------------------- */
 /* Called (branch patch) from WindowSelectGameMode.OnSignInClicked. */
-static char g_filebuf[256];
+char g_filebuf[256];
 
 void email_login_entry(ptr self) {
     char* email = 0;
@@ -296,16 +353,41 @@ __attribute__((naked)) void email_capture_trampoline(void) {
 
 /* Seed g_windowMgr from UIWindowManager.Update (called every frame, x0 = instance).
  * Displaces `sub sp,sp,#0xb0` and resumes at 0x0278D73C. Cheap: one load + test. */
+/* Per-frame hook: once the client has finished booting (the startup device login has
+ * initialised NetClient), perform the email sign-in a single time. Doing it here
+ * instead of inside LoginStateMachineNew.Login avoids the "Client not initialized"
+ * failure that overriding the startup login causes, and it is what flips the account
+ * to an online one - opening the realtime /ws channel that persists experience. */
+static int g_frames;
+static int g_autologin_done;
+
+void auto_email_signin(void)
+{
+    char* e = 0;
+    char* p = 0;
+    if (g_autologin_done) return;
+    g_frames++;
+    if (g_frames < 900) return;                 /* ~15s: boot + startup device login */
+    g_autologin_done = 1;
+    if (!read_credentials(g_filebuf, sizeof(g_filebuf), &e, &p)) { g_dbg[6] = 0x9999; return; }
+    g_dbg[6] = 0xAAAA;
+    UnityGame_SignInNew(2, 1, 0, il2cpp_string_new(e), il2cpp_string_new(p));
+    g_dbg[6] = 0xBBBB;
+}
+
 __attribute__((naked)) void email_capture_wm_trampoline(void) {
     __asm__ volatile(
-        "stp x9, x10, [sp, #-16]!\n"
+        "stp x9, x10, [sp, #-0x20]!\n"
+        "stp x0, x30, [sp, #0x10]\n"
         "adrp x9, g_windowMgr\n"
         "add  x9, x9, :lo12:g_windowMgr\n"
         "ldr  x10, [x9]\n"
         "cbnz x10, 1f\n"
         "str  x0, [x9]\n"
         "1:\n"
-        "ldp x9, x10, [sp], #16\n"
+        "bl   auto_email_signin\n"
+        "ldp x0, x30, [sp, #0x10]\n"
+        "ldp x9, x10, [sp], #0x20\n"
         "sub sp, sp, #0xb0\n"
         "adrp x9, WMGR_RESUME\n"
         "add  x9, x9, :lo12:WMGR_RESUME\n"
