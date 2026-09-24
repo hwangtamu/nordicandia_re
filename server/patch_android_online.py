@@ -22,6 +22,13 @@ import struct
 from pathlib import Path
 
 
+# The forced-offline workaround made the client enter the world by diverting the
+# world-entry decision to the local-device block, but that block never starts the
+# realtime client and never persists progress - which is exactly why experience
+# resets. It is therefore OFF by default so the genuine ONLINE path is exercised.
+FORCE_OFFLINE_WORKAROUND = False
+
+
 def patch(data):
     if hashlib.sha256(data).hexdigest() != "529bd257af0cd6e953fb50f51a69857f42f04eb70acab0586f8413d1f97afd1d":
         raise ValueError("Expected the original 1.9.3 ARM64 library; refusing unknown/already-patched input")
@@ -99,7 +106,8 @@ def patch(data):
     # 1) SPSM __c__DisplayClass9_0.<SetupStateMachine>b__4: drop the online
     #    guard so the state machine proceeds to load the device account.
     #    tbnz w0,#0,0x26fb774  ->  nop
-    replace(0x26FB754, bytes.fromhex("00010037"), bytes.fromhex("1f2003d5"))
+    if FORCE_OFFLINE_WORKAROUND:
+        replace(0x26FB754, bytes.fromhex("00010037"), bytes.fromhex("1f2003d5"))
     # 2) WindowCharacterList._OnPlayClicked_d__52.MoveNext: after the account is
     #    classified, the client branches online -> 0x257DAE8, offline ->
     #    0x257E610. Only the offline block initialises the loading UI
@@ -107,7 +115,8 @@ def patch(data):
     #    _OnPlayClicked_b__0 (world entry). The online branch never does, so the
     #    coroutine is never scheduled. Force the offline block.
     #    cbnz w8,0x257dae8  ->  nop
-    replace(0x257D29C, bytes.fromhex("68420035"), bytes.fromhex("1f2003d5"))
+    if FORCE_OFFLINE_WORKAROUND:
+        replace(0x257D29C, bytes.fromhex("68420035"), bytes.fromhex("1f2003d5"))
 
     # MagicOnion.Unity.GrpcChannelProvider.get_Default is never assigned on
     # this build because the GrpcChannelProviderHost scene object is absent
