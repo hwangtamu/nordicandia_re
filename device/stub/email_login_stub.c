@@ -52,6 +52,13 @@ extern ptr NetClient_get_Current(void);
  * session/token the socket needs. */
 extern ptr NetClient_SignInWithEmail(ptr self, ptr email, ptr pw);
 extern ptr il2cpp_class_get_method_from_name(ptr klass, const char* name, int argc);
+extern ptr il2cpp_domain_get(void);
+extern ptr il2cpp_domain_get_assemblies(ptr domain, u64* count);
+extern ptr il2cpp_assembly_get_image(ptr asm_);
+extern int  il2cpp_image_get_class_count(ptr image);
+extern ptr il2cpp_image_get_class(ptr image, int index);
+extern const char* il2cpp_class_get_name(ptr klass);
+extern const char* il2cpp_class_get_namespace(ptr klass);
 extern ptr il2cpp_method_get_param(ptr method, unsigned int index);
 extern ptr il2cpp_class_from_type(ptr type);
 extern ptr il2cpp_object_new(ptr klass);
@@ -120,6 +127,53 @@ static int read_credentials(char* buf, int cap, char** email, char** pw)
 #define STAGE_REG_REPEAT     5
 
 volatile long g_dbg[8];  /* diagnostics: make_delegate step results */
+
+/* ---- SaveManager.SaveCharacter resolver ---------------------------------
+ * The client keeps character progress in a LOCAL, encrypted MessagePack file
+ * (SaveManager.SaveCharacterToLocalDevice_MessagePack) and never reports it to the
+ * server, which is why experience resets to 0 on the next GetCharacterList.
+ * Frida cannot resolve the IL2CPP API (it is stripped from .dynsym) and direct calls
+ * from Frida fault, but injected native code can call it - so the stub resolves
+ * SaveManager.SaveCharacter itself and publishes the function pointer in g_dbg[5].
+ * ---------------------------------------------------------------------- */
+static int sceq(const char* a, const char* b)
+{
+    while (*a && *b) { if (*a != *b) return 0; a++; b++; }
+    return *a == *b;
+}
+
+void resolve_save_character(void)
+{
+    ptr dom;
+    ptr* asms;
+    u64 n = 0, i;
+    if (g_dbg[5]) return;                        /* resolve once */
+    dom = il2cpp_domain_get();
+    if (!dom) { g_dbg[5] = 0xDEAD; return; }
+    asms = (ptr*)il2cpp_domain_get_assemblies(dom, &n);
+    if (!asms || n == 0 || n > 512) { g_dbg[5] = 0xDEAE; return; }
+    for (i = 0; i < n; i++) {
+        ptr img = il2cpp_assembly_get_image(asms[i]);
+        int cc, c;
+        if (!img) continue;
+        cc = il2cpp_image_get_class_count(img);
+        for (c = 0; c < cc; c++) {
+            ptr k = il2cpp_image_get_class(img, c);
+            const char* cn;
+            ptr m, fn;
+            if (!k) continue;
+            cn = il2cpp_class_get_name(k);
+            if (!cn || !sceq(cn, "SaveManager")) continue;
+            m = il2cpp_class_get_method_from_name(k, "SaveCharacter", 5);
+            if (!m) m = il2cpp_class_get_method_from_name(k, "SaveCharacter", 3);
+            if (!m) { g_dbg[5] = 0xDEAF; return; }
+            fn = *(ptr*)m;                       /* Il2CppMethod -> methodPointer */
+            g_dbg[5] = (long)(u64)fn;
+            return;
+        }
+    }
+    g_dbg[5] = 0xDEB0;
+}
 ptr g_realAction;   /* a real System.Action<string> to clone (captured) */
 ptr g_windowMgr;    /* UIWindowManager instance                        */
 ptr g_email;
@@ -384,6 +438,7 @@ void auto_email_signin(void)
     char* e = 0;
     char* p = 0;
     g_dbg[0] = (long)(u64)g_autologin_tries;     /* observe the counter itself */
+    if (!g_dbg[5]) resolve_save_character();     /* publish SaveCharacter once */
     if (g_autologin_tries >= 3) return;
     g_autologin_tries++;
     if (!read_credentials(g_filebuf, sizeof(g_filebuf), &e, &p)) { g_dbg[6] = 0x9999; return; }
@@ -441,8 +496,11 @@ __attribute__((naked)) void email_capture_wm_trampoline(void) {
         "cbnz x10, 1f\n"
         "str  x0, [x9]\n"
         "1:\n"
+        "adrp x9, g_dbg\n"
+        "add  x9, x9, :lo12:g_dbg\n"
         "mov  w10, #0x0002\n"
-        "str  w10, [x9, #-0x58]\n"   /* g_dbg[0] = STUB_VERSION */
+        "str  w10, [x9]\n"          /* g_dbg[0] = STUB_VERSION */
+        "bl   resolve_save_character\n" /* publishes SaveManager.SaveCharacter once */
         "ldp x0, x30, [sp, #0x10]\n"
         "ldp x9, x10, [sp], #0x20\n"
         "sub sp, sp, #0xb0\n"

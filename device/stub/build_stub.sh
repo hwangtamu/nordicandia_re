@@ -28,6 +28,13 @@ DEFSYMS=(
   --defsym=GM_START_RESUME=0x026337B8
   --defsym=NetClient_get_Current=0x02DA1E28
   --defsym=NetClient_SignInWithEmail=0x02DA2584
+  --defsym=il2cpp_domain_get=0x02318138
+  --defsym=il2cpp_domain_get_assemblies=0x02318144
+  --defsym=il2cpp_assembly_get_image=0x02317C3C
+  --defsym=il2cpp_image_get_class_count=0x0231881C
+  --defsym=il2cpp_image_get_class=0x02318830
+  --defsym=il2cpp_class_get_name=0x02317CA0
+  --defsym=il2cpp_class_get_namespace=0x02317CA4
 )
 
 CC=clang
