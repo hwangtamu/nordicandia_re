@@ -85,6 +85,9 @@ REFRESH = 0x02633BD0
 # from the first frame (that is what makes PlayerAccount.IsOnline true and therefore
 # opens the realtime /ws channel which persists experience).
 LOGIN_FUNNEL = 0x026F2434
+# WindowSelectGameMode.OnEnable: the login machine is created with this window, so the
+# credential-file sign-in is triggered from here (in-window UI context).
+GAMEMODE_ONENABLE = 0x02633568
 # LoadGame.SignInNew drives the *startup* sign-in (device flow). Routing it through the
 # stub makes the credential-file email login the default, so the account is online from
 # the very first frame instead of only after tapping "Sign in".
@@ -162,6 +165,10 @@ def build(src: Path, out: Path, stub_bin: Path):
     # exists and the client then reports "Client not initialized"; the credential-file
     # sign-in is instead triggered automatically from the per-frame UIWindowManager
     # update trampoline once the startup device login has initialised the client.
+
+    o = _off_for(segs, GAMEMODE_ONENABLE)
+    result[o:o + 4] = _b(GAMEMODE_ONENABLE, syms["game_mode_onenable_trampoline"])
+    print(f"onEnable  {GAMEMODE_ONENABLE:#010x} -> b {syms['game_mode_onenable_trampoline']:#x}")
 
     o = _off_for(segs, REFRESH)
     result[o:o + 4] = bytes.fromhex("c0035fd6")   # ret

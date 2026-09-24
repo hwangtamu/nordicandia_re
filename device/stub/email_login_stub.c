@@ -363,25 +363,35 @@ __attribute__((naked)) void email_capture_trampoline(void) {
  * instead of inside LoginStateMachineNew.Login avoids the "Client not initialized"
  * failure that overriding the startup login causes, and it is what flips the account
  * to an online one - opening the realtime /ws channel that persists experience. */
-static int g_frames;
 static int g_autologin_tries;
 
+/* Credential-file sign-in. It MUST run from the Game Mode window's own callback:
+ * LoginStateMachineNew is (re)created with that window, so calling SignInNew from an
+ * unrelated context (e.g. the per-frame UIWindowManager update) reaches the method but
+ * silently returns without starting the flow. */
 void auto_email_signin(void)
 {
     char* e = 0;
     char* p = 0;
-    g_frames++;
-    if (g_frames < 600) return;                 /* let the startup device login finish */
-    if (g_frames % 300) return;                 /* retry about every 5 seconds */
-    if (g_autologin_tries >= 12) return;        /* give up after ~60s of attempts */
+    if (g_autologin_tries >= 3) return;
     g_autologin_tries++;
     if (!read_credentials(g_filebuf, sizeof(g_filebuf), &e, &p)) { g_dbg[6] = 0x9999; return; }
     g_dbg[6] = 0xA000 + g_autologin_tries;
-    /* NOTE: calling LoginStateMachineNew.Initialize() here is NOT possible - it is an
-     * instance method and we have no instance in this context, so it faults. The
-     * machine's reset has to come from the UI path instead. */
     UnityGame_SignInNew(2, 1, 0, il2cpp_string_new(e), il2cpp_string_new(p));
     g_dbg[6] = 0xB000 + g_autologin_tries;
+}
+
+/* WindowSelectGameMode.OnEnable: keep the original behaviour and trigger the sign-in
+ * inside the window's UI context. Displaces `stp x30, x23, [sp, #-0x30]!`. */
+__attribute__((naked)) void game_mode_onenable_trampoline(void)
+{
+    __asm__ volatile(
+        "stp x0, x30, [sp, #-0x10]!\n"
+        "bl  auto_email_signin\n"
+        "ldp x0, x30, [sp], #0x10\n"
+        "stp x30, x23, [sp, #-0x30]!\n"
+        "b   GM_ONENABLE_RESUME\n"
+    );
 }
 
 __attribute__((naked)) void email_capture_wm_trampoline(void) {
@@ -394,7 +404,6 @@ __attribute__((naked)) void email_capture_wm_trampoline(void) {
         "cbnz x10, 1f\n"
         "str  x0, [x9]\n"
         "1:\n"
-        "bl   auto_email_signin\n"
         "ldp x0, x30, [sp, #0x10]\n"
         "ldp x9, x10, [sp], #0x20\n"
         "sub sp, sp, #0xb0\n"
