@@ -21,6 +21,10 @@ static_resources:
                 text_format_source:
                   inline_string: "ACCESS %REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL% code=%RESPONSE_CODE% gs=%RESP(grpc-status)% gm=%RESP(grpc-message)% ct=%RESP(content-type)% flags=%RESPONSE_FLAGS% dur=%DURATION%ms\n"
           codec_type: AUTO
+          # The Nordicandia client opens /ws with HTTP/2 extended CONNECT, so the
+          # listener must allow CONNECT or Envoy rejects the stream outright.
+          http2_protocol_options:
+            allow_connect: true
           upgrade_configs:
           - upgrade_type: websocket
           http_filters:
@@ -81,7 +85,8 @@ static_resources:
     type: STRICT_DNS
     dns_lookup_family: V4_ONLY
     connect_timeout: 5s
-    http2_protocol_options: {}
+    http2_protocol_options:
+      allow_connect: true
     load_assignment:
       cluster_name: server_grpc
       endpoints:
