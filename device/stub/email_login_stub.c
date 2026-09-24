@@ -49,6 +49,7 @@ extern ptr il2cpp_object_new(ptr klass);
 #define STAGE_REG_PW         4
 #define STAGE_REG_REPEAT     5
 
+volatile long g_dbg[8];  /* diagnostics: make_delegate step results */
 ptr g_realAction;   /* a real System.Action<string> to clone (captured) */
 ptr g_windowMgr;    /* UIWindowManager instance                        */
 ptr g_email;
@@ -77,16 +78,23 @@ static u8 g_fake[0x48] __attribute__((aligned(16)));
  * UIWindowManager klass -> ShowSingleInputDialogOkCancel MethodInfo ->
  * parameter 4 (Action<string>) type -> klass -> il2cpp_object_new. */
 static ptr make_delegate(void (*cb)(ptr, ptr, ptr)) {
+    ptr klass, method, type, aklass, obj;
+    g_dbg[0] = (long)(u64)g_windowMgr;
     if (!g_windowMgr) return 0;
-    ptr klass = *(ptr*)g_windowMgr;
+    klass = *(ptr*)g_windowMgr;
+    g_dbg[1] = (long)(u64)klass;
     if (!klass) return 0;
-    ptr method = il2cpp_class_get_method_from_name(klass, "ShowSingleInputDialogOkCancel", 7);
+    method = il2cpp_class_get_method_from_name(klass, "ShowSingleInputDialogOkCancel", 7);
+    g_dbg[2] = (long)(u64)method;
     if (!method) return 0;
-    ptr type = il2cpp_method_get_param(method, 4);
+    type = il2cpp_method_get_param(method, 4);
+    g_dbg[3] = (long)(u64)type;
     if (!type) return 0;
-    ptr aklass = il2cpp_class_from_type(type);
+    aklass = il2cpp_class_from_type(type);
+    g_dbg[4] = (long)(u64)aklass;
     if (!aklass) return 0;
-    ptr obj = il2cpp_object_new(aklass);
+    obj = il2cpp_object_new(aklass);
+    g_dbg[5] = (long)(u64)obj;
     if (!obj) return 0;
     *(ptr*)((u8*)obj + 0x10) = (ptr)cb;   /* method_ptr  */
     *(ptr*)((u8*)obj + 0x18) = (ptr)cb;   /* invoke_impl */

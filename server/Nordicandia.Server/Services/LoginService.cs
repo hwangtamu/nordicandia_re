@@ -1,3 +1,4 @@
+using Grpc.Core;
 using MagicOnion;
 using MagicOnion.Server;
 using SharedNet.Api;
@@ -151,6 +152,22 @@ public sealed class LoginService : ServiceBase<ILoginServiceApi>, ILoginServiceA
     public UnaryResult<ForgotPasswordResponse> ForgotPassword(ForgotPasswordRequest req)
         => UnaryResult.FromResult(new ForgotPasswordResponse());
 
+    /// <summary>
+    /// Password change for the account's own email identity. The real service mails a
+    /// one-time code via ForgotPassword; a private server has no mail path, so this
+    /// instead requires an authenticated caller whose account owns the credential —
+    /// which cannot be abused by a third party and needs no out-of-band delivery.
+    /// </summary>
     public UnaryResult<ChangeEmailPasswordResponse> ChangeEmailPassword(ChangeEmailPasswordRequest req)
-        => UnaryResult.FromResult(new ChangeEmailPasswordResponse());
+    {
+        var email = (req?.Email ?? string.Empty).Trim().ToLowerInvariant();
+        var owner = GameStore.Instance.RequireUser(Context.CallContext.RequestHeaders.GetValue("authorization"));
+        var identity = "email:" + email;
+        if (email.Length == 0 || string.IsNullOrEmpty(req?.NewPassword) || req.NewPassword != req.NewPasswordRepeat
+            || !GameStore.Instance.CredentialBelongsTo(identity, owner)
+            || !GameStore.Instance.UpdateCredentialPassword(identity, req.NewPassword))
+            throw new RpcException(new Status(StatusCode.PermissionDenied, "Password change was rejected"));
+
+        return UnaryResult.FromResult(new ChangeEmailPasswordResponse());
+    }
 }

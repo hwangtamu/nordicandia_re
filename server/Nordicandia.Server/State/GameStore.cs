@@ -268,6 +268,13 @@ public sealed class GameStore : IDisposable
         return true;
     });
 
+    /// <summary>True when the credential for <paramref name="identity"/> belongs to this user.</summary>
+    public bool CredentialBelongsTo(string identity, Guid userId)
+    {
+        lock (gate)
+            return state.Credentials.TryGetValue(identity, out var c) && c.UserId == userId;
+    }
+
     /// <summary>Replaces the password for an existing credential (used by change-password).</summary>
     public bool UpdateCredentialPassword(string identity, string password) => Change(s =>
     {
