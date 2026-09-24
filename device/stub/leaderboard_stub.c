@@ -245,6 +245,7 @@ static ptr build_rows(const char *category, const char *cls)
     if (count <= 0) return 0;
 
     arr = il2cpp_array_new(klass, (u64)count);
+    g_dbg[6] = (long)arr;
     if (!arr) return 0;
 
     p = body;
@@ -280,8 +281,13 @@ static ptr build_rows(const char *category, const char *cls)
         }
         (void)num;
 
-        fill_row(*(ptr *)((u8 *)arr + 0x20 + 8 * (u64)i), rank ? rank : (i + 1),
-                 name, nameLen, value, clsId, isPlayer);
+        {
+            ptr row = il2cpp_object_new(klass);
+            if (i == 0) g_dbg[7] = (long)row;
+            if (!row) break;
+            fill_row(row, rank ? rank : (i + 1), name, nameLen, value, clsId, isPlayer);
+            *(ptr *)((u8 *)arr + 0x20 + 8 * (u64)i) = row;
+        }
         i++;
         p += 7;
     }
