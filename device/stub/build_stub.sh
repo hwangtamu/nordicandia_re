@@ -35,6 +35,7 @@ DEFSYMS=(
   --defsym=il2cpp_image_get_class=0x02318830
   --defsym=il2cpp_class_get_name=0x02317CA0
   --defsym=il2cpp_class_get_namespace=0x02317CA4
+  --defsym=SAVECHAR_RESUME=0x025D18DC
 )
 
 CC=clang

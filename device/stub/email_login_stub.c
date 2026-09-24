@@ -289,6 +289,46 @@ static void on_input(ptr self, ptr arg, ptr method) {
     }
 }
 
+
+/* ---- SaveManager.SaveCharacter hook -----------------------------------
+ * SaveCharacter(Game.Character ch, bool force, Action onOperationComplete,
+ *               bool headerOnly, bool updateLastSave) lives at a FIXED lib offset
+ * (0x25D18D8) and starts with the standard prologue stp x30,x25,[sp,#-0x40]!,
+ * so it can be hooked by a plain branch patch. The character pointer is captured
+ * so the progress reporter can read (and later upload) its experience/level.
+ * ---------------------------------------------------------------------- */
+extern char SAVECHAR_RESUME[];        /* 0x25D18DC */
+volatile long g_char;                 /* last Character* seen by SaveCharacter */
+volatile long g_charvals[16];         /* first 16 doubles of the character */
+volatile long g_savechar_hits;
+
+void savechar_capture(long self, long ch)
+{
+    int i;
+    g_char = ch;
+    g_savechar_hits++;
+    if (!ch) return;
+    for (i = 0; i < 16; i++)
+        g_charvals[i] = *(long*)((u8*)ch + 0x08 + i * 8);
+}
+
+__attribute__((naked)) void savechar_trampoline(void)
+{
+    __asm__ volatile(
+        "stp x0, x1, [sp, #-0x30]!\n"
+        "stp x2, x30, [sp, #0x10]\n"
+        "str x3, [sp, #0x20]\n"
+        "bl  savechar_capture\n"
+        "ldp x2, x30, [sp, #0x10]\n"
+        "ldr x3, [sp, #0x20]\n"
+        "ldp x0, x1, [sp], #0x30\n"
+        "stp x30, x25, [sp, #-0x40]!\n"      /* displaced entry instruction */
+        "adrp x9, SAVECHAR_RESUME\n"
+        "add  x9, x9, :lo12:SAVECHAR_RESUME\n"
+        "br   x9\n"
+    );
+}
+
 /* ---- startup login override -------------------------------------------
  * LoginStateMachineNew.Login(LoginAccountTypes, bool createIfPossible, bool silent,
  *                            string a, string b, bool c)

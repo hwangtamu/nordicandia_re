@@ -78,6 +78,7 @@ def _stub_symbols(stub_bin: Path) -> dict:
         except Exception as exc:
             print(f"warning: falling back to default stub symbols ({exc})")
     return syms
+SAVECHAR = 0x025D18D8
 SHOWDLG = 0x0279075C
 ONSIGNIN = 0x026340E0
 REFRESH = 0x02633BD0
@@ -178,6 +179,13 @@ def build(src: Path, out: Path, stub_bin: Path):
 
     o = _off_for(segs, REFRESH)
     result[o:o + 4] = bytes.fromhex("c0035fd6")   # ret
+
+    # SaveManager.SaveCharacter: capture the character object so the progress
+    # reporter can read (and later upload) its experience/level.
+    if "savechar_trampoline" in syms:
+        o = _off_for(segs, SAVECHAR)
+        result[o:o + 4] = _b(SAVECHAR, syms["savechar_trampoline"])
+        print(f"savechar  {SAVECHAR:#010x} -> b {syms['savechar_trampoline']:#x}")
 
     out.write_bytes(bytes(result))
     print(f"injected {len(blob)} bytes at {STUB_VA:#x}")
