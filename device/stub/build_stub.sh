@@ -25,6 +25,7 @@ DEFSYMS=(
   --defsym=WMGR_RESUME=0x0278D73C
   --defsym=login_resume=0x026F2438
   --defsym=GM_ONENABLE_RESUME=0x0263356C
+  --defsym=GM_START_RESUME=0x026337B8
 )
 
 CC=clang

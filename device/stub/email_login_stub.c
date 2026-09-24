@@ -399,6 +399,20 @@ __attribute__((naked)) void game_mode_onenable_trampoline(void)
     );
 }
 
+/* WindowSelectGameMode.Start runs after OnEnable and after the window has wired its
+ * buttons - the point where the login machine is actually usable. Displaces
+ * `sub sp, sp, #0x40`. */
+__attribute__((naked)) void game_mode_start_trampoline(void)
+{
+    __asm__ volatile(
+        "stp x0, x30, [sp, #-0x10]!\n"
+        "bl  auto_email_signin\n"
+        "ldp x0, x30, [sp], #0x10\n"
+        "sub sp, sp, #0x40\n"
+        "b   GM_START_RESUME\n"
+    );
+}
+
 __attribute__((naked)) void email_capture_wm_trampoline(void) {
     __asm__ volatile(
         "stp x9, x10, [sp, #-0x20]!\n"

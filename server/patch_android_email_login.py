@@ -88,6 +88,7 @@ LOGIN_FUNNEL = 0x026F2434
 # WindowSelectGameMode.OnEnable: the login machine is created with this window, so the
 # credential-file sign-in is triggered from here (in-window UI context).
 GAMEMODE_ONENABLE = 0x02633568
+GAMEMODE_START = 0x026337B4
 # LoadGame.SignInNew drives the *startup* sign-in (device flow). Routing it through the
 # stub makes the credential-file email login the default, so the account is online from
 # the very first frame instead of only after tapping "Sign in".
@@ -169,6 +170,10 @@ def build(src: Path, out: Path, stub_bin: Path):
     o = _off_for(segs, GAMEMODE_ONENABLE)
     result[o:o + 4] = _b(GAMEMODE_ONENABLE, syms["game_mode_onenable_trampoline"])
     print(f"onEnable  {GAMEMODE_ONENABLE:#010x} -> b {syms['game_mode_onenable_trampoline']:#x}")
+
+    o = _off_for(segs, GAMEMODE_START)
+    result[o:o + 4] = _b(GAMEMODE_START, syms["game_mode_start_trampoline"])
+    print(f"start     {GAMEMODE_START:#010x} -> b {syms['game_mode_start_trampoline']:#x}")
 
     o = _off_for(segs, REFRESH)
     result[o:o + 4] = bytes.fromhex("c0035fd6")   # ret
