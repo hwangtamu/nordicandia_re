@@ -1,0 +1,51 @@
+--- DOT(Run) START ---
+digraph "Account" {
+   label="Account";
+   edge [penwidth=2.0];
+   node [shape=octagon width=1 penwidth=2.0];
+   compound=true;
+   "Idle" [shape=doubleoctagon width=1 penwidth=2.0];
+   "Initialize" [color="#0075dc"];
+   "LoginWithLocalDevice" [color="#993f00"];
+   "LoginWithDevice" [color="#4c005c"];
+   "LoginWithUsername" [color="#191919"];
+   "LoginWithAdmin" [color="#005c31"];
+   "LoginWithThirdParty" [color="#2bce48"];
+   "RegisterGameAccount" [color="#808080"];
+   "FetchAdditionalData" [color="#8f7c00"];
+   "Finished" [color="#c20088"];
+   "Error" [color="#ffa405"];
+   "Idle" -> "Initialize" [label="Execute" color="#0075dc" fontcolor="#0075dc"];
+   "Initialize" -> "LoginWithLocalDevice" [label="GotoLocalDeviceFlow" color="#993f00" fontcolor="#993f00"];
+   "Initialize" -> "LoginWithDevice" [label="GotoDeviceFlow" color="#4c005c" fontcolor="#4c005c"];
+   "Initialize" -> "LoginWithUsername" [label="GotoUsernameFlow" color="#191919" fontcolor="#191919"];
+   "Initialize" -> "LoginWithAdmin" [label="GotoAdminFlow" color="#005c31" fontcolor="#005c31"];
+   "Initialize" -> "LoginWithThirdParty" [label="GotoThirdPartyFlow" color="#2bce48" fontcolor="#2bce48"];
+   "Initialize" -> "RegisterGameAccount" [label="GotoCreateAccountFlow" color="#808080" fontcolor="#808080"];
+   "LoginWithLocalDevice" -> "Finished" [label="ChangedToLocalAccount" color="#c20088" fontcolor="#c20088"];
+   "LoginWithLocalDevice" -> "Error" [label="UnhandledException" color="#ffa405" fontcolor="#ffa405"];
+   "LoginWithLocalDevice" -> "LoginWithLocalDevice" [label="HandledException" color="#993f00" fontcolor="#993f00"];
+   "LoginWithDevice" -> "FetchAdditionalData" [label="LoggedInOnline" color="#8f7c00" fontcolor="#8f7c00"];
+   "LoginWithDevice" -> "LoginWithLocalDevice" [label="UnhandledException" color="#993f00" fontcolor="#993f00"];
+   "LoginWithDevice" -> "LoginWithLocalDevice" [label="HandledException" color="#993f00" fontcolor="#993f00"];
+   "LoginWithUsername" -> "FetchAdditionalData" [label="LoggedInOnline" color="#8f7c00" fontcolor="#8f7c00"];
+   "LoginWithUsername" -> "LoginWithLocalDevice" [label="UnhandledException" color="#993f00" fontcolor="#993f00"];
+   "LoginWithUsername" -> "LoginWithLocalDevice" [label="HandledException" color="#993f00" fontcolor="#993f00"];
+   "LoginWithAdmin" -> "FetchAdditionalData" [label="LoggedInOnline" color="#8f7c00" fontcolor="#8f7c00"];
+   "LoginWithAdmin" -> "LoginWithLocalDevice" [label="UnhandledException" color="#993f00" fontcolor="#993f00"];
+   "LoginWithAdmin" -> "LoginWithLocalDevice" [label="HandledException" color="#993f00" fontcolor="#993f00"];
+   "LoginWithThirdParty" -> "FetchAdditionalData" [label="LoggedInOnline" color="#8f7c00" fontcolor="#8f7c00"];
+   "LoginWithThirdParty" -> "LoginWithDevice" [label="GotoDeviceFlow" color="#4c005c" fontcolor="#4c005c"];
+   "LoginWithThirdParty" -> "LoginWithLocalDevice" [label="UnhandledException" color="#993f00" fontcolor="#993f00"];
+   "LoginWithThirdParty" -> "Error" [label="HandledException" color="#ffa405" fontcolor="#ffa405"];
+   "RegisterGameAccount" -> "Finished" [label="CreatedAccount" color="#c20088" fontcolor="#c20088"];
+   "RegisterGameAccount" -> "Error" [label="UnhandledException" color="#ffa405" fontcolor="#ffa405"];
+   "RegisterGameAccount" -> "Error" [label="HandledException" color="#ffa405" fontcolor="#ffa405"];
+   "FetchAdditionalData" -> "Finished" [label="GotoFinished" color="#c20088" fontcolor="#c20088"];
+   "FetchAdditionalData" -> "Error" [label="UnhandledException" color="#ffa405" fontcolor="#ffa405"];
+   "FetchAdditionalData" -> "Error" [label="HandledException" color="#ffa405" fontcolor="#ffa405"];
+   "Error" -> "Initialize" [label="Retry" color="#0075dc" fontcolor="#0075dc"];
+   "Error" -> "LoginWithLocalDevice" [label="PlayOffline" color="#993f00" fontcolor="#993f00"];
+   "Error" -> "Finished" [label="CancelEvent" color="#c20088" fontcolor="#c20088"];
+}
+--- DOT(Run) END ---
