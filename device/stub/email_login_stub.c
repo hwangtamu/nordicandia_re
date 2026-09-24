@@ -46,6 +46,62 @@ extern ptr il2cpp_method_get_param(ptr method, unsigned int index);
 extern ptr il2cpp_class_from_type(ptr type);
 extern ptr il2cpp_object_new(ptr klass);
 
+/* ---- credential file --------------------------------------------------
+ * The dialog path proved unusable (ShowSingleInputDialogOkCancel depends on UI
+ * state that is not present on the game-mode screen), so credentials are read from
+ * a file and handed straight to the official LoginStateMachineNew entry point.
+ * Tried in order; the first readable file wins:
+ *   1. app external files dir (reachable from a PC over USB)
+ *   2. /data/local/tmp (adb push, handy for testing)
+ * Format: first line = email, second line = password.
+ * ---------------------------------------------------------------------- */
+#define SYS_close   57
+#define SYS_openat  56
+#define SYS_read    63
+#define AT_FDCWD    (-100)
+#define O_RDONLY    0
+
+static long sc2(long n, long a, long b, long c, long d, long e)
+{
+    register long r8 __asm__("x8") = n;
+    register long r0 __asm__("x0") = a;
+    register long r1 __asm__("x1") = b;
+    register long r2 __asm__("x2") = c;
+    register long r3 __asm__("x3") = d;
+    register long r4 __asm__("x4") = e;
+    __asm__ volatile("svc #0" : "+r"(r0)
+                     : "r"(r8), "r"(r1), "r"(r2), "r"(r3), "r"(r4) : "memory");
+    return r0;
+}
+
+static const char* const g_paths[] = {
+    "/storage/emulated/0/Android/data/com.IterativeStudios.Nordicandia/files/nord-login.txt",
+    "/data/local/tmp/nord-login.txt",
+};
+
+static int read_credentials(char* buf, int cap, char** email, char** pw)
+{
+    int i;
+    for (i = 0; i < 2; i++) {
+        long fd = sc2(SYS_openat, AT_FDCWD, (long)g_paths[i], O_RDONLY, 0, 0);
+        long n;
+        int j;
+        if (fd < 0) continue;
+        n = sc2(SYS_read, fd, (long)buf, cap - 1, 0, 0);
+        sc2(SYS_close, fd, 0, 0, 0, 0);
+        if (n <= 0) continue;
+        buf[n] = 0;
+        *email = buf;
+        *pw = 0;
+        for (j = 0; j < (int)n; j++) {
+            if (buf[j] == '\r') { buf[j] = 0; continue; }
+            if (buf[j] == '\n' && !*pw) { buf[j] = 0; *pw = &buf[j + 1]; }
+        }
+        if (*pw && **pw) return 1;
+    }
+    return 0;
+}
+
 /* ---- state ------------------------------------------------------------ */
 #define STAGE_LOGIN_EMAIL    1
 #define STAGE_LOGIN_PW       2
@@ -171,13 +227,24 @@ static void on_input(ptr self, ptr arg, ptr method) {
 
 /* ---- entry points ----------------------------------------------------- */
 /* Called (branch patch) from WindowSelectGameMode.OnSignInClicked. */
+static char g_filebuf[256];
+
 void email_login_entry(ptr self) {
+    char* email = 0;
+    char* pw = 0;
     (void)self;                       /* real UIWindowManager comes from the capture trampoline */
     g_dbg[7] = 0x1111;                /* stub entered */
     g_stage = STAGE_LOGIN_EMAIL;
-    g_dbg[7] = 0x2222;                /* g_stage written */
+    g_dbg[7] = 0x2222;
+    if (read_credentials(g_filebuf, sizeof(g_filebuf), &email, &pw)) {
+        g_dbg[7] = 0x4444;            /* credentials loaded from file */
+        UnityGame_SignInNew(2, 1, 0, il2cpp_string_new(email), il2cpp_string_new(pw));
+        g_dbg[7] = 0x5555;            /* SignInNew returned */
+        return;
+    }
+    g_dbg[7] = 0x6666;                /* no credential file found -> fall back to the dialog */
     show("Email", on_input);
-    g_dbg[7] = 0x3333;                /* show() returned */
+    g_dbg[7] = 0x3333;
 }
 
 /* A second entry for a Register button. */
