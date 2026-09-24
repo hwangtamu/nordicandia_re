@@ -64,6 +64,7 @@ static long sc(long n, long a, long b, long c, long d, long e, long f)
 
 static ptr g_rowKlass;
 static char *g_body;
+volatile long g_dbg[8];
 
 static void mem_copy(char *d, const char *s, int n)
 {
@@ -110,6 +111,7 @@ static int http_get(const char *path, char *out, int cap)
     int in_body = 0, scan = 0;
 
     fd = (int)sc(SYS_socket, 2 /*AF_INET*/, 1 /*SOCK_STREAM*/, 0, 0, 0, 0);
+    g_dbg[4] = fd;
     if (fd < 0) return 0;
 
     /* Bound the whole exchange so a blocked network can never freeze the UI. */
@@ -122,7 +124,8 @@ static int http_get(const char *path, char *out, int cap)
     sa.addr = LB_IP_WORD;
     for (int i = 0; i < 8; i++) sa.pad[i] = 0;
 
-    if (sc(SYS_connect, fd, (long)&sa, 16, 0, 0, 0) != 0) { sc(SYS_close, fd, 0, 0, 0, 0, 0); return 0; }
+    { long rc = sc(SYS_connect, fd, (long)&sa, 16, 0, 0, 0); g_dbg[5] = rc;
+      if (rc != 0) { sc(SYS_close, fd, 0, 0, 0, 0, 0); return 0; } }
 
     str_cat(req, &rl, "GET ");
     str_cat(req, &rl, path);
@@ -161,7 +164,7 @@ static ptr resolve_row_klass(void)
     for (u64 i = 0; i < n; i++) {
         ptr k = il2cpp_class_from_name(il2cpp_assembly_get_image(assemblies[i]),
                                        "Nordicandia.OfflineCore", "FakeLeaderboardRow");
-        if (k) { g_rowKlass = k; return k; }
+        if (k) { g_rowKlass = k; g_dbg[0] = (long)k; return k; }
     }
     return 0;
 }
@@ -220,6 +223,7 @@ static ptr build_rows(const char *category, const char *cls)
     klass = resolve_row_klass();
     if (!klass) return 0;
     if (!body) { body = (char *)il2cpp_alloc(32768); g_body = body; }
+    g_dbg[1] = (long)body;
     if (!body) return 0;
 
     str_cat(path, &pl, "/api/leaderboards/");
@@ -230,13 +234,14 @@ static ptr build_rows(const char *category, const char *cls)
     if (cls) { str_cat(path, &pl, "&cls="); str_cat(path, &pl, cls); }
     path[pl] = 0;
 
-    if (http_get(path, body, sizeof(body)) <= 0) return 0;
+    { int hl = http_get(path, body, 32768); g_dbg[2] = hl; if (hl <= 0) return 0; }
 
     end = body;
     while (*end) end++;
 
     /* First pass: how many rows? */
     for (p = body; (p = find_str(p, end, "\"rank\":")) != 0; p += 7) count++;
+    g_dbg[3] = count;
     if (count <= 0) return 0;
 
     arr = il2cpp_array_new(klass, (u64)count);
