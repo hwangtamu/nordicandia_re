@@ -29,6 +29,7 @@ extern ptr il2cpp_domain_get(void);
 extern ptr il2cpp_domain_get_assemblies(ptr domain, u64 *size);
 extern ptr il2cpp_assembly_get_image(ptr assembly);
 extern ptr il2cpp_object_new(ptr klass);
+extern void il2cpp_runtime_class_init(ptr klass);
 extern ptr il2cpp_array_new(ptr elementKlass, u64 length);
 extern ptr il2cpp_string_new(const char *str);
 extern ptr il2cpp_alloc(unsigned long size);
@@ -164,7 +165,13 @@ static ptr resolve_row_klass(void)
     for (u64 i = 0; i < n; i++) {
         ptr k = il2cpp_class_from_name(il2cpp_assembly_get_image(assemblies[i]),
                                        "Nordicandia.OfflineCore", "FakeLeaderboardRow");
-        if (k) { g_rowKlass = k; g_dbg[0] = (long)k; return k; }
+        if (k) {
+            /* il2cpp_array_new/il2cpp_object_new dereference class metadata: an
+             * uninitialised class made them fault at null+0x28 (SIGSEGV) when the
+             * leaderboard window opened.  Force the cctor/type init first. */
+            il2cpp_runtime_class_init(k);
+            g_rowKlass = k; g_dbg[0] = (long)k; return k;
+        }
     }
     return 0;
 }
@@ -177,11 +184,17 @@ static void fill_row(ptr obj, int rank, const char *name, int nameLen, long valu
     for (i = 0; i < nameLen && i < 63; i++) buf[i] = name[i];
     buf[i] = 0;
 
-    *(i32 *)((u8 *)obj + 0x00) = rank;
-    *(ptr *)((u8 *)obj + 0x08) = il2cpp_string_new(buf);
-    *(i32 *)((u8 *)obj + 0x10) = classId;
-    *(i64 *)((u8 *)obj + 0x18) = value;
-    *(u8 *)((u8 *)obj + 0x20) = (u8)(isPlayer ? 1 : 0);
+    /* Field offsets measured from the real class (il2cpp_field_get_offset):
+     *   <Rank> 0x10, <Name> 0x18, <ClassId> 0x20, <Value> 0x28, <IsPlayer> 0x30
+     * The previous 0x00/0x08/... base overwrote the object header (klass at +0x00,
+     * monitor at +0x08) with the rank/name, which crashed IL2CPP later (SIGSEGV at
+     * null+0x28 with a bogus klass) and made the UI show an unnamed row with a
+     * garbage level. */
+    *(i32 *)((u8 *)obj + 0x10) = rank;
+    *(ptr *)((u8 *)obj + 0x18) = il2cpp_string_new(buf);
+    *(i32 *)((u8 *)obj + 0x20) = classId;
+    *(i64 *)((u8 *)obj + 0x28) = value;
+    *(u8 *)((u8 *)obj + 0x30) = (u8)(isPlayer ? 1 : 0);
 }
 
 static long atoi_span(const char *s, int n)
