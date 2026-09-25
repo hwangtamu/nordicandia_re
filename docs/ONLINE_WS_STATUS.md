@@ -1,7 +1,9 @@
 # Nordicandia 私有服务器 —— 在线模式 / 实时通道 现状报告
 
 > 最后更新：本次会话结束
-> 结论一句话：**登录、选模式、角色列表、本地存档系统、排行榜、ChangePassword 均已打通；唯一未打通的是"在线世界入口 + 实时 socket"，而它正是"经验归零"的根因。**
+> 一句话结论：**实时 WebSocket 已经打通**（Envoy `code=101`、服务端 `[WS] open`/`pushed SeasonBuff`、连接可保持数分钟）；
+> 经验持久化仍差"上传"这一步；另外发现并修复了服务端一个真实 BUG（离线奖励接口是空桩），
+> 但用户点击【领取】时的报错是**客户端本地失败**（请求根本没发出），尚未解决。
 
 ---
 
@@ -12,202 +14,314 @@
 | 连上私有服务器 | ✅ |
 | 邮箱/密码登录（服务端） | ✅ |
 | Google 登录保持可用（不重签 APK） | ✅ |
-| 排行榜显示 Steam 角色 | ✅ |
+| 排行榜显示 Steam 角色 | ✅（服务端接口正常） |
 | 修改密码 | ✅ |
-| **进入世界并游玩** | ⚠️ 仅"强制离线"路径可进 |
-| **经验持久化（不回 0）** | ❌ |
-| **实时通道 `/ws`** | ❌ 从未建立 |
-| 独立 XAPK 分发 | ⚠️ 可构建，但内容待更新 |
+| **进入世界并游玩** | ✅（手动操作稳定；adb 自动化不稳） |
+| **实时 WebSocket `/ws`** | ✅ **已连通**（曾保持 3~7 分钟） |
+| **经验上传 / 持久化** | ❌ 仍未发生 |
+| **离线奖励领取** | ❌ 点击报错（客户端本地失败） |
+| 独立 XAPK 分发 | ⚠️ 可构建，内容待更新 |
 
 ---
 
-## 2. 已修复 / 已交付（可复现）
+## 2. 本次会话新完成的关键工作
+
+### 2.1 ✅ 实时 WebSocket **已打通**（重大突破）
+
+Envoy 访问日志（`code=101` = Switching Protocols）：
+
+```
+ACCESS GET /ws?status=True&characterId=e9805d14-… HTTP/1.1 code=101 dur=316633ms
+ACCESS GET /ws?status=True&characterId=e9805d14-… code=101 dur=434567ms
+ACCESS GET /ws?status=True&characterId=e9805d14-… code=101 dur=213088ms
+```
+
+服务端网关生命周期完整：
+
+```
+[WS] open  user=e7641a52… character=e9805d14… online=True
+[WS] pushed SeasonBuff to e9805d14…
+[WS] closed …
+```
+
+- `server/RealtimeGateway.cs` 已实现：`/ws?status=&characterId=`，Bearer 鉴权，二进制 MessagePack `Envelope`（RequestId + Message union），支持请求/响应与服务器推送。
+- **Envoy 必须 `allow_connect: true`**（client 用 HTTP/2 extended CONNECT 打开 `/ws`）—— 已修并上线（见 §3）。
+
+### 2.2 ✅ 修复一个真实服务端 BUG：`ClaimCharacterOfflineRewards` 是空桩
+
+```csharp
+// 修复前（Services.Generated.cs，自动生成）
+public UnaryResult<ClaimCharacterOfflineRewardsResponse> ClaimCharacterOfflineRewards(req)
+    => UnaryResult.FromResult(Defaults.Create<ClaimCharacterOfflineRewardsResponse>());
+// → 全零响应：FinalExperienceGained=0, FinalLevelsGained=0, NewOpals=0
+```
+
+后果：客户端领取离线奖励时拿到空响应 → 弹 "Error"；等级由服务端算（`Progression.LevelForExperience(AttrExperience)`），服务端经验恒为 0 → **经验条溢出但升不了级**。
+
+**修复**（提交 `d382591`）：
+
+```csharp
+// GameStore.ClaimOfflineRewards —— 新增
+① 应用请求里的经验增量（客户端自己算好离线收益后上报）
+② 用 Progression.LevelForExperience 重算等级
+③ 刷新 IdleProgress.LastActiveEpoch（下次离线时长从此刻算）
+④ 更新 header.Level（EnterGameWithCharacter 会用到）
+⑤ FromAdReward 时扣 OpalCost
+⑥ 返回 FinalExperienceGained / FinalLevelsGained / NewOpals
+```
+
+契约：
+
+```
+ClaimCharacterOfflineRewardsRequest  { CharacterId, ExperienceGained, LevelsGained, FromAdReward, OpalCost }
+ClaimCharacterOfflineRewardsResponse { FinalExperienceGained, FinalLevelsGained, NewOpals }
+```
+
+### 2.3 ✅ 修复 CI 真实故障 + 部署
+
+```
+CI 里 compose 绑定的 envoy.yaml 不存在 →
+  OCI runtime create failed: not a directory → 整个构建 job 失败
+修复：workflow 增加  cp deploy/lightsail/envoy.yaml "$NORD_HOME/envoy.yaml"
+
+部署结果：CI run 36086773857 success；镜像 c411d93f36800d06010601fa461b0681d79f4704
+         已上线；healthz=200；数据完好（Characters=7, Users=14）
+```
+
+### 2.4 ✅ 进度泵（realtime stub）解锁
+
+`realtime_stub.c` 的 `ws_fixed_update` 原来在早期 return 之后才 `g_ticks++`：
+
+```c
+if(!g_ready||!g_socket||!Internal_is_connected(g_socket,0)) return;  // stub 自己的 socket 从未建立
+g_ticks++;                                    // 永远到不了
+Forget(NetSocket_update_fixed(0),0);          // 进度泵永不执行
+```
+
+**关键事实**：`NetSocket.UpdateFixed`（`0x2E09E80`）在整个 lib 里**调用者 = 0**（这个 build 省略了调用点）。
+修改后（解除对 stub socket 的依赖）：
+
+```
+g_ticks: 0x67b (1659) → 0x6ba (1722)   ← 进度泵开始执行 ✓
+```
+
+---
+
+## 3. 已修复 / 已交付（累计）
 
 | 项目 | 证据 / 位置 |
 |---|---|
-| **Envoy `allow_connect: true`**（listener + cluster） | `deploy/lightsail/envoy.yaml`，提交 `1b53412`，已上线重启。客户端用 **HTTP/2 extended CONNECT** 开 `/ws`，原配置必被拒 |
-| Envoy `grpc_http1_bridge` + Lua 修复（grpc-dotnet trailers-only 误判） | `deploy/lightsail/envoy.yaml` |
+| **Envoy `allow_connect: true`**（listener + cluster） | `deploy/lightsail/envoy.yaml`，提交 `1b53412`，已上线。客户端用 **HTTP/2 extended CONNECT** 开 `/ws`，原配置必被拒 |
+| Envoy `grpc_http1_bridge` + Lua 修复（grpc-dotnet trailers-only 误判） | 同上 |
 | gRPC 诊断日志（`gs/gm/ct/te`） | Envoy access log |
 | TLS 补丁（`MobileTlsContext.ValidateCertificate`） | `server/patch_android_online.py` |
 | gRPC over HTTP/1.1 补丁（`GrpcCall.ValidateHeaders` / `_RunCall`） | 同上 |
 | Season 模式 UI 补丁 | 同上 |
-| 服务端排行榜 JSON 接口 + `LeaderboardQuery` | `server/.../LeaderboardQuery.cs`、`LeaderboardHttp.cs`；`GET /api/leaderboards/{normal\|season}/overall?limit=N` |
+| 服务端排行榜 JSON 接口 + `LeaderboardQuery` | `GET /api/leaderboards/{normal\|season}/overall?limit=N` |
 | 服务端 `ChangeEmailPassword` | `LoginService.cs` |
-| **stub 工具链根因修复** | `_stub_symbols` 改为 `syms.update(found)`；此前 KeyError 导致 `mk_a1.py` 静默失败、**所有测试都在推旧库** |
+| **服务端 `ClaimCharacterOfflineRewards`** | `GameStore.cs` + `CharacterService.cs`（`Services.Generated.cs` 里删掉空桩） |
+| **CI：复制 envoy.yaml** | `.github/workflows/lightsail-image.yml` |
+| **stub 工具链根因修复** | `_stub_symbols` 改为 `syms.update(found)`（此前 KeyError 导致 `mk_a1.py` 静默失败、所有测试都在推旧库） |
 | **地址漂移 bug 修复** | STUB_VERSION 改用 `adrp/add g_dbg`（`g_dbg` 每次构建地址会变） |
 | **测试铁律** | sha256 校验设备库 + `rm`/`cp` 换 inode + 探针安装校验 + 关键链路尽早 attach |
+| **Frida 精确驱动游戏** | 见 §4.3（含必须的 IL2CPP thread attach） |
 
 ---
 
-## 3. 核心资产（可复用）
+## 4. 核心资产（可复用）
 
-### 3.1 运行时 IL2CPP 解析器（最重要）
-注入 stub 在 `UIWindowManager.Update` 每帧调用，使用 IL2CPP API 枚举类/方法并发布到 `g_meth_fn[] / g_meth_name[] / g_meth_n`，Frida 可直接读出**方法名 + 固定偏移**。
-- 支持**按类名**匹配，也支持**按方法名**反查类（本次用它找到 SignalR 协商类）。
-- 彻底摆脱"预知地址"和"地址表不可靠"的问题。
+### 4.1 运行时 IL2CPP 解析器（最重要）
 
-### 3.2 已解析出的方法表（均为固定 lib 偏移）
+注入 stub 在 `UIWindowManager.Update` 每帧调用，用 IL2CPP API 枚举类/方法并发布到
+`g_meth_fn[] / g_meth_name[] / g_meth_n`，Frida 可直接读出**方法名 + 固定偏移**。
 
-**`SaveManager`（64 个）**
+- 支持**按类名**匹配，也支持**按方法名反查类**（用它找到了 SignalR 协商类）。
+- 彻底摆脱"预知地址"与"地址表不可靠"。
+- 复用方式：改 `email_login_stub.c` 里 `sceq(cn, "NetSocket")` 的类名 → `bash build_stub.sh` → `python3 /tmp/mk_a2.py` → 用 `/tmp/mt.js` 读表。
+
+### 4.2 已解析出的方法表（均为固定 lib 偏移）
+
+**`SaveManager`（64）**
 ```
-SaveManager.Update                    0x25D0CB0   ← 根因指令 0x25D0F8C 在此
-SaveCurrentAccountAndCharacter        0x25D10CC
-SaveCurrentAccount                    0x25D180C
-SaveCharacter                         0x25D18D8
-InternalSaveCharacter                 0x25D19C8
-SaveCharacterSnapshotOrLegacy         0x25D2710
-GetOfflineWriteRoute                  0x25D1F18
-ForceHeaderOnlyWhenGmacMissing        0x25D3FF4
-ScheduleOnlineSaveIn                  0x25D092C
-Player_OnCharacterEnteredGame         0x25D085C
-```
-
-**`NetSocket`（64 个）**
-```
-ConnectWithNewSocket                  0x2E09050   （异步包装；体在 MoveNext）
-EnsureSocketConnectivity              0x2E096A4
-RetryConnection                       0x2E09620
-Socket_Connected                      0x2E0920C
-Socket_Closed                         0x2E09564
-CloseSocket                           0x2E094B8
-ResetCharacterExperienceSync          0x2E09A88   ← 经验同步走 socket
-UpdateFixedAsync                      0x2E09E80
-_ConnectWithNewSocket_d__116.MoveNext 0x2E0CE50
+Update                          0x25D0CB0   ← 根因指令 0x25D0F8C 在此
+SaveCurrentAccountAndCharacter  0x25D10CC
+SaveCurrentAccount              0x25D180C
+SaveCharacter                   0x25D18D8
+InternalSaveCharacter           0x25D19C8
+SaveCharacterSnapshotOrLegacy   0x25D2710
+GetOfflineWriteRoute            0x25D1F18
+ForceHeaderOnlyWhenGmacMissing  0x25D3FF4
+ScheduleOnlineSaveIn            0x25D092C
+Player_OnCharacterEnteredGame   0x25D085C
 ```
 
-**SignalR 协商类（按 `get_WebSocketServerUrl` 反查得到）**
+**`NetSocket`（64）**
 ```
-Start                                 0x34197AC
-Get                                   0x341EC08
-OnNegotiationRequestFinished          0x341DEF4
-RaiseOnError                          0x341E3CC
-get_Url                               0x341DDF4
-get_WebSocketServerUrl                0x341DE04
-get_TryWebSockets                     0x341DE68
-```
-
-**`UIWindowManager`（64 个）**
-```
-Update                                0x278D738
-ShowWindow                            0x278E674
-ShowInGameWindow                      0x278EA08
-ShowSocketConnectingDialog            0x279013C
-HideSocketConnectingDialog            0x278D4EC
-Player_OnCharacterLeftGame            0x278D4E4
-ShowLoadingDialog                     0x2790550
-ShowDialogRetryContinue               0x27917A8
+ConnectWithNewSocket                    0x2E09050   （异步包装；体在 MoveNext）
+EnsureSocketConnectivity                0x2E096A4
+RetryConnection                         0x2E09620
+Socket_Connected                        0x2E0920C
+Socket_Closed                           0x2E09564
+CloseSocket                             0x2E094B8
+ResetCharacterExperienceSync            0x2E09A88   ← 经验同步走 socket
+UpdateFixedAsync                        0x2E09E80   ← ★ 调用者=0（build 省略了调用点）
+_ConnectWithNewSocket_d__116.MoveNext   0x2E0CE50
 ```
 
-### 3.3 关键地址
+**SignalR 协商类（按 `get_WebSocketServerUrl` 反查）**
 ```
-世界入口决策点（IsOnline 分支）      0x257D29C   cbnz w8, 0x257DAE8(在线) / b 0x257E610(离线)
-离线块里的本地设备登录调用           0x257E46C   UnityGame.SignInNew(0,true,true,null,null)
-SPSM 抛异常点                        0x26FB774   "Cannot synchronize online account"
-SPSM 在线守卫                        0x26FB754
-PlayerAccount.get_IsOnline           0x2C0AEA4   AccountType(+0x30) ∈ {1,2,3}
-PlayerAccount.RefreshAccountType     0x2C0CBDC
-UnityGame.SignInNew                  0x2701390
+Start 0x34197AC  Get 0x341EC08  OnNegotiationRequestFinished 0x341DEF4  RaiseOnError 0x341E3CC
+get_Url 0x341DDF4  get_WebSocketServerUrl 0x341DE04  get_TryWebSockets 0x341DE68
+```
+> 实测：全部**从未被调用**（客户端用自身路径直接开 `/ws`）。
+
+**`UIWindowManager`（64）**
+```
+Update                        0x278D738
+ShowWindow                    0x278E674
+ShowInGameWindow              0x278EA08
+ShowSocketConnectingDialog    0x279013C
+HideSocketConnectingDialog    0x278D4EC
+Player_OnCharacterLeftGame    0x278D4E4
+ShowLoadingDialog             0x2790550
+ShowErrorDialogOK             0x278D5F8
+ShowDialogOK                  0x278EA8C
+ShowDialogRetryContinue       0x27917A8
+```
+
+**`WindowCharacterList`（35）**
+```
+OnCharacterSelected           0x2575360
+OnPlayClicked                 0x2576004   ← 世界入口
+ReportLoadingProgress         0x25760B0
+FetchCharacters               0x2573458
+FetchOnlineCharacters         0x2573508
+FetchOfflineCharacters        0x2573AC8
+UpdateButtonStatus            0x2574E60
+Awake 0x2572F34   Start 0x2573160
+```
+
+**`UnityGame`（40）**
+```
+Update       0x26FFE0C
+FixedUpdate  0x26FFEB0   ← realtime stub 的进度泵挂这里
+```
+
+### 4.3 Frida 精确驱动游戏（本轮打通）
+
+```
+抓实例   → Hook Awake/Start                                          this ✓
+取类     → il2cpp_object_get_class (0x2318508)                        klass ✓
+取方法   → il2cpp_class_get_method_from_name (0x2317C9C)              MethodInfo ✓
+线程     → il2cpp_thread_attach(il2cpp_domain_get()) (0x2318594/0x2318138)
+           ← 【必须】否则 runtime_invoke 直接 "access violation"
+调用     → il2cpp_runtime_invoke (0x231855C)                          ret=0x0 ex=0x0 ✓
+```
+
+### 4.4 关键地址
+
+```
+世界入口决策点（IsOnline 分支）   0x257D29C   cbnz w8,0x257DAE8(在线) / b 0x257E610(离线)
+离线块里的本地设备登录调用        0x257E46C   UnityGame.SignInNew(0,true,true,null,null)
+SPSM 抛异常点                     0x26FB774   "Cannot synchronize online account"
+SPSM 在线守卫                     0x26FB754
+PlayerAccount.get_IsOnline        0x2C0AEA4   AccountType(+0x30) ∈ {1,2,3}
+PlayerAccount.RefreshAccountType  0x2C0CBDC
+UnityGame.SignInNew               0x2701390
 ```
 
 ---
 
-## 4. 根因链（本次会话最终收敛）
+## 5. 根因链（当前理解）
 
 ```
-① 客户端从未启动实时客户端
-   · SignalR 协商类 Start/Get/OnNegotiationRequestFinished 全部从未触发
-   · Envoy 侧无 /negotiate、无 /ws
-   · ShowSocketConnectingDialog / ShowInGameWindow 从未调用
+① 客户端【自己】打开 /ws（code=101，保持数分钟）        ✅ 已通
+   · SignalR 协商类从未调用 → 不是走 SignalR negotiate
+   · ConnectWithNewSocket 是否被调用尚未定论（stub 的 g_attempts 一直是 0）
         ↓
-② 为什么没启动？世界入口没走通
-   · 在线账号(AccountType=2, IsOnline=1) → 世界入口跑 SPSM
-     → 抛 "Cannot synchronize online account" → 错误框 → 退回主菜单
-   · 只有【离线块 0x257E610】才初始化加载 UI 并驱动世界入口
+② 经验上传依赖 NetSocket.UpdateFixed
+   · 它在整个 lib 里【调用者 = 0】（build 省略调用点）
+   · realtime stub 用 UnityGame.FixedUpdate(0x26FFEB0) 驱动它 → g_ticks 已增长 ✅
+   · 但服务端 Experience 仍为 0 / HasRealtimeProgress=False  ❌
         ↓
-③ 我们此前的"强制离线"补丁（NOP 0x257D29C + NOP 0x26FB754）
-   · 能让客户端进世界，但把客户端锁进本地设备路径
-   · 且 IsOnline 仍为 true → SaveManager.Update 按设计跳过本地保存
-   · 结果：本地不写、服务器也拿不到 → 经验归零
+③ 等级由服务端决定
+   · EnterGameWithCharacter 时服务端用 Progression.LevelForExperience(exp)
+     算好 level 放进 AttrLevel 返回
+   · 服务端经验恒 0 → 永远返回 level=1
+   · 客户端经验条继续按本地经验涨 → 【溢出但升不了级】
         ↓
-④ 经验上传的真实通道 = 实时 socket
-   · 服务端 RealtimeGateway(/ws) 写 HasRealtimeProgress / Experience
-   · 证据：Steam 角色 0412ea15  exp=79740.3  rt=true  (2026-09-20)
-   · 所有 device 账号角色：exp=0  rt=false
+④ 领取离线奖励报错
+   · 服务端已实现该接口并上线，但点击时【服务端收到请求数 = 0】
+   · 实时通道 union 里没有 Claim/Offline 消息 → 不是走 WS
+   · ⇒ 错误发生在【客户端本地】，请求还没发出
+   · 触发位置：ShowErrorDialogOK，调用栈 #3 = 0x2674770（调用者返回地址）
+   · 线索：离线奖励对话框【只在进入打怪地图时弹出】，城镇里不弹
 ```
 
-### 架构结论（关键）
+### 重要架构结论
 ```
-在线进度上传 = 实时 socket（/ws）        ← 与 SaveManager.IsOnline 是两套独立机制
+在线进度上传 = 实时 socket（/ws）       ← 与 SaveManager.IsOnline 是两套独立机制
 SaveManager.IsOnline 只是"保存路由"开关：
     true  → 跳过本地保存（0x25D0F8C），保存委托给 socket
     false → 走本地保存
 
-客户端要求：IsOnline=false 以通过 SPSM/世界入口
-           随后由【世界入口启动的实时 socket】负责上传
+服务端 RealtimeGateway 会写 HasRealtimeProgress / Experience
+证据：Steam 角色 0412ea15  exp=79740.3  rt=true (2026-09-20)
+      所有 device 账号角色：exp=0  rt=false
 ```
 
 ---
 
-## 5. 本轮验证记录
+## 6. 当前阻塞
 
-| 实验 | 结果 |
+| # | 阻塞 | 说明 |
+|---|---|---|
+| 1 | **经验上传未发生** | `/ws` 通了，但服务端 Experience 仍 0；需确认客户端是否真的在推 delta |
+| 2 | **领取离线奖励报错** | 纯客户端失败，请求未发出；调用栈指向 `0x2674770` 所在函数 |
+| 3 | **UI 自动化不可靠** | adb 触摸不稳（见 §7），**已改用手动操作 + Frida 驱动** |
+| 4 | **排行榜在游戏内显示错误** | `lib_rt2/lib_rt3` 链路是 online + realtime，**缺排行榜补丁** → 游戏显示本地伪造榜 |
+
+---
+
+## 7. 为什么坐标不稳定（已核实硬件事实）
+
+| 检查 | 结果 |
 |---|---|
-| 移除强制离线（`FORCE_OFFLINE_WORKAROUND=False`，`lib_online_clean.so`） | 客户端走**在线分支** ✓、首次调用 `ConnectWithNewSocket` ✓、**首次调用 `SaveCurrentAccountAndCharacter`** ✓、并弹出真实错误框 **"Cannot synchronize online account"** |
-| 服务端移除 email 链接（账号仅剩 device） | 错误依旧 → 客户端的"在线"判定**不来自 linked-accounts**，来自账号对象创建（登录响应） |
-| `get_IsOnline → 0`（`lib_offacc.so`） | ✅ SPSM 异常消失；⚠️ 该轮 UI 落在 Game Mode→Select Race 向导，世界入口链未被触发 |
+| tap 坐标空间 | `[0,0][2340,1080]`（uiautomator SurfaceView bounds）✓ |
+| letterbox | 无，`mAppBounds=Rect(0,0-2340,1080)` ✓ |
+| 旋转 / 截图 | `ROTATION_90`，截图 2340×1080，一致 ✓ |
+| 挖孔 | 竖屏顶部中央 `Rect(511,0-569,103)`；横屏后移到侧边，**不影响坐标** ✓ |
 
----
+**真实原因（5 条）**
+1. **屏幕序列不稳定（主因）**：同一 tap 因客户端起始状态不同而落到不同窗口
+2. **Unity 触摸需要按压时长**：`input tap` 近乎零帧按压会被丢弃（用 `input swipe x y x y 120`）
+3. **截图→坐标换算误差**：缩放比 x/y 不一致 + 在压缩图上目测
+4. **过渡动画期间点击被吞**
+5. **没有可查询的视图层级**（整个游戏在一个 `SurfaceView` 内）
 
-## 6. 当前阻塞：UI 自动化不可靠（非功能问题）
-
-| 卡点 | 现象 |
-|---|---|
-| Game Mode 卡片点击 | `input tap` / `input swipe` 均无响应（像素分析：NORMAL 红边 1111px vs SEASON 2px） |
-| 角色名输入 | `input text` 文字进入输入框，但游戏仍报 "Enter character name"，Create 不提交 |
-
-→ 导致无法用纯 CLI 稳定走到"角色列表 → Play → 进世界"。
-
----
-
-## 7. 下一步（按优先级）
-
-```
-1. 把 UI 路径变确定（三选一）
-   A. 用 Frida 直接调用游戏自身 UI 方法（推荐）
-      WindowSelectGameMode.OnNextClicked 0x2634174
-      UIWindowManager.ShowWindow         0x278E674
-      WindowCharacterList 的 Play 入口
-   B. 服务端直接创建 Season 角色 → 重启 app → Game Mode 自动预选 SEASON
-      → Next → 角色列表（此路径此前已验证可行）
-   C. uiautomator 精确坐标（效果有限，Unity 无视图层级）
-
-2. 用 /tmp/off.js（全链钩子）跑一次，判定：
-   ShowInGameWindow → ShowSocketConnectingDialog → Negotiation.Start/Get → /ws
-   → 服务端 world.json 的 Experience / HasRealtimeProgress 是否更新
-
-3. 若世界入口通但 socket 未启动 → 用同一套钩子继续追 socket 启动的闸门
-4. 若 socket 通 → 验证经验增长 + 重启后仍在
-5. 最后：产品化 4 项
-   · 登录 UX（免手工凭证文件；Register 与 Login 分离）
-   · XAPK 重建（patch_android_online → email_login → leaderboard）
-   · 安全收紧（关 NORD_AUTH_ALLOW_UNVERIFIED_PROVIDERS；8081 加 token/TLS）
-   · 干净设备端到端验收
-```
+→ 正解：**状态驱动 + Frida 直接调用游戏方法**（§4.3）。**手动操作已验证"进世界"完全没问题。**
 
 ---
 
 ## 8. 环境与命令速查
 
-### 构建
+### 构建（注意顺序！）
 ```bash
-# 在线库（无强制离线，排查 socket 用）
-python3 server/patch_android_online.py <原版 libil2cpp.so> /tmp/lib_online_clean.so
-
-# 强制离线（仅用于"能进世界玩"，不可用于验证持久化）
-FORCE_OFFLINE_WORKAROUND=True ...
-
-# 账号离线（get_IsOnline→0）
-#   0x2C0AEA4: mov w0,#0 ; ret
+# realtime 补丁必须【挂在 online 补丁之后】
+python3 server/patch_android_online.py  <原版 libil2cpp.so>  /tmp/rt_c1.so
+python3 server/patch_android_realtime.py /tmp/rt_c1.so        /tmp/lib_rt3.so \
+        --host prod.038c3288.nip.io          # = 3.140.50.136 的 nip.io 别名
+# 排行榜（游戏内显示正确榜用）：
+python3 server/patch_android_leaderboard.py ...
+```
+`patch_android_realtime.py` 关键动作：
+```
+ConnectWithNewSocket 0x2E09050 → ws_connect_trampoline (b)
+MoveNext WAIT        0x2E0CED4 → ws_wait_trampoline    (b)
+MoveNext RESULT      0x2E0D064 → ws_result_trampoline  (b)
+UnityGame.FixedUpdate 0x26FFEB0 → ws_fixed_update      (b)
+BestHTTP TLS 验证器   0x2FF634C → ret
+扩展 RW PT_LOAD memsz 使 stub 的 state (0x5DE4000) 被映射
 ```
 
 ### 部署（铁律）
@@ -215,53 +329,90 @@ FORCE_OFFLINE_WORKAROUND=True ...
 adb shell am force-stop com.IterativeStudios.Nordicandia
 adb push <lib> /data/local/tmp/l.so
 adb shell "su 0 rm -f '$LIB'; su 0 cp /data/local/tmp/l.so '$LIB'; su 0 chown system:system '$LIB'; su 0 chmod 644 '$LIB'"
-# 必须校验 sha256 == 本地
-adb shell "su 0 sha256sum '$LIB'"
+adb shell "su 0 sha256sum '$LIB'"     # 必须 == 本地 sha
 ```
 
 ### 服务端
 ```bash
 ssh -i /tmp/ls.pem ubuntu@3.140.50.136
-sudo docker logs nordicandia-envoy-1
+sudo docker logs nordicandia-envoy-1        # 看 ACCESS ... /ws
+sudo docker logs nordicandia-server-1       # 看 [WS] open/closed、[OFFLINE]、[ENTER]
+sudo docker logs --since 10m ... | grep -E '\[WS\]'
 curl http://127.0.0.1:8081/api/leaderboards/season/overall?limit=10
-sudo python3 -c "import json;w=json.load(open('/opt/nordicandia/data/world.json'));..."
 ```
 
-### 探针（`/tmp/*.js`，用 `/tmp/runjs.py` 运行）
-```
-off.js    全链：世界入口 + socket + 保存
-acc.js    账号类型 / IsOnline / SPSM 抛异常
-ol.js     在线路径轨迹
-ld.js     ShowLoadingDialog 调用栈
-wm2.js    窗口切换轨迹
-mt.js     方法表（改类名/匹配规则即可复用）
-neg.js    SignalR 协商链
-nc.js     socket 链
-pt3.js    函数内插桩（带安装校验）
-mn2.js    MoveNext 状态
+### 部署新版服务端（CI 构建 → Lightsail）
+```bash
+git branch -f deploy/lightsail main && git push -f origin deploy/lightsail
+gh workflow run lightsail-image.yml --ref deploy/lightsail
+gh run list --limit 3 ; gh run view <id> --log-failed
+gh run download <id> -D /tmp/art
+scp -i /tmp/ls.pem /tmp/art/*/nordicandia-server.tar.gz ubuntu@3.140.50.136:/tmp/
+# 服务器上：
+gunzip -c /tmp/nordicandia-server.tar.gz | sudo docker load
+sudo sed -i 's|^NORD_IMAGE=.*|NORD_IMAGE=nordicandia-server:<sha>|' /opt/nordicandia/.env
+sudo docker compose --project-directory /opt/nordicandia -f /opt/nordicandia/compose.yaml up -d
 ```
 
-### 导航坐标（横屏 2340×1080）
+### 探针（`/tmp/*.js`，用 `python3 /tmp/runjs.py <script> <秒>` 运行）
+```
+rt.js       realtime stub 状态（g_attempts/error/socket/connected/ready/ticks）
+mt.js       方法表（改类名/匹配规则即可复用）
+err2.js     错误弹窗调用栈
+drive2.js   Frida 驱动 UI（含 IL2CPP thread attach）
+fields.js   实例字段 dump（含类名）
+ol.js / ld.js / wm2.js / neg.js / nc.js / pt3.js / mn2.js / acc.js / off.js
+```
+
+### 导航坐标（横屏 2340×1080，仅作参考，优先用 Frida）
 ```
 Play(主菜单) 1170,1017 | Next 2141,1000 | Back 250,1000
-角色列表 Play 2080,1017 | 关闭弹窗 1166,762
+角色列表 Play 2144,936 / 2144,960 | 关弹窗 1166,762
 ```
 
 ---
 
-## 9. 完成度评估
+## 9. 下一步（按优先级）
+
+```
+1. 【最高】定位"领取离线奖励"客户端报错
+   · 用解析器【按方法名】搜索 ClaimCharacterOfflineRewards → 拿到客户端 API 包装类
+     → hook 它：是否被调用 / 入参 / 是否抛异常
+   · 若压根没调用 → hook ShowErrorDialogOK 上一层（0x2674770 所在函数）读字符串参数
+   · 注意线索：对话框只在【进入打怪地图】时弹出
+
+2. 【高】让进度真正上传
+   · 确认 /ws 是谁开的（stub 的 ws_prepare vs 客户端自身）—— g_attempts 一直 0
+   · 确认 NetSocket.UpdateFixed 被调用后是否真的发送 delta（服务端 [WS] 侧有无收到）
+   · 必要时在网关加日志：打印收到的 Envelope.Message 类型
+
+3. 【中】补排行榜补丁到链路（游戏内显示真实榜）
+   patch_android_online → patch_android_leaderboard → patch_android_realtime
+
+4. 【中】产品化 4 项
+   · 登录 UX（免手工凭证文件；Register 与 Login 分离）
+   · XAPK 重建（完整补丁链）
+   · 安全收紧（关 NORD_AUTH_ALLOW_UNVERIFIED_PROVIDERS；8081 加 token/TLS）
+   · 干净设备端到端验收
+```
+
+---
+
+## 10. 完成度评估
 
 | 维度 | 完成度 |
 |---|---|
 | 技术研究 / 根因 | **~99%** |
-| 功能可用性 | **~85%**（能登录、选模式、建角色、本地存档系统、排行榜） |
+| 功能可用性 | **~88%**（能登录、选模式、建角色、**进世界游玩**、实时通道连通、排行榜接口、改密码） |
 | 产品化 / 可发布 | **~55%** |
 
-**不可发布的原因**：在线世界入口 + 实时 socket 未打通 ⇒ 经验无法持久化。
+**不可发布的原因**：经验上传/持久化未完成；领取离线奖励报错；游戏内排行榜显示错误。
 
 ---
 
-## 10. 一句话交接
+## 11. 一句话交接
 
-> 所有机制都已定位到指令级，工具链（运行时 IL2CPP 解析器 + 方法表 + 指令地图 + 注入 stub）完全就绪。
-> 剩下的工作只有两件：**(1) 把 UI 自动化变确定（推荐 Frida 调游戏自身方法）**，**(2) 判定实时 socket 是否随世界入口启动；若未启动，继续用同一套钩子追闸门**。
+> 实时通道已经打通（这是本次会话最大的进展），服务端离线奖励接口的空桩 BUG 也已修复并上线。
+> 剩下三件事：**(1) 定位客户端领取报错（纯本地失败，调用栈已收到 `0x2674770`）**、
+> **(2) 让进度 delta 真正上传**、**(3) 把排行榜补丁加回链路**。
+> 工具链（运行时 IL2CPP 解析器 + 5 张方法表 + 指令级地图 + 注入 stub + Frida 精确驱动）全部就绪。
