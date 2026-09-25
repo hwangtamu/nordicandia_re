@@ -9,6 +9,8 @@ public sealed partial class CharacterServiceApiImpl
     private Guid Owner => GameStore.Instance.RequireUser(Context.CallContext.RequestHeaders.GetValue("authorization"));
     public UnaryResult<CreateCharacterResponse> CreateCharacter(CreateCharacterRequest req)
         => UnaryResult.FromResult(new CreateCharacterResponse { Character = GameStore.Instance.CreateCharacter(Owner, req) });
+    public UnaryResult<ClaimCharacterOfflineRewardsResponse> ClaimCharacterOfflineRewards(ClaimCharacterOfflineRewardsRequest req)
+        => UnaryResult.FromResult(GameStore.Instance.ClaimOfflineRewards(Owner, req));
     public UnaryResult<GetCharacterListResponse> GetCharacterList(GetCharacterListRequest req)
         => UnaryResult.FromResult(new GetCharacterListResponse { Characters = GameStore.Instance.Characters(Owner) });
     public UnaryResult<EnterGameWithCharacterResponse> EnterGameWithCharacter(EnterGameWithCharacterRequest req)

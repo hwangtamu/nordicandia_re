@@ -344,6 +344,44 @@ public sealed class GameStore : IDisposable
             return header;
         });
     }
+    /// <summary>
+    /// The client measures its own offline window (IdleProgress.LastActiveEpoch vs now)
+    /// and posts the reward it wants applied. The generated service used to answer with a
+    /// default (all-zero) response, which made the client raise its generic "Error" dialog
+    /// on claim and left the character with an overflowing experience bar but a stuck
+    /// level. Apply the delta, recompute the level from the authoritative experience and
+    /// answer with the final values.
+    /// </summary>
+    public ClaimCharacterOfflineRewardsResponse ClaimOfflineRewards(Guid owner, ClaimCharacterOfflineRewardsRequest req) => Change(s =>
+    {
+        var character = Owned(s, owner, req.CharacterId);
+        var gained = double.IsNaN(req.ExperienceGained) || req.ExperienceGained < 0 ? 0 : req.ExperienceGained;
+        var levels = double.IsNaN(req.LevelsGained) || req.LevelsGained < 0 ? 0 : req.LevelsGained;
+
+        var data = Unpack<SerializedCharacterData.SerializedData>(character.Data);
+        var experience = (GetAttribute(data, AttrExperience) ?? 0) + gained;
+        var level = Progression.LevelForExperience(experience);
+        SetAttribute(data, AttrExperience, experience);
+        SetAttribute(data, AttrLevel, level);
+        SetLastActiveEpoch(data);
+        character.Data = Pack(data);
+        character.Experience = experience;
+
+        var header = Unpack<CharacterHeaderDto>(character.Header);
+        header.Level = level;
+        character.Header = Pack(header);
+
+        if (req.FromAdReward && req.OpalCost > 0)
+            character.Opals -= Math.Clamp(req.OpalCost, 0, character.Opals);
+
+        Console.WriteLine($"[OFFLINE] character={req.CharacterId} +exp={gained:F1} level={level} opals={character.Opals}");
+        return new ClaimCharacterOfflineRewardsResponse
+        {
+            FinalExperienceGained = gained,
+            FinalLevelsGained = levels,
+            NewOpals = character.Opals,
+        };
+    });
     public EnterGameWithCharacterResponse Enter(Guid owner, Guid id) => Change(s => {
         var character = Owned(s, owner, id);
         var header = Unpack<CharacterHeaderDto>(character.Header); header.LastLogin = Now;

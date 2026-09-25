@@ -24,7 +24,6 @@ public sealed partial class CharacterPowerServiceApiImpl : ServiceBase<ICharacte
 
 public sealed partial class CharacterServiceApiImpl : ServiceBase<ICharacterServiceApi>, ICharacterServiceApi
 {
-    public MagicOnion.UnaryResult<SharedNet.Api.ClaimCharacterOfflineRewardsResponse> ClaimCharacterOfflineRewards(SharedNet.Api.ClaimCharacterOfflineRewardsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ClaimCharacterOfflineRewardsResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ClaimRegularChristmasItemResponse> ClaimRegularChristmasItem(SharedNet.Api.ClaimRegularChristmasItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ClaimRegularChristmasItemResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ClaimAdChristmasItemResponse> ClaimAdChristmasItem(SharedNet.Api.ClaimAdChristmasItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ClaimAdChristmasItemResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.InitializeRegularChristmasRewardsResponse> InitializeRegularChristmasRewards(SharedNet.Api.InitializeRegularChristmasRewardsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.InitializeRegularChristmasRewardsResponse>());

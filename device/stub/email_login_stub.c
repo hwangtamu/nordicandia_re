@@ -170,7 +170,7 @@ void resolve_save_character(void)
             if (!k) continue;
             cn = il2cpp_class_get_name(k);
             if (!cn) continue;
-            if (!cn || !sceq(cn, "NetSocket")) continue;
+            if (!cn || !sceq(cn, "UnityGame")) continue;
             {   /* publish every method: pointer + name */
                 ptr it = 0, mm;
                 int n = 0;
