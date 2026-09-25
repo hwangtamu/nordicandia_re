@@ -247,7 +247,12 @@ static ptr build_rows(const char *category, const char *cls)
     if (cls) { str_cat(path, &pl, "&cls="); str_cat(path, &pl, cls); }
     path[pl] = 0;
 
-    { int hl = http_get(path, body, 32768); g_dbg[2] = hl; if (hl <= 0) return 0; }
+    /* Never hand back a null array: the leaderboard window dereferences the result
+     * unconditionally, so a null return (empty class board, or an unreachable feed)
+     * crashed the client the moment such a tab was opened.  An empty typed array is
+     * the safe equivalent of "no rows". */
+    { int hl = http_get(path, body, 32768); g_dbg[2] = hl;
+      if (hl <= 0) return il2cpp_array_new(klass, 0); }
 
     end = body;
     while (*end) end++;
@@ -255,7 +260,7 @@ static ptr build_rows(const char *category, const char *cls)
     /* First pass: how many rows? */
     for (p = body; (p = find_str(p, end, "\"rank\":")) != 0; p += 7) count++;
     g_dbg[3] = count;
-    if (count <= 0) return 0;
+    if (count <= 0) return il2cpp_array_new(klass, 0);
 
     arr = il2cpp_array_new(klass, (u64)count);
     g_dbg[6] = (long)arr;
