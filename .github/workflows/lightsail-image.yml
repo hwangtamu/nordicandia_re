@@ -31,6 +31,7 @@ jobs:
           export NORD_CERT_PWD=ci-ephemeral-certificate
           export NORD_PUBLIC_PORT=8443
           mkdir -p "$NORD_HOME/data" "$NORD_HOME/certs"
+          cp deploy/lightsail/envoy.yaml "$NORD_HOME/envoy.yaml"
           openssl req -x509 -newkey rsa:2048 -nodes -days 1 \
             -subj '/CN=localhost' -addext 'subjectAltName=DNS:localhost,IP:127.0.0.1' \
             -keyout "$NORD_HOME/certs/server.key" -out "$NORD_HOME/certs/server.crt"
