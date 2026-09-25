@@ -224,6 +224,16 @@ static const char *find_str(const char *p, const char *end, const char *needle)
  * `category` is "overall", "class" or "helheim"; `cls` is used for "class".
  * Returns 0 when the feed is unreachable, so the caller can fall back.
  */
+/* An empty result that still satisfies the List<FakeLeaderboardRow> layout the
+ * window reads (see the note in build_rows).  Never null: the window dereferences
+ * it unconditionally. */
+static ptr empty_result(ptr klass)
+{
+    ptr arr = il2cpp_array_new(klass, 0);
+    if (arr) { *(ptr *)((u8 *)arr + 0x10) = arr; *(i64 *)((u8 *)arr + 0x18) = 0; }
+    return arr;
+}
+
 static ptr build_rows(const char *category, const char *cls)
 {
     char *body = g_body;
@@ -252,7 +262,7 @@ static ptr build_rows(const char *category, const char *cls)
      * crashed the client the moment such a tab was opened.  An empty typed array is
      * the safe equivalent of "no rows". */
     { int hl = http_get(path, body, 32768); g_dbg[2] = hl;
-      if (hl <= 0) return il2cpp_array_new(klass, 0); }
+      if (hl <= 0) return empty_result(klass); }
 
     end = body;
     while (*end) end++;
@@ -260,7 +270,7 @@ static ptr build_rows(const char *category, const char *cls)
     /* First pass: how many rows? */
     for (p = body; (p = find_str(p, end, "\"rank\":")) != 0; p += 7) count++;
     g_dbg[3] = count;
-    if (count <= 0) return il2cpp_array_new(klass, 0);
+    if (count <= 0) return empty_result(klass);
 
     arr = il2cpp_array_new(klass, (u64)count);
     g_dbg[6] = (long)arr;
@@ -309,6 +319,20 @@ static ptr build_rows(const char *category, const char *cls)
         i++;
         p += 7;
     }
+
+    /* The leaderboard window holds this result as a concrete List<FakeLeaderboardRow>
+     * and reads it by object layout (IL2CPP field access does not go through the
+     * IReadOnlyList<T> interface): List._items sits at +0x10 and List._size at +0x18,
+     * whereas an array has ArrayBounds* at +0x10 and max_length at +0x18.  Reading an
+     * array that way gave _size == max_length (which is why exactly 5 rows appeared)
+     * and _items == the bounds pointer, i.e. garbage rows.
+     *
+     * Point _items back at this very array so the same object satisfies both layouts:
+     *   List._items[i] -> array->vector[i] -> the FakeLeaderboardRow we filled in.
+     * The array's own element access (vector at +0x20) is untouched, and max_length is
+     * already the row count, so it doubles as List._size. */
+    *(ptr *)((u8 *)arr + 0x10) = arr;
+    *(i64 *)((u8 *)arr + 0x18) = (i64)count;
 
     /* Trailing entries keep their default (zeroed) values only if the feed was
      * shorter than the announced count; the server never does that. */
