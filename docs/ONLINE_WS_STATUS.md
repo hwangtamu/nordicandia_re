@@ -263,30 +263,52 @@ UnityGame.SignInNew               0x2701390
 
 ---
 
-## 5. 根因链（当前理解）
+## 5. 根因链（全部已解决 ✅）
 
 ```
-① 客户端【自己】打开 /ws（code=101，保持数分钟）        ✅ 已通
+① 客户端【自己】打开 /ws（code=101，保持 3~7 分钟）        ✅ 已通
    · SignalR 协商类从未调用 → 不是走 SignalR negotiate
-   · ConnectWithNewSocket 是否被调用尚未定论（stub 的 g_attempts 一直是 0）
+   · Envoy ACCESS: GET /ws?status=True&characterId=… code=101 dur=316633ms
+   · 服务端: [WS] open user=… character=… online=True / [WS] pushed SeasonBuff
         ↓
-② 经验上传依赖 NetSocket.UpdateFixed
-   · 它在整个 lib 里【调用者 = 0】（build 省略调用点）
-   · realtime stub 用 UnityGame.FixedUpdate(0x26FFEB0) 驱动它 → g_ticks 已增长 ✅
-   · 但服务端 Experience 仍为 0 / HasRealtimeProgress=False  ❌
+② 经验上传依赖 NetSocket.UpdateFixed —— 之前【调用者 = 0】
+   · 需要同时修两处【两个 bug】才能上传：
+     (a) 差量参数丢失：UpdateFixedAsync(float) 从 s0 读 dt（fmov s8,s0 @0x2E09E80），
+         UpdateFixed(double) 从 d0 读（fmov d8,d0 @0x2E09F14）
+         → 旧 stub 传了 0 → s0 是垃圾 → 上传计时器永不推进
+     修：ws_fixed_update 用 il2cpp_resolve_icall("UnityEngine.Time::get_fixedDeltaTime()")
+         把真实 dt 传给两个泵
+     (b) 跳板返回值错误：ws_result_trampoline 复刻
+         _ConnectWithNewSocket_d__116.MoveNext 的 ValueTuple<bool,bool,bool>
+         = (connected, playOffline, maintenance)；
+         旧代码把 [sp,#0x38] (playOffline) 写成 1
+         → 调用方改走 SignInNew(LocalDevice)，【在线进度被丢弃】
+     修：connected=ws_finish()、playOffline=0、maintenance=0
+        （同时正确复刻 strb wzr,[sp,#0x22] / strh wzr,[sp,#0x20] /
+          strb wzr,[sp,#0x34]，TUPLE_MI 从 0x55B9548 载入）
+   · 修复后实测：attempts=1 error=0 socket=0x… connected=1 ready=1
+     4 分钟内 17 条 [META] 上传；world.json exp=3782.4 rt=True
+     角色 Pumpkin 等级 1→20；重启 App 后经验仍在 ✅
         ↓
 ③ 等级由服务端决定
-   · EnterGameWithCharacter 时服务端用 Progression.LevelForExperience(exp)
-     算好 level 放进 AttrLevel 返回
-   · 服务端经验恒 0 → 永远返回 level=1
-   · 客户端经验条继续按本地经验涨 → 【溢出但升不了级】
+   · EnterGameWithCharacter 时服务端用 Progression.LevelForExperience(exp) 算 level
+   · 现在服务端 exp 会增长 → 等级正常推进（1→20→21）✅
         ↓
-④ 领取离线奖励报错
-   · 服务端已实现该接口并上线，但点击时【服务端收到请求数 = 0】
-   · 实时通道 union 里没有 Claim/Offline 消息 → 不是走 WS
-   · ⇒ 错误发生在【客户端本地】，请求还没发出
-   · 触发位置：ShowErrorDialogOK，调用栈 #3 = 0x2674770（调用者返回地址）
-   · 线索：离线奖励对话框【只在进入打怪地图时弹出】，城镇里不弹
+④ 领取离线奖励报错 —— 真因 = TimeCheatingDetector
+   · 服务端 ClaimCharacterOfflineRewards 曾是空桩（返回全 0）→ 已实现 ✅
+   · 但点击时服务端收到请求数 = 0 ⇒ 客户端本地就失败了
+   · 真因：TimeCheatingDetector 的时钟校验；ServerTime 只随实时通道的
+     UpdateCharacterMetadataResponse 下发，实时通道未通时从未同步过时钟
+   · /ws 打通后 → 领取成功：
+     [OFFLINE] character=e9805d14… +exp=339.8 level=21 opals=0 → 200 ✅
+```
+
+### 两条最容易踩的坑（务必记住）
+```
+· ws_result_trampoline 必须返回 playOffline=false
+  返回 true → 客户端改走 SignInNew(LocalDevice) → 在线进度全部丢弃
+· 进度泵必须喂真实 elapsed（Time.fixedDeltaTime）
+  传 0 → s0/d0 是垃圾 → 上传计时器永不推进
 ```
 
 ### 重要架构结论
@@ -303,14 +325,80 @@ SaveManager.IsOnline 只是"保存路由"开关：
 
 ---
 
-## 6. 当前阻塞
+## 6. 当前阻塞（仅剩 2 项功能 + 产品化）
 
 | # | 阻塞 | 说明 |
 |---|---|---|
-| 1 | **经验上传未发生** | `/ws` 通了，但服务端 Experience 仍 0；需确认客户端是否真的在推 delta |
-| 2 | **领取离线奖励报错** | 纯客户端失败，请求未发出；调用栈指向 `0x2674770` 所在函数 |
-| 3 | **UI 自动化不可靠** | adb 触摸不稳（见 §7），**已改用手动操作 + Frida 驱动** |
-| 4 | **排行榜在游戏内显示错误** | `lib_rt2/lib_rt3` 链路是 online + realtime，**缺排行榜补丁** → 游戏显示本地伪造榜 |
+| 1 | **游戏内排行榜渲染** | 数据链路已实测正确，但 **容器类型错**：window 会把返回值 `castclass` 成 `List<FakeLeaderboardRow>`，数组转不过去 → 空榜/垃圾行 |
+| 2 | **排行榜偶发崩溃** | stub 内 `il2cpp_array_new(klass,…)` 的 `klass` 是坏值 → 缓存的 `g_rowKlass`（stub `.bss` @ `0x5DDE100`）疑被 lib 覆盖 |
+| 3 | **装备登出后消失** | 客户端【不发 `ItemOperation`】；在线通道只有经验/银币/Opal，没有物品字段 → 物品无上传路径 |
+| 4 | **UI 自动化不可靠** | adb 触摸不稳（见 §7），**已改用手动操作 + Frida 驱动** |
+| 5 | **产品化未开始** | 登录 UX、XAPK 重建、安全收紧、干净设备验收 |
+
+### 6.1 排行榜：反证过程与正确修法
+```
+数据侧（已实测正确，用探针 dump 返回数组）：
+  klass=FakeLeaderboardRow[]  maxlen=5
+  [0] rank=1 val=138  [1] rank=2 val=23  [2] rank=3 val=1
+  [3] rank=4 val=1    [4] rank=5 val=1
+  （探针打印 name="?" 是探针自己用 readUtf8String 读了 UTF-16，不是 stub 的问题）
+
+反证：把返回对象同时做成两种布局（数组 +0x10 指向自身当 List._items、
+      +0x18 保持 count 当 List._size）→ 排行榜变成【完全空白】
+  ⇒ 说明 window 做了真正的类型转换（castclass 到 List<T>），
+    数组【转不过去】，所以 hack 无效 → 容器必须是真正的 List<T>
+
+正确修法（不要替换 Build*）：
+  ① 跳板里【先调用原版 Build*】→ 拿到它自己 new 的
+     List<FakeLeaderboardRow>（类型天然正确）
+  ② 再【就地改写】该 List 每行的 5 个字段
+     （List 布局 _items@+0x10 / _size@+0x18；
+       行字段 <Rank>0x10 <Name>0x18 <ClassId>0x20 <Value>0x28 <IsPlayer>0x30）
+  ③ 空榜返回原版给你的空 List（永不 null、永不数组）
+
+崩溃修法：
+  把 lbstub 的 .bss 移到 realtime 补丁已经映射的区间（0x5DE4000+），
+  并让 patch_android_leaderboard.py 也执行 RW p_memsz 扩展
+
+服务端侧（已排除）：
+  GET /api/leaderboards/{mode}/{category}?limit=&player=&cls=
+  · class 榜【必须带 &cls=】否则 404 "unknown leaderboard season/class/"
+    cls=warrior → count=5（Watermelon lvl138 rank1）；cls=mage → count=0
+  · 所以【不是服务端缺接口】，早先误判为“职业榜为空”是测试时漏了 &cls=
+  · 关键：leaderboard_stub.bin 是预编译 blob，必须用 device/stub/build_lbstub.sh 重建，
+    否则改了 .c 也不会生效（这个坑踩过一次）
+```
+
+### 6.2 装备登出后消失：物品没有上传通道
+```
+服务端侧（已排除）：
+  InventoryService.ItemOperation      → GameStore.ApplyItemOperations   ✅ 已实现
+  GameStore.ApplyItemOperations 处理 AddItem/DeleteItem/MoveItem/SortItem
+  并【真正写回】：c.Data = Pack(data)   ✅
+
+客户端侧（真因）：
+  最近 40 分钟端点统计：
+    22 GetUserAccountData / 17 GetCharacterList / 17 EnterGameWithCharacter
+    11 LoginWithStandaloneDeviceIdAsync / 9 /ws / 7 OnDungeonRunStarted
+     2 AllocateCharacterAttributes / 1 ClaimCharacterOfflineRewards
+     1 AssignPassiveSkill / 1 AssignActiveSkill
+     0 ItemOperation        ← ★ 一次都没发
+
+  在线路径唯一的“进度上传”通道是 /ws 的 UpdateCharacterMetadataMessage
+    字段：BaseExperienceGained / NewExperience / NewSilver / NewOpals
+    【D 没有任何物品字段】
+  物品要么走 gRPC ItemOperation（客户端没调），
+  要么走本地存档 —— 而 SaveManager.Update 的 0x25D0F8C
+  在“账号在线”时按设计【跳过本地保存】
+  ⇒ 装备变更落进了“两不管”的空档
+
+正确修法：
+  · hook 客户端装备/背包变更点，主动发出 ItemOperationEntry
+    （MoveItem / AddItem）或直接调用服务端 ApplyItemOperations
+  · 不推荐扩展实时协议（要同步改客户端序列化，风险大）
+  · 先 hook 确认客户端到底何时才发 ItemOperation
+    （是否只在“关闭背包/退出游戏/定时保存”时 flush）
+```
 
 ---
 
@@ -406,25 +494,33 @@ Play(主菜单) 1170,1017 | Next 2141,1000 | Back 250,1000
 ## 9. 下一步（按优先级）
 
 ```
-1. 【最高】定位"领取离线奖励"客户端报错
-   · 用解析器【按方法名】搜索 ClaimCharacterOfflineRewards → 拿到客户端 API 包装类
-     → hook 它：是否被调用 / 入参 / 是否抛异常
-   · 若压根没调用 → hook ShowErrorDialogOK 上一层（0x2674770 所在函数）读字符串参数
-   · 注意线索：对话框只在【进入打怪地图】时弹出
+1. 【高】修排行榜（两个小改造，每步都有明确验证点）
+   a. 借原版 List：跳板【先调原版 Build*】拿真正的 List<FakeLeaderboardRow>，
+      再【就地改写】每行 5 个字段（List 布局 _items@+0x10 / _size@+0x18）
+      → 验证：Overall 显示 Watermelon lvl138 rank1、Pumpkin rank2
+   b. bss 移位：lbstub 的 .bss 从 0x5DDE100 移到 0x5DE4000+（realtime 补丁已映射区间），
+      并让 patch_android_leaderboard.py 也扩展 RW p_memsz
+      → 验证：清 logcat 后连点 Overall + Warrior + Mage，无 SIGSEGV
+      （空榜永不 null、永不数组 —— 之前的数组 hack 已被反证否定）
 
-2. 【高】让进度真正上传
-   · 确认 /ws 是谁开的（stub 的 ws_prepare vs 客户端自身）—— g_attempts 一直 0
-   · 确认 NetSocket.UpdateFixed 被调用后是否真的发送 delta（服务端 [WS] 侧有无收到）
-   · 必要时在网关加日志：打印收到的 Envelope.Message 类型
+2. 【高】修装备登出消失
+   · 先 hook 客户端确认它【何时】才发 ItemOperation
+     （是否只在关背包/退出游戏/定时保存时 batch flush）
+   · 然后 hook 装备/背包变更点 → 主动发出 ItemOperationEntry(MoveItem/AddItem)
+   · 服务端侧已就绪（InventoryService.ItemOperation + ApplyItemOperations 已实现且正确写回）
 
-3. 【中】补排行榜补丁到链路（游戏内显示真实榜）
-   patch_android_online → patch_android_leaderboard → patch_android_realtime
-
-4. 【中】产品化 4 项
+3. 【中】产品化
    · 登录 UX（免手工凭证文件；Register 与 Login 分离）
-   · XAPK 重建（完整补丁链）
+   · XAPK 重建（链路：patch_android_leaderboard → patch_android_realtime，
+     需要 email 登录则再加 patch_android_email_login 做基底）
+     ⚠ 注意：leaderboard / email_login 两个脚本【各自内含 online 补丁】且
+       拒绝已打补丁的输入 → 只能二选一做起头，不能串联
+     ⚠ 三个 stub 占用不重叠的 cave 区间：
+        email 0x344EC24 / leaderboard 0x3451000 / realtime 0x3456000
    · 安全收紧（关 NORD_AUTH_ALLOW_UNVERIFIED_PROVIDERS；8081 加 token/TLS）
-   · 干净设备端到端验收
+   · 干净设备端到端验收（必须包含“重启后经验仍在”）
+
+4. 【低】纯本地设备上的 adb 自动化仍不可靠 → 用手动操作 + Frida 驱动（见 §7）
 ```
 
 ---
@@ -434,16 +530,22 @@ Play(主菜单) 1170,1017 | Next 2141,1000 | Back 250,1000
 | 维度 | 完成度 |
 |---|---|
 | 技术研究 / 根因 | **~99%** |
-| 功能可用性 | **~88%**（能登录、选模式、建角色、**进世界游玩**、实时通道连通、排行榜接口、改密码） |
+| 功能可用性 | **~88%** |
 | 产品化 / 可发布 | **~55%** |
 
-**结论**：核心功能全部打通。剩余仅为产品化（登录 UX、XAPK 重建、安全收紧、干净设备验收）。
+能登录、选模式、建角色、**进世界游玩**、**实时通道连通**、**经验持久化 + 升级**、
+**领取离线奖励**、改密码、拿排行榜接口 —— 全部已通。
+
+剩余：**游戏内排行榜渲染**、**装备持久化**、登录 UX、XAPK 重建、安全收紧、干净设备验收。
 
 ---
 
 ## 11. 一句话交接
 
-> 实时通道已经打通（这是本次会话最大的进展），服务端离线奖励接口的空桩 BUG 也已修复并上线。
-> 剩下三件事：**(1) 定位客户端领取报错（纯本地失败，调用栈已收到 `0x2674770`）**、
-> **(2) 让进度 delta 真正上传**、**(3) 把排行榜补丁加回链路**。
-> 工具链（运行时 IL2CPP 解析器 + 5 张方法表 + 指令级地图 + 注入 stub + Frida 精确驱动）全部就绪。
+> 实时通道（/ws）已打通，经验持久化 + 升级 + 离线奖励领取全部正常 —— 根因是两个 bug：
+> 进度泵没喂真实 dt、跳板返回了 playOffline=true。
+> 剩下两件功能事：**(1) 游戏内排行榜必须返回真正的 `List<T>`**
+> （数组已被 `castclass` 反证否定：改成兼容布局后排行榜变会完全空白），
+> **(2) 装备登出消失 —— 客户端根本不发 `ItemOperation`，在线通道又没有物品字段**。
+> 服务端两个接口均已实现且正确，缺的是客户端把它调起来 —— 和当初“实时 socket 没人调用”同一性质。
+> 工具链（运行时 IL2CPP 解析器 + 方法表 + 指令级地图 + 注入 stub + Frida 精确驱动）全部就绪。
