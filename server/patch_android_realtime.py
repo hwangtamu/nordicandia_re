@@ -16,17 +16,6 @@ from patch_android_email_login import _read_symbols, _segments, _off_for, _b
 
 STUB_VA, STUB_END = 0x3456000, 0x345C9AC
 STATE_VA, STATE_END = 0x5DE4000, 0x5DE5E40
-# SPSM b__4 throws "Cannot synchronize online account" for any account the client
-# classifies as online (tbnz w0,#0 -> 0x26fb774).  The restored realtime socket
-# connects, but the online world-entry path still aborts here.  Disable only the
-# guard and keep the online branch itself so ConnectWithNewSocket still runs.
-SPSM_PASSTHROUGH = True
-# Also divert the world-entry decision into the offline block (0x257d29c ->
-# 0x257e610).  That block is the one that actually initialises the loading UI
-# and drives world entry; the online branch does not.  The socket is already up
-# (ConnectWithNewSocket runs during the account sync), so the offline block can
-# enter the world while the realtime pump keeps uploading.
-FORCE_OFFLINE = True
 ROOT = Path(__file__).resolve().parent.parent
 TARGETS = {
     'Internal_ctor': 0x2D9AC0C, 'Internal_connect': 0x2D9B2F4,
@@ -108,12 +97,7 @@ def apply(data, blob, syms):
         off=_off_for(segs,va)
         if data[off:off+4] not in (bytes.fromhex(original),bytes.fromhex('1f2003d5')):
             raise ValueError(f'Unknown world-entry patch at {va:#x}')
-        if va == 0x26FB754 and SPSM_PASSTHROUGH:
-            result[off:off+4]=bytes.fromhex('1f2003d5')
-        elif va == 0x257D29C and FORCE_OFFLINE:
-            result[off:off+4]=bytes.fromhex('1f2003d5')
-        else:
-            result[off:off+4]=bytes.fromhex(original)
+        result[off:off+4]=bytes.fromhex(original)
     replace(0x2E09050, bytes.fromhex('ff8301d1'), _b(0x2E09050,syms['ws_connect_trampoline']))
     replace(0x2E0CED4, bytes.fromhex('085c40f9'), _b(0x2E0CED4,syms['ws_wait_trampoline']))
     replace(0x2E0D064, bytes.fromhex('ff8b0039'), _b(0x2E0D064,syms['ws_result_trampoline']))

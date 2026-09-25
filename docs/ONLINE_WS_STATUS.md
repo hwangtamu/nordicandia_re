@@ -1,5 +1,36 @@
 # Nordicandia 私有服务器 —— 在线模式 / 实时通道 现状报告
 
+> ## 🎉 状态：在线模式 + 实时通道 + 经验持久化 **已全部打通**（本次会话最终验证）
+>
+> ```
+> stub:    attempts=1  error=0  socket≠0  connected=1  ready=1
+> [META]:  进度持续上传（实测 17 次/4 分钟，baseGain/applied/total 逐条递增）
+> 服务端:  exp=3782.4  HasRealtimeProgress=True
+> 等级:    Pumpkin 1 → 20（排行榜 rank 2, level=20, score=2995732）
+> 重启app: exp 仍为 3782.4  ✓ 持久化验证通过
+> ```
+>
+> ### 最后两个关键修复（用户指出的）
+> 1. **进度泵缺 elapsed 参数**：`UpdateFixedAsync(float elapsed)` 从 `s0` 读差值（入口 `fmov s8,s0` @0x2E09E80），
+>    原补丁调用 `NetSocket_update_fixed(0)` 使 `s0` 为垃圾值 → 上传计时器不可靠。
+>    现改为 `il2cpp_resolve_icall("UnityEngine.Time::get_fixedDeltaTime()")` 取真实步长，传给两个泵。
+> 2. **结果元组返回了"离线播放"**：`ws_result_trampoline` 复现 `_ConnectWithNewSocket_d__116.MoveNext`
+>    的结果元组 `ValueTuple<bool,bool,bool> = (connected, playOffline, maintenance)`；
+>    原实现把 `[sp,#0x38]`（playOffline）写成 1 → 调用方转去 `SignInNew(LocalDevice)`，丢失在线进度。
+>    现改为 `connected = ws_finish()`、`playOffline = 0`、`maintenance = 0`。
+>
+> ### 进度上传的实际通路
+> ```
+> ws_fixed_update (挂在 UnityGame.FixedUpdate 0x26FFEB0，每周定步长)
+>    → NetSocket.UpdateFixedAsync(dt) / UpdateFixed(dt)   （0x2E09E80 / 0x2E09F14）
+>    → 客户端通过 /ws 发送 UpdateCharacterMetadataMessage
+>    → 服务端 RealtimeGateway.HandleMetadata 应用经验
+>      → [META] character=… baseGain=… applied=… total=…
+>      → 写 world.json（Experience / HasRealtimeProgress / LastRealtimeUpdate）
+>      → 回 UpdateCharacterMetadataResponse（含 ServerTime）
+> ```
+
+
 > 最后更新：本次会话结束
 > 一句话结论：**实时 WebSocket 已经打通**（Envoy `code=101`、服务端 `[WS] open`/`pushed SeasonBuff`、连接可保持数分钟）；
 > 经验持久化仍差"上传"这一步；另外发现并修复了服务端一个真实 BUG（离线奖励接口是空桩），
@@ -17,9 +48,9 @@
 | 排行榜显示 Steam 角色 | ✅（服务端接口正常） |
 | 修改密码 | ✅ |
 | **进入世界并游玩** | ✅（手动操作稳定；adb 自动化不稳） |
-| **实时 WebSocket `/ws`** | ✅ **已连通**（曾保持 3~7 分钟） |
-| **经验上传 / 持久化** | ❌ 仍未发生 |
-| **离线奖励领取** | ❌ 点击报错（客户端本地失败） |
+| **实时 WebSocket `/ws`** | ✅ **已稳定连通**（connected=1） |
+| **经验上传 / 持久化** | ✅ **已打通**（exp=3782.4, rt=True, 重启后仍在） |
+| **离线奖励领取** | ⚠️ 客户端本地失败（服务端接口已实现；待查同步时钟） |
 | 独立 XAPK 分发 | ⚠️ 可构建，内容待更新 |
 
 ---

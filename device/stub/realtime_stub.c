@@ -30,8 +30,9 @@ extern int Internal_is_connected(ptr, ptr);
 extern ptr Internal_close(ptr, ptr, int, ptr);
 extern int Task_is_completed(ptr, ptr);
 extern UniTask WaitUntil(ptr, int, ptr, ptr);
-extern UniTask NetSocket_update_fixed(ptr);
-extern UniTask NetSocket_update(ptr);
+extern UniTask NetSocket_update_fixed(float, ptr);
+extern UniTask NetSocket_update(double, ptr);
+extern ptr il2cpp_resolve_icall(const char *);
 extern void Forget(UniTask, ptr);
 
 ptr g_socket_class, g_internal_class, g_task_class, g_uni_class;
@@ -116,13 +117,13 @@ int ws_finish(void) {
  * in-game checks, semaphores and acknowledged delta accounting. */
 void ws_fixed_update(ptr unused,ptr mi) {
     (void)unused;(void)mi;
-    /* The pump must NOT depend on the stub's own socket: on this build the client
-     * opens /ws itself (Envoy sees GET /ws code=101), while ws_prepare is never
-     * reached.  NetSocket.UpdateFixed contains its own in-game checks, rate limiting
-     * and acknowledged-delta accounting, so calling it unconditionally is safe and
-     * is exactly the call site this build omitted. */
+    static float (*fixed_delta)(void);
+    if(!fixed_delta)fixed_delta=il2cpp_resolve_icall("UnityEngine.Time::get_fixedDeltaTime()");
+    if(!fixed_delta)return;
+    float dt=fixed_delta();
     g_ticks++;
-    Forget(NetSocket_update_fixed(0),0);
+    Forget(NetSocket_update_fixed(dt,0),0);
+    Forget(NetSocket_update((double)dt,0),0);
 }
 __attribute__((naked)) void ws_connect_trampoline(void) {
     __asm__ volatile("stp x29,x30,[sp,#-16]!\nbl ws_prepare\nldp x29,x30,[sp],#16\nsub sp,sp,#0x60\nb CONNECT_RESUME\n");
@@ -131,23 +132,21 @@ __attribute__((naked)) void ws_wait_trampoline(void) {
     __asm__ volatile("adrp x8,g_wait\nadd x8,x8,:lo12:g_wait\nldr q0,[x8]\nstr q0,[sp,#0x20]\nb WAIT_RESUME\n");
 }
 __attribute__((naked)) void ws_result_trampoline(void) {
-    /* Finalise the stub's own await, then reproduce NetSocket MoveNext
-     * 0x2E0D064..0x2E0D084 verbatim (the await-completion setup).  The old
-     * version cleared [sp,#0x38] instead of setting it to 1 and skipped the
-     * [sp,#0x20]/[sp,#0x22] clears, which left the async state machine
-     * thinking the continuation had faulted and corrupted the awaiter. */
+    /* ValueTuple<bool,bool,bool> = (connected, playOffline, maintenance).
+     * These are result values, not awaiter flags. Returning (false,true,false)
+     * diverts the caller to SignInNew(LocalDevice) and loses online progress. */
     __asm__ volatile("stp x0,x30,[sp,#-16]!\n"
                      "bl ws_finish\n"
+                     "mov w9,w0\n"
                      "ldp x0,x30,[sp],#16\n"
                      "strb wzr,[sp,#0x22]\n"
-                     "adrp x8,TUPLE_MI\n"
-                     "mov w9,#1\n"
-                     "add x8,x8,:lo12:TUPLE_MI\n"
                      "strh wzr,[sp,#0x20]\n"
-                     "strb wzr,[sp,#0x3c]\n"
-                     "ldr x8,[x8]\n"
-                     "strb w9,[sp,#0x38]\n"
+                     "strb w9,[sp,#0x3c]\n"
+                     "strb wzr,[sp,#0x38]\n"
                      "strb wzr,[sp,#0x34]\n"
+                     "adrp x8,TUPLE_MI\n"
+                     "add x8,x8,:lo12:TUPLE_MI\n"
+                     "ldr x8,[x8]\n"
                      "ldr x4,[x8]\n"
                      "b RESULT_RESUME\n");
 }
