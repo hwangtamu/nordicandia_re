@@ -38,7 +38,9 @@ internal static class LeaderboardQuery
     public static string Cls(SharedNet.Constants.Game.CharacterClass cls) => cls.ToString().ToLowerInvariant();
 
     /// <summary>A row ready to be serialised to the client.</summary>
-    public sealed record Row(long Rank, string Name, double Level, long Score, int ClassId, bool IsPlayer);
+    /// <remarks><c>CharacterId</c> is what lets the client open the "inspect player" panel
+    /// when a leaderboard row is tapped; it is emitted to the JSON feed only.</remarks>
+    public sealed record Row(long Rank, string Name, double Level, long Score, int ClassId, bool IsPlayer, Guid CharacterId);
 
     /// <summary>Ranked standings for a leaderboard name (identical filter/sort to the gRPC path).</summary>
     public static List<GameStore.CharacterStanding> Ranked(string name)
@@ -63,7 +65,8 @@ internal static class LeaderboardQuery
                 s.Level,
                 EncodeScore(name, s),
                 (int)s.Class,
-                substituteFor != null && string.Equals(s.DisplayName, substituteFor, StringComparison.OrdinalIgnoreCase)))
+                substituteFor != null && string.Equals(s.DisplayName, substituteFor, StringComparison.OrdinalIgnoreCase),
+                s.CharacterId))
             .ToList();
     }
 

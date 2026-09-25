@@ -462,14 +462,16 @@ public static class RealtimeGateway
                     : new State.GameStore.RealtimeProgress(0, 0, 0, default);
                 var silver = Math.Max(stored.Silver, payload.LastSeenSilver);
                 var opals = Math.Max(stored.Opals, payload.LastSeenOpals);
+                var combat = new State.GameStore.CombatSnapshot(payload.Offense, payload.Defense, payload.Recovery,
+                    payload.NumMonsterKills, payload.NumItemsLooted);
                 if (characterId is { } cid)
-                    updated = State.GameStore.Instance.SaveRealtimeProgress(user.UserId, cid, experience, silver, opals);
+                    updated = State.GameStore.Instance.SaveRealtimeProgress(user.UserId, cid, experience, silver, opals, combat);
                 else
                     updated = new State.GameStore.RealtimeProgress(experience, silver, opals, DateTime.UtcNow);
                 progress = updated;
             }
 
-            Console.WriteLine($"[META] character={characterId} baseGain={payload.BaseExperienceGained:F2} applied={gain:F2} total={updated.Experience:F2} result={updated.Experience:F2}");
+            Console.WriteLine($"[META] character={characterId} baseGain={payload.BaseExperienceGained:F2} applied={gain:F2} total={updated.Experience:F2} result={updated.Experience:F2} off={payload.Offense:F1} def={payload.Defense:F1} rec={payload.Recovery:F1} kills={payload.NumMonsterKills} loot={payload.NumItemsLooted}");
 
             return new UpdateCharacterMetadataResponse
             {

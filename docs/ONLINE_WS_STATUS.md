@@ -1,5 +1,32 @@
 # Nordicandia 私有服务器 —— 在线模式 / 实时通道 现状报告
 
+> **最新跟进（排行榜 tap-to-inspect 已交付）**：排行榜显示正确；ItemOperation 定时 flush 已验证；
+> **点排行榜玩家行打开 Player Info（WindowInspectPlayer）已在真机（RFCY416VMHF）用纯 `adb shell input tap`、无 Frida 端到端验收**：
+> Watermelon / Pumpkin / Seasonia 均显示对应角色（等级、种族职业、装备、最高世界），行间切换、关闭后重开、切换 Overall/职业/Helheim 页签后再点均正常。
+> 服务端 `characterId` 已部署到 Lightsail（镜像 `nordicandia-server:lbprofile1`）。设备当前运行 `/tmp/lib_full12.so`
+> （sha256 `f557d1ecb5dc733ec5f50d1ef3a192040d3660c225a657eb40e009035deb244d`）。
+>
+> 根因（四个，全部修复，见 `device/stub/leaderboard_stub.c` / `server/patch_android_leaderboard.py`）：
+> 1. **点击目标错误**：行上真正接收点击的是 `LeaderboardEntry+0x50` 的全行 **`Button (Inspect)`**（onClick 在离线版被清空），
+>    而不是 `+0x48` 的 Toggle（`interactable=0`）。hook 改到 `Button.OnPointerClick` 左键分支 `0x4F76140`（`b Button.Press`，原字节 `d6ffff17`），
+>    映射键改为该 Button；Toggle 保持 retail。每次 `build_rows` 清空 Button 映射，防止地址复用误开旧档。
+> 2. **窗口自毁**：离线版把 `WindowInspectPlayer.Awake`（`0x25F3310`）与 `WindowInspectPlayerSkills.Awake`（`0x25F3AAC`）改成了
+>    `UnityGame.DestroyObject(gameObject)`，实例化后第一帧即销毁 → 两处 prologue（`fe57bea9`）改为 `ret`。
+> 3. **不能强制 Show()**：新实例 `UIWindow+0x40==0` 已是 Shown 状态，强行 `Show()`/改 `+0x40` 会触发过渡并 abort。现只 `BringToFront` + `InspectPlayer`；
+>    父节点用 `GetWindow(5).transform`（与 retail `ShowInGameWindow` 相同），先 `GetWindow(46)` 复用已开窗口。不在 .bss 缓存任何托管对象（非 GC root）。
+> 4. **`il2cpp_runtime_invoke` 传参错误**：引用类型参数应直接放对象指针（`args[0]=type`），原来传 `&arg` 导致 `GetComponent(Type)` 在 Unity 内 SIGSEGV。
+>
+> **属性 / 等级修复（服务端镜像 `nordicandia-server:stats1`，已部署并真机验证）**：
+> - 客户端每次 `/ws` `UpdateCharacterMetadataMessage` 都带 Offense/Defense/Recovery/NumMonsterKills/NumItemsLooted，
+>   但 `RealtimeGateway.HandleMetadata` 只用了经验/银币/Opals → `CombatStats` 永远是建角时的 0。现 `SaveRealtimeProgress(..., CombatSnapshot)`
+>   写入 `SerializedData.CombatStats`（0/非法值视为“未上报”保留旧值；击杀/拾取为增量累加）。Player Info 现显示真实属性（如 Watermelon 612 / 19.37K / 130.5）。
+> - `Progression.MaxLevel = 200` 是服务端臆造的上限：客户端 `Calculator.CalculateLevelGains` 为闭式 `floor(round(((xp-350)/20)^(1/1.7), 6))`、无上限。
+>   旧逻辑每次同步/登录把 Pumpkin（458k XP = 366 级）钉回 200。现 `LevelForExperience` 与客户端逐位一致、去掉上限；排行榜/Inspect/HUD 等级一致。
+>   （未验证的副作用：被钉住期间客户端每次会话可能重复执行 `LevelUp(+166)`，如技能点等按升级发放的奖励可能被重复给予。）
+>
+> 已知限制："View Skills" 无反应（离线版处理被裁剪），不崩溃；InspectCharacter 的 Active/PassiveSkills 仍为空列表。
+> 构建：`/tmp/mk_full10.py <out>`（在 `lib_full7.so` 上注入最新 stub + 全部 hook/Awake 补丁；仓库脚本仍无法把 email+leaderboard 串联在同一原版上）。
+
 > ## 🎉 状态：在线模式 + 实时通道 + 经验持久化 **已全部打通**（本次会话最终验证）
 >
 > ```
@@ -325,7 +352,11 @@ SaveManager.IsOnline 只是"保存路由"开关：
 
 ---
 
-## 6. 当前阻塞（仅剩 2 项功能 + 产品化）
+## 6. 历史阻塞记录（以下内容已被后续修复 superseded）
+
+> **当前情况**：Leaderboard struct 数组渲染现已正确（不是 List cast 问题）；stub `.bss` 已移至 `0x5DE6000`；
+> 设备确认 ItemOperation 会由 `NetClient.UpdateAsync` 定时 flush。tap-to-inspect 也已在真机验收（见文首）。
+> 下列调查过程保留作历史记录，不应再按旧结论实施。
 
 | # | 阻塞 | 说明 |
 |---|---|---|
@@ -493,8 +524,12 @@ Play(主菜单) 1170,1017 | Next 2141,1000 | Back 250,1000
 
 ## 9. 下一步（按优先级）
 
+> **最新行动项**：tap-to-inspect 已交付并真机验收。剩余：InspectCharacter 返回角色属性（Offense/Defense/Recovery 目前 0.0）；
+> 可选修复 "View Skills"；email stub `.bss` 移出 retail .bss（`0x5DE7000`）；把 `/tmp/mk_full10.py` 的串联流程并入仓库脚本；GitHub 认证恢复后提交推送。
+> 以下列表是修复前的历史计划，供追溯，不代表当前状态。
+
 ```
-1. 【高】修排行榜（两个小改造，每步都有明确验证点）
+1. 【已完成】修排行榜（两个小改造，每步都有明确验证点）
    a. 借原版 List：跳板【先调原版 Build*】拿真正的 List<FakeLeaderboardRow>，
       再【就地改写】每行 5 个字段（List 布局 _items@+0x10 / _size@+0x18）
       → 验证：Overall 显示 Watermelon lvl138 rank1、Pumpkin rank2
@@ -542,10 +577,6 @@ Play(主菜单) 1170,1017 | Next 2141,1000 | Back 250,1000
 
 ## 11. 一句话交接
 
-> 实时通道（/ws）已打通，经验持久化 + 升级 + 离线奖励领取全部正常 —— 根因是两个 bug：
-> 进度泵没喂真实 dt、跳板返回了 playOffline=true。
-> 剩下两件功能事：**(1) 游戏内排行榜必须返回真正的 `List<T>`**
-> （数组已被 `castclass` 反证否定：改成兼容布局后排行榜变会完全空白），
-> **(2) 装备登出消失 —— 客户端根本不发 `ItemOperation`，在线通道又没有物品字段**。
-> 服务端两个接口均已实现且正确，缺的是客户端把它调起来 —— 和当初“实时 socket 没人调用”同一性质。
-> 工具链（运行时 IL2CPP 解析器 + 方法表 + 指令级地图 + 注入 stub + Frida 精确驱动）全部就绪。
+> `/ws`、经验/等级持久化、离线奖励、排行榜渲染和装备操作 flush 均已修复并验证。
+> 点排行榜玩家行打开 Player Info 已交付并真机验收（行 `Button (Inspect)` 左键 hook → name→Guid → 实例化 Inspect Player prefab →
+> `InspectPlayer`；两个 Awake 自毁补丁改 `ret`）。服务端 JSON Row 含 `characterId` 并已部署。工具链（IL2CPP 注入、Frida、补丁 ELF 检查）可复用。

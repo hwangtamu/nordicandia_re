@@ -420,7 +420,34 @@ public sealed class GameStore : IDisposable
         }
     }
 
-    public RealtimeProgress SaveRealtimeProgress(Guid owner, Guid id, double experience, int silver, int opals)
+    /// <summary>Combat numbers the client reports with every realtime metadata sync
+    /// (CharacterMetadataPayload). Offense/Defense/Recovery are the client's current totals;
+    /// kills/loot are deltas since the previous sync.</summary>
+    public readonly record struct CombatSnapshot(double Offense, double Defense, double Recovery, int MonsterKills, int ItemsLooted);
+
+    // Generous ceilings: they only reject corrupt/absurd client values, not real builds.
+    private const double MaxCombatStat = 1e15;
+    private const int MaxCountDelta = 1_000_000;
+
+    private static bool ValidStat(double v) => !double.IsNaN(v) && !double.IsInfinity(v) && v > 0 && v < MaxCombatStat;
+
+    /// <summary>Persists reported combat numbers into SerializedData.CombatStats, which the
+    /// inspect window (CharacterInspectionDto) reads. A zero/invalid stat means "not
+    /// reported in this message" and keeps the stored value.</summary>
+    private static void ApplyCombat(SerializedCharacterData.SerializedData data, CombatSnapshot combat)
+    {
+        var cs = data.CombatStats ??= new SerializedCharacterData.SerializedCombatStats();
+        if (ValidStat(combat.Offense)) cs.Offense = combat.Offense;
+        if (ValidStat(combat.Defense)) cs.Defense = combat.Defense;
+        if (ValidStat(combat.Recovery)) cs.Recovery = combat.Recovery;
+        if (combat.MonsterKills is > 0 and <= MaxCountDelta)
+            cs.MonsterKills += combat.MonsterKills;
+        if (combat.ItemsLooted is > 0 and <= MaxCountDelta)
+            cs.ItemsFound = (int)Math.Min(int.MaxValue, (long)cs.ItemsFound + combat.ItemsLooted);
+    }
+
+    public RealtimeProgress SaveRealtimeProgress(Guid owner, Guid id, double experience, int silver, int opals,
+        CombatSnapshot? combat = null)
         => Change(s =>
         {
             var c = Owned(s, owner, id);
@@ -442,6 +469,7 @@ public sealed class GameStore : IDisposable
             // Refresh the "last active" stamp on every realtime sync so the next login's
             // offline progress window measures only the real offline gap.
             SetLastActiveEpoch(data);
+            if (combat is { } snapshot) ApplyCombat(data, snapshot);
             c.Data = Pack(data);
             return new RealtimeProgress(c.Experience, c.Silver, c.Opals, c.LastRealtimeUpdate);
         });

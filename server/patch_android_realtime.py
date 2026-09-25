@@ -25,6 +25,8 @@ TARGETS = {
     'Forget': 0x486610C, 'CONNECT_RESUME': 0x2E09054,
     'WAIT_RESUME': 0x2E0CEE0, 'RESULT_RESUME': 0x2E0D088,
     'TUPLE_MI': 0x55B9548,
+    # NetClient.UpdateAsync is the omitted item-operation flush / keep-alive pump.
+    'NetClient_get_Current': 0x2DA1E28, 'NetClient_UpdateAsync': 0x2DAC8EC,
 }
 
 def tool(name):

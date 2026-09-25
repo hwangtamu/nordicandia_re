@@ -34,13 +34,15 @@ extern UniTask NetSocket_update_fixed(float, ptr);
 extern UniTask NetSocket_update(double, ptr);
 extern ptr il2cpp_resolve_icall(const char *);
 extern void Forget(UniTask, ptr);
+extern ptr NetClient_get_Current(ptr);
+extern UniTask NetClient_UpdateAsync(ptr, double, ptr);
 
 ptr g_socket_class, g_internal_class, g_task_class, g_uni_class;
 ptr g_socket, g_connect_task, g_wait_method;
 UniTask g_wait;
 u32 g_socket_root, g_wait_root;
 int g_ready, g_error, g_connected;
-u64 g_attempts, g_ticks;
+u64 g_attempts, g_ticks, g_net_ticks;
 Guid g_character;
 #ifndef WS_HOST
 #define WS_HOST "prod.038c3288.nip.io"
@@ -114,7 +116,17 @@ int ws_finish(void) {
 }
 /* Retail UnityGame.FixedUpdate's state machine is an empty completed method.
  * Restore the existing game progress pump; it contains its own rate limiting,
- * in-game checks, semaphores and acknowledged delta accounting. */
+ * in-game checks, semaphores and acknowledged delta accounting.
+ *
+ * NetClient.UpdateAsync(double deltaTime) (0x2DAC8EC) is the second omitted pump:
+ * it has no caller in this build either.  It is the only place that runs
+ * FlushItemOperationsAsync (every 10 s via Task.Run(<UpdateAsync>b__187_0)) and
+ * KeepAlive, so every ItemAdded/Moved/Deleted/Sort operation queued by
+ * ItemRelocatorNew.ProcessMoveResult / InventoryGrid.Sort (NetClient._itemOperations,
+ * +0x58) piled up forever and never reached InventoryService.ItemOperation - which
+ * is why equipment/loot vanished after logging out.  UpdateAsync gates itself on
+ * NetClient.IsOnline (+0x10) and on a character being in game, and keeps its timers
+ * in NetClient statics, so it is safe to feed it every fixed step. */
 void ws_fixed_update(ptr unused,ptr mi) {
     (void)unused;(void)mi;
     static float (*fixed_delta)(void);
@@ -124,6 +136,8 @@ void ws_fixed_update(ptr unused,ptr mi) {
     g_ticks++;
     Forget(NetSocket_update_fixed(dt,0),0);
     Forget(NetSocket_update((double)dt,0),0);
+    ptr net=NetClient_get_Current(0);
+    if(net){ g_net_ticks++; Forget(NetClient_UpdateAsync(net,(double)dt,0),0); }
 }
 __attribute__((naked)) void ws_connect_trampoline(void) {
     __asm__ volatile("stp x29,x30,[sp,#-16]!\nbl ws_prepare\nldp x29,x30,[sp],#16\nsub sp,sp,#0x60\nb CONNECT_RESUME\n");
