@@ -123,9 +123,31 @@ def _b(frm, to):
     return struct.pack("<I", 0x14000000 | (((to - frm) // 4) & 0x3FFFFFF))
 
 
+def _grow_rw_memsz(result, state_va, state_end):
+    """The email stub's .bss lives in the RW tail; make sure the last RW PT_LOAD
+    maps it (memsz > filesz -> fresh zero pages)."""
+    phoff = struct.unpack_from('<Q', result, 32)[0]
+    entsize, count = struct.unpack_from('<HH', result, 54)
+    target = None
+    for i in range(count):
+        base = phoff + i * entsize
+        typ, flags, off, va, _, filesz, memsz, _ = struct.unpack_from('<IIQQQQQQ', result, base)
+        if typ == 1 and (flags & 2) and va <= state_va:
+            if target is None or va > target[1]:
+                target = (base, va, memsz)
+    if target is None:
+        raise ValueError('no writable PT_LOAD covers the email stub state')
+    base, va, memsz = target
+    if va + memsz >= state_end:
+        return
+    struct.pack_into('<Q', result, base + 40, state_end - va)
+    print(f'grew RW PT_LOAD p_memsz to {state_end - va:#x} (email state at {state_va:#x})')
+
+
 def build(src: Path, out: Path, stub_bin: Path):
     data = patch_online(src.read_bytes())              # standard online patches
     result = bytearray(data)
+    _grow_rw_memsz(result, 0x5DE7000, 0x5DE8000)
     segs = _segments(bytes(data))
 
     syms = _stub_symbols(stub_bin)
