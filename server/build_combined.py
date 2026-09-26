@@ -17,6 +17,7 @@ import patch_android_email_login as email
 import patch_android_leaderboard as lb
 import patch_android_realtime as rt
 import patch_android_skill_rank as sr
+import patch_android_slot_expand as se
 import patch_android_xp_drop as xd
 
 STUB_DIR = Path(__file__).resolve().parent.parent / 'device/stub'
@@ -46,6 +47,9 @@ def build(src: Path, out: Path, host: str = 'prod.038c3288.nip.io', with_email: 
 
     t.write_bytes(data)
     sr.build(t, out); data = out.read_bytes(); print('skill_rank  ok')
+
+    t.write_bytes(data)
+    se.build(t, out); data = out.read_bytes(); print('slot_expand ok')
 
     t.write_bytes(data)
     xd.build(t, out); data = out.read_bytes(); print('xp_drop     ok  (10x xp, 5x drops)')
