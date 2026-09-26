@@ -19,7 +19,8 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from patch_android_email_login import _read_symbols, _segments, _off_for, _b, check_cave_fit, _extend_rw_memsz
+from patch_android_email_login import _read_symbols, _segments, _off_for, _b, check_cave_fit
+from patch_android_realtime import _extend_rw_memsz
 
 def tool(name):
     path = shutil.which(name)

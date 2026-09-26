@@ -120,6 +120,7 @@ CAVE_ORDER = (0x344EC24,  # email-login stub (dropped from v6 builds, kept for r
               0x3456000,  # realtime stub
               0x3457000,  # skill_rank stub
               0x3458000,  # xp_drop stub
+              0x3459000,  # slot_expand stub
               0x345C9AC)  # end of the dead-code region
 
 
