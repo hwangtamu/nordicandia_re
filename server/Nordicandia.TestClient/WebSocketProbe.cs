@@ -19,7 +19,7 @@ namespace Nordicandia.TestClient;
 /// </summary>
 public static class WebSocketProbe
 {
-    public static async Task<int> RunAsync(string grpcAddress, string steamId = "0ce37d053370b02147be1a1e8029d43a3c444efd")
+    public static async Task<int> RunAsync(string grpcAddress, string steamId = "0ce37d053370b02147be1a1e8029d43a3c444ef0")
     {
         var http = new HttpClientHandler();
         if (grpcAddress.StartsWith("https", StringComparison.OrdinalIgnoreCase))

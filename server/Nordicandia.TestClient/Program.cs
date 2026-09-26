@@ -10,7 +10,7 @@ AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport
 if (args.Length >= 1 && args[0] == "ws")
 {
     var grpc = args.Length >= 2 ? args[1] : "https://localhost";
-    var steam = args.Length >= 3 ? args[2] : "0ce37d053370b02147be1a1e8029d43a3c444efd";
+    var steam = args.Length >= 3 ? args[2] : "0ce37d053370b02147be1a1e8029d43a3c444ef0";
     Environment.Exit(await Nordicandia.TestClient.WebSocketProbe.RunAsync(grpc, steam));
 }
 

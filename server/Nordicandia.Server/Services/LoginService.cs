@@ -20,6 +20,28 @@ public sealed class LoginService : ServiceBase<ILoginServiceApi>, ILoginServiceA
         Env("NORD_AUTH_ALLOW_UNVERIFIED_PROVIDERS") is "1" or "true";
     private static readonly bool AllowRegistration =
         Env("NORD_ALLOW_REGISTRATION") is not ("0" or "false");
+    // Optional login aliasing for private servers: lets one login identity land on
+    // another identity's user row, so e.g. a desktop Steam login can share the same
+    // characters/currency/items as a mobile device login without any client changes.
+    // Format: "steam:76561198000000000=device:abc123;steam:999=device:xyz" (the left
+    // side is "<kind>:<identity>" as computed below, the right side is the target
+    // user key used for GetOrCreateUser). The real platform identity is still
+    // recorded in LinkedAccounts on the resolved user.
+    private static readonly Dictionary<string, string> LoginAliases = ParseAliases(Env("NORD_LOGIN_ALIAS"));
+
+    private static Dictionary<string, string> ParseAliases(string raw)
+    {
+        var map = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var pair in (raw ?? string.Empty).Split(';', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var eq = pair.IndexOf('=');
+            if (eq <= 0) continue;
+            var from = pair[..eq].Trim();
+            var to = pair[(eq + 1)..].Trim();
+            if (from.Length > 0 && to.Length > 0) map[from] = to;
+        }
+        return map;
+    }
     private static readonly string SteamApiKey = Env("NORD_STEAM_WEBAPI_KEY");
     private static readonly string GoogleClientId = Env("NORD_GOOGLE_CLIENT_ID");
     private static readonly string GoogleClientSecret = Env("NORD_GOOGLE_CLIENT_SECRET");
@@ -115,11 +137,14 @@ public sealed class LoginService : ServiceBase<ILoginServiceApi>, ILoginServiceA
         SharedNet.Constants.LoginIdentityProvider? platform = null)
     {
         if (string.IsNullOrEmpty(identity)) identity = "guest-" + Guid.NewGuid().ToString("N");
-        var user = GameStore.Instance.GetOrCreateUser(kind + ":" + identity);
+        var loginKey = kind + ":" + identity;
+        var userKey = LoginAliases.TryGetValue(loginKey, out var target) ? target : loginKey;
+        var user = GameStore.Instance.GetOrCreateUser(userKey);
+        Console.WriteLine($"[Login] {loginKey} -> user {user.UserId} ({userKey})");
         // The client checks GetUserAccountData.LinkedAccounts after login and shows the
         // account as "unregistered" when it is empty, so link the identity that was used.
         if (platform is { } p)
-            GameStore.Instance.LinkAccount(user.UserId, p, kind + ":" + identity, kind + ":" + identity,
+            GameStore.Instance.LinkAccount(user.UserId, p, loginKey, loginKey,
                 kind is "email" or "username" ? identity : null);
         return UnaryResult.FromResult(BuildLogin(user));
     }

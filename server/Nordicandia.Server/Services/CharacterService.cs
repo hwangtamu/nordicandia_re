@@ -15,6 +15,17 @@ public sealed partial class CharacterServiceApiImpl
         => UnaryResult.FromResult(new GetCharacterListResponse { Characters = GameStore.Instance.Characters(Owner) });
     public UnaryResult<EnterGameWithCharacterResponse> EnterGameWithCharacter(EnterGameWithCharacterRequest req)
         => UnaryResult.FromResult(GameStore.Instance.Enter(Owner, req.CharacterId));
+    public UnaryResult<ExpandCharacterSkillSlotsResponse> ExpandCharacterSkillSlots(ExpandCharacterSkillSlotsRequest req)
+        => UnaryResult.FromResult(GameStore.Instance.ExpandSkillSlots(Owner, req.CharacterId, req.ExpandType, req.OpalCost));
+    public UnaryResult<ExpandCharacterStashPageResponse> ExpandCharacterStashPage(ExpandCharacterStashPageRequest req)
+        => UnaryResult.FromResult(GameStore.Instance.ExpandStashPage(Owner, req.CharacterId, req.OpalCost, req.Page));
+    public UnaryResult<ExpandCharacterInventoryRowResponse> ExpandCharacterInventoryRow(ExpandCharacterInventoryRowRequest req)
+        => UnaryResult.FromResult(GameStore.Instance.ExpandInventoryRow(Owner, req.CharacterId, req.ExpandType, req.OpalCost));
+    // Patched-client only: persists the skill rank the client just upgraded to via
+    // LivingPowers.RankUp. The official API has no such RPC, which is why upgraded
+    // ranks reset to 1 on the next login.
+    public UnaryResult<UpgradeCharacterSkillRankResponse> UpgradeCharacterSkillRank(UpgradeCharacterSkillRankRequest req)
+        => UnaryResult.FromResult(GameStore.Instance.UpgradeSkillRank(Owner, req.CharacterId, req.PowerHashSafe, req.NewRank));
     public UnaryResult<AllocateCharacterAttributesResponse> AllocateCharacterAttributes(AllocateCharacterAttributesRequest req)
     {
         var owner = Owner;

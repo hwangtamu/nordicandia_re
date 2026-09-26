@@ -63,7 +63,7 @@ namespace SharedNet.Api
 
 namespace SharedNet.Api
 {
-    public interface ICharacterServiceApi : IService<ICharacterServiceApi>
+    public partial interface ICharacterServiceApi : IService<ICharacterServiceApi>
     {
         MagicOnion.UnaryResult<SharedNet.Api.CreateCharacterResponse> CreateCharacter(SharedNet.Api.CreateCharacterRequest req);
         MagicOnion.UnaryResult<SharedNet.Api.DeleteCharacterResponse> DeleteCharacter(SharedNet.Api.DeleteCharacterRequest req);
@@ -972,6 +972,12 @@ namespace Game
     public int NumPotionSlots { get; set; }
     [Key("NumPassiveTrainingSlots")]
     public int NumPassiveTrainingSlots { get; set; }
+    [Key("NumInventoryRows")]
+    public int NumInventoryRows { get; set; }
+    [Key("NumPetLootRows")]
+    public int NumPetLootRows { get; set; }
+    [Key("NumCraftingRows")]
+    public int NumCraftingRows { get; set; }
     }
     [MessagePackObject(false)]
     public class SerializedLootFilterEntry

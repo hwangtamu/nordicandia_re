@@ -305,7 +305,7 @@ public sealed class GameStore : IDisposable
     {
         lock (gate) {
             if (token == null || !state.Sessions.TryGetValue(token, out var session) || !(session.ExpireTimestamp > Now)) return null;
-            return Unpack<UserDto>(Pack(state.Users.Values.Single(u => u.UserId == session.UserId)));
+            return Unpack<UserDto>(Pack(state.Users.Values.FirstOrDefault(u => u.UserId == session.UserId)));
         }
     }
     public Guid RequireUser(string authorization)
@@ -482,13 +482,27 @@ public sealed class GameStore : IDisposable
             {
                 var h = Unpack<CharacterHeaderDto>(c.Header);
                 var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
-                var tier = (int)(GetAttribute(data, AttrWorldTierUnlocked) ?? 0);
-                var waypoint = data.Waypoints?.WaypointMap != null && data.Waypoints.WaypointMap.Count > 0
-                    ? data.Waypoints.WaypointMap.Values.Max(w => w?.HighestWaypointCleared ?? w?.MaxWaypoint ?? 0)
-                    : 0;
+                var (tier, waypoint) = HighestCompletedWorld(data);
                 return new CharacterStanding(c.Owner, h.CharacterId, h.DisplayName, h.Level, c.Experience, c.Silver,
                     c.Opals, tier, waypoint, h.GameMode, h.Class, h.Race, h.LastLogin ?? DateTime.UtcNow);
             }).ToList();
+    }
+
+    /// <summary>Highest completed world as a (tier, waypoint) pair taken from the same
+    /// tier entry. Pairing the highest unlocked tier with the max waypoint across all
+    /// tiers produced phantom combinations like "3-10" for a character that had just
+    /// entered 3-1 (tier 3 unlocked, but the max cleared waypoint 10 came from tier 2).</summary>
+    private static (int Tier, int Waypoint) HighestCompletedWorld(SerializedCharacterData.SerializedData data)
+    {
+        var tier = (int)(GetAttribute(data, AttrWorldTierUnlocked) ?? 0);
+        var map = data.Waypoints?.WaypointMap;
+        if (map == null || map.Count == 0) return (tier, 0);
+        if (!map.TryGetValue(tier, out var entry) || entry == null)
+        {
+            tier = map.Keys.Max();
+            entry = map[tier];
+        }
+        return (tier, entry?.HighestWaypointCleared ?? entry?.MaxWaypoint ?? 0);
     }
 
     private static readonly HashSet<SharedNet.Constants.Game.ItemSlotTypes> EquipmentSlots = new()
@@ -534,9 +548,7 @@ public sealed class GameStore : IDisposable
                 .Where(w => w?.HighestWaypointBestClearTime != null)
                 .Select(w => w.HighestWaypointBestClearTime!.Value)
                 .DefaultIfEmpty(TimeSpan.Zero).Min() ?? TimeSpan.Zero;
-            var waypoint = data.Waypoints?.WaypointMap != null && data.Waypoints.WaypointMap.Count > 0
-                ? data.Waypoints.WaypointMap.Values.Max(w => w?.HighestWaypointCleared ?? w?.MaxWaypoint ?? 0)
-                : 0;
+            (tier, var waypoint) = HighestCompletedWorld(data);
             var accountName = state.Users.Values.FirstOrDefault(u => u.UserId == c.Owner)?.DisplayName;
             return new SharedNet.Dto.CharacterInspectionDto
             {
@@ -1144,8 +1156,127 @@ public sealed class GameStore : IDisposable
         return true;
     });
 
-    public WorldAnnouncement ApplyWorldProgress(Guid owner, Guid characterId, int worldTier, int worldWaypoint, TimeSpan duration, int depth = 0)
-        => Change(s =>
+    /// <summary>Buys an extra skill slot (active / passive / passive-training) for opals.
+    /// This RPC used to be an unimplemented stub, so the client applied the purchase
+    /// locally and the slot silently vanished on the next login (the server re-sent the
+    /// old GameModeAccount). Deducts opals with the same balance check as merchant
+    /// purchases, bumps the matching slot counter on the per-game-mode account and
+    /// persists it.</summary>
+    public ExpandCharacterSkillSlotsResponse ExpandSkillSlots(Guid owner, Guid characterId,
+        ExpandCharacterSkillSlotTypes expandType, int opalCost) => Change(s =>
+    {
+        if (opalCost < 0)
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid opal cost"));
+        var c = Owned(s, owner, characterId);
+        if (c.Opals < opalCost)
+            throw new RpcException(new Status(StatusCode.FailedPrecondition, "Not enough opals"));
+        c.Opals -= opalCost;
+        var account = Unpack<SerializedPlayerGameModeAccountData>(c.GameModeAccount);
+        int newNumSlots = expandType switch
+        {
+            ExpandCharacterSkillSlotTypes.Active => ++account.NumActiveSkillSlots,
+            ExpandCharacterSkillSlotTypes.Passive => ++account.NumPassiveSkillSlots,
+            ExpandCharacterSkillSlotTypes.PassiveTraining => ++account.NumPassiveTrainingSlots,
+            _ => throw new RpcException(new Status(StatusCode.InvalidArgument, "Unknown skill slot type")),
+        };
+        c.GameModeAccount = Pack(account);
+        Console.WriteLine($"[SKILL] character={characterId} expand={expandType} cost={opalCost} slots={newNumSlots} opals={c.Opals}");
+        return new ExpandCharacterSkillSlotsResponse { NewOpals = c.Opals, NewNumSlots = newNumSlots };
+    });
+
+    /// <summary>Persists an opal stash-page purchase.
+    /// This RPC used to be an unimplemented stub, so the client applied the new page
+    /// locally and it vanished on the next login (the server re-sent the old
+    /// GameModeAccount with the old NumStashPages). The request carries the page number
+    /// being unlocked (client's pageToUnlock); the RPC has no stash-type discriminator
+    /// (unlike skill slots), so it expands the shared stash. One paid call unlocks
+    /// exactly one page: a page number at or below the current count is treated as an
+    /// idempotent replay of an already-owned page and is not charged again.</summary>
+    public ExpandCharacterStashPageResponse ExpandStashPage(Guid owner, Guid characterId,
+        int opalCost, int page) => Change(s =>
+    {
+        if (opalCost < 0)
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid opal cost"));
+        var c = Owned(s, owner, characterId);
+        var account = Unpack<SerializedPlayerGameModeAccountData>(c.GameModeAccount);
+        if (page <= account.NumStashPages)
+            return new ExpandCharacterStashPageResponse { NewOpals = c.Opals, UnlockedPage = account.NumStashPages };
+        if (c.Opals < opalCost)
+            throw new RpcException(new Status(StatusCode.FailedPrecondition, "Not enough opals"));
+        c.Opals -= opalCost;
+        account.NumStashPages++;
+        c.GameModeAccount = Pack(account);
+        Console.WriteLine($"[STASH] character={characterId} page={account.NumStashPages} cost={opalCost} opals={c.Opals}");
+        return new ExpandCharacterStashPageResponse { NewOpals = c.Opals, UnlockedPage = account.NumStashPages };
+    });
+
+    /// <summary>Persists an opal inventory-row purchase.
+    /// Same stub history as stash pages: unimplemented server handler, client applied
+    /// locally. Row counts had no server-side storage at all, so per-type purchased-row
+    /// counters were added to the game-mode account (potions reuses NumPotionSlots).
+    /// NOTE: NewNumRows reports the server-recorded purchased rows for the type; the
+    /// client UI owns the base (unpurchased) row count.</summary>
+    public ExpandCharacterInventoryRowResponse ExpandInventoryRow(Guid owner, Guid characterId,
+        ExpandInventoryRowType expandType, int opalCost) => Change(s =>
+    {
+        if (opalCost < 0)
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid opal cost"));
+        if (expandType == ExpandInventoryRowType.Unknown)
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Unknown inventory row type"));
+        var c = Owned(s, owner, characterId);
+        if (c.Opals < opalCost)
+            throw new RpcException(new Status(StatusCode.FailedPrecondition, "Not enough opals"));
+        c.Opals -= opalCost;
+        var account = Unpack<SerializedPlayerGameModeAccountData>(c.GameModeAccount);
+        int newNumRows = expandType switch
+        {
+            ExpandInventoryRowType.Inventory => ++account.NumInventoryRows,
+            ExpandInventoryRowType.PetLoot => ++account.NumPetLootRows,
+            ExpandInventoryRowType.CraftingInventory => ++account.NumCraftingRows,
+            ExpandInventoryRowType.Potions => ++account.NumPotionSlots,
+            _ => throw new RpcException(new Status(StatusCode.InvalidArgument, "Unknown inventory row type")),
+        };
+        c.GameModeAccount = Pack(account);
+        Console.WriteLine($"[STASH] character={characterId} rows={expandType} cost={opalCost} newRows={newNumRows} opals={c.Opals}");
+        return new ExpandCharacterInventoryRowResponse { NewOpals = c.Opals, NewNumRows = newNumRows };
+    });
+
+    /// <summary>Persists a client-side skill rank upgrade.
+    /// The official API has no rank-upload RPC: the client's LivingPowers.RankUp only
+    /// mutates the in-memory rank, so the server kept Power_Rank = 1 and the next login
+    /// overwrote the upgraded rank. A patched client calls this right after RankUp.
+    /// Gameplay math (cost, max rank) stays client-authoritative, same trust model as
+    /// drops/buffs; the server only enforces monotonicity and a sanity cap.</summary>
+    public UpgradeCharacterSkillRankResponse UpgradeSkillRank(Guid owner, Guid characterId,
+        int powerHashSafe, double newRank) => Change(s =>
+    {
+        if (newRank <= 1 || newRank > 200 || double.IsNaN(newRank) || double.IsInfinity(newRank))
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid rank"));
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        data.Powers ??= new SerializedCharacterData.SerializedPowers { Powers = new() };
+        data.Powers.Powers ??= new List<SerializedCharacterData.SerializedPower>();
+        var power = data.Powers.Powers.FirstOrDefault(p => p != null && p.PowerHashSafe == powerHashSafe);
+        if (power == null)
+        {
+            // Skill the server never saw assigned (e.g. learned while offline): create it
+            // rather than dropping the upgrade.
+            power = new SerializedCharacterData.SerializedPower
+            {
+                PowerHash = powerHashSafe, PowerHashSafe = powerHashSafe, Power_Rank = 1,
+                Power_Masteries = new SerializedCharacterData.SerializedPowerMasteries { Masteries = new() },
+            };
+            data.Powers.Powers.Add(power);
+        }
+        if (newRank <= power.Power_Rank)
+            throw new RpcException(new Status(StatusCode.FailedPrecondition, "Rank must increase"));
+        power.Power_Rank = newRank;
+        c.Data = Pack(data);
+        Console.WriteLine($"[SKILL] character={characterId} rankup hash={powerHashSafe} rank={newRank}");
+        return new UpgradeCharacterSkillRankResponse { NewRank = newRank };
+    });
+
+    public WorldAnnouncement ApplyWorldProgress(Guid owner, Guid characterId, int worldTier, int worldWaypoint, TimeSpan duration, int depth = 0)        => Change(s =>
         {
             var c = Owned(s, owner, characterId);
             var header = Unpack<CharacterHeaderDto>(c.Header);

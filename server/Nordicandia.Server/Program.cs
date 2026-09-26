@@ -79,6 +79,7 @@ if (Environment.GetEnvironmentVariable("NORD_DUMP_BODY") == "1")
 
 app.MapMagicOnionService();
 app.MapLeaderboardJson();
+app.MapSkillRankJson();
 app.MapGet("/", () => "Nordicandia private server (MagicOnion 5.1.8)");
 app.MapGet("/healthz", () => Results.Ok(new { status = "ok" }));
 
