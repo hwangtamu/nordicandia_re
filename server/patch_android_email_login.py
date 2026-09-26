@@ -110,6 +110,33 @@ def _segments(data):
     return segs
 
 
+# Shared RX code-cave map (dead BestHTTP example code inside libil2cpp).
+# Each stub is linked at a fixed VA and must fit strictly before the NEXT
+# stub's VA. The old per-script check (len(blob) <= STUB_END - STUB_VA) only
+# guarded the end of the whole region and allowed silent overlap into the
+# neighbour's cave, e.g. a growing realtime stub clobbering skill_rank.
+CAVE_ORDER = (0x344EC24,  # email-login stub (dropped from v6 builds, kept for reference)
+              0x3451000,  # leaderboard stub
+              0x3456000,  # realtime stub
+              0x3457000,  # skill_rank stub
+              0x3458000,  # xp_drop stub
+              0x345C9AC)  # end of the dead-code region
+
+
+def cave_limit(va):
+    """Exclusive upper bound for the stub linked at *va* (start of next cave)."""
+    i = CAVE_ORDER.index(va)
+    return CAVE_ORDER[i + 1]
+
+
+def check_cave_fit(va, blob_len, name):
+    limit = cave_limit(va)
+    if va + blob_len > limit:
+        raise ValueError(
+            f'{name} stub ({blob_len} bytes at {va:#x}) overruns into the next '
+            f'code cave at {limit:#x}; shrink the stub or move the cave map')
+
+
 def _off_for(segs, va):
     for start, off, size in segs:
         if start <= va < start + size:

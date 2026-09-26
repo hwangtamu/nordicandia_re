@@ -20,7 +20,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from patch_android_email_login import _read_symbols, _segments, _off_for, _b
+from patch_android_email_login import _read_symbols, _segments, _off_for, _b, check_cave_fit
 
 STUB_VA, STUB_END = 0x3458000, 0x345C9AC
 XP_VA, XP_RESUME = 0x2A7A6E0, 0x2A7A6EC
@@ -66,6 +66,7 @@ def apply(data, blob, syms):
     segs = _segments(data)
     if len(blob) > STUB_END - STUB_VA:
         raise ValueError('xp/drop stub exceeds its reserved code cave')
+    check_cave_fit(STUB_VA, len(blob), 'xp_drop')
     for name in ('xp_hook', 'xp_body_impl', 'drop_hook'):
         if not STUB_VA <= syms[name] < STUB_VA + len(blob):
             raise ValueError(f'{name} lies outside the compiled stub')

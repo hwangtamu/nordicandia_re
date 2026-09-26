@@ -12,7 +12,7 @@ import shutil
 import struct
 import subprocess
 import tempfile
-from patch_android_email_login import _read_symbols, _segments, _off_for, _b
+from patch_android_email_login import _read_symbols, _segments, _off_for, _b, check_cave_fit
 
 STUB_VA, STUB_END = 0x3456000, 0x345C9AC
 STATE_VA, STATE_END = 0x5DE4000, 0x5DE5E40
@@ -89,6 +89,7 @@ def apply(data, blob, syms):
         result[off:off+len(replacement)]=replacement
     if len(blob)>STUB_END-STUB_VA:
         raise ValueError('Realtime stub exceeds its reserved code cave')
+    check_cave_fit(STUB_VA, len(blob), 'realtime')
     for name in ('ws_connect_trampoline','ws_wait_trampoline','ws_result_trampoline','ws_fixed_update'):
         if not STUB_VA <= syms[name] < STUB_VA+len(blob):
             raise ValueError(f'{name} lies outside the compiled stub')

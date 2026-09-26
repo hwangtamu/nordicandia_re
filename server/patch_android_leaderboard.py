@@ -36,7 +36,7 @@ import tempfile
 from pathlib import Path
 
 from patch_android_online import patch as patch_online
-from patch_android_email_login import _read_symbols
+from patch_android_email_login import _read_symbols, check_cave_fit
 
 ROOT = Path(__file__).resolve().parent.parent
 STUB_DIR = ROOT / "device/stub"
@@ -183,6 +183,7 @@ def apply(data: bytes, blob: bytes, syms: dict) -> bytes:
 
     if len(blob) > STUB_END - STUB_VA:
         raise ValueError("stub does not fit its code cave (would overlap the realtime stub)")
+    check_cave_fit(STUB_VA, len(blob), 'leaderboard')
     for name in ("lb_overall", "lb_class", "lb_helheim", "lb_row_hook", "lb_click_hook"):
         if not STUB_VA <= syms[name] < STUB_VA + len(blob):
             raise ValueError(f"{name} lies outside the injected blob")

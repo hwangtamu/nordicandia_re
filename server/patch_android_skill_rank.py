@@ -24,7 +24,7 @@ import struct
 import subprocess
 import tempfile
 from pathlib import Path
-from patch_android_email_login import _read_symbols, _segments, _off_for, _b
+from patch_android_email_login import _read_symbols, _segments, _off_for, _b, check_cave_fit
 from patch_android_realtime import _extend_rw_memsz
 
 STUB_VA, STUB_END = 0x3457000, 0x345C9AC
@@ -79,6 +79,7 @@ def apply(data, blob, syms):
     segs = _segments(data)
     if len(blob) > STUB_END - STUB_VA:
         raise ValueError('skill-rank stub exceeds its reserved code cave')
+    check_cave_fit(STUB_VA, len(blob), 'skill_rank')
     for name in ('rankup_trampoline', 'rankup_body_impl'):
         if not STUB_VA <= syms[name] < STUB_VA + len(blob):
             raise ValueError(f'{name} lies outside the compiled stub')
