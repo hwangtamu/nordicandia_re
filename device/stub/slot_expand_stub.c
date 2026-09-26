@@ -215,11 +215,16 @@ static int http_post(const char *path, const char *json, int json_len)
  * ARM64: x0=this, w1=type, w2=cost. Called at method entry (original first
  * instruction replaced by branch here). We POST then jump to RESUME.
  * The stub is position-independent; RESUME addr is patched in by the patcher.
+ *
+ * IMPORTANT: The skipped first instruction is `stp x19, x20, [sp, #64]`.
+ * We must save x19/x20 at entry and execute the stp before RESUME,
+ * otherwise the function's epilogue will load garbage.
  */
 __attribute__((naked)) void hook_expand_skill_slot(void)
 {
     __asm__ volatile(
         "stp x29, x30, [sp, #-16]!\n"
+        "stp x19, x20, [sp, #-16]!\n"  /* save x19/x20 (skipped stp needs them) */
         "stp x0, x1, [sp, #-16]!\n"
         "stp x2, x3, [sp, #-16]!\n"
         "str w1, [sp, #-16]!\n"      /* skillSlotType */
@@ -228,7 +233,9 @@ __attribute__((naked)) void hook_expand_skill_slot(void)
         "add sp, sp, #32\n"
         "ldp x2, x3, [sp], #16\n"
         "ldp x0, x1, [sp], #16\n"
+        "ldp x19, x20, [sp], #16\n"  /* restore x19/x20 */
         "ldp x29, x30, [sp], #16\n"
+        "stp x19, x20, [sp, #64]\n"  /* execute skipped instruction */
         /* patched: ldr x16, =RESUME; br x16 */
         "ldr x16, 0f\n"
         "br x16\n"
@@ -265,6 +272,10 @@ void hook_expand_skill_slot_c(int skillSlotType, int cost)
 
 /* Hook entry for ExpandPotionSlotOffline(InventoryGrid*, int cost)
  * ARM64: x0=this, w1=cost.
+ *
+ * IMPORTANT: The skipped first instruction is `adrp x21, #13983`
+ * (x21 = 0x5BA9000). We must set x21 correctly before RESUME,
+ * otherwise the function will use a wrong pointer.
  */
 __attribute__((naked)) void hook_expand_potion_slot(void)
 {
@@ -276,6 +287,10 @@ __attribute__((naked)) void hook_expand_potion_slot(void)
         "add sp, sp, #16\n"
         "ldp x0, x1, [sp], #16\n"
         "ldp x29, x30, [sp], #16\n"
+        /* Execute skipped adrp: x21 = 0x5BA9000 (x21 is caller-saved,
+           original function overwrites it immediately, no need to save) */
+        "movz x21, #0x9000\n"
+        "movk x21, #0x5ba, lsl #16\n"
         "ldr x16, 0f\n"
         "br x16\n"
         "0: .quad 0x0\n"
