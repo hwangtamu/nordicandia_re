@@ -30,15 +30,12 @@ extern ptr  il2cpp_assembly_get_image(ptr);
 extern ptr  il2cpp_class_from_name(ptr, const char *, const char *);
 extern ptr  il2cpp_class_get_method_from_name(ptr, const char *, int);
 extern ptr  il2cpp_runtime_invoke(ptr, ptr, ptr *, ptr *);
+extern ptr  il2cpp_object_get_class(ptr);
 extern ptr  il2cpp_value_box(ptr, ptr);
 
-/* game / net (fixed VAs, linked) */
+/* game / net: get_trained_rank is still a fixed VA (verified working);
+ * auth/guid now resolve dynamically via il2cpp metadata (see refresh_auth). */
 extern int   get_trained_rank(ptr self, int hash, ptr mi);          /* 0x2C6EA0C */
-extern ptr   netclient_get_current(ptr mi);                         /* 0x2DA1E28 */
-extern Guid  netclient_current_character_id(ptr self, ptr mi);      /* 0x2DA1E90 */
-extern ptr   netsession_get_current(ptr mi);                         /* 0x2E42DAC */
-extern ptr   netsession_get_session(ptr self, ptr mi);              /* 0x2E42E04 */
-extern ptr   sessiondto_get_authtoken(ptr self, ptr mi);            /* 0x0279C8B8 */
 
 /* ---- raw syscalls (no libc, no PLT) ---------------------------------- */
 #define SYS_close 57
@@ -100,14 +97,27 @@ static ptr find_class(const char *ns, const char *name)
 
 static void refresh_auth(void)
 {
+    /* Fully dynamic via metadata: the hardcoded sessiondto_get_authtoken VA
+     * (0x0279C8B8) reads the wrong field -> server 401. Resolve the real
+     * get_AuthToken from the SessionDto class at runtime. */
+    ptr exc = 0;
     if (!g_ns_class) g_ns_class = find_class("Nordicandia.Client.Net", "NetSession");
     if (g_ns_class && !g_ns_current_mi)
         g_ns_current_mi = il2cpp_class_get_method_from_name(g_ns_class, "get_Current", 0);
-    ptr ns = g_ns_current_mi ? netsession_get_current(g_ns_current_mi) : 0;
-    if (ns) {
-        ptr sd = netsession_get_session(ns, 0);
-        if (sd) str_copy_il2cpp(g_token, sizeof(g_token), sessiondto_get_authtoken(sd, 0));
-    }
+    if (!g_ns_current_mi) return;
+    ptr ns = il2cpp_runtime_invoke(g_ns_current_mi, 0, 0, &exc);
+    if (exc || !ns) return;
+    ptr get_session_mi = il2cpp_class_get_method_from_name(g_ns_class, "get_Session", 0);
+    if (!get_session_mi) return;
+    ptr sd = il2cpp_runtime_invoke(get_session_mi, ns, 0, &exc);
+    if (exc || !sd) return;
+    ptr sd_class = il2cpp_object_get_class(sd);
+    if (!sd_class) return;
+    ptr get_token_mi = il2cpp_class_get_method_from_name(sd_class, "get_AuthToken", 0);
+    if (!get_token_mi) return;
+    ptr token_str = il2cpp_runtime_invoke(get_token_mi, sd, 0, &exc);
+    if (exc || !token_str) return;
+    str_copy_il2cpp(g_token, sizeof(g_token), token_str);
     g_dbg[6] = g_token[0] ? 1 : 0;
 }
 
@@ -132,13 +142,20 @@ static void guid_to_str(const Guid *g, char *out)
 
 static void refresh_guid(void)
 {
-    Guid cid;
+    /* Dynamic via metadata (same reason as refresh_auth): avoid hardcoded VAs. */
+    ptr exc = 0;
     if (!g_nc_class) g_nc_class = find_class("Client.Net", "NetClient");
     if (g_nc_class && !g_nc_current_mi)
         g_nc_current_mi = il2cpp_class_get_method_from_name(g_nc_class, "get_Current", 0);
     if (!g_nc_current_mi) { g_guid[0] = 0; return; }
-    cid = netclient_current_character_id(netclient_get_current(g_nc_current_mi), 0);
-    guid_to_str(&cid, g_guid);
+    ptr nc = il2cpp_runtime_invoke(g_nc_current_mi, 0, 0, &exc);
+    if (exc || !nc) { g_guid[0] = 0; return; }
+    ptr get_cid_mi = il2cpp_class_get_method_from_name(g_nc_class, "get_CurrentCharacterId", 0);
+    if (!get_cid_mi) { g_guid[0] = 0; return; }
+    ptr boxed = il2cpp_runtime_invoke(get_cid_mi, nc, 0, &exc);
+    if (exc || !boxed) { g_guid[0] = 0; return; }
+    /* Unbox: skip 16-byte Il2CppObject header (klass + monitor). */
+    guid_to_str((const Guid *)((u8 *)boxed + 16), g_guid);
 }
 
 /* Blocking HTTP/1.0 POST; returns body length (0 on failure). */

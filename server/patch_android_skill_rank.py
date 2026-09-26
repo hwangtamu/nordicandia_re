@@ -34,13 +34,10 @@ RANKUP_RESUME = 0x2C6C640
 ROOT = Path(__file__).resolve().parent.parent
 
 # Fixed libil2cpp 1.9.3 arm64 VAs the stub links against.
+# Auth/guid resolve dynamically via il2cpp metadata now (the hardcoded
+# sessiondto_get_authtoken VA read the wrong field -> server 401).
 TARGETS = {
     'get_trained_rank': 0x2C6EA0C,
-    'netclient_get_current': 0x2DA1E28,
-    'netclient_current_character_id': 0x2DA1E90,
-    'netsession_get_current': 0x2E42DAC,
-    'netsession_get_session': 0x2E42E04,
-    'sessiondto_get_authtoken': 0x0279C8B8,
     'RANKUP_RESUME': RANKUP_RESUME,
 }
 
