@@ -430,6 +430,7 @@ public sealed class GameStore : IDisposable
         SyncSlotCapacities(character, data, Unpack<SerializedPlayerGameModeAccountData>(character.GameModeAccount));
         SetAttribute(data, AttrLevel, header.Level);
         SetAttribute(data, AttrExperience, character.Experience);
+        EnsureBlessingBuffs(character, data);
         if (IsSeasonMode(header.GameMode))
         {
             EnsureSeasonExperienceBuff(data);
@@ -880,6 +881,29 @@ public sealed class GameStore : IDisposable
                 : null;
             return (Buff(1), Buff(2), Buff(3), Buff(4));
         });
+
+    /// <summary>Mirrors the active Aesir blessings onto the character's serialized buffs so the
+    /// client re-applies them on login (the GetCurrentBlessings response alone does not survive a
+    /// relogin). Expired blessings are pruned; the buffs are attribute-free, so re-adding them is
+    /// idempotent.</summary>
+    private void EnsureBlessingBuffs(SavedCharacter c, SerializedCharacterData.SerializedData data)
+    {
+        data.Buffs ??= new SerializedCharacterData.SerializedBuffs();
+        data.Buffs.Buffs ??= new List<SerializedCharacterData.SerializedBuff>();
+        c.Blessings ??= new();
+        var now = Now;
+        foreach (var expired in c.Blessings.Where(kv => kv.Value <= now).Select(kv => kv.Key).ToList())
+            c.Blessings.Remove(expired);
+        var active = c.Blessings.Keys.Where(BlessingBuffIds.ContainsKey).Select(k => BlessingBuffIds[k]).ToHashSet();
+        data.Buffs.Buffs.RemoveAll(b => b != null && BlessingBuffIds.ContainsValue(b.DefinitionIntegerId));
+        foreach (var id in active)
+            data.Buffs.Buffs.Add(new SerializedCharacterData.SerializedBuff
+            {
+                DefinitionIntegerId = id,
+                IsCharacterContext = true,
+                Attributes = new SerializedAttributes { Values = new(), MultiplicativeValues = new() },
+            });
+    }
 
     private static SerializedCharacterData.SerializedPets EnsurePets(SerializedCharacterData.SerializedData data)
     {
