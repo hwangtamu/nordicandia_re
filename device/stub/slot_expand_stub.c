@@ -314,3 +314,64 @@ void hook_expand_potion_slot_c(int cost)
     json[n++]='}'; json[n]=0;
     http_post("/api/character/expand-potion-slots", json, n);
 }
+
+/* Hook entry for OfflineCombatPets_Unlock(int petDefinitionIntegerId, bool payWithOpals, int cost, int* newCurrencyValue)
+ * ARM64: w0=petId, w1=payWithOpals, w2=cost, x3=newCurrencyValue. Static method.
+ * Real VA 0x02E3DF40 (inspector VA, no -0x4000 adjustment for this range).
+ *
+ * IMPORTANT: The skipped first instruction is `stp x25, x30, [sp, #-64]!`.
+ * We must save x25 at entry and execute the stp before RESUME.
+ */
+__attribute__((naked)) void hook_unlock_combat_pet(void)
+{
+    __asm__ volatile(
+        "stp x29, x30, [sp, #-16]!\n"
+        "stp x25, x26, [sp, #-16]!\n"  /* save x25 (skipped stp needs it) */
+        "stp x0, x1, [sp, #-16]!\n"
+        "stp x2, x3, [sp, #-16]!\n"
+        "str w0, [sp, #-16]!\n"      /* petDefinitionIntegerId */
+        "str w1, [sp, #-16]!\n"      /* payWithOpals (bool) */
+        "str w2, [sp, #-16]!\n"      /* cost */
+        "bl hook_unlock_combat_pet_c\n"
+        "add sp, sp, #48\n"
+        "ldp x2, x3, [sp], #16\n"
+        "ldp x0, x1, [sp], #16\n"
+        "ldp x25, x26, [sp], #16\n"  /* restore x25 */
+        "ldp x29, x30, [sp], #16\n"
+        "stp x25, x30, [sp, #-64]!\n"  /* execute skipped instruction */
+        /* patched: ldr x16, =RESUME; br x16 */
+        "ldr x16, 0f\n"
+        "br x16\n"
+        "0: .quad 0x0\n"  /* RESUME placeholder */
+    );
+}
+
+void hook_unlock_combat_pet_c(int petDefinitionIntegerId, int payWithOpals, int cost)
+{
+    /* Build JSON: {"characterId":"...","payWithOpals":true,"combatPetDefinitionIntegerId":N,"cost":M} */
+    static char json[256];
+    int n = 0;
+    const char *p1 = "{\"characterId\":\"";
+    while (*p1) json[n++] = *p1++;
+    for (int i = 0; g_guid[i]; i++) json[n++] = g_guid[i];
+    const char *p2 = "\",\"payWithOpals\":";
+    while (*p2) json[n++] = *p2++;
+    const char *pb = payWithOpals ? "true" : "false";
+    while (*pb) json[n++] = *pb++;
+    const char *p3 = ",\"combatPetDefinitionIntegerId\":";
+    while (*p3) json[n++] = *p3++;
+    char nb[12]; int nn = 0;
+    int t = petDefinitionIntegerId; if (t==0) nb[nn++]='0';
+    char rb[12]; int rn=0;
+    while (t>0) { rb[rn++]='0'+t%10; t/=10; }
+    while (rn>0) nb[nn++]=rb[--rn];
+    for (int i=0;i<nn;i++) json[n++]=nb[i];
+    const char *p4 = ",\"cost\":";
+    while (*p4) json[n++] = *p4++;
+    nn=0; rn=0; t=cost; if(t==0) nb[nn++]='0';
+    while (t>0) { rb[rn++]='0'+t%10; t/=10; }
+    while (rn>0) nb[nn++]=rb[--rn];
+    for (int i=0;i<nn;i++) json[n++]=nb[i];
+    json[n++]='}'; json[n]=0;
+    http_post("/api/character/unlock-combat-pet", json, n);
+}

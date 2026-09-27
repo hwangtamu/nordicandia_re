@@ -37,6 +37,8 @@ EXPAND_SKILL_SLOT = 0x25263C8
 EXPAND_SKILL_SLOT_RESUME = 0x25263CC
 EXPAND_POTION_SLOT = 0x250AA90
 EXPAND_POTION_SLOT_RESUME = 0x250AA94
+UNLOCK_COMBAT_PET = 0x02E3DF40
+UNLOCK_COMBAT_PET_RESUME = 0x02E3DF44
 
 STUB_VA, STUB_END = 0x3459000, 0x3459FFF
 STATE_VA, STATE_END = 0x5DE8400, 0x5DE8800
@@ -109,7 +111,7 @@ def apply(data, blob, syms):
     # Pattern: 0x58000050 (ldr x16, [pc, #8]), 0xD61F0200 (br x16), followed by 8 zero bytes
     import re
     pattern = struct.pack('<IIQ', 0x58000050, 0xD61F0200, 0)
-    resumes = [EXPAND_SKILL_SLOT_RESUME, EXPAND_POTION_SLOT_RESUME]
+    resumes = [EXPAND_SKILL_SLOT_RESUME, EXPAND_POTION_SLOT_RESUME, UNLOCK_COMBAT_PET_RESUME]
     idx = 0
     for i, resume_va in enumerate(resumes):
         pos = blob.find(pattern, idx)
@@ -129,6 +131,7 @@ def apply(data, blob, syms):
     for target_va, hook_name in [
         (EXPAND_SKILL_SLOT, 'hook_expand_skill_slot'),
         (EXPAND_POTION_SLOT, 'hook_expand_potion_slot'),
+        (UNLOCK_COMBAT_PET, 'hook_unlock_combat_pet'),
     ]:
         off = _off_for(segs, target_va)
         hook_va = syms[hook_name]
