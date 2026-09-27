@@ -840,13 +840,14 @@ public sealed class GameStore : IDisposable
         c.HasRealtimeProgress = true;
         c.LastRealtimeUpdate = Now;
         c.Blessings ??= new();
+        // Client durations for Small/Medium/Large/ExtraLarge: 10m / 30m / 1h / 4h.
         var duration = offeringSize switch
         {
-            1 => TimeSpan.FromHours(1),
-            2 => TimeSpan.FromHours(6),
-            3 => TimeSpan.FromDays(1),
-            4 => TimeSpan.FromDays(3),
-            _ => TimeSpan.FromHours(1),
+            1 => TimeSpan.FromMinutes(10),
+            2 => TimeSpan.FromMinutes(30),
+            3 => TimeSpan.FromHours(1),
+            4 => TimeSpan.FromHours(4),
+            _ => TimeSpan.FromMinutes(10),
         };
         if (offeringType > 0) c.Blessings[offeringType] = Now.Add(duration);
         return (c.Opals, spent > 0);
@@ -881,6 +882,27 @@ public sealed class GameStore : IDisposable
                 : null;
             return (Buff(1), Buff(2), Buff(3), Buff(4));
         });
+
+    /// <summary>The active Aesir blessing buffs as a list, for the realtime push. The client
+    /// applies buffs from <c>SerializedData.Buffs</c> on load but races the buff bar's start,
+    /// so (like the SeasonBuff) we also push them when the socket opens.</summary>
+    public List<SerializedCharacterData.SerializedBuff> ActiveBlessingBuffs(Guid owner, Guid characterId) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        c.Blessings ??= new();
+        var now = Now;
+        foreach (var expired in c.Blessings.Where(kv => kv.Value <= now).Select(kv => kv.Key).ToList())
+            c.Blessings.Remove(expired);
+        var list = new List<SerializedCharacterData.SerializedBuff>();
+        foreach (var type in c.Blessings.Keys.Where(BlessingBuffIds.ContainsKey))
+            list.Add(new SerializedCharacterData.SerializedBuff
+            {
+                DefinitionIntegerId = BlessingBuffIds[type],
+                IsCharacterContext = true,
+                Attributes = new SerializedAttributes { Values = new(), MultiplicativeValues = new() },
+            });
+        return list;
+    });
 
     /// <summary>Mirrors the active Aesir blessings onto the character's serialized buffs so the
     /// client re-applies them on login (the GetCurrentBlessings response alone does not survive a

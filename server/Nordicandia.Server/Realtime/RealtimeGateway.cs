@@ -328,6 +328,16 @@ public static class RealtimeGateway
                     await SendAsync(new Envelope { RequestId = 0, Message = new BuffReceivedMessage { Buff = State.GameStore.CreateSeasonBuff() } }, cancellationToken);
                     Console.WriteLine($"[WS] pushed SeasonBuff to {openedCharacter}");
                 }
+                // Re-push active Aesir blessings so the buff bar applies them even if the
+                // SerializedData.Buffs load raced the bar's start (same reason as SeasonBuff).
+                if (header is not null)
+                {
+                    foreach (var buff in State.GameStore.Instance.ActiveBlessingBuffs(user.UserId, openedCharacter))
+                    {
+                        await SendAsync(new Envelope { RequestId = 0, Message = new BuffReceivedMessage { Buff = buff } }, cancellationToken);
+                        Console.WriteLine($"[WS] pushed AesirBuff {buff.DefinitionIntegerId} to {openedCharacter}");
+                    }
+                }
             }
             var buffer = new byte[16 * 1024];
             using var message = new MemoryStream();
