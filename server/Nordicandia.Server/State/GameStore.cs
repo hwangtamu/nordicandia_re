@@ -9,6 +9,15 @@ using SharedNet.Dto;
 
 namespace Nordicandia.Server.State;
 
+/// <summary>One power (passive-skill) entry in a client snapshot.</summary>
+public sealed class PowerSyncEntry
+{
+    public int PowerHashSafe { get; set; }
+    public double Rank { get; set; }
+    public int TrainingStart { get; set; }
+    public int TrainingEnd { get; set; }
+}
+
 /// <summary>Single-process private-server storage. Every mutation is flushed before acknowledgement.</summary>
 public sealed class GameStore : IDisposable
 {

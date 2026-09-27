@@ -4,15 +4,6 @@ using Nordicandia.Server.State;
 
 namespace Nordicandia.Server.Services;
 
-/// <summary>One power (passive-skill) entry in a client snapshot.</summary>
-public sealed class PowerSyncEntry
-{
-    public int PowerHashSafe { get; set; }
-    public double Rank { get; set; }
-    public int TrainingStart { get; set; }
-    public int TrainingEnd { get; set; }
-}
-
 /// <summary>
 /// Plain-HTTP/1.1 JSON upload of the client's full power (passive-skill) state.
 ///
