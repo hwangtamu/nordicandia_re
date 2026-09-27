@@ -163,7 +163,6 @@ public sealed partial class UserServiceApiImpl : ServiceBase<IUserServiceApi>, I
 {
     public MagicOnion.UnaryResult<SharedNet.Api.UnlockCharacterSlotResponse> UnlockCharacterSlot(SharedNet.Api.UnlockCharacterSlotRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UnlockCharacterSlotResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.UpdateCheatInfoResponse> UpdateCheatInfo(SharedNet.Api.UpdateCheatInfoRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UpdateCheatInfoResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.UnlockAchievementResponse> UnlockAchievement(SharedNet.Api.UnlockAchievementRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UnlockAchievementResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.UnlockAvatarResponse> UnlockAvatar(SharedNet.Api.UnlockAvatarRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UnlockAvatarResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.UnlockAvatarFrameResponse> UnlockAvatarFrame(SharedNet.Api.UnlockAvatarFrameRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.UnlockAvatarFrameResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.ChangeDisplayNameResponse> ChangeDisplayName(SharedNet.Api.ChangeDisplayNameRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ChangeDisplayNameResponse>());

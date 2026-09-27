@@ -78,6 +78,8 @@ public sealed class GameStore : IDisposable
         public bool SeasonBonusApplied { get; set; }
         // Aesir blessing expiries keyed by AesirOfferingTypes (1=Odin, 2=Tyr, 3=Frigg, 4=Thor).
         public Dictionary<int, DateTime> Blessings { get; set; } = new();
+        // Unlocked achievement names (UnlockAchievement RPC). HashSet for idempotency.
+        public HashSet<string> Achievements { get; set; } = new();
     }
 
     /// <summary>Read-only projection used by the leaderboard services.</summary>
@@ -923,6 +925,20 @@ public sealed class GameStore : IDisposable
         c.LastRealtimeUpdate = Now;
         c.Data = Pack(data);
         return (payWithOpals ? c.Opals : c.Silver, payWithOpals);
+    });
+
+    /// <summary>
+    /// Unlock an achievement for a character. Idempotent: re-unlocking an already
+    /// unlocked achievement is a no-op. Returns the character's current opal balance.
+    /// </summary>
+    public int UnlockAchievement(Guid owner, Guid characterId, string achievementName) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        if (!string.IsNullOrEmpty(achievementName))
+        {
+            c.Achievements.Add(achievementName);
+        }
+        return c.Opals;
     });
 
     public (bool IsAlive, DateTime? LastDeath, int AdsLeft) CheckCombatPet(Guid owner, Guid characterId, int petDefinitionId)

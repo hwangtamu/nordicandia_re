@@ -18,4 +18,10 @@ public sealed partial class UserServiceApiImpl
         Console.WriteLine($"[SEASON] metadata level={season.SeasonLevel} claimedRegular={season.ClaimedSeasonRewardsByLevel.Count} claimedPass={season.ClaimedSeasonPassRewardsByLevel.Count}");
         return UnaryResult.FromResult(new GetSeasonMetadataResponse { SeasonMetadata = season });
     }
+
+    public UnaryResult<UnlockAchievementResponse> UnlockAchievement(UnlockAchievementRequest req)
+    {
+        var newOpals = GameStore.Instance.UnlockAchievement(Owner, req.CharacterId, req.AchievementName);
+        return UnaryResult.FromResult(new UnlockAchievementResponse { NewOpals = newOpals });
+    }
 }
