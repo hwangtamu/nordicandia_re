@@ -445,21 +445,23 @@ public static class RealtimeGateway
             var payload = request.Metadata ?? new CharacterMetadataPayload();
             var gain = payload.BaseExperienceGained;
             if (double.IsNaN(gain) || double.IsInfinity(gain) || gain < 0) gain = 0;
-            // Cap a single client-reported batch to a generous ceiling; a legit idle sync is
-            // far below this, so it only stops absurd/negative values from corrupting state.
-            if (gain > 5_000_000) gain = 0;
+            // The client reports only the experience gained since its last sync, so a single
+            // batch can legitimately be large (a long idle window, or the 10x exp build: we
+            // kept rejecting >5M batches, so the client's unsynced total kept growing and was
+            // never applied). Only reject clearly absurd values.
+            if (gain > 1e12) gain = 0;
 
             State.GameStore.RealtimeProgress updated;
             lock (progressGate)
             {
-                var experience = progress.Experience + gain;
-                // Base the wallet on the *persisted* value, not this session's cache. A
-                // server-side spend (Aesir offering, merchant, currency RPC) lowers the
-                // stored balance while the cache still holds the pre-spend value; maxing
-                // against the cache would refund every purchase on the next periodic sync.
+                // Base both the experience and the wallet on the *persisted* value, not this
+                // session's cache. The cache can lag a server-side change (offline rewards,
+                // Aesir offering, merchant/currency RPC), and maxing against it would refund
+                // every purchase on the next periodic sync.
                 var stored = characterId is { } storedId
                     ? State.GameStore.Instance.GetRealtimeProgress(user.UserId, storedId)
                     : new State.GameStore.RealtimeProgress(0, 0, 0, default);
+                var experience = stored.Experience + gain;
                 var silver = Math.Max(stored.Silver, payload.LastSeenSilver);
                 var opals = Math.Max(stored.Opals, payload.LastSeenOpals);
                 var combat = new State.GameStore.CombatSnapshot(payload.Offense, payload.Defense, payload.Recovery,
