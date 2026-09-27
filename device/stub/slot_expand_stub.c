@@ -235,7 +235,7 @@ __attribute__((naked)) void hook_expand_skill_slot(void)
         "ldp x0, x1, [sp], #16\n"
         "ldp x19, x20, [sp], #16\n"  /* restore x19/x20 */
         "ldp x29, x30, [sp], #16\n"
-        "stp x19, x20, [sp, #64]\n"  /* execute skipped instruction */
+        "ldp x20, x19, [sp, #0x40]\n"  /* execute skipped epilogue instruction */
         "b EXPAND_SKILL_SLOT_RESUME\n"  /* PC-relative: ASLR-safe */
     );
 }
@@ -333,7 +333,7 @@ __attribute__((naked)) void hook_unlock_combat_pet(void)
         "ldp x0, x1, [sp], #16\n"
         "ldp x25, x26, [sp], #16\n"  /* restore x25 */
         "ldp x29, x30, [sp], #16\n"
-        "stp x25, x30, [sp, #-64]!\n"  /* execute skipped instruction */
+        "stp x30, x25, [sp, #-64]!\n"  /* execute skipped instruction (x30 first!) */
         "b UNLOCK_COMBAT_PET_RESUME\n"  /* PC-relative: ASLR-safe */
     );
 }
