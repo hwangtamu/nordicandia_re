@@ -23,12 +23,7 @@ public sealed partial class CharacterPowerServiceApiImpl
 
     public UnaryResult<AssignCharacterPassiveSkillTrainingResponse> AssignPassiveSkillTraining(AssignCharacterPassiveSkillTrainingRequest req)
     {
-        GameStore.Instance.ApplySkillAssignment(Owner, req.CharacterId, req.Skills, PowerSlotTypes.SkillTraining);
-        var now = DateTime.UtcNow;
-        var trainings = (req.Skills ?? new()).Select(s => new CharacterSkillTrainingEntry
-        {
-            PowerId = s.PowerId, TrainingStarted = now, TrainingEnds = now.AddMinutes(5), TrainingToLevel = 1,
-        }).ToList();
+        var trainings = GameStore.Instance.ApplySkillAssignment(Owner, req.CharacterId, req.Skills, PowerSlotTypes.SkillTraining);
         return UnaryResult.FromResult(new AssignCharacterPassiveSkillTrainingResponse { Success = true, SkillTrainings = trainings });
     }
 

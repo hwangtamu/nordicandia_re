@@ -1191,7 +1191,7 @@ public sealed class GameStore : IDisposable
     /// <summary>Persists a skill-bar / passive-tree assignment. The client sends the
     /// power's definition id and the slot index; the wire format the character uses stores
     /// an integer <c>PowerHashSafe</c>, resolved through <see cref="PowerCatalog"/>.</summary>
-    public void ApplySkillAssignment(Guid owner, Guid characterId, IList<CharacterSkillEntry> skills,
+    public List<CharacterSkillTrainingEntry> ApplySkillAssignment(Guid owner, Guid characterId, IList<CharacterSkillEntry> skills,
         SharedNet.Constants.Game.PowerSlotTypes slotType) => Change(s =>
     {
         var c = Owned(s, owner, characterId);
@@ -1200,6 +1200,7 @@ public sealed class GameStore : IDisposable
         data.Skills.Skills ??= new List<SerializedCharacterData.SerializedSkill>();
         data.Powers ??= new SerializedCharacterData.SerializedPowers { Powers = new() };
         data.Powers.Powers ??= new List<SerializedCharacterData.SerializedPower>();
+        var trainings = new List<CharacterSkillTrainingEntry>();
         int SlotIndex(SerializedCharacterData.SerializedSkill k) =>
             slotType == SharedNet.Constants.Game.PowerSlotTypes.SkillTraining ? k.Row : k.Column;
 
@@ -1225,15 +1226,35 @@ public sealed class GameStore : IDisposable
             existing.PowerHashSafe = info.HashSafe;
             if (slotType == SharedNet.Constants.Game.PowerSlotTypes.SkillTraining) existing.Row = entry.SkillSlot;
             else existing.Column = entry.SkillSlot;
-            if (!data.Powers.Powers.Any(p => p != null && p.PowerHashSafe == info.HashSafe))
-                data.Powers.Powers.Add(new SerializedCharacterData.SerializedPower
+            var power = data.Powers.Powers.FirstOrDefault(p => p != null && p.PowerHashSafe == info.HashSafe);
+            if (power == null)
+            {
+                power = new SerializedCharacterData.SerializedPower
                 {
                     PowerHash = info.HashSafe, PowerHashSafe = info.HashSafe, Power_Rank = 1,
                     Power_Masteries = new SerializedCharacterData.SerializedPowerMasteries { Masteries = new() },
+                };
+                data.Powers.Powers.Add(power);
+            }
+            // Passive training is time-gated client-side; persist the window so it can be
+            // resumed/collected after a relogin, and tell the client the level it will reach.
+            if (slotType == SharedNet.Constants.Game.PowerSlotTypes.SkillTraining)
+            {
+                var start = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                var end = start + 60;
+                power.Power_Training_Start = start;
+                power.Power_Training_End = end;
+                trainings.Add(new CharacterSkillTrainingEntry
+                {
+                    PowerId = entry.PowerId,
+                    TrainingStarted = DateTimeOffset.FromUnixTimeSeconds(start).UtcDateTime,
+                    TrainingEnds = DateTimeOffset.FromUnixTimeSeconds(end).UtcDateTime,
+                    TrainingToLevel = (int)power.Power_Rank + 1,
                 });
+            }
         }
         c.Data = Pack(data);
-        return true;
+        return trainings;
     });
 
     /// <summary>Buy a slot and persist the capacity in both wire representations.</summary>
