@@ -33,6 +33,8 @@ RANKUP = 0x2C6C63C
 RANKUP_RESUME = 0x2C6C640
 SERIALIZE = 0x2C6CEAC
 SERIALIZE_RESUME = 0x2C6CEB0
+START_TRAINING = 0x2C6C858
+START_TRAINING_RESUME = 0x2C6C85C
 ROOT = Path(__file__).resolve().parent.parent
 
 # Fixed libil2cpp 1.9.3 arm64 VAs the stub links against.
@@ -42,6 +44,8 @@ TARGETS = {
     'get_trained_rank': 0x2C6EA0C,
     'RANKUP_RESUME': RANKUP_RESUME,
     'SERIALIZE_RESUME': SERIALIZE_RESUME,
+    'START_TRAINING_RESUME': START_TRAINING_RESUME,
+    'living_powers_rankup': RANKUP,
 }
 
 
@@ -81,7 +85,8 @@ def apply(data, blob, syms):
         raise ValueError('skill-rank stub exceeds its reserved code cave')
     check_cave_fit(STUB_VA, len(blob), 'skill_rank')
     for name in ('rankup_trampoline', 'rankup_body_impl',
-                 'hook_living_powers_serialize', 'serialize_body_impl'):
+                 'hook_living_powers_serialize', 'serialize_body_impl',
+                 'hook_start_training', 'start_training_body_impl'):
         if not STUB_VA <= syms[name] < STUB_VA + len(blob):
             raise ValueError(f'{name} lies outside the compiled stub')
     if not STATE_VA <= syms['g_token'] < STATE_END:
@@ -94,6 +99,10 @@ def apply(data, blob, syms):
     if data[off:off + 4] != bytes.fromhex('ff0302d1'):   # sub sp, sp, #0x80
         raise ValueError(f'unexpected LivingPowers.Serialize prologue at {SERIALIZE:#x}')
     result[off:off + 4] = _b(SERIALIZE, syms['hook_living_powers_serialize'])
+    off = _off_for(segs, START_TRAINING)
+    if data[off:off + 4] != bytes.fromhex('ff4302d1'):   # sub sp, sp, #0x90
+        raise ValueError(f'unexpected LivingPowers.StartTraining prologue at {START_TRAINING:#x}')
+    result[off:off + 4] = _b(START_TRAINING, syms['hook_start_training'])
     _extend_rw_memsz(result, STATE_VA, STATE_END)
     off = _off_for(segs, STUB_VA)
     result[off:off + len(blob)] = blob
@@ -115,7 +124,8 @@ def build(source, output, artifacts=None):
                 shutil.copy2(item, artifacts / item.name)
         print(f'Injected skill-rank sync stub ({len(blob)} bytes) at {STUB_VA:#x}; '
               f'RankUp {RANKUP:#x} -> b {syms["rankup_trampoline"]:#x}; '
-              f'Serialize {SERIALIZE:#x} -> b {syms["hook_living_powers_serialize"]:#x}')
+              f'Serialize {SERIALIZE:#x} -> b {syms["hook_living_powers_serialize"]:#x}; '
+              f'StartTraining {START_TRAINING:#x} -> b {syms["hook_start_training"]:#x} (instant)')
 
 
 if __name__ == '__main__':

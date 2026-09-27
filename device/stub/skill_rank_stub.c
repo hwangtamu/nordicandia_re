@@ -348,6 +348,30 @@ __attribute__((naked)) void serialize_body_impl(void) {
     __asm__ volatile("sub sp,sp,#0x80\nb SERIALIZE_RESUME\n");
 }
 
+/* ---- instant passive training -------------------------------------------
+ * The client only grants a passive level from UISlotBase.Unassign, whose
+ * collect coroutine never completes on this build. Call the (patched) RankUp
+ * right after StartTraining so confirming a training grants the level at once;
+ * the RankUp hook then POSTs it, and the server persists Power_Rank. */
+extern void living_powers_rankup(ptr self, int hash);   /* 0x2C6C63C (patched) */
+
+__attribute__((naked)) void hook_start_training(void) {
+    __asm__ volatile(
+        "stp x19,x30,[sp,#-0x10]!\n"
+        "mov x19,x0\n"
+        "stp x1,x2,[sp,#-0x10]!\n"
+        "bl start_training_body_impl\n"
+        "ldp x1,x2,[sp],#0x10\n"
+        "mov x0,x19\n"
+        "bl living_powers_rankup\n"
+        "ldp x19,x30,[sp],#0x10\n"
+        "ret\n");
+}
+/* start_training_body_impl: reproduce 0x2C6C858 (sub sp,sp,#0x90) then resume. */
+__attribute__((naked)) void start_training_body_impl(void) {
+    __asm__ volatile("sub sp,sp,#0x90\nb START_TRAINING_RESUME\n");
+}
+
 int  skill_rank_stub_ready(void) { return g_ready; }
 int  skill_rank_stub_error(void) { return g_error; }
 int  skill_rank_stub_sent(void)  { return g_sent; }
