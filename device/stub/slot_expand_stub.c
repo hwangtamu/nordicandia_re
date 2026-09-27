@@ -416,13 +416,25 @@ void hook_combat_pet_progress_c(ptr self)
     http_post("/api/character/combat-pet-exp", json, n);
 }
 
-__attribute__((naked)) void hook_combat_pet_set_level(void)
+/* CombatPetMinion.SetPetParameters(this): the Game.CombatPet lives at [this+0x2B0].
+ * The CombatPet.set_Level/set_Experience setters are never called on exp gain, so
+ * this is the observable point where the pet's level/exp change. */
+void hook_combat_pet_params_c(ptr minion)
+{
+    if (!minion) return;
+    ptr pet = *(ptr *)((u8 *)minion + 0x2B0);
+    hook_combat_pet_progress_c(pet);
+}
+
+__attribute__((naked)) void hook_combat_pet_set_params(void)
 {
     __asm__ volatile(
         "stp x29, x30, [sp, #-16]!\n"
-        "str d0, [x0, #0x18]\n"   /* the replaced setter instruction */
-        "bl hook_combat_pet_progress_c\n"
+        "stp x0, x1, [sp, #-16]!\n"
+        "bl hook_combat_pet_params_c\n"
+        "ldp x0, x1, [sp], #16\n"
         "ldp x29, x30, [sp], #16\n"
-        "ret\n"
+        "str d8, [sp, #-0x40]!\n"   /* skipped first instruction */
+        "b COMBAT_PET_SET_PARAMS_RESUME\n"  /* PC-relative: ASLR-safe */
     );
 }

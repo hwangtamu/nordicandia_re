@@ -41,9 +41,10 @@ EXPAND_POTION_SLOT = 0x250EA90
 EXPAND_POTION_SLOT_RESUME = 0x250EA94
 UNLOCK_COMBAT_PET = 0x02E3DF40
 UNLOCK_COMBAT_PET_RESUME = 0x02E3DF44
-# Game.CombatPet.set_Level is a 2-instruction setter (`str d0,[x0,#0x18]; ret`);
-# fully replaced by a trampoline that also reports level/exp.
-COMBAT_PET_SET_LEVEL = 0x2C6638C
+# CombatPetMinion.set_Level/set_Experience setters are never called on exp gain;
+# CombatPetMinion.SetPetParameters(this) is (pet at [this+0x2B0]).
+COMBAT_PET_SET_PARAMS = 0x2A661D4
+COMBAT_PET_SET_PARAMS_RESUME = 0x2A661D8
 
 STUB_VA, STUB_END = 0x3459000, 0x345C9AB
 STATE_VA = 0x5DE8400  # .bss start (from linker script); end computed from ELF
@@ -97,6 +98,7 @@ TARGETS = {
     'EXPAND_SKILL_SLOT_RESUME': EXPAND_SKILL_SLOT_RESUME,
     'EXPAND_POTION_SLOT_RESUME': EXPAND_POTION_SLOT_RESUME,
     'UNLOCK_COMBAT_PET_RESUME': UNLOCK_COMBAT_PET_RESUME,
+    'COMBAT_PET_SET_PARAMS_RESUME': COMBAT_PET_SET_PARAMS_RESUME,
 }
 
 def build_stub(source, directory):
@@ -129,7 +131,7 @@ def apply(data, blob, syms, bss_end):
     check_cave_fit(STUB_VA, len(blob), 'slot_expand')
     
     # Verify hook entry points exist in syms
-    for name in ('hook_expand_skill_slot', 'hook_expand_potion_slot', 'hook_unlock_combat_pet', 'hook_combat_pet_set_level'):
+    for name in ('hook_expand_skill_slot', 'hook_expand_potion_slot', 'hook_unlock_combat_pet', 'hook_combat_pet_set_params'):
         if name not in syms:
             raise ValueError(f'{name} not found in stub symbols')
         if not STUB_VA <= syms[name] < STUB_VA + len(blob):
@@ -146,7 +148,7 @@ def apply(data, blob, syms, bss_end):
         (EXPAND_SKILL_SLOT, 'hook_expand_skill_slot'),
         (EXPAND_POTION_SLOT, 'hook_expand_potion_slot'),
         (UNLOCK_COMBAT_PET, 'hook_unlock_combat_pet'),
-        (COMBAT_PET_SET_LEVEL, 'hook_combat_pet_set_level'),
+        (COMBAT_PET_SET_PARAMS, 'hook_combat_pet_set_params'),
     ]:
         off = _off_for(segs, target_va)
         hook_va = syms[hook_name]
