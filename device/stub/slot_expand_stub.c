@@ -239,17 +239,23 @@ __attribute__((naked)) void hook_expand_skill_slot(void)
 
 void hook_expand_skill_slot_c(int skillSlotType, int cost)
 {
+    /* http_post() refreshes g_guid only after the JSON is built, so resolve it
+       first and copy it out (json[] scratch can sit next to g_guid in .bss).
+       Client SkillSlotType is 0-based; server enum uses 0 = Unknown. */
+    refresh_auth();
+    char guid[40];
+    int gi = 0; for (; gi < 39 && g_guid[gi]; gi++) guid[gi] = g_guid[gi]; guid[gi] = 0;
     /* Build JSON: {"characterId":"...","expandType":N,"opalCost":M} */
     static char json[256];
     int n = 0;
     const char *p1 = "{\"characterId\":\"";
     while (*p1) json[n++] = *p1++;
-    for (int i = 0; g_guid[i]; i++) json[n++] = g_guid[i];
+    for (int i = 0; guid[i]; i++) json[n++] = guid[i];
     const char *p2 = "\",\"expandType\":";
     while (*p2) json[n++] = *p2++;
     /* expandType decimal */
     char nb[12]; int nn = 0;
-    int t = skillSlotType; if (t==0) nb[nn++]='0';
+    int t = skillSlotType + 1; if (t==0) nb[nn++]='0';
     char rb[12]; int rn=0;
     while (t>0) { rb[rn++]='0'+t%10; t/=10; }
     while (rn>0) nb[nn++]=rb[--rn];
@@ -287,11 +293,14 @@ __attribute__((naked)) void hook_expand_potion_slot(void)
 
 void hook_expand_potion_slot_c(int cost)
 {
+    refresh_auth();
+    char guid[40];
+    int gi = 0; for (; gi < 39 && g_guid[gi]; gi++) guid[gi] = g_guid[gi]; guid[gi] = 0;
     static char json[256];
     int n = 0;
     const char *p1 = "{\"characterId\":\"";
     while (*p1) json[n++] = *p1++;
-    for (int i = 0; g_guid[i]; i++) json[n++] = g_guid[i];
+    for (int i = 0; guid[i]; i++) json[n++] = guid[i];
     const char *p2 = "\",\"opalCost\":";
     while (*p2) json[n++] = *p2++;
     char nb[12]; int nn=0; char rb[12]; int rn=0;
@@ -334,11 +343,14 @@ __attribute__((naked)) void hook_unlock_combat_pet(void)
 void hook_unlock_combat_pet_c(int petDefinitionIntegerId, int payWithOpals, int cost)
 {
     /* Build JSON: {"characterId":"...","payWithOpals":true,"combatPetDefinitionIntegerId":N,"cost":M} */
+    refresh_auth();
+    char guid[40];
+    int gi = 0; for (; gi < 39 && g_guid[gi]; gi++) guid[gi] = g_guid[gi]; guid[gi] = 0;
     static char json[256];
     int n = 0;
     const char *p1 = "{\"characterId\":\"";
     while (*p1) json[n++] = *p1++;
-    for (int i = 0; g_guid[i]; i++) json[n++] = g_guid[i];
+    for (int i = 0; guid[i]; i++) json[n++] = guid[i];
     const char *p2 = "\",\"payWithOpals\":";
     while (*p2) json[n++] = *p2++;
     const char *pb = payWithOpals ? "true" : "false";
