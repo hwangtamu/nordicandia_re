@@ -861,31 +861,25 @@ public sealed class GameStore : IDisposable
         [4] = 282, // AesirThorBuff
     };
 
-    /// <summary>Builds an Aesir blessing buff with its remaining duration encoded as the
-    /// <c>GameAttributeD.Buff_Duration</c> attribute (id 465, origin Buff). The client's
-    /// DeserializeBlessing reads this value and does <c>now + value</c>; with no value it
-    /// computed <c>now + 0</c>, so the blessing was treated as expired and its effect lost.</summary>
+    /// <summary>Match FinalizeAesirBuffOffline/Serialize on Android 1.9.3. Attribute
+    /// 166 is Buff_Duration; 465 is the scripted Buff_Duration_Total and cannot be
+    /// assigned directly. All values belong to the buff's own attribute map.</summary>
     private static SerializedCharacterData.SerializedBuff CreateBlessingBuff(int definitionIntegerId, double seconds)
     {
-        if (seconds < 0) seconds = 0;
-        Console.WriteLine($"[BLESS] def={definitionIntegerId} seconds={seconds:F0}");
+        seconds = Math.Max(0, seconds);
         return new SerializedCharacterData.SerializedBuff
         {
             DefinitionIntegerId = definitionIntegerId,
-            IsCharacterContext = true,
+            IsCharacterContext = false,
             Attributes = new SerializedAttributes
             {
                 Values = new()
                 {
-                    // The client's map lookup for Buff_Duration is origin-sensitive; set both the
-                    // buff and character origins so it finds the value either way.
                     [SharedNet.Constants.Game.AttributeOrigin.Buff] = new Dictionary<int, GameAttributeValue>
                     {
-                        [465] = new GameAttributeValue { Value = (int)seconds, ValueD = seconds },
-                    },
-                    [SharedNet.Constants.Game.AttributeOrigin.Character] = new Dictionary<int, GameAttributeValue>
-                    {
-                        [465] = new GameAttributeValue { Value = (int)seconds, ValueD = seconds },
+                        [166] = new GameAttributeValue { ValueD = seconds }, // Buff_Duration (seconds remaining)
+                        [279] = new GameAttributeValue { ValueD = 1 },       // Buff_Context_Hash
+                        [289] = new GameAttributeValue { ValueD = 6 },       // Buff_Context_Type
                     },
                 },
                 MultiplicativeValues = new(),
@@ -928,8 +922,8 @@ public sealed class GameStore : IDisposable
 
     /// <summary>Mirrors the active Aesir blessings onto the character's serialized buffs so the
     /// client re-applies them on login (the GetCurrentBlessings response alone does not survive a
-    /// relogin). Expired blessings are pruned; the buffs are attribute-free, so re-adding them is
-    /// idempotent.</summary>
+    /// relogin). Expired blessings are pruned; existing blessing entries are replaced, so repeated
+    /// logins neither duplicate buffs nor extend their stored expiry.</summary>
     private void EnsureBlessingBuffs(SavedCharacter c, SerializedCharacterData.SerializedData data)
     {
         data.Buffs ??= new SerializedCharacterData.SerializedBuffs();
