@@ -235,7 +235,7 @@ __attribute__((naked)) void hook_expand_skill_slot(void)
         "ldp x0, x1, [sp], #16\n"
         "ldp x19, x20, [sp], #16\n"  /* restore x19/x20 */
         "ldp x29, x30, [sp], #16\n"
-        "ldp x20, x19, [sp, #0x40]\n"  /* execute skipped epilogue instruction */
+        "str x30, [sp, #-0x50]!\n"  /* execute skipped instruction */
         "b EXPAND_SKILL_SLOT_RESUME\n"  /* PC-relative: ASLR-safe */
     );
 }
@@ -284,10 +284,7 @@ __attribute__((naked)) void hook_expand_potion_slot(void)
         "add sp, sp, #16\n"
         "ldp x0, x1, [sp], #16\n"
         "ldp x29, x30, [sp], #16\n"
-        /* Execute skipped adrp: x21 = 0x5BA9000 (x21 is caller-saved,
-           original function overwrites it immediately, no need to save) */
-        "movz x21, #0x9000\n"
-        "movk x21, #0x5ba, lsl #16\n"
+        "sub sp, sp, #0x90\n"  /* execute skipped instruction */
         "b EXPAND_POTION_SLOT_RESUME\n"  /* PC-relative: ASLR-safe */
     );
 }

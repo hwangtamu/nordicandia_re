@@ -2,9 +2,9 @@
 """Patch Android libil2cpp.so: hook *Offline slot-expansion methods to sync to server.
 
 Hooks:
-  SkillGrid.ExpandSkillSlotOffline(SkillSlotType, int cost)  0x25263C8
+  SkillGrid.ExpandSkillSlotOffline(SkillGrid*, SkillSlotType, int cost)  0x252A3C8
     -> POST /api/character/expand-skill-slots {characterId, expandType, opalCost}
-  InventoryGrid.ExpandPotionSlotOffline(int cost)            0x250AA90
+  InventoryGrid.ExpandPotionSlotOffline(InventoryGrid*, int cost)         0x250EA90
     -> POST /api/character/expand-potion-slots {characterId, opalCost}
 
 The client only has Offline variants which never call the server. Without this
@@ -32,11 +32,13 @@ def tool(name):
             return str(path)
     raise RuntimeError(f'{name} is required to build the slot-expand stub')
 
-# Real VAs (Il2CppInspectorRedux - 0x4000)
-EXPAND_SKILL_SLOT = 0x25263C8
-EXPAND_SKILL_SLOT_RESUME = 0x25263CC
-EXPAND_POTION_SLOT = 0x250AA90
-EXPAND_POTION_SLOT_RESUME = 0x250AA94
+# Real VAs resolved at runtime via il2cpp (Frida), NOT Il2CppInspector: the
+# inspector-derived constants were +0x4000 off (the old skill target 0x25263C8
+# is an epilogue, and the old potion target 0x250AA90 is a different function).
+EXPAND_SKILL_SLOT = 0x252A3C8
+EXPAND_SKILL_SLOT_RESUME = 0x252A3CC
+EXPAND_POTION_SLOT = 0x250EA90
+EXPAND_POTION_SLOT_RESUME = 0x250EA94
 UNLOCK_COMBAT_PET = 0x02E3DF40
 UNLOCK_COMBAT_PET_RESUME = 0x02E3DF44
 
