@@ -27,7 +27,7 @@ from pathlib import Path
 from patch_android_email_login import _read_symbols, _segments, _off_for, _b, check_cave_fit
 from patch_android_realtime import _extend_rw_memsz
 
-STUB_VA, STUB_END = 0x3457000, 0x345C9AC
+STUB_VA, STUB_END = 0x3457000, 0x3458000
 STATE_VA, STATE_END = 0x5DE8000, 0x5DE8400
 RANKUP = 0x2C6C63C
 RANKUP_RESUME = 0x2C6C640
@@ -58,8 +58,8 @@ def build_stub(source, directory):
     targets = dict(TARGETS)
     targets.update({k: v for k, v in syms.items() if k.startswith('il2cpp_')})
     stem = directory / 'skill_rank_stub'
-    subprocess.run([tool('clang'), '-target', 'aarch64-linux-gnu', '-O2', '-ffreestanding',
-                    '-fno-stack-protector', '-fno-pic', '-mno-outline-atomics',
+    subprocess.run([tool('clang'), '-target', 'aarch64-linux-gnu', '-Oz', '-ffreestanding',
+                    '-ffixed-x18', '-fno-stack-protector', '-fno-pic', '-mno-outline-atomics',
                     '-c', str(ROOT / 'device/stub/skill_rank_stub.c'),
                     '-o', str(stem.with_suffix('.o'))], check=True)
     subprocess.run([tool('ld.lld'), '-T', str(ROOT / 'device/stub/skill_rank_stub.ld'),

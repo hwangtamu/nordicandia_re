@@ -76,6 +76,8 @@ public sealed class GameStore : IDisposable
         public DateTime LastRealtimeUpdate { get; set; }
         // Guards the one-time +100% season experience bonus so repeated logins don't stack it.
         public bool SeasonBonusApplied { get; set; }
+        // v1.9.3 consumes slot capacity from character attributes, not account fields.
+        public bool SlotCapacitiesMigrated { get; set; }
         // Aesir blessing expiries keyed by AesirOfferingTypes (1=Odin, 2=Tyr, 3=Frigg, 4=Thor).
         public Dictionary<int, DateTime> Blessings { get; set; } = new();
         // Unlocked achievement names (UnlockAchievement RPC). HashSet for idempotency.
@@ -186,6 +188,29 @@ public sealed class GameStore : IDisposable
             && map != null && map.TryGetValue(id, out var value)) return value.ValueD;
         return null;
     }
+    // Verified on Android 1.9.3: GameAttributeMap.get_Item at 0x2A86F50;
+    // SkillGrid writes these ids at Character origin. SkillSlotRules caps are 6/3/3,
+    // StashRules.CanExpandPotionSlots caps at 3. Legacy account defaults were wrong.
+    private static void SyncSlotCapacities(SavedCharacter c, SerializedCharacterData.SerializedData data,
+        SerializedPlayerGameModeAccountData account)
+    {
+        int Capacity(int id, int initial, int maximum, int recorded, int legacyInitial)
+        {
+            var saved = (int)(GetAttribute(data, id) ?? initial);
+            var count = c.SlotCapacitiesMigrated ? Math.Max(saved, recorded)
+                : Math.Max(saved, initial + Math.Max(0L, (long)recorded - legacyInitial));
+            var value = (int)Math.Clamp(count, initial, maximum);
+            SetAttribute(data, id, value);
+            return value;
+        }
+        account.NumActiveSkillSlots = Capacity(45, 4, 6, account.NumActiveSkillSlots, 3);
+        account.NumPassiveSkillSlots = Capacity(56, 1, 3, account.NumPassiveSkillSlots, 3);
+        account.NumPassiveTrainingSlots = Capacity(49, 1, 3, account.NumPassiveTrainingSlots, 0);
+        account.NumPotionSlots = Capacity(44, 2, 3, account.NumPotionSlots, 2);
+        c.SlotCapacitiesMigrated = true;
+        c.GameModeAccount = Pack(account);
+    }
+
     public GameStore(string directory, TimeProvider clock = null)
     {
         this.clock = clock ?? TimeProvider.System;
@@ -340,9 +365,12 @@ public sealed class GameStore : IDisposable
             SetAttribute(data, AttrLevel, header.Level);
             var account = Defaults.Create<SerializedPlayerGameModeAccountData>();
             account.GameMode = req.CharacterGameMode; account.NumStashPages = 1; account.NumPrivateStashPages = 1;
-            account.NumActiveSkillSlots = 3; account.NumPassiveSkillSlots = 3; account.NumPotionSlots = 2;
+            account.NumActiveSkillSlots = (int)(GetAttribute(data, 45) ?? 4);
+            account.NumPassiveSkillSlots = (int)(GetAttribute(data, 56) ?? 1);
+            account.NumPassiveTrainingSlots = (int)(GetAttribute(data, 49) ?? 1);
+            account.NumPotionSlots = (int)(GetAttribute(data, 44) ?? 2);
             s.Characters.Add(id, new SavedCharacter { Owner = owner, Header = Pack(header), Data = Pack(data), GameModeAccount = Pack(account),
-                Experience = experience, SeasonBonusApplied = isSeason });
+                Experience = experience, SeasonBonusApplied = isSeason, SlotCapacitiesMigrated = true });
             return header;
         });
     }
@@ -390,6 +418,7 @@ public sealed class GameStore : IDisposable
         header.Level = Progression.LevelForExperience(character.Experience);
         character.Header = Pack(header);
         var data = Unpack<SerializedCharacterData.SerializedData>(character.Data);
+        SyncSlotCapacities(character, data, Unpack<SerializedPlayerGameModeAccountData>(character.GameModeAccount));
         SetAttribute(data, AttrLevel, header.Level);
         SetAttribute(data, AttrExperience, character.Experience);
         if (IsSeasonMode(header.GameMode))
@@ -1198,30 +1227,33 @@ public sealed class GameStore : IDisposable
         return true;
     });
 
-    /// <summary>Buys an extra skill slot (active / passive / passive-training) for opals.
-    /// This RPC used to be an unimplemented stub, so the client applied the purchase
-    /// locally and the slot silently vanished on the next login (the server re-sent the
-    /// old GameModeAccount). Deducts opals with the same balance check as merchant
-    /// purchases, bumps the matching slot counter on the per-game-mode account and
-    /// persists it.</summary>
+    /// <summary>Buy a slot and persist the capacity in both wire representations.</summary>
     public ExpandCharacterSkillSlotsResponse ExpandSkillSlots(Guid owner, Guid characterId,
         ExpandCharacterSkillSlotTypes expandType, int opalCost) => Change(s =>
     {
+        var (attribute, maximum) = expandType switch
+        {
+            ExpandCharacterSkillSlotTypes.Active => (45, 6),
+            ExpandCharacterSkillSlotTypes.Passive => (56, 3),
+            ExpandCharacterSkillSlotTypes.PassiveTraining => (49, 3),
+            _ => throw new RpcException(new Status(StatusCode.InvalidArgument, "Unknown skill slot type")),
+        };
         if (opalCost < 0)
             throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid opal cost"));
         var c = Owned(s, owner, characterId);
         if (c.Opals < opalCost)
             throw new RpcException(new Status(StatusCode.FailedPrecondition, "Not enough opals"));
-        c.Opals -= opalCost;
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
         var account = Unpack<SerializedPlayerGameModeAccountData>(c.GameModeAccount);
-        int newNumSlots = expandType switch
-        {
-            ExpandCharacterSkillSlotTypes.Active => ++account.NumActiveSkillSlots,
-            ExpandCharacterSkillSlotTypes.Passive => ++account.NumPassiveSkillSlots,
-            ExpandCharacterSkillSlotTypes.PassiveTraining => ++account.NumPassiveTrainingSlots,
-            _ => throw new RpcException(new Status(StatusCode.InvalidArgument, "Unknown skill slot type")),
-        };
-        c.GameModeAccount = Pack(account);
+        SyncSlotCapacities(c, data, account);
+        var current = (int)GetAttribute(data, attribute).Value;
+        if (current >= maximum)
+            throw new RpcException(new Status(StatusCode.FailedPrecondition, "All slots are unlocked"));
+        int newNumSlots = current + 1;
+        SetAttribute(data, attribute, newNumSlots);
+        SyncSlotCapacities(c, data, account);
+        c.Data = Pack(data);
+        c.Opals -= opalCost;
         Console.WriteLine($"[SKILL] character={characterId} expand={expandType} cost={opalCost} slots={newNumSlots} opals={c.Opals}");
         return new ExpandCharacterSkillSlotsResponse { NewOpals = c.Opals, NewNumSlots = newNumSlots };
     });
@@ -1263,13 +1295,17 @@ public sealed class GameStore : IDisposable
     {
         if (opalCost < 0)
             throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid opal cost"));
-        if (expandType == ExpandInventoryRowType.Unknown)
+        if (expandType is not (ExpandInventoryRowType.Inventory or ExpandInventoryRowType.PetLoot
+            or ExpandInventoryRowType.CraftingInventory or ExpandInventoryRowType.Potions))
             throw new RpcException(new Status(StatusCode.InvalidArgument, "Unknown inventory row type"));
         var c = Owned(s, owner, characterId);
         if (c.Opals < opalCost)
             throw new RpcException(new Status(StatusCode.FailedPrecondition, "Not enough opals"));
-        c.Opals -= opalCost;
         var account = Unpack<SerializedPlayerGameModeAccountData>(c.GameModeAccount);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        SyncSlotCapacities(c, data, account);
+        if (expandType == ExpandInventoryRowType.Potions && account.NumPotionSlots >= 3)
+            throw new RpcException(new Status(StatusCode.FailedPrecondition, "All potion slots are unlocked"));
         int newNumRows = expandType switch
         {
             ExpandInventoryRowType.Inventory => ++account.NumInventoryRows,
@@ -1278,7 +1314,10 @@ public sealed class GameStore : IDisposable
             ExpandInventoryRowType.Potions => ++account.NumPotionSlots,
             _ => throw new RpcException(new Status(StatusCode.InvalidArgument, "Unknown inventory row type")),
         };
+        if (expandType == ExpandInventoryRowType.Potions) SetAttribute(data, 44, newNumRows);
+        c.Data = Pack(data);
         c.GameModeAccount = Pack(account);
+        c.Opals -= opalCost;
         Console.WriteLine($"[STASH] character={characterId} rows={expandType} cost={opalCost} newRows={newNumRows} opals={c.Opals}");
         return new ExpandCharacterInventoryRowResponse { NewOpals = c.Opals, NewNumRows = newNumRows };
     });

@@ -39,3 +39,5 @@ try
     using (var store = new GameStore(directory)) Check(store.GetUserByAuthToken(auth) == null, "orphaned session rejected");
 }
 finally { Directory.Delete(directory, true); }
+
+SlotPersistenceTests.Run();

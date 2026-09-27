@@ -1,8 +1,8 @@
 /* Skill/Potion Slot expansion -> server sync (client side, plain HTTP POST).
  *
  * The shipped Android client only has *Offline variants:
- *   SkillGrid.ExpandSkillSlotOffline(SkillSlotType, int cost)      0x25263C8
- *   InventoryGrid.ExpandPotionSlotOffline(int cost)                0x250AA90
+ *   SkillGrid.ExpandSkillSlotOffline(SkillSlotType, int cost)      0x252A3C8
+ *   InventoryGrid.ExpandPotionSlotOffline(int cost)                0x250EA90
  * These update local state without calling the server, so purchased slots
  * vanish on next login (server re-sends old GameModeAccount).
  *
@@ -90,7 +90,8 @@ static ptr find_class(const char *ns, const char *name)
 static void refresh_auth(void)
 {
     /* Dynamic via metadata (same as skill-rank stub v9) */
-    if (g_ready) return;
+    g_ready = 0;
+    g_token[0] = g_guid[0] = 0;
     g_ns_class = find_class("Nordicandia.Client.Net", "NetSession");
     g_nc_class = find_class("Client.Net", "NetClient");
     if (!g_ns_class || !g_nc_class) { g_error = 1; return; }
@@ -147,11 +148,13 @@ static void refresh_auth(void)
 /* Minimal HTTP POST, returns HTTP status code or -1 */
 static int http_post(const char *path, const char *json, int json_len)
 {
-    refresh_auth();
     if (!g_ready) return -1;
 
     long fd = sc(SYS_socket, 2, 1, 0, 0, 0, 0); /* AF_INET, SOCK_STREAM */
     if (fd < 0) return -1;
+    long timeout[2] = {2, 0};
+    sc(SYS_setsockopt, fd, 1, 20, (long)timeout, sizeof(timeout), 0);
+    sc(SYS_setsockopt, fd, 1, 21, (long)timeout, sizeof(timeout), 0);
 
     u8 addr[16] = {0};
     *(u16 *)addr = 2; /* AF_INET */
@@ -185,7 +188,7 @@ static int http_post(const char *path, const char *json, int json_len)
 
     long sent = 0;
     while (sent < n) {
-        long r = sc(SYS_sendto, fd, (long)(req + sent), n - sent, 0, 0, 0);
+        long r = sc(SYS_sendto, fd, (long)(req + sent), n - sent, 0x4000, 0, 0);
         if (r <= 0) break;
         sent += r;
     }
@@ -216,9 +219,7 @@ static int http_post(const char *path, const char *json, int json_len)
  * instruction replaced by branch here). We POST then jump to RESUME.
  * The stub is position-independent; RESUME addr is patched in by the patcher.
  *
- * IMPORTANT: The skipped first instruction is `stp x19, x20, [sp, #64]`.
- * We must save x19/x20 at entry and execute the stp before RESUME,
- * otherwise the function's epilogue will load garbage.
+ * IMPORTANT: The skipped first instruction is `str x30, [sp, #-0x50]!`.
  */
 __attribute__((naked)) void hook_expand_skill_slot(void)
 {
@@ -273,9 +274,7 @@ void hook_expand_skill_slot_c(int skillSlotType, int cost)
 /* Hook entry for ExpandPotionSlotOffline(InventoryGrid*, int cost)
  * ARM64: x0=this, w1=cost.
  *
- * IMPORTANT: The skipped first instruction is `adrp x21, #13983`
- * (x21 = 0x5BA9000). We must set x21 correctly before RESUME,
- * otherwise the function will use a wrong pointer.
+ * IMPORTANT: The skipped first instruction is `sub sp, sp, #0x90`.
  */
 __attribute__((naked)) void hook_expand_potion_slot(void)
 {
@@ -316,7 +315,7 @@ void hook_expand_potion_slot_c(int cost)
  * ARM64: w0=petId, w1=payWithOpals, w2=cost, x3=newCurrencyValue. Static method.
  * Real VA 0x02E3DF40 (inspector VA, no -0x4000 adjustment for this range).
  *
- * IMPORTANT: The skipped first instruction is `stp x25, x30, [sp, #-64]!`.
+ * IMPORTANT: The skipped first instruction is `stp x30, x25, [sp, #-64]!`.
  * We must save x25 at entry and execute the stp before RESUME.
  */
 __attribute__((naked)) void hook_unlock_combat_pet(void)

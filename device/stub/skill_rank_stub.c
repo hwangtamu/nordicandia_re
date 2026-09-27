@@ -100,6 +100,7 @@ static void refresh_auth(void)
     /* Fully dynamic via metadata: the hardcoded sessiondto_get_authtoken VA
      * (0x0279C8B8) reads the wrong field -> server 401. Resolve the real
      * get_AuthToken from the SessionDto class at runtime. */
+    g_token[0] = 0;
     ptr exc = 0;
     if (!g_ns_class) g_ns_class = find_class("Nordicandia.Client.Net", "NetSession");
     if (g_ns_class && !g_ns_current_mi)
@@ -217,7 +218,8 @@ static int report(int hash, int rank)
     if (!g_token[0] || !g_guid[0]) { g_error = 20; return 0; }
     #define BCAT(s) do { const char *_s = (s); while (*_s && n < (int)sizeof(body) - 1) body[n++] = *_s++; } while (0)
     BCAT("{\"characterId\":\""); BCAT(g_guid);
-    BCAT("\",\"powerHashSafe\":"); { int v = hash, d = 0; char t[12];
+    BCAT("\",\"powerHashSafe\":"); { long v = hash; int d = 0; char t[12];
+        if (v < 0) { body[n++] = '-'; v = -v; }
         if (v == 0) t[d++] = '0'; while (v > 0) { t[d++] = (char)('0' + v % 10); v /= 10; }
         for (int i = d - 1; i >= 0; i--) body[n++] = t[i]; }
     BCAT(",\"newRank\":"); { int v = rank, d = 0; char t[12];
@@ -226,6 +228,7 @@ static int report(int hash, int rank)
     BCAT("}");
     body[n] = 0;
     http_post("/api/character/skill-rank", body, n);
+    if (g_dbg[3] != 200) return 0;
     g_sent++;
     return 1;
 }
@@ -248,14 +251,15 @@ void rankup_leave(void)
 __attribute__((naked)) void rankup_trampoline(void) {
     __asm__ volatile(
         "stp x0,x1,[sp,#-0x20]!\n"
-        "str x30,[sp,#0x10]\n"
+        "stp x2,x30,[sp,#0x10]\n"
         "bl rankup_enter\n"
-        "ldr x30,[sp,#0x10]\n"
-        "ldp x0,x1,[sp],#0x20\n"
+        "ldp x0,x1,[sp]\n"
+        "ldr x2,[sp,#0x10]\n"
+        /* Keep the caller's LR in our frame while the original body runs. */
         "bl rankup_body_impl\n"
-        "stp x0,x30,[sp,#-0x10]!\n"
         "bl rankup_leave\n"
-        "ldp x0,x30,[sp],#0x10\n"
+        "ldr x30,[sp,#0x18]\n"
+        "add sp,sp,#0x20\n"
         "ret\n");
 }
 /* rankup_body_impl: reproduce 0x2C6C63C (sub sp,sp,#0x90) then resume. */

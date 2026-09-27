@@ -108,7 +108,7 @@ def build_stub(source, directory):
     targets.update({k: v for k, v in syms.items() if k.startswith('il2cpp_')})
     stem = directory / 'slot_expand_stub'
     subprocess.run([tool('clang'), '-target', 'aarch64-linux-gnu', '-Os', '-ffreestanding',
-                    '-fno-stack-protector', '-fno-pic', '-mno-outline-atomics',
+                    '-ffixed-x18', '-fno-stack-protector', '-fno-pic', '-mno-outline-atomics',
                     '-c', str(ROOT / 'device/stub/slot_expand_stub.c'),
                     '-o', str(stem.with_suffix('.o'))], check=True)
     subprocess.run([tool('ld.lld'), '-T', str(ROOT / 'device/stub/slot_expand_stub.ld'),
