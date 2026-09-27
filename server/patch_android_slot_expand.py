@@ -45,6 +45,13 @@ UNLOCK_COMBAT_PET_RESUME = 0x02E3DF44
 # CombatPetMinion.SetPetParameters(this) is (pet at [this+0x2B0]).
 COMBAT_PET_SET_PARAMS = 0x2A661D4
 COMBAT_PET_SET_PARAMS_RESUME = 0x2A661D8
+# Aesir offering: the client applies it through the offline path
+# (WindowAesirOffering.MakeOfferingOffline) and never calls MakeOffering, so we
+# capture the size from PromptOfferingPurchase and POST the offering ourselves.
+PROMPT_OFFERING = 0x255EC54
+PROMPT_OFFERING_RESUME = 0x255EC58
+MAKE_OFFERING = 0x255F2BC
+MAKE_OFFERING_RESUME = 0x255F2C0
 
 STUB_VA, STUB_END = 0x3459000, 0x345C9AB
 STATE_VA = 0x5DE8400  # .bss start (from linker script); end computed from ELF
@@ -99,6 +106,8 @@ TARGETS = {
     'EXPAND_POTION_SLOT_RESUME': EXPAND_POTION_SLOT_RESUME,
     'UNLOCK_COMBAT_PET_RESUME': UNLOCK_COMBAT_PET_RESUME,
     'COMBAT_PET_SET_PARAMS_RESUME': COMBAT_PET_SET_PARAMS_RESUME,
+    'PROMPT_OFFERING_RESUME': PROMPT_OFFERING_RESUME,
+    'MAKE_OFFERING_RESUME': MAKE_OFFERING_RESUME,
 }
 
 def build_stub(source, directory):
@@ -131,7 +140,7 @@ def apply(data, blob, syms, bss_end):
     check_cave_fit(STUB_VA, len(blob), 'slot_expand')
     
     # Verify hook entry points exist in syms
-    for name in ('hook_expand_skill_slot', 'hook_expand_potion_slot', 'hook_unlock_combat_pet', 'hook_combat_pet_set_params'):
+    for name in ('hook_expand_skill_slot', 'hook_expand_potion_slot', 'hook_unlock_combat_pet', 'hook_combat_pet_set_params', 'hook_prompt_offering', 'hook_make_offering'):
         if name not in syms:
             raise ValueError(f'{name} not found in stub symbols')
         if not STUB_VA <= syms[name] < STUB_VA + len(blob):
@@ -149,6 +158,8 @@ def apply(data, blob, syms, bss_end):
         (EXPAND_POTION_SLOT, 'hook_expand_potion_slot'),
         (UNLOCK_COMBAT_PET, 'hook_unlock_combat_pet'),
         (COMBAT_PET_SET_PARAMS, 'hook_combat_pet_set_params'),
+        (PROMPT_OFFERING, 'hook_prompt_offering'),
+        (MAKE_OFFERING, 'hook_make_offering'),
     ]:
         off = _off_for(segs, target_va)
         hook_va = syms[hook_name]

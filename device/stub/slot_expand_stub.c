@@ -437,3 +437,67 @@ __attribute__((naked)) void hook_combat_pet_set_params(void)
         "b COMBAT_PET_SET_PARAMS_RESUME\n"  /* PC-relative: ASLR-safe */
     );
 }
+
+/* ---- Aesir offering -> server sync ----------------------------------------
+ * The client applies Aesir offerings through the OFFLINE path
+ * (WindowAesirOffering.MakeOfferingOffline) and never calls the MakeOffering
+ * gRPC, so the blessing was applied locally only and vanished on relogin.
+ * Capture the size from PromptOfferingPurchase, then POST the offering when it
+ * is applied so GameStore.MakeOffering persists the blessing expiry.
+ *   PromptOfferingPurchase(this, int offeringSize, int offeringType) 0x255EC54
+ *   MakeOfferingOffline(this, int offeringType, int offeredOpals)    0x255F2BC */
+static int g_offering_size;
+
+void prompt_offering_c(int size) { g_offering_size = size; }
+
+void make_offering_c(int type, int opals)
+{
+    refresh_auth();
+    char guid[40];
+    int gi = 0; for (; gi < 39 && g_guid[gi]; gi++) guid[gi] = g_guid[gi]; guid[gi] = 0;
+    static char json[192];
+    int n = 0;
+    const char *p1 = "{\"characterId\":\"";
+    while (*p1) json[n++] = *p1++;
+    for (int i = 0; guid[i]; i++) json[n++] = guid[i];
+    const char *p2 = "\",\"offeringType\":";
+    while (*p2) json[n++] = *p2++;
+    n += fmt_i64(json + n, type);
+    const char *p3 = ",\"offeringSize\":";
+    while (*p3) json[n++] = *p3++;
+    n += fmt_i64(json + n, g_offering_size);
+    const char *p4 = ",\"offeredOpals\":";
+    while (*p4) json[n++] = *p4++;
+    n += fmt_i64(json + n, opals);
+    json[n++] = '}'; json[n] = 0;
+    http_post("/api/character/make-offering", json, n);
+}
+
+__attribute__((naked)) void hook_prompt_offering(void)
+{
+    __asm__ volatile(
+        "stp x29, x30, [sp, #-16]!\n"
+        "stp x0, x1, [sp, #-16]!\n"
+        "mov w0, w1\n"              /* offeringSize */
+        "bl prompt_offering_c\n"
+        "ldp x0, x1, [sp], #16\n"
+        "ldp x29, x30, [sp], #16\n"
+        "sub sp, sp, #0x80\n"       /* skipped first instruction */
+        "b PROMPT_OFFERING_RESUME\n");
+}
+
+__attribute__((naked)) void hook_make_offering(void)
+{
+    __asm__ volatile(
+        "stp x29, x30, [sp, #-16]!\n"
+        "stp x0, x1, [sp, #-16]!\n"
+        "stp x2, x3, [sp, #-16]!\n"
+        "mov w0, w1\n"              /* offeringType */
+        "mov w1, w2\n"              /* offeredOpals */
+        "bl make_offering_c\n"
+        "ldp x2, x3, [sp], #16\n"
+        "ldp x0, x1, [sp], #16\n"
+        "ldp x29, x30, [sp], #16\n"
+        "sub sp, sp, #0x90\n"       /* skipped first instruction */
+        "b MAKE_OFFERING_RESUME\n");
+}
