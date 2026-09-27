@@ -38,6 +38,14 @@ internal static class PetUnlockHttp
         public int Cost { get; set; }
     }
 
+    public sealed class CombatPetExpRequest
+    {
+        public Guid CharacterId { get; set; }
+        public int CombatPetDefinitionIntegerId { get; set; }
+        public double Level { get; set; }
+        public double Experience { get; set; }
+    }
+
     public static void MapPetUnlockJson(this WebApplication app)
     {
         app.MapPost("/api/character/unlock-pet", (UnlockPetRequest req, HttpContext ctx) =>
@@ -95,6 +103,35 @@ internal static class PetUnlockHttp
                     StatusCode.InvalidArgument => Results.BadRequest(ex.Status.Detail),
                     StatusCode.NotFound => Results.NotFound(ex.Status.Detail),
                     StatusCode.FailedPrecondition => Results.Conflict(ex.Status.Detail),
+                    _ => Results.Json(new { error = ex.Status.Detail }, Json, statusCode: 500),
+                };
+            }
+        });
+        app.MapPost("/api/character/combat-pet-exp", (CombatPetExpRequest req, HttpContext ctx) =>
+        {
+            Guid owner;
+            try
+            {
+                owner = GameStore.Instance.RequireUser(ctx.Request.Headers["authorization"].FirstOrDefault());
+            }
+            catch (RpcException ex) when (ex.StatusCode == StatusCode.Unauthenticated)
+            {
+                return Results.Unauthorized();
+            }
+
+            if (req == null) return Results.BadRequest("missing body");
+            try
+            {
+                GameStore.Instance.SaveCombatPetProgress(owner, req.CharacterId,
+                    req.CombatPetDefinitionIntegerId, req.Level, req.Experience);
+                return Results.Json(new { ok = true }, Json);
+            }
+            catch (RpcException ex)
+            {
+                return ex.StatusCode switch
+                {
+                    StatusCode.InvalidArgument => Results.BadRequest(ex.Status.Detail),
+                    StatusCode.NotFound => Results.NotFound(ex.Status.Detail),
                     _ => Results.Json(new { error = ex.Status.Detail }, Json, statusCode: 500),
                 };
             }

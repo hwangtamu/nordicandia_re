@@ -372,3 +372,57 @@ void hook_unlock_combat_pet_c(int petDefinitionIntegerId, int payWithOpals, int 
     json[n++]='}'; json[n]=0;
     http_post("/api/character/unlock-combat-pet", json, n);
 }
+
+/* ---- combat pet level/experience persistence ------------------------- */
+/* Game.CombatPet fields: DefinitionId@0x10, Level@0x18 (double), Experience@0x20 (double).
+ * The setters are 2 instructions (`str d0,[x0,#off]; ret`); replace them entirely
+ * with a trampoline that applies the store, reports to the server, and returns. */
+static int fmt_i64(char *out, long v)
+{
+    char tmp[24]; int d = 0; int neg = 0;
+    if (v < 0) { neg = 1; v = -v; }
+    if (v == 0) tmp[d++] = '0';
+    while (v > 0) { tmp[d++] = (char)('0' + v % 10); v /= 10; }
+    int n = 0; if (neg) out[n++] = '-';
+    while (d > 0) out[n++] = tmp[--d];
+    return n;
+}
+
+void hook_combat_pet_progress_c(ptr self)
+{
+    if (!self) return;
+    int defId = *(int *)((u8 *)self + 0x10);
+    if (defId <= 0) return;
+    long level = (long)*(double *)((u8 *)self + 0x18);
+    long exp = (long)*(double *)((u8 *)self + 0x20);
+    refresh_auth();
+    char guid[40];
+    int gi = 0; for (; gi < 39 && g_guid[gi]; gi++) guid[gi] = g_guid[gi]; guid[gi] = 0;
+    static char json[192];
+    int n = 0;
+    const char *p1 = "{\"characterId\":\"";
+    while (*p1) json[n++] = *p1++;
+    for (int i = 0; guid[i]; i++) json[n++] = guid[i];
+    const char *p2 = "\",\"combatPetDefinitionIntegerId\":";
+    while (*p2) json[n++] = *p2++;
+    n += fmt_i64(json + n, defId);
+    const char *p3 = ",\"level\":";
+    while (*p3) json[n++] = *p3++;
+    n += fmt_i64(json + n, level);
+    const char *p4 = ",\"experience\":";
+    while (*p4) json[n++] = *p4++;
+    n += fmt_i64(json + n, exp);
+    json[n++] = '}'; json[n] = 0;
+    http_post("/api/character/combat-pet-exp", json, n);
+}
+
+__attribute__((naked)) void hook_combat_pet_set_level(void)
+{
+    __asm__ volatile(
+        "stp x29, x30, [sp, #-16]!\n"
+        "str d0, [x0, #0x18]\n"   /* the replaced setter instruction */
+        "bl hook_combat_pet_progress_c\n"
+        "ldp x29, x30, [sp], #16\n"
+        "ret\n"
+    );
+}

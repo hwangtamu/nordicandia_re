@@ -901,6 +901,32 @@ public sealed class GameStore : IDisposable
         return true;
     });
 
+    /// <summary>Persists a combat pet's locally-earned level/experience. The shipped
+    /// client only mutates the pet in memory, so without this the pet reset to the
+    /// server's stored level on the next login.</summary>
+    public void SaveCombatPetProgress(Guid owner, Guid characterId, int combatPetDefinitionIntegerId,
+        double level, double experience) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        var pets = EnsureCombatPets(data);
+        var pet = pets.CombatPets.FirstOrDefault(p => p != null && p.DefinitionIntegerId == combatPetDefinitionIntegerId);
+        if (pet == null)
+        {
+            pet = new SerializedCharacterData.SerializedCombatPet
+            {
+                DefinitionIntegerId = combatPetDefinitionIntegerId,
+                IsAlive = true,
+            };
+            pets.CombatPets.Add(pet);
+        }
+        if (level > 0 && !double.IsNaN(level) && !double.IsInfinity(level)) pet.Level = level;
+        if (experience >= 0 && !double.IsNaN(experience) && !double.IsInfinity(experience)) pet.Experience = experience;
+        c.Data = Pack(data);
+        Console.WriteLine($"[COMPET] character={characterId} pet={combatPetDefinitionIntegerId} level={pet.Level:F0} exp={pet.Experience:F0}");
+        return true;
+    });
+
     public (int NewCurrency, bool PayWithOpals) UnlockCombatPet(Guid owner, Guid characterId, bool payWithOpals, int combatPetDefinitionIntegerId, int cost) => Change(s =>
     {
         var c = Owned(s, owner, characterId);
