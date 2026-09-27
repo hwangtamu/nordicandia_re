@@ -116,25 +116,22 @@ def apply(data, blob, syms, bss_end):
     check_cave_fit(STUB_VA, len(blob), 'slot_expand')
     
     # Verify hook entry points exist in syms
-    for name in ('hook_expand_skill_slot', 'hook_expand_potion_slot'):
+    for name in ('hook_expand_skill_slot', 'hook_expand_potion_slot', 'hook_unlock_combat_pet'):
         if name not in syms:
             raise ValueError(f'{name} not found in stub symbols')
         if not STUB_VA <= syms[name] < STUB_VA + len(blob):
             raise ValueError(f'{name} lies outside the compiled stub')
-    
-    # Patch the RESUME placeholders in the stub
-    # The stub has .quad 0 placeholders after each hook's branch.
-    # We need to find them and patch with RESUME VAs.
-    # The naked functions end with:
-    #   ldr x16, 0f; br x16; 0: .quad 0
-    # We'll search the blob for the pattern and patch.
-    #
-    # Actually, simpler: the linker script places the functions, and we can
-    # compute the placeholder location as: syms[name] + offset_to_placeholder.
-    # But we don't know the offset. Let's search for the pattern in the blob.
-    
-    # Pattern: 0x58000050 (ldr x16, [pc, #8]), 0xD61F0200 (br x16), followed by 8 zero bytes
-    import re
+
+    # Place the (unpatched) blob in the cave FIRST.  The RESUME placeholders live
+    # inside this blob, so they must be patched *after* the blob is in `result`;
+    # patching before the injection would be overwritten by the blob and every
+    # trampoline would `br x16` to address 0 (the v12/v13/v14 SIGSEGV).
+    off = _off_for(segs, STUB_VA)
+    result[off:off+len(blob)] = blob
+
+    # Patch the RESUME placeholders in the injected blob.
+    # Pattern: 0x58000050 (ldr x16, [pc, #8]), 0xD61F0200 (br x16), 8 zero bytes
+    # (the linker-time `.quad 0` placeholder the trampoline branches to).
     pattern = struct.pack('<IIQ', 0x58000050, 0xD61F0200, 0)
     resumes = [EXPAND_SKILL_SLOT_RESUME, EXPAND_POTION_SLOT_RESUME, UNLOCK_COMBAT_PET_RESUME]
     idx = 0
@@ -142,17 +139,14 @@ def apply(data, blob, syms, bss_end):
         pos = blob.find(pattern, idx)
         if pos < 0:
             raise ValueError(f'Could not find trampoline placeholder {i}')
-        # Patch the .quad (8 bytes at pos+8)
-        struct.pack_into('<Q', result, _off_for(segs, STUB_VA) + pos + 8, resume_va)
+        struct.pack_into('<Q', result, off + pos + 8, resume_va)
         print(f'Patched resume {i} -> {resume_va:#x}')
         idx = pos + 16
-    
+    # Sanity: the pet trampoline (last placeholder) must no longer be zero.
+    if struct.unpack_from('<Q', result, off + idx - 8)[0] == 0:
+        raise ValueError('resume placeholder patch did not take')
+
     # Install hooks: overwrite first instruction of each target with branch to stub
-    # Verify prologues first
-    # ExpandSkillSlotOffline prologue: need to check what it is
-    # For now, we'll just install without verification (risky but let's try)
-    # TODO: Add prologue verification
-    
     for target_va, hook_name in [
         (EXPAND_SKILL_SLOT, 'hook_expand_skill_slot'),
         (EXPAND_POTION_SLOT, 'hook_expand_potion_slot'),
@@ -162,14 +156,10 @@ def apply(data, blob, syms, bss_end):
         hook_va = syms[hook_name]
         result[off:off+4] = _b(target_va, hook_va)
         print(f'Hooked {target_va:#x} -> {hook_name} at {hook_va:#x}')
-    
-    # Place blob in cave
-    off = _off_for(segs, STUB_VA)
-    result[off:off+len(blob)] = blob
-    
+
     # Extend RW for .bss
     _extend_rw_memsz(result, STATE_VA, bss_end)
-    
+
     return bytes(result)
 
 def build(source, output, artifacts=None):

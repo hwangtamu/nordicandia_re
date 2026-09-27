@@ -81,6 +81,7 @@ app.MapMagicOnionService();
 app.MapLeaderboardJson();
 app.MapSkillRankJson();
 app.MapPetUnlockJson();
+app.MapExpandJson();
 app.MapGet("/", () => "Nordicandia private server (MagicOnion 5.1.8)");
 app.MapGet("/healthz", () => Results.Ok(new { status = "ok" }));
 
