@@ -41,8 +41,31 @@ UNLOCK_COMBAT_PET = 0x02E3DF40
 UNLOCK_COMBAT_PET_RESUME = 0x02E3DF44
 
 STUB_VA, STUB_END = 0x3459000, 0x345C9AB
-STATE_VA, STATE_END = 0x5DE8400, 0x5DE8800
+STATE_VA = 0x5DE8400  # .bss start (from linker script); end computed from ELF
 ROOT = Path(__file__).resolve().parent.parent
+
+def _bss_end(elf: Path) -> int:
+    """Read .bss section end address from ELF section headers."""
+    import struct
+    data = elf.read_bytes()
+    if data[:4] != b"\x7fELF":
+        raise ValueError(f"{elf} is not an ELF file")
+    shoff = struct.unpack_from("<Q", data, 0x28)[0]
+    shentsize, shnum, shstrndx = struct.unpack_from("<HHH", data, 0x3A)
+    # Get section header string table
+    o = shoff + shstrndx * shentsize
+    str_off = struct.unpack_from("<Q", data, o + 24)[0]
+    for i in range(shnum):
+        o = shoff + i * shentsize
+        name_idx, typ, flags, addr, off, size = struct.unpack_from("<IIQQQQ", data, o)
+        # Get section name
+        name_end = data.index(b"\x00", str_off + name_idx)
+        name = data[str_off + name_idx:name_end].decode()
+        if name == ".bss":
+            # Page-align up
+            end = addr + size
+            return (end + 0xFFF) & ~0xFFF
+    raise ValueError("No .bss section found in ELF")
 
 # We need the il2cpp API addresses; they resolve dynamically in the stub,
 # but the stub references them as extern. We'll use --defsym to provide them.
@@ -81,9 +104,11 @@ def build_stub(source, directory):
                     str(stem.with_suffix('.bin'))], check=True)
     blob = stem.with_suffix('.bin').read_bytes()
     elf_syms = _read_symbols(stem.with_suffix('.elf'))
-    return blob, elf_syms
+    bss_end = _bss_end(stem.with_suffix('.elf'))
+    print(f'Stub .bss ends at {bss_end:#x} (page-aligned)')
+    return blob, elf_syms, bss_end
 
-def apply(data, blob, syms):
+def apply(data, blob, syms, bss_end):
     result = bytearray(data)
     segs = _segments(data)
     if len(blob) > STUB_END - STUB_VA:
@@ -143,7 +168,7 @@ def apply(data, blob, syms):
     result[off:off+len(blob)] = blob
     
     # Extend RW for .bss
-    _extend_rw_memsz(result, STATE_VA, STATE_END)
+    _extend_rw_memsz(result, STATE_VA, bss_end)
     
     return bytes(result)
 
@@ -153,8 +178,8 @@ def build(source, output, artifacts=None):
         raise ValueError('Use a separate output path')
     with tempfile.TemporaryDirectory(prefix='nord-slotexpand-') as work:
         directory = Path(work)
-        blob, syms = build_stub(source, directory)
-        patched = apply(source.read_bytes(), blob, syms)
+        blob, syms, bss_end = build_stub(source, directory)
+        patched = apply(source.read_bytes(), blob, syms, bss_end)
         output.write_bytes(patched)
         if artifacts:
             artifacts = Path(artifacts); artifacts.mkdir(parents=True, exist_ok=True)
