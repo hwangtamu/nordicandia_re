@@ -236,10 +236,7 @@ __attribute__((naked)) void hook_expand_skill_slot(void)
         "ldp x19, x20, [sp], #16\n"  /* restore x19/x20 */
         "ldp x29, x30, [sp], #16\n"
         "stp x19, x20, [sp, #64]\n"  /* execute skipped instruction */
-        /* patched: ldr x16, =RESUME; br x16 */
-        "ldr x16, 0f\n"
-        "br x16\n"
-        "0: .quad 0x0\n"  /* RESUME placeholder */
+        "b EXPAND_SKILL_SLOT_RESUME\n"  /* PC-relative: ASLR-safe */
     );
 }
 
@@ -291,9 +288,7 @@ __attribute__((naked)) void hook_expand_potion_slot(void)
            original function overwrites it immediately, no need to save) */
         "movz x21, #0x9000\n"
         "movk x21, #0x5ba, lsl #16\n"
-        "ldr x16, 0f\n"
-        "br x16\n"
-        "0: .quad 0x0\n"
+        "b EXPAND_POTION_SLOT_RESUME\n"  /* PC-relative: ASLR-safe */
     );
 }
 
@@ -339,10 +334,7 @@ __attribute__((naked)) void hook_unlock_combat_pet(void)
         "ldp x25, x26, [sp], #16\n"  /* restore x25 */
         "ldp x29, x30, [sp], #16\n"
         "stp x25, x30, [sp, #-64]!\n"  /* execute skipped instruction */
-        /* patched: ldr x16, =RESUME; br x16 */
-        "ldr x16, 0f\n"
-        "br x16\n"
-        "0: .quad 0x0\n"  /* RESUME placeholder */
+        "b UNLOCK_COMBAT_PET_RESUME\n"  /* PC-relative: ASLR-safe */
     );
 }
 

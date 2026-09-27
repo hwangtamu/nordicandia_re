@@ -84,7 +84,15 @@ def _bss_end(elf: Path) -> int:
 #
 # For now, we'll use the same approach: read syms from the source .so.
 
-TARGETS = {}
+# Link-time resume addresses, passed to the stub via --defsym so its trampolines
+# can use a PC-relative `b RESUME` (ASLR-safe).  An absolute `.quad RESUME` +
+# `br x16` is wrong in a shared object: the trampoline would jump to the raw
+# link-time VA (e.g. pc=0x2e3df44) instead of libbase+VA and fault with SEGV_ACCERR.
+TARGETS = {
+    'EXPAND_SKILL_SLOT_RESUME': EXPAND_SKILL_SLOT_RESUME,
+    'EXPAND_POTION_SLOT_RESUME': EXPAND_POTION_SLOT_RESUME,
+    'UNLOCK_COMBAT_PET_RESUME': UNLOCK_COMBAT_PET_RESUME,
+}
 
 def build_stub(source, directory):
     syms = _read_symbols(source)
@@ -122,29 +130,11 @@ def apply(data, blob, syms, bss_end):
         if not STUB_VA <= syms[name] < STUB_VA + len(blob):
             raise ValueError(f'{name} lies outside the compiled stub')
 
-    # Place the (unpatched) blob in the cave FIRST.  The RESUME placeholders live
-    # inside this blob, so they must be patched *after* the blob is in `result`;
-    # patching before the injection would be overwritten by the blob and every
-    # trampoline would `br x16` to address 0 (the v12/v13/v14 SIGSEGV).
+    # Place the blob in the cave.  Its trampolines branch straight back to the
+    # retail resume addresses with PC-relative `b RESUME`, resolved at link time
+    # from the --defsym values in TARGETS, so nothing needs runtime patching.
     off = _off_for(segs, STUB_VA)
     result[off:off+len(blob)] = blob
-
-    # Patch the RESUME placeholders in the injected blob.
-    # Pattern: 0x58000050 (ldr x16, [pc, #8]), 0xD61F0200 (br x16), 8 zero bytes
-    # (the linker-time `.quad 0` placeholder the trampoline branches to).
-    pattern = struct.pack('<IIQ', 0x58000050, 0xD61F0200, 0)
-    resumes = [EXPAND_SKILL_SLOT_RESUME, EXPAND_POTION_SLOT_RESUME, UNLOCK_COMBAT_PET_RESUME]
-    idx = 0
-    for i, resume_va in enumerate(resumes):
-        pos = blob.find(pattern, idx)
-        if pos < 0:
-            raise ValueError(f'Could not find trampoline placeholder {i}')
-        struct.pack_into('<Q', result, off + pos + 8, resume_va)
-        print(f'Patched resume {i} -> {resume_va:#x}')
-        idx = pos + 16
-    # Sanity: the pet trampoline (last placeholder) must no longer be zero.
-    if struct.unpack_from('<Q', result, off + idx - 8)[0] == 0:
-        raise ValueError('resume placeholder patch did not take')
 
     # Install hooks: overwrite first instruction of each target with branch to stub
     for target_va, hook_name in [
