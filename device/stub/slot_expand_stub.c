@@ -224,16 +224,13 @@ __attribute__((naked)) void hook_expand_skill_slot(void)
 {
     __asm__ volatile(
         "stp x29, x30, [sp, #-16]!\n"
-        "stp x19, x20, [sp, #-16]!\n"  /* save x19/x20 (skipped stp needs them) */
         "stp x0, x1, [sp, #-16]!\n"
         "stp x2, x3, [sp, #-16]!\n"
-        "str w1, [sp, #-16]!\n"      /* skillSlotType */
-        "str w2, [sp, #-16]!\n"      /* cost */
+        "mov w0, w1\n"              /* skillSlotType */
+        "mov w1, w2\n"              /* cost */
         "bl hook_expand_skill_slot_c\n"
-        "add sp, sp, #32\n"
         "ldp x2, x3, [sp], #16\n"
         "ldp x0, x1, [sp], #16\n"
-        "ldp x19, x20, [sp], #16\n"  /* restore x19/x20 */
         "ldp x29, x30, [sp], #16\n"
         "str x30, [sp, #-0x50]!\n"  /* execute skipped instruction */
         "b EXPAND_SKILL_SLOT_RESUME\n"  /* PC-relative: ASLR-safe */
@@ -279,9 +276,8 @@ __attribute__((naked)) void hook_expand_potion_slot(void)
     __asm__ volatile(
         "stp x29, x30, [sp, #-16]!\n"
         "stp x0, x1, [sp, #-16]!\n"
-        "str w1, [sp, #-16]!\n"      /* cost */
+        "mov w0, w1\n"              /* cost */
         "bl hook_expand_potion_slot_c\n"
-        "add sp, sp, #16\n"
         "ldp x0, x1, [sp], #16\n"
         "ldp x29, x30, [sp], #16\n"
         "sub sp, sp, #0x90\n"  /* execute skipped instruction */
