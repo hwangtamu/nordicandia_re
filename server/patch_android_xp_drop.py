@@ -22,7 +22,7 @@ from pathlib import Path
 
 from patch_android_email_login import _read_symbols, _segments, _off_for, _b, check_cave_fit
 
-STUB_VA, STUB_END = 0x3458000, 0x345C9AC
+STUB_VA, STUB_END = 0x345C800, 0x345C9AC
 XP_VA, XP_RESUME = 0x2A7A6E0, 0x2A7A6EC
 DROP_VA, DROP_RESUME = 0x2C8FE9C, 0x2C8FEA0
 XP_PROLOGUE = bytes.fromhex('e923bd6dfe0b00f9f44f02a9')  # 3 instrs

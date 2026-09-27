@@ -1357,6 +1357,40 @@ public sealed class GameStore : IDisposable
         return new UpgradeCharacterSkillRankResponse { NewRank = newRank };
     });
 
+    /// <summary>Replaces the persisted power (passive-skill) state with the client's
+    /// serialized snapshot: ranks and training windows. Passive skills level through the
+    /// training system (StartTraining -> HasFinishedTraining), which has no upload RPC, so
+    /// without this the ranks reverted to Power_Rank=1 on every login. The client POSTs
+    /// the snapshot from LivingPowers.Serialize. Ranks only move forward; training windows
+    /// are overwritten (they are transient).</summary>
+    public bool SavePowers(Guid owner, Guid characterId, IList<PowerSyncEntry> powers) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        data.Powers ??= new SerializedCharacterData.SerializedPowers { Powers = new() };
+        data.Powers.Powers ??= new List<SerializedCharacterData.SerializedPower>();
+        foreach (var e in powers ?? Array.Empty<PowerSyncEntry>())
+        {
+            if (e == null || e.PowerHashSafe == 0) continue;
+            var p = data.Powers.Powers.FirstOrDefault(p => p != null && p.PowerHashSafe == e.PowerHashSafe);
+            if (p == null)
+            {
+                p = new SerializedCharacterData.SerializedPower
+                {
+                    PowerHash = e.PowerHashSafe, PowerHashSafe = e.PowerHashSafe, Power_Rank = 1,
+                    Power_Masteries = new SerializedCharacterData.SerializedPowerMasteries { Masteries = new() },
+                };
+                data.Powers.Powers.Add(p);
+            }
+            if (e.Rank > p.Power_Rank) p.Power_Rank = e.Rank;
+            p.Power_Training_Start = e.TrainingStart;
+            p.Power_Training_End = e.TrainingEnd;
+        }
+        c.Data = Pack(data);
+        Console.WriteLine($"[POWERS] character={characterId} powers={data.Powers.Powers.Count} synced={powers?.Count ?? 0}");
+        return true;
+    });
+
     public WorldAnnouncement ApplyWorldProgress(Guid owner, Guid characterId, int worldTier, int worldWaypoint, TimeSpan duration, int depth = 0)        => Change(s =>
         {
             var c = Owned(s, owner, characterId);

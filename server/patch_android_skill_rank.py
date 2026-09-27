@@ -27,10 +27,12 @@ from pathlib import Path
 from patch_android_email_login import _read_symbols, _segments, _off_for, _b, check_cave_fit
 from patch_android_realtime import _extend_rw_memsz
 
-STUB_VA, STUB_END = 0x3457000, 0x3458000
+STUB_VA, STUB_END = 0x3457000, 0x3459000
 STATE_VA, STATE_END = 0x5DE8000, 0x5DE8400
 RANKUP = 0x2C6C63C
 RANKUP_RESUME = 0x2C6C640
+SERIALIZE = 0x2C6CEAC
+SERIALIZE_RESUME = 0x2C6CEB0
 ROOT = Path(__file__).resolve().parent.parent
 
 # Fixed libil2cpp 1.9.3 arm64 VAs the stub links against.
@@ -39,6 +41,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TARGETS = {
     'get_trained_rank': 0x2C6EA0C,
     'RANKUP_RESUME': RANKUP_RESUME,
+    'SERIALIZE_RESUME': SERIALIZE_RESUME,
 }
 
 
@@ -77,7 +80,8 @@ def apply(data, blob, syms):
     if len(blob) > STUB_END - STUB_VA:
         raise ValueError('skill-rank stub exceeds its reserved code cave')
     check_cave_fit(STUB_VA, len(blob), 'skill_rank')
-    for name in ('rankup_trampoline', 'rankup_body_impl'):
+    for name in ('rankup_trampoline', 'rankup_body_impl',
+                 'hook_living_powers_serialize', 'serialize_body_impl'):
         if not STUB_VA <= syms[name] < STUB_VA + len(blob):
             raise ValueError(f'{name} lies outside the compiled stub')
     if not STATE_VA <= syms['g_token'] < STATE_END:
@@ -86,6 +90,10 @@ def apply(data, blob, syms):
     if data[off:off + 4] != bytes.fromhex('ff4302d1'):   # sub sp, sp, #0x90
         raise ValueError(f'unexpected LivingPowers.RankUp prologue at {RANKUP:#x}')
     result[off:off + 4] = _b(RANKUP, syms['rankup_trampoline'])
+    off = _off_for(segs, SERIALIZE)
+    if data[off:off + 4] != bytes.fromhex('ff0302d1'):   # sub sp, sp, #0x80
+        raise ValueError(f'unexpected LivingPowers.Serialize prologue at {SERIALIZE:#x}')
+    result[off:off + 4] = _b(SERIALIZE, syms['hook_living_powers_serialize'])
     _extend_rw_memsz(result, STATE_VA, STATE_END)
     off = _off_for(segs, STUB_VA)
     result[off:off + len(blob)] = blob
@@ -106,7 +114,8 @@ def build(source, output, artifacts=None):
             for item in directory.iterdir():
                 shutil.copy2(item, artifacts / item.name)
         print(f'Injected skill-rank sync stub ({len(blob)} bytes) at {STUB_VA:#x}; '
-              f'RankUp {RANKUP:#x} -> b {syms["rankup_trampoline"]:#x}')
+              f'RankUp {RANKUP:#x} -> b {syms["rankup_trampoline"]:#x}; '
+              f'Serialize {SERIALIZE:#x} -> b {syms["hook_living_powers_serialize"]:#x}')
 
 
 if __name__ == '__main__':

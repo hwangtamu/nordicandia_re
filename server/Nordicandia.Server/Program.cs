@@ -80,6 +80,7 @@ if (Environment.GetEnvironmentVariable("NORD_DUMP_BODY") == "1")
 app.MapMagicOnionService();
 app.MapLeaderboardJson();
 app.MapSkillRankJson();
+app.MapPowersJson();
 app.MapPetUnlockJson();
 app.MapExpandJson();
 app.MapGet("/", () => "Nordicandia private server (MagicOnion 5.1.8)");

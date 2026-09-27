@@ -159,13 +159,36 @@ static void refresh_guid(void)
     guid_to_str((const Guid *)((u8 *)boxed + 16), g_guid);
 }
 
+/* Small integer formatters (no libc). */
+static int itoa_s(char *out, long v)
+{
+    char t[12]; int d = 0, n = 0;
+    if (v < 0) { out[n++] = '-'; v = -v; }
+    if (v == 0) t[d++] = '0';
+    while (v > 0) { t[d++] = (char)('0' + v % 10); v /= 10; }
+    for (int i = d - 1; i >= 0; i--) out[n++] = t[i];
+    return n;
+}
+
+/* IEEE-754 double -> int (ranks are whole numbers, 0..~1000). */
+static int dbl_to_int(u64 bits)
+{
+    int exp = (int)((bits >> 52) & 0x7ff);
+    if (exp == 0) return 0;
+    int shift = 52 - (exp - 1023);
+    u64 mant = (bits & ((1ull << 52) - 1)) | (1ull << 52);
+    if (shift < 0) return (int)(mant << (-shift));
+    if (shift > 63) return 0;
+    return (int)(mant >> shift);
+}
+
 /* Blocking HTTP/1.0 POST; returns body length (0 on failure). */
 static int http_post(const char *path, const char *body, int blen)
 {
     struct { unsigned short family; unsigned short port; unsigned int addr; char pad[8]; } sa;
     long tv[2];
     int fd, got, total = 0;
-    char req[1200];
+    char req[8192];
     int rl = 0;
     char resp[512];
     char num[24];
@@ -265,6 +288,64 @@ __attribute__((naked)) void rankup_trampoline(void) {
 /* rankup_body_impl: reproduce 0x2C6C63C (sub sp,sp,#0x90) then resume. */
 __attribute__((naked)) void rankup_body_impl(void) {
     __asm__ volatile("sub sp,sp,#0x90\nb RANKUP_RESUME\n");
+}
+
+/* ---- LivingPowers.Serialize full-state upload -----------------------------
+ * Serialize() returns the authoritative snapshot: every power's rank and
+ * training window. Passive skills level via the time-based training system,
+ * which has no upload RPC, so this hook keeps the server in sync. */
+void serialize_report_c(ptr powers)
+{
+    char body[4096];
+    int n = 0, size;
+    ptr list, items;
+    if (!powers) return;
+    list = *(ptr *)((u8 *)powers + 0x10);          /* SerializedPowers.Powers */
+    if (!list) return;
+    size = *(i32 *)((u8 *)list + 0x18);            /* List<T>._size */
+    if (size < 0) return;
+    if (size > 48) size = 48;
+    items = *(ptr *)((u8 *)list + 0x10);           /* List<T>._items */
+    if (!items) return;
+    refresh_auth();
+    refresh_guid();
+    if (!g_token[0] || !g_guid[0]) { g_error = 21; return; }
+    BCAT("{\"characterId\":\""); BCAT(g_guid); BCAT("\",\"powers\":[");
+    for (int i = 0; i < size; i++) {
+        ptr p = *(ptr *)((u8 *)items + 0x20 + i * 8);   /* array data at +0x20 */
+        int hash, ts, te, rank;
+        if (!p) continue;
+        hash = *(i32 *)((u8 *)p + 0x14);          /* PowerHashSafe */
+        if (hash == 0) continue;
+        rank = dbl_to_int(*(u64 *)((u8 *)p + 0x28)); /* Power_Rank (double) */
+        ts = *(i32 *)((u8 *)p + 0x30);            /* Power_Training_Start */
+        te = *(i32 *)((u8 *)p + 0x34);            /* Power_Training_End */
+        if (n > 0) body[n++] = ',';
+        BCAT("{\"powerHashSafe\":"); n += itoa_s(body + n, hash);
+        BCAT(",\"rank\":");         n += itoa_s(body + n, rank);
+        BCAT(",\"trainingStart\":"); n += itoa_s(body + n, ts);
+        BCAT(",\"trainingEnd\":");   n += itoa_s(body + n, te);
+        body[n++] = '}';
+    }
+    BCAT("]}");
+    body[n] = 0;
+    http_post("/api/character/powers", body, n);
+    if (g_dbg[3] == 200) g_sent++;
+}
+
+__attribute__((naked)) void hook_living_powers_serialize(void) {
+    __asm__ volatile(
+        "stp x19,x30,[sp,#-0x10]!\n"
+        "bl serialize_body_impl\n"
+        "mov x19,x0\n"
+        "bl serialize_report_c\n"
+        "mov x0,x19\n"
+        "ldp x19,x30,[sp],#0x10\n"
+        "ret\n");
+}
+/* serialize_body_impl: reproduce 0x2C6CEAC (sub sp,sp,#0x80) then resume. */
+__attribute__((naked)) void serialize_body_impl(void) {
+    __asm__ volatile("sub sp,sp,#0x80\nb SERIALIZE_RESUME\n");
 }
 
 int  skill_rank_stub_ready(void) { return g_ready; }
