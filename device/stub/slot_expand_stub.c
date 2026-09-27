@@ -91,8 +91,8 @@ static void refresh_auth(void)
 {
     /* Dynamic via metadata (same as skill-rank stub v9) */
     if (g_ready) return;
-    g_ns_class = find_class("Net", "NetSession");
-    g_nc_class = find_class("Net", "NetClient");
+    g_ns_class = find_class("Nordicandia.Client.Net", "NetSession");
+    g_nc_class = find_class("Client.Net", "NetClient");
     if (!g_ns_class || !g_nc_class) { g_error = 1; return; }
     g_ns_current_mi = il2cpp_class_get_method_from_name(g_ns_class, "get_Current", 0);
     g_nc_current_mi = il2cpp_class_get_method_from_name(g_nc_class, "get_Current", 0);
@@ -104,7 +104,7 @@ static void refresh_auth(void)
         ptr *a = il2cpp_domain_get_assemblies(il2cpp_domain_get(), &n);
         for (u64 i = 0; i < n && (!get_token || !get_charid); i++) {
             ptr img = il2cpp_assembly_get_image(a[i]);
-            ptr dto = il2cpp_class_from_name(img, "Net", "SessionDto");
+            ptr dto = il2cpp_class_from_name(img, "SharedNet.Dto", "SessionDto");
             if (dto && !get_token) get_token = il2cpp_class_get_method_from_name(dto, "get_AuthToken", 0);
             if (!get_charid) get_charid = il2cpp_class_get_method_from_name(g_nc_class, "get_CurrentCharacterId", 0);
         }
