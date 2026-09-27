@@ -297,7 +297,7 @@ __attribute__((naked)) void rankup_body_impl(void) {
 void serialize_report_c(ptr powers)
 {
     char body[4096];
-    int n = 0, size;
+    int n = 0, size, first = 1;
     ptr list, items;
     if (!powers) return;
     list = *(ptr *)((u8 *)powers + 0x10);          /* SerializedPowers.Powers */
@@ -320,7 +320,8 @@ void serialize_report_c(ptr powers)
         rank = dbl_to_int(*(u64 *)((u8 *)p + 0x28)); /* Power_Rank (double) */
         ts = *(i32 *)((u8 *)p + 0x30);            /* Power_Training_Start */
         te = *(i32 *)((u8 *)p + 0x34);            /* Power_Training_End */
-        if (n > 0) body[n++] = ',';
+        if (!first) body[n++] = ',';
+        first = 0;
         BCAT("{\"powerHashSafe\":"); n += itoa_s(body + n, hash);
         BCAT(",\"rank\":");         n += itoa_s(body + n, rank);
         BCAT(",\"trainingStart\":"); n += itoa_s(body + n, ts);
