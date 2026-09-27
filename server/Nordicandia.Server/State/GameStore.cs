@@ -861,8 +861,33 @@ public sealed class GameStore : IDisposable
         [4] = 282, // AesirThorBuff
     };
 
+    /// <summary>Builds an Aesir blessing buff with its remaining duration encoded as the
+    /// <c>GameAttributeD.Buff_Duration</c> attribute (id 465, origin Buff). The client's
+    /// DeserializeBlessing reads this value and does <c>now + value</c>; with no value it
+    /// computed <c>now + 0</c>, so the blessing was treated as expired and its effect lost.</summary>
+    private static SerializedCharacterData.SerializedBuff CreateBlessingBuff(int definitionIntegerId, double seconds)
+    {
+        if (seconds < 0) seconds = 0;
+        return new SerializedCharacterData.SerializedBuff
+        {
+            DefinitionIntegerId = definitionIntegerId,
+            IsCharacterContext = true,
+            Attributes = new SerializedAttributes
+            {
+                Values = new()
+                {
+                    [SharedNet.Constants.Game.AttributeOrigin.Buff] = new Dictionary<int, GameAttributeValue>
+                    {
+                        [465] = new GameAttributeValue { Value = (int)seconds, ValueD = seconds },
+                    },
+                },
+                MultiplicativeValues = new(),
+            },
+        };
+    }
+
     /// <summary>Returns the four Aesir blessing buffs that have not expired, pruning the
-    /// expired ones. The buff carries only the definition id; the client applies its effect.</summary>
+    /// expired ones. The buff carries the definition id plus the remaining duration.</summary>
     public (SerializedCharacterData.SerializedBuff Odin, SerializedCharacterData.SerializedBuff Tyr,
         SerializedCharacterData.SerializedBuff Frigg, SerializedCharacterData.SerializedBuff Thor)
         GetActiveBlessings(Guid owner, Guid characterId) => Change(s =>
@@ -872,13 +897,8 @@ public sealed class GameStore : IDisposable
             var now = Now;
             foreach (var expired in c.Blessings.Where(kv => kv.Value <= now).Select(kv => kv.Key).ToList())
                 c.Blessings.Remove(expired);
-            SerializedCharacterData.SerializedBuff Buff(int type) => c.Blessings.ContainsKey(type) && BlessingBuffIds.TryGetValue(type, out var id)
-                ? new SerializedCharacterData.SerializedBuff
-                {
-                    DefinitionIntegerId = id,
-                    IsCharacterContext = true,
-                    Attributes = new SerializedAttributes { Values = new(), MultiplicativeValues = new() },
-                }
+            SerializedCharacterData.SerializedBuff Buff(int type) => c.Blessings.TryGetValue(type, out var expiry) && BlessingBuffIds.TryGetValue(type, out var id)
+                ? CreateBlessingBuff(id, (expiry - now).TotalSeconds)
                 : null;
             return (Buff(1), Buff(2), Buff(3), Buff(4));
         });
@@ -895,12 +915,7 @@ public sealed class GameStore : IDisposable
             c.Blessings.Remove(expired);
         var list = new List<SerializedCharacterData.SerializedBuff>();
         foreach (var type in c.Blessings.Keys.Where(BlessingBuffIds.ContainsKey))
-            list.Add(new SerializedCharacterData.SerializedBuff
-            {
-                DefinitionIntegerId = BlessingBuffIds[type],
-                IsCharacterContext = true,
-                Attributes = new SerializedAttributes { Values = new(), MultiplicativeValues = new() },
-            });
+            list.Add(CreateBlessingBuff(BlessingBuffIds[type], (c.Blessings[type] - now).TotalSeconds));
         return list;
     });
 
@@ -916,15 +931,9 @@ public sealed class GameStore : IDisposable
         var now = Now;
         foreach (var expired in c.Blessings.Where(kv => kv.Value <= now).Select(kv => kv.Key).ToList())
             c.Blessings.Remove(expired);
-        var active = c.Blessings.Keys.Where(BlessingBuffIds.ContainsKey).Select(k => BlessingBuffIds[k]).ToHashSet();
         data.Buffs.Buffs.RemoveAll(b => b != null && BlessingBuffIds.ContainsValue(b.DefinitionIntegerId));
-        foreach (var id in active)
-            data.Buffs.Buffs.Add(new SerializedCharacterData.SerializedBuff
-            {
-                DefinitionIntegerId = id,
-                IsCharacterContext = true,
-                Attributes = new SerializedAttributes { Values = new(), MultiplicativeValues = new() },
-            });
+        foreach (var type in c.Blessings.Keys.Where(BlessingBuffIds.ContainsKey))
+            data.Buffs.Buffs.Add(CreateBlessingBuff(BlessingBuffIds[type], (c.Blessings[type] - now).TotalSeconds));
     }
 
     private static SerializedCharacterData.SerializedPets EnsurePets(SerializedCharacterData.SerializedData data)
