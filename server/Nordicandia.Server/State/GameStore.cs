@@ -868,6 +868,7 @@ public sealed class GameStore : IDisposable
     private static SerializedCharacterData.SerializedBuff CreateBlessingBuff(int definitionIntegerId, double seconds)
     {
         if (seconds < 0) seconds = 0;
+        Console.WriteLine($"[BLESS] def={definitionIntegerId} seconds={seconds:F0}");
         return new SerializedCharacterData.SerializedBuff
         {
             DefinitionIntegerId = definitionIntegerId,
