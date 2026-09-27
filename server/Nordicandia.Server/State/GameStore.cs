@@ -877,7 +877,13 @@ public sealed class GameStore : IDisposable
             {
                 Values = new()
                 {
+                    // The client's map lookup for Buff_Duration is origin-sensitive; set both the
+                    // buff and character origins so it finds the value either way.
                     [SharedNet.Constants.Game.AttributeOrigin.Buff] = new Dictionary<int, GameAttributeValue>
+                    {
+                        [465] = new GameAttributeValue { Value = (int)seconds, ValueD = seconds },
+                    },
+                    [SharedNet.Constants.Game.AttributeOrigin.Character] = new Dictionary<int, GameAttributeValue>
                     {
                         [465] = new GameAttributeValue { Value = (int)seconds, ValueD = seconds },
                     },
