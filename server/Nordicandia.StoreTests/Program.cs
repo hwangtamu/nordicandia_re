@@ -43,3 +43,5 @@ finally { Directory.Delete(directory, true); }
 SlotPersistenceTests.Run();
 
 BlessingPersistenceTests.Run();
+
+ConsumeItemTests.Run();

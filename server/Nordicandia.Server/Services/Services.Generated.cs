@@ -94,7 +94,6 @@ public sealed partial class InventoryServiceApiImpl : ServiceBase<IInventoryServ
     public MagicOnion.UnaryResult<SharedNet.Api.CraftEssenceItemResponse2> CraftEssenceItem2(SharedNet.Api.CraftEssenceItemRequest2 req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CraftEssenceItemResponse2>());
     public MagicOnion.UnaryResult<SharedNet.Api.DisassembleItemsResponse> DisassembleItems(SharedNet.Api.DisassembleItemsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.DisassembleItemsResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.MergePortalsResponse> MergePortals(SharedNet.Api.MergePortalsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.MergePortalsResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.ConsumeItemResponse> ConsumeItem(SharedNet.Api.ConsumeItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.ConsumeItemResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.LockItemsResponse> LockItems(SharedNet.Api.LockItemsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.LockItemsResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.SmeltItemsResponse> SmeltItems(SharedNet.Api.SmeltItemsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.SmeltItemsResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.SocketItemResponse> SocketItem(SharedNet.Api.SocketItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.SocketItemResponse>());

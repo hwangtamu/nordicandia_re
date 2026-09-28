@@ -197,6 +197,27 @@ public sealed class GameStore : IDisposable
             && map != null && map.TryGetValue(id, out var value)) return value.ValueD;
         return null;
     }
+
+    // Stack size/max for stackable items, stored on the item's own attribute map at the Item
+    // origin (verified from a live character save: e.g. Iron {18:1000, 19:6}; gear has neither).
+    private const int ItemMaxStackAttributeId = 18;
+    private const int ItemStackAttributeId = 19;
+
+    private static double? GetItemAttribute(SerializedItem item, SharedNet.Constants.Game.AttributeOrigin origin, int id)
+    {
+        if (item?.Attributes?.Values != null && item.Attributes.Values.TryGetValue(origin, out var map)
+            && map != null && map.TryGetValue(id, out var value)) return value.ValueD;
+        return null;
+    }
+
+    private static void SetItemAttribute(SerializedItem item, SharedNet.Constants.Game.AttributeOrigin origin, int id, double value)
+    {
+        item.Attributes ??= new SerializedAttributes { Values = new(), MultiplicativeValues = new() };
+        item.Attributes.Values ??= new();
+        if (!item.Attributes.Values.TryGetValue(origin, out var map) || map == null)
+            item.Attributes.Values[origin] = map = new Dictionary<int, GameAttributeValue>();
+        map[id] = new GameAttributeValue { Value = (int)value, ValueD = value };
+    }
     // Verified on Android 1.9.3: GameAttributeMap.get_Item at 0x2A86F50;
     // SkillGrid writes these ids at Character origin. SkillSlotRules caps are 6/3/3,
     // StashRules.CanExpandPotionSlots caps at 3. Legacy account defaults were wrong.
@@ -655,6 +676,32 @@ public sealed class GameStore : IDisposable
             }
             c.Data = Pack(data);
             return true;
+        });
+
+    /// <summary>Consumes stack(s) of an inventory item. The client journals item movement
+    /// through ItemOperation but uses a separate ConsumeItem RPC, which used to be an
+    /// unimplemented stub returning 0. Because the client aborts a "use" when the server
+    /// reports 0 consumed, this broke every consume-gated action (e.g. the Niflheim portal)
+    /// and left consumables un-deducted server-side. Returns the actually-consumed amount and
+    /// whether the stack(s) were exhausted (item removed).</summary>
+    public (int Consumed, bool AllStacks) ConsumeItem(Guid owner, Guid characterId, Guid itemId, int amount)
+        => Change(s =>
+        {
+            var c = Owned(s, owner, characterId);
+            var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+            data.Items ??= new SerializedItems();
+            data.Items.Items ??= new List<SerializedItem>();
+            var item = data.Items.Items.FirstOrDefault(i => i != null && i.Id == itemId);
+            if (item == null) return (0, false);
+            var stack = (int)(GetItemAttribute(item, SharedNet.Constants.Game.AttributeOrigin.Item, ItemStackAttributeId) ?? 1);
+            if (stack <= 0) stack = 1;
+            var consumed = amount > 0 ? Math.Min(amount, stack) : stack;
+            var remaining = stack - consumed;
+            if (remaining <= 0) data.Items.Items.Remove(item);
+            else SetItemAttribute(item, SharedNet.Constants.Game.AttributeOrigin.Item, ItemStackAttributeId, remaining);
+            c.Data = Pack(data);
+            Console.WriteLine($"[CONSUME] character={characterId} item={itemId} requested={amount} consumed={consumed} remaining={Math.Max(0, remaining)}");
+            return (consumed, remaining <= 0);
         });
 
     /// <summary>Reads the item list currently persisted for a character (used by tests).</summary>
