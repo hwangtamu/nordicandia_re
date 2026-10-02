@@ -205,6 +205,89 @@ public static class WebApiEndpoints
             if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
             return Results.Ok(CombatRegistry.Instance.MasteryView(user.UserId, id));
         });
+
+        // ----- NPC windows (blacksmith / merchant) -----
+
+        // Blacksmith operations. Items are placed into the Blacksmith slots, the operation runs,
+        // and the updated inventory is returned (mirrors the client's WindowBlacksmith tabs).
+        IResult Blacksmith(HttpContext ctx, Guid id, List<Guid> itemIds, Guid targetItemId, int overheat,
+            Func<Guid, Guid, (bool, object)> run)
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var slots = new Dictionary<Guid, SharedNet.Constants.Game.ItemSlotTypes>();
+            foreach (var itemId in itemIds ?? new List<Guid>())
+                slots[itemId] = SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem;
+            if (targetItemId != Guid.Empty) slots[targetItemId] = SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_TargetItem;
+            GameStore.Instance.SetItemSlots(user.UserId, id, slots);
+            var (successful, extra) = run(user.UserId, id);
+            return Results.Ok(new { successful, result = extra, inventory = CombatRegistry.Instance.Inventory(user.UserId, id) });
+        }
+
+        group.MapPost("/characters/{id:guid}/npc/smelt", (HttpContext ctx, Guid id, NpcItemsRequest req) =>
+            Blacksmith(ctx, id, req?.ItemIds, Guid.Empty, 0, (owner, cid) =>
+            {
+                var (ok, _, result) = GameStore.Instance.SmeltItems(owner, cid);
+                return (ok, result);
+            }));
+
+        group.MapPost("/characters/{id:guid}/npc/disassemble", (HttpContext ctx, Guid id, NpcItemsRequest req) =>
+            Blacksmith(ctx, id, req?.ItemIds, Guid.Empty, 0, (owner, cid) =>
+            {
+                var (ok, _, result) = GameStore.Instance.DisassembleItems(owner, cid);
+                return (ok, result);
+            }));
+
+        group.MapPost("/characters/{id:guid}/npc/essence", (HttpContext ctx, Guid id, NpcCraftRequest req) =>
+            Blacksmith(ctx, id, req?.ItemIds, req?.TargetItemId ?? Guid.Empty, req?.Overheat ?? 0, (owner, cid) =>
+            {
+                var (ok, success, result, _, iron) = GameStore.Instance.CraftEssenceItem(owner, cid, req?.Overheat ?? 0);
+                return (ok, new { success, result, iron });
+            }));
+
+        group.MapPost("/characters/{id:guid}/npc/relic", (HttpContext ctx, Guid id, NpcCraftRequest req) =>
+            Blacksmith(ctx, id, req?.ItemIds, req?.TargetItemId ?? Guid.Empty, 0, (owner, cid) =>
+            {
+                var (ok, _, result) = GameStore.Instance.CraftRelicItem(owner, cid);
+                return (ok, result);
+            }));
+
+        group.MapPost("/characters/{id:guid}/npc/socket", (HttpContext ctx, Guid id, NpcCraftRequest req) =>
+            Blacksmith(ctx, id, req?.ItemIds, req?.TargetItemId ?? Guid.Empty, 0, (owner, cid) =>
+            {
+                var (ok, _, result) = GameStore.Instance.SocketItem(owner, cid);
+                return (ok, result);
+            }));
+
+        group.MapPost("/characters/{id:guid}/npc/add-socket", (HttpContext ctx, Guid id, NpcCraftRequest req) =>
+            Blacksmith(ctx, id, null, req?.TargetItemId ?? Guid.Empty, 0, (owner, cid) =>
+            {
+                var (ok, _, result) = GameStore.Instance.ItemAddNewSocket(owner, cid);
+                return (ok, result);
+            }));
+
+        // Merchant catalog + barter trade (the offered items move into the YourTrade slot).
+        group.MapGet("/merchant/catalog", () => Results.Ok(MerchantCatalog.Products));
+
+        group.MapPost("/characters/{id:guid}/npc/trade", (HttpContext ctx, Guid id, NpcTradeRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var product = MerchantCatalog.Find(req?.CatalogItemId ?? Guid.Empty);
+            if (product is null) return Results.BadRequest(new { error = "unknown_catalog_item" });
+            var slots = new Dictionary<Guid, SharedNet.Constants.Game.ItemSlotTypes>();
+            foreach (var itemId in req?.OfferItemIds ?? new List<Guid>())
+                slots[itemId] = SharedNet.Constants.Game.ItemSlotTypes.YourTrade;
+            GameStore.Instance.SetItemSlots(user.UserId, id, slots);
+            var stacks = Math.Clamp(req?.Stacks ?? 1, 1, 100);
+            var (applied, _, _) = GameStore.Instance.TradeWithMerchant(
+                user.UserId, id, product.Value.DefinitionIntegerId, product.Value.Name, stacks);
+            return Results.Ok(new { applied, reason = applied ? "ok" : "empty_offer", inventory = CombatRegistry.Instance.Inventory(user.UserId, id) });
+        });
     }
 
     private static IResult CreateSessionResponse(HttpContext ctx, Guid userId, string displayName)
@@ -263,3 +346,9 @@ public sealed record WebCreateCharacterRequest(string DisplayName, int Class, in
 
 public sealed record WebCommandEnvelope(
     string CommandId, long ExpectedVersion, string Type, double X = 0, double Z = 0, Guid ItemId = default, int SkillId = 0, int MasteryId = 0);
+
+public sealed record NpcItemsRequest(List<Guid> ItemIds);
+
+public sealed record NpcCraftRequest(List<Guid> ItemIds, Guid TargetItemId, int Overheat);
+
+public sealed record NpcTradeRequest(List<Guid> OfferItemIds, Guid CatalogItemId, int Stacks);

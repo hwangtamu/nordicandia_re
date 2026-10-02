@@ -1,5 +1,5 @@
 import "./style.css";
-import { api, CharacterSummary, CombatEnvelope, LootDrop, newCommandId, SkillMasteryView, Snapshot, WebInventory } from "./api";
+import { api, CharacterSummary, CombatEnvelope, LootDrop, MerchantProduct, newCommandId, NpcResult, SkillMasteryView, Snapshot, WebInventory } from "./api";
 import { loadContent, loadPowers, ContentManifest, ClassPowers, className } from "./content";
 import { HudState, World } from "./game";
 
@@ -52,6 +52,19 @@ app.innerHTML = `
       </div>
       <div id="powers-items" class="inv-items"></div>
     </div>
+    <div id="npc" class="npc-panel hidden">
+      <div class="npc-head">
+        <span id="npc-title">Blacksmith</span>
+        <button id="npc-close" class="icon-btn">×</button>
+      </div>
+      <div id="npc-tabs" class="npc-tabs"></div>
+      <div id="npc-hint" class="npc-hint"></div>
+      <div id="npc-body" class="npc-body"></div>
+      <div class="npc-foot">
+        <button id="npc-action" class="npc-action">Craft</button>
+        <span id="npc-status" class="npc-status"></span>
+      </div>
+    </div>
     <div class="hud-bottom">
       <button id="hud-skill" class="skill">Skill 1 <small>1</small></button>
       <button id="hud-skill-2" class="skill">Skill 2 <small>2</small></button>
@@ -59,6 +72,8 @@ app.innerHTML = `
       <button id="hud-auto" class="skill alt">Auto-move: ON <small>Tab</small></button>
       <button id="hud-bag" class="skill alt">Bag <small>B</small></button>
       <button id="hud-powers" class="skill alt">Skills <small>P</small></button>
+      <button id="hud-smith" class="skill alt">Blacksmith <small>K</small></button>
+      <button id="hud-merchant" class="skill alt">Merchant <small>M</small></button>
     </div>
     <div id="hud-message" class="toast"></div>
   </div>
@@ -179,13 +194,40 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
   };
 
   const initial: CombatEnvelope = await api.state(characterId);
+  npcCharacterId = characterId;
   const refreshInventory = async (): Promise<void> => {
     try {
       const inventory = await api.inventory(characterId);
+      inventoryCache = inventory;
       renderInventory(inventory, (itemId, equipped) => void sendCommand(equipped ? "unequip" : "equip", { itemId }));
+      if (npcMode) renderNpc();
     } catch (error) {
       console.warn("inventory failed", error);
     }
+  };
+  npcActionHandler = async (): Promise<void> => {
+    const picked = Array.from(npcPicked);
+    const target = npcTarget ?? "";
+    npcStatusEl.textContent = "Working…";
+    try {
+      let result: NpcResult;
+      switch (npcTab) {
+        case "smelt": result = await api.smelt(characterId, picked); break;
+        case "disassemble": result = await api.disassemble(characterId, picked); break;
+        case "essence": result = await api.craftEssence(characterId, picked, target, 10); break;
+        case "relic": result = await api.craftRelic(characterId, picked, target); break;
+        case "socket": result = await api.socket(characterId, picked, target); break;
+        case "add-socket": result = await api.addSocket(characterId, target); break;
+        case "trade": result = await api.trade(characterId, picked, target, 1); break;
+        default: return;
+      }
+      npcStatusEl.textContent = result.successful ? "Done" : "No valid items for that operation";
+      if (result.successful) { npcPicked.clear(); npcTarget = null; }
+      await refreshInventory();
+    } catch (error) {
+      npcStatusEl.textContent = `Failed: ${error instanceof Error ? error.message : String(error)}`;
+    }
+    renderNpc();
   };
   const refreshPowers = async (): Promise<void> => {
     try {
@@ -231,6 +273,10 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
   document.getElementById("inv-close")!.addEventListener("click", () => toggleBag(false));
   document.getElementById("hud-powers")!.addEventListener("click", () => togglePowers());
   document.getElementById("powers-close")!.addEventListener("click", () => togglePowers(false));
+  document.getElementById("hud-smith")!.addEventListener("click", () => openNpc("smith"));
+  document.getElementById("hud-merchant")!.addEventListener("click", () => openNpc("merchant"));
+  document.getElementById("npc-close")!.addEventListener("click", () => closeNpc());
+  npcActionEl.addEventListener("click", () => void npcActionHandler?.());
   const keyToSkill: Record<string, number> = { Digit1: 0, Digit2: 1, Digit3: 2, Numpad1: 0, Numpad2: 1, Numpad3: 2 };
   window.addEventListener("keydown", (event) => {
     if (event.code === "Space") {
@@ -249,19 +295,27 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
     } else if (event.code === "KeyP") {
       event.preventDefault();
       togglePowers();
+    } else if (event.code === "KeyK") {
+      event.preventDefault();
+      openNpc("smith");
+    } else if (event.code === "KeyM") {
+      event.preventDefault();
+      openNpc("merchant");
+    } else if (event.code === "Escape") {
+      closeNpc();
     }
   });
 }
 
 function toggleBag(force?: boolean): void {
   const show = force ?? inventoryEl.classList.contains("hidden");
-  if (show) powersEl.classList.add("hidden");
+  if (show) { powersEl.classList.add("hidden"); closeNpc(); }
   inventoryEl.classList.toggle("hidden", !show);
 }
 
 function togglePowers(force?: boolean): void {
   const show = force ?? powersEl.classList.contains("hidden");
-  if (show) inventoryEl.classList.add("hidden");
+  if (show) { inventoryEl.classList.add("hidden"); closeNpc(); }
   powersEl.classList.toggle("hidden", !show);
 }
 
@@ -324,6 +378,112 @@ function renderInventory(inventory: WebInventory, onToggle: (itemId: string, equ
     row.appendChild(button);
     invItemsEl.appendChild(row);
   }
+}
+
+type NpcTab = "smelt" | "disassemble" | "essence" | "relic" | "socket" | "add-socket" | "trade";
+
+const npcEl = document.getElementById("npc") as HTMLDivElement;
+const npcTitleEl = document.getElementById("npc-title") as HTMLElement;
+const npcTabsEl = document.getElementById("npc-tabs") as HTMLDivElement;
+const npcHintEl = document.getElementById("npc-hint") as HTMLDivElement;
+const npcBodyEl = document.getElementById("npc-body") as HTMLDivElement;
+const npcActionEl = document.getElementById("npc-action") as HTMLButtonElement;
+const npcStatusEl = document.getElementById("npc-status") as HTMLElement;
+
+let npcMode: "smith" | "merchant" | null = null;
+let npcTab: NpcTab = "smelt";
+let npcPicked = new Set<string>();
+let npcTarget: string | null = null;
+let npcCatalog: MerchantProduct[] = [];
+let inventoryCache: WebInventory | null = null;
+let npcCharacterId = "";
+let npcActionHandler: (() => Promise<void>) | null = null;
+
+const NPc_TABS: Record<string, { label: string; hint: string }> = {
+  smelt: { label: "Smelting", hint: "Smelt selected materials into Steel (essence → steel value)." },
+  disassemble: { label: "Disassemble", hint: "Disassemble selected equipment into Iron." },
+  essence: { label: "Reforge", hint: "Pick a target and source items; consumes Iron and merges affixes." },
+  relic: { label: "Bless", hint: "Pick a target and a source relic; blesses the target's affixes." },
+  socket: { label: "Socket", hint: "Pick a gem and a target; inserts the gem into a free socket." },
+  "add-socket": { label: "Add Socket", hint: "Pick a target; consumes Titansteel to add a socket." },
+  trade: { label: "Trade", hint: "Offer items for the selected merchant product." },
+};
+
+function openNpc(mode: "smith" | "merchant"): void {
+  npcMode = mode;
+  npcTab = mode === "smith" ? "smelt" : "trade";
+  npcPicked.clear();
+  npcTarget = null;
+  npcStatusEl.textContent = "";
+  inventoryEl.classList.add("hidden");
+  powersEl.classList.add("hidden");
+  npcEl.classList.remove("hidden");
+  renderNpc();
+  if (mode === "merchant" && npcCatalog.length === 0) {
+    void api.merchantCatalog().then((rows) => { npcCatalog = rows; renderNpc(); }).catch(() => undefined);
+  }
+}
+
+function closeNpc(): void {
+  npcMode = null;
+  npcEl.classList.add("hidden");
+}
+
+function renderNpc(): void {
+  if (!npcMode) return;
+  npcTitleEl.textContent = npcMode === "smith" ? "Blacksmith" : "Merchant";
+  const tabs: NpcTab[] = npcMode === "smith"
+    ? ["smelt", "disassemble", "essence", "relic", "socket", "add-socket"]
+    : ["trade"];
+  if (!tabs.includes(npcTab)) npcTab = tabs[0];
+  npcTabsEl.innerHTML = tabs.map((t) =>
+    `<button class="npc-tab${t === npcTab ? " active" : ""}" data-tab="${t}">${NPc_TABS[t].label}</button>`).join("");
+  for (const button of Array.from(npcTabsEl.querySelectorAll(".npc-tab")))
+    button.addEventListener("click", () => { npcTab = (button as HTMLElement).dataset.tab as NpcTab; npcPicked.clear(); npcTarget = null; npcStatusEl.textContent = ""; renderNpc(); });
+  npcHintEl.textContent = NPc_TABS[npcTab].hint;
+
+  const items = inventoryCache?.items ?? [];
+  if (npcTab === "trade") {
+    npcBodyEl.innerHTML = npcCatalog.length === 0
+      ? `<div class="inv-empty">Loading merchant stock…</div>`
+      : npcCatalog.map((p) => `<div class="npc-row" data-trade="${p.itemId}"><span class="npc-slot">${p.silverPrice} silver</span><span class="inv-name">${escapeHtml(p.name)}</span></div>`).join("");
+    for (const row of Array.from(npcBodyEl.querySelectorAll("[data-trade]")))
+      row.addEventListener("click", () => { npcTarget = (row as HTMLElement).dataset.trade!; renderNpc(); });
+    npcActionEl.textContent = "Trade";
+    npcActionEl.disabled = npcPicked.size === 0 || !npcTarget;
+    return;
+  }
+
+  const needTarget = npcTab === "essence" || npcTab === "relic" || npcTab === "socket" || npcTab === "add-socket";
+  npcBodyEl.innerHTML = items.length === 0
+    ? `<div class="inv-empty">No items in the bag.</div>`
+    : items.map((item) => {
+      const picking = needTarget && npcTarget === item.id;
+      const picked = npcPicked.has(item.id);
+      return `<div class="npc-row${picked || picking ? " picked" : ""}" data-item="${item.id}">
+        <span class="npc-slot">${picked ? "source" : picking ? "target" : item.equipped ? "equipped" : ""}</span>
+        <span class="inv-name">${escapeHtml(item.name)}</span>
+        <span class="inv-stats">+${Math.round(item.offense)} off</span></div>`;
+    }).join("");
+  for (const row of Array.from(npcBodyEl.querySelectorAll("[data-item]")))
+    row.addEventListener("click", () => onClickItem((row as HTMLElement).dataset.item!));
+  npcActionEl.textContent = NPc_TABS[npcTab].label;
+  const ready = needTarget ? Boolean(npcTarget) : npcPicked.size > 0;
+  npcActionEl.disabled = !ready;
+}
+
+function onClickItem(itemId: string): void {
+  if (npcTab === "add-socket") {
+    npcTarget = npcTarget === itemId ? null : itemId;
+  } else if (npcTab === "essence" || npcTab === "relic" || npcTab === "socket") {
+    npcPicked.delete(itemId);
+    npcTarget = npcTarget === itemId ? null : itemId;
+  } else if (npcPicked.has(itemId)) {
+    npcPicked.delete(itemId);
+  } else {
+    npcPicked.add(itemId);
+  }
+  renderNpc();
 }
 
 function showLoot(loot: LootDrop[]): void {

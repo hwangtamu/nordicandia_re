@@ -237,4 +237,44 @@ export const api = {
     }),
 
   powers: (characterId: string) => request<SkillMasteryView[]>(`/characters/${characterId}/powers`),
+
+  merchantCatalog: () => request<MerchantProduct[]>("/merchant/catalog"),
+
+  smelt: (characterId: string, itemIds: string[]) => npc(characterId, "smelt", { itemIds }),
+  disassemble: (characterId: string, itemIds: string[]) => npc(characterId, "disassemble", { itemIds }),
+  craftEssence: (characterId: string, itemIds: string[], targetItemId: string, overheat: number) =>
+    npc(characterId, "essence", { itemIds, targetItemId, overheat }),
+  craftRelic: (characterId: string, itemIds: string[], targetItemId: string) =>
+    npc(characterId, "relic", { itemIds, targetItemId }),
+  socket: (characterId: string, itemIds: string[], targetItemId: string) =>
+    npc(characterId, "socket", { itemIds, targetItemId }),
+  addSocket: (characterId: string, targetItemId: string) =>
+    npc(characterId, "add-socket", { itemIds: [], targetItemId }),
+  trade: (characterId: string, offerItemIds: string[], catalogItemId: string, stacks: number) =>
+    request<NpcResult>(`/characters/${characterId}/npc/trade`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ offerItemIds, catalogItemId, stacks }),
+    }),
 };
+
+export interface MerchantProduct {
+  itemId: string;
+  name: string;
+  definitionIntegerId: number;
+  silverPrice: number;
+}
+
+export interface NpcResult {
+  successful: boolean;
+  result?: unknown;
+  inventory: WebInventory;
+}
+
+function npc(characterId: string, action: string, body: Record<string, unknown>): Promise<NpcResult> {
+  return request<NpcResult>(`/characters/${characterId}/npc/${action}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}

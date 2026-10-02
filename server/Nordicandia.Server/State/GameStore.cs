@@ -785,6 +785,19 @@ public sealed class GameStore : IDisposable
         }
     }
 
+    /// <summary>Moves the given owned items into the requested slots (used by the web NPC windows,
+    /// which place items into the Blacksmith/YourTrade slots before the operation runs).</summary>
+    public void SetItemSlots(Guid owner, Guid characterId, IReadOnlyDictionary<Guid, SharedNet.Constants.Game.ItemSlotTypes> slots) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        if (data?.Items?.Items == null || slots == null) return false;
+        foreach (var item in data.Items.Items)
+            if (item != null && slots.TryGetValue(item.Id, out var slot)) item.Slot = slot;
+        c.Data = Pack(data);
+        return true;
+    });
+
     /// <summary>Reads the item list currently persisted for a character (used by tests).</summary>
     public List<SerializedItem> GetItems(Guid owner, Guid id)
     {

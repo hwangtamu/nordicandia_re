@@ -27,6 +27,7 @@ static class AcceptanceRegressionTests
         RealAffixesCarryClientAttributes();
         SetBonusesAndEquipRequirements();
         UniqueAndSetItemDefinitions();
+        NpcSlotPlacementSmelts();
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
@@ -328,6 +329,28 @@ static class AcceptanceRegressionTests
             Check(tConsumed.Items.Count == 1, "trade: consumes the offered items");
             Check(tInventory.Items.Any(i => i.DefinitionIntegerId == 606), "trade: grants the product stack");
             Check(store.GetItems(owner, characterId).All(i => i.Slot != ItemSlotTypes.YourTrade), "trade: empties the trade window");
+        }
+    }
+
+    private static void NpcSlotPlacementSmelts()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var (store, _, owner, characterId, _) = Create("r12", 100);
+        using (store)
+        {
+            var a = LootTable.CreateItem(new LootDrop(3, 5, 10, false, 41));
+            var b = LootTable.CreateItem(new LootDrop(3, 6, 10, false, 42));
+            store.GrantItems(owner, characterId, new List<SerializedItem> { a, b });
+            // The web NPC window places selected items into the Blacksmith slot before the op.
+            store.SetItemSlots(owner, characterId, new Dictionary<Guid, ItemSlotTypes>
+            {
+                [a.Id] = ItemSlotTypes.Blacksmith_SourceItem,
+                [b.Id] = ItemSlotTypes.Blacksmith_SourceItem,
+            });
+            var placed = store.GetItems(owner, characterId).Count(i => i.Slot == ItemSlotTypes.Blacksmith_SourceItem);
+            Check(placed == 2, "npc: SetItemSlots places the chosen items");
+            var (ok, _, _) = store.SmeltItems(owner, characterId);
+            Check(ok, "npc: placed items can be smelted through the same flow the endpoint uses");
         }
     }
 
