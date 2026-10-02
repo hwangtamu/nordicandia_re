@@ -1,0 +1,1815 @@
+{
+  "Game.Actor GetActorByDynamicId(System.Guid dynamicID, T matchType)": [
+    "Attempted to get actor ID {0} as a {1}, whereas the actor is type {2}"
+  ],
+  "Game.AffixBuff CreateAffixBuff(Game.IGameContext gameContext, System.Guid buffId, Game.Affixes.Affix affix, System.Boolean isSelfBuff)": [
+    "Buff definition does not exist: {0}"
+  ],
+  "Game.Affixes.Affix Deserialize(Game.SerializedAffix dto)": [
+    "Failed to load affix with id '{0}'",
+    "LocalTwoHand",
+    "LocalTwoHandBaseColdDamage",
+    "LocalTwoHandBaseFireDamage",
+    "LocalTwoHandBaseLightningDamage",
+    "LocalTwoHandBasePhysicalDamage",
+    "LocalTwoHandBasePoisonDamage",
+    "LocalTwoHandColdDamagePercent",
+    "LocalTwoHandFireDamagePercent",
+    "LocalTwoHandLightningDamagePercent",
+    "LocalTwoHandPhysicalDamagePercent",
+    "LocalTwoHandPhysicalDamagePercentAndAttackRating",
+    "LocalTwoHandPoisonDamagePercent",
+    "MovementSpeedCloak"
+  ],
+  "Game.Buff CreateBuff(Game.IGameContext gameContext, System.Int32 buffHashSafe, System.Object[] args)": [
+    "Buff definition does not exist: {0}",
+    "Unimplemented buff: {0}, using generic type"
+  ],
+  "Game.Character Deserialize(Game.SerializedCharacterData dto, System.Int32 currentEpoch)": [
+    "Buff definition with id '{0}' not found",
+    "Character failed to deserialize item (null)",
+    "Duped character inventory item {0}@{1}_{2}_{3}_{4}, found existing item at {5}_{6}_{7}",
+    "Duped character shared stash item {0}@{1}_{2}_{3}_{4}, found existing item at {5}_{6}_{7}",
+    "Failed to extract item cooldown item hash {0} from old hash {1}",
+    "Failed to extract power cooldown power hash {0} from old hash {1}",
+    "Failed to load item cooldown buff with item hash {0}",
+    "Failed to load power cooldown buff with power hash {0}",
+    "Failed to load skill with id {0}, it is not a skill",
+    "Failed to load skill with id {0}, no matching grid found for slot {1}"
+  ],
+  "Game.GameAttributeMap Deserialize(Game.SerializedAttributes dto)": [
+    "Game attribute with id '{0}' not found"
+  ],
+  "Game.GameAttributeValue GetAttributeValue(SharedNet.Constants.Game.AttributeOrigin origin, Game.GameAttribute attribute, System.Boolean useCache = True)": [
+    "Requested scripted value with specific origin, why?"
+  ],
+  "Game.GameWorld GetWorld(SharedNet.Constants.Game.WorldTypes type)": [
+    "Failed to generate world with type: {0}"
+  ],
+  "Game.Inventory+ItemMoveResult MoveItem(Game.SlotOperationSource operationSource, Game.Items.Item item, SharedNet.Constants.Game.ItemSlotTypes targetSlot, System.Int32 row, System.Int32 column, System.Int32 page = 1, System.Boolean force = False, Game.Character ch = null, Game.PlayerAccount playerAccount = null, Game.PlayerGameModeAccount playerGameModeAccount = null, System.Boolean ignoreDeltaOperation = False, System.Boolean canDestroy = True)": [
+    "Trying to move item from slot {0} but it does not exist in that grid. Force: {1}"
+  ],
+  "Game.Inventory+ItemMoveResult MoveItem(Game.SlotOperationSource operationSource, Game.Items.Item item, SharedNet.Constants.Game.ItemSlotTypes targetSlot, System.Int32 row, System.Int32 column, System.Int32 page = 1, System.Boolean force = False, Game.Character ch = null, Game.PlayerGameModeAccount playerAccount = null, System.Boolean ignoreDeltaOperation = False, System.Boolean canDestroy = True, System.Boolean isPickup = False, System.Boolean allowOverstack = False)": [
+    "Trying to move item from slot {0} but it does not exist in that grid. Force: {1}"
+  ],
+  "Game.Inventory+ItemMoveResult PlayerPickupLoot(Game.Items.Item item, System.Boolean ignoreDeltaOperation = False)": [
+    "",
+    "MonsterKill",
+    "Player:PickedUpLoot:ItemRarity:",
+    "Player:PickedUpLoot:ItemType:",
+    "Unknown",
+    "item_type",
+    "player_picked_up_loot",
+    "rarity"
+  ],
+  "Game.Items.Item Deserialize(Game.SerializedItem dto)": [
+    "Item definition with id '{0}' not found"
+  ],
+  "Game.Minion CreateMinion(Game.Definitions.MonsterDefinition definition)": [
+    "\u0425\u041f \u0423 \u041c\u0418\u041d\u042c\u041e\u041d\u0410 \u041d\u0410 \u0421\u041e\u0417\u0414\u0410\u041d\u0418\u0418"
+  ],
+  "Game.Npc SpawnNpc(Game.GameWorld world, System.Int32 npcHashSafe, System.Nullable`1<Common.Types.Math.Vector3D> position, System.Double level = 1, SharedNet.Constants.Game.MonsterRarity rarity = 0)": [
+    "Npc with hash '{0}' not found"
+  ],
+  "Game.Pets Deserialize(Game.SerializedCharacterData+SerializedPets dto, Game.GameWorld world)": [
+    "Duped pet inventory item {0}@{1}_{2}_{3}",
+    "Failed to deserialize pet item"
+  ],
+  "Game.Power CreatePower(System.Int32 powerHashSafe, Game.Actor user, Game.GameWorld world, System.Object[] args)": [
+    "Unimplemented power: {0}"
+  ],
+  "Game.SerializedPlayerAccountData Serialize(System.Boolean updateLastSavedTimestamp)": [
+    "PlayerAccount.Serialize: Failed to serialize shared stash item"
+  ],
+  "Game.SerializedPlayerAccountData SerializeFromGmac(Game.PlayerGameModeAccount gmac, System.Boolean updateLastSavedTimestamp)": [
+    "PlayerAccount.Serialize: Failed to serialize shared stash item"
+  ],
+  "Game.Skill CreateSkill(System.Int32 powerHashSafe, System.Boolean initializePowerParamsBeforePerform, Game.Living user, Game.GameWorld world, System.Object[] args)": [
+    "Unimplemented power: {0}"
+  ],
+  "Game.SkillAction ExecutePendingTargetedSkill(Common.Types.Math.Vector3D target)": [
+    "Player:RunSkill:",
+    "name",
+    "player_run_skill"
+  ],
+  "System.Boolean <Deserialize>b__47_0(Game.Definitions.ItemAffixDefinition x)": [
+    "LocalBaseColdDamage"
+  ],
+  "System.Boolean <Deserialize>b__47_1(Game.Definitions.ItemAffixDefinition x)": [
+    "LocalBaseFireDamage"
+  ],
+  "System.Boolean <Deserialize>b__47_10(Game.Definitions.ItemAffixDefinition x)": [
+    "LocalPoisonDamagePercent"
+  ],
+  "System.Boolean <Deserialize>b__47_11(Game.Definitions.ItemAffixDefinition x)": [
+    "MovementSpeed"
+  ],
+  "System.Boolean <Deserialize>b__47_2(Game.Definitions.ItemAffixDefinition x)": [
+    "LocalBaseLightningDamage"
+  ],
+  "System.Boolean <Deserialize>b__47_3(Game.Definitions.ItemAffixDefinition x)": [
+    "LocalBasePhysicalDamage"
+  ],
+  "System.Boolean <Deserialize>b__47_4(Game.Definitions.ItemAffixDefinition x)": [
+    "LocalBasePoisonDamage"
+  ],
+  "System.Boolean <Deserialize>b__47_5(Game.Definitions.ItemAffixDefinition x)": [
+    "LocalColdDamagePercent"
+  ],
+  "System.Boolean <Deserialize>b__47_6(Game.Definitions.ItemAffixDefinition x)": [
+    "LocalFireDamagePercent"
+  ],
+  "System.Boolean <Deserialize>b__47_7(Game.Definitions.ItemAffixDefinition x)": [
+    "LocalLightningDamagePercent"
+  ],
+  "System.Boolean <Deserialize>b__47_8(Game.Definitions.ItemAffixDefinition x)": [
+    "LocalPhysicalDamagePercent"
+  ],
+  "System.Boolean <Deserialize>b__47_9(Game.Definitions.ItemAffixDefinition x)": [
+    "LocalPhysicalDamagePercentAndAttackRating"
+  ],
+  "System.Boolean <FlagTutorialConversationsAsCompleted>b__23_0(Game.Definitions.ConversationDefinition x)": [
+    "Tutorial"
+  ],
+  "System.Boolean <Init>b__9_0(System.Reflection.PropertyInfo a)": [
+    "GameAttributeD",
+    "GameAttributeDA",
+    "GameAttributeI"
+  ],
+  "System.Boolean <SetupStartingItems>b__62_1(Game.Definitions.ItemDefinition x)": [
+    "JaggedSword"
+  ],
+  "System.Boolean <SetupStartingItems>b__62_2(Game.Definitions.ItemDefinition x)": [
+    "ShortBow"
+  ],
+  "System.Boolean AddBuff(Game.Actor user, Game.Actor target, Game.Buff buff)": [
+    "Trying to add invalid buff"
+  ],
+  "System.Boolean AddItem(Game.Items.Item item)": [
+    "Loot grid already contains item {0} '{1}'"
+  ],
+  "System.Boolean AddItem(Game.SlotOperationSource operationSource, System.Int32 minRow, System.Int32 maxRow, Game.Items.Item item, System.Int32 page, System.Boolean updateItemLocation = True)": [
+    "Can't find slot in backpack to add item {0}"
+  ],
+  "System.Boolean Apply(System.Boolean replacedWeaker = False)": [
+    "%",
+    "No minion definition found for '{0}'",
+    "[BUFF] Buff.Apply: Applying buff: ",
+    "[BUFF] Buff.Remove: Skipping apply of buff since it's already applied: "
+  ],
+  "System.Boolean CanCraft(System.Collections.Generic.List`1<Game.Items.Item> sourceItems, Game.Items.Item essence, Game.Items.Item targetItem, System.Int32 qualitySliderValue, System.Int32 overheatSliderValue, ref System.String reasonText, ref System.Boolean confirmReasonWarning, System.Boolean allowOnImbued = False)": [
+    "\n",
+    "BlacksmithImbueWarning",
+    "BlacksmithRerollNumAffixesWarning",
+    "CraftingReason_AlreadyRestored",
+    "CraftingReason_BlessingMaxed",
+    "CraftingReason_CanOnlyHaveOneSSRarity",
+    "CraftingReason_CannotApplyLowerRarityAffix",
+    "CraftingReason_CannotCraftOnImbued",
+    "CraftingReason_CannotUpgradeMaxRarity",
+    "CraftingReason_CannotUseMultipleAnvils",
+    "CraftingReason_CannotUseMultipleHeatingStones",
+    "CraftingReason_HasNoImplicitAffixes",
+    "CraftingReason_HasNoNonImplicitAffixes",
+    "CraftingReason_ItemHasNoDurability",
+    "CraftingReason_LinkNotEnoughAffixes",
+    "CraftingReason_MissingMergableItem",
+    "CraftingReason_NoImplicits",
+    "CraftingReason_NotEnoughMaterials",
+    "CraftingReason_NotEquippable",
+    "CraftingReason_NotHeavyArmor",
+    "CraftingReason_NotJewelry",
+    "CraftingReason_NotLightArmor",
+    "CraftingReason_NotMediumArmor",
+    "CraftingReason_NotMelee",
+    "CraftingReason_NotRanged",
+    "CraftingReason_NotShield",
+    "CraftingReason_NotStaff",
+    "CraftingReason_NumAffixesAlreadyMaxed",
+    "CraftingReason_Ready",
+    "CraftingReason_ReinforcementMaxed",
+    "CraftingReason_Remove_NotEnoughAffixes",
+    "CraftingReason_TooHighRarity",
+    "CraftingReason_TypeNotEligable"
+  ],
+  "System.Boolean CanCraft(System.Collections.Generic.List`1<Game.Items.Item> sourceItems, Game.Items.Item targetItem, ref System.String reasonText, ref System.Boolean confirmReasonWarning, System.Boolean allowOnImbued = False)": [
+    "CraftingReason_CannotCraftOnImbued",
+    "CraftingReason_Ready",
+    "CraftingReason_TypeNotEligable"
+  ],
+  "System.Boolean CanSpawnLegendary()": [
+    "Snowman_Legendary_BlockUntil",
+    "Snowman_Legendary_Count"
+  ],
+  "System.Boolean CanSpawnRegular()": [
+    "Snowman_Regular_BlockUntil",
+    "Snowman_Regular_Count"
+  ],
+  "System.Boolean CanSpawnStrong()": [
+    "Snowman_Strong_BlockUntil",
+    "Snowman_Strong_Count"
+  ],
+  "System.Boolean CanUse(Game.Character user, Game.Items.Item target)": [
+    "NotEnoughRoomInInventoryWithSpaceNeeded"
+  ],
+  "System.Boolean CheckUnseenSeasonProgressActivity(System.Nullable`1<System.Int32> combinedSeasonLevel)": [
+    "(\\d+)_(\\d+)_(\\d+)"
+  ],
+  "System.Boolean ClampPositionToNavMesh(Game.Actor user, ref Common.Types.Math.Vector3D destination)": [
+    "Cannot clamp to NavMesh when no AStarPath is active"
+  ],
+  "System.Boolean ForgivingConvertToBool(System.String val)": [
+    "1"
+  ],
+  "System.Boolean GenerateForceField(System.Double quantity)": [
+    "Trying to add negative force field {0}"
+  ],
+  "System.Boolean Heal(System.Double quantity)": [
+    "Trying to add negative health {0}"
+  ],
+  "System.Boolean InternalAddBuff(Game.Buff newBuff, System.Boolean transfered = False, System.Boolean isBeingReplaced = False)": [
+    "): Applying new stronger buff since it's not applied: ",
+    "): Removing weaker buff: ",
+    "): Skipping apply of new stronger buff since it's already applied: ",
+    "): Skipping removal of weaker buff since it's not applied: ",
+    "No World",
+    "[BUFF] BuffManager.InternalAddBuff ("
+  ],
+  "System.Boolean IsBrainConditionFulfilled(Game.Definitions.BrainActionDefinition brainAction, Game.ActorAction context, System.Int32 brainCondition, Game.Actor currentTarget)": [
+    "I don't know how to evaluate brain condition '{0}' in brain '{1}' for action '{2}'",
+    "NULL"
+  ],
+  "System.Boolean IsInsideNavMesh(Common.Types.Math.Vector3D pos, System.Single radius = 0)": [
+    "Cannot check NavMesh when no AStarPath is active"
+  ],
+  "System.Boolean MoveNext()": [
+    "Interactable",
+    "No minion definition found for '{0}'"
+  ],
+  "System.Boolean Remove(Game.Buff beingReplacedBy = null)": [
+    "[BUFF] Buff.Remove: Removing buff: ",
+    "[BUFF] Buff.Remove: Skipping removal of buff since it's not applied: "
+  ],
+  "System.Boolean TransferBuffs(System.Collections.Generic.List`1<Game.Buff> buffs)": [
+    "): No buffs to transfer",
+    "): Transfering buff: ",
+    "No World",
+    "[BUFF] BuffManager.TransferBuffs ("
+  ],
+  "System.Boolean UnlockAchievementLocally(System.String name)": [
+    "unlock-achievement"
+  ],
+  "System.Double GetUseCooldownTime(Game.Actor user, System.Boolean excludeMultipliers = False)": [
+    "GreatElixirOfKnowledge",
+    "GreatElixirOfKnowledgeShort"
+  ],
+  "System.Guid[] GetSeasonalIds(Game.DungeonMonsterSpawnArea+seasonalType rarity)": [
+    "05c8b11d-fe15-48b8-9441-f5beddd5388f",
+    "0e4fb97c-ef0f-4486-9c24-c721c4687db6",
+    "25b30e75-c9b5-4240-878d-fd1246674c0f",
+    "3c5329b7-e390-4b03-a9e9-65a51678e1d9",
+    "479ad76c-815c-4a34-b47a-c3e039f7f81d",
+    "66e804a8-4d79-4da9-97b5-2ba55e8c249f",
+    "a1a2ba8d-8e10-4317-b3f4-ce8364d97f13",
+    "df0cbeda-95e2-4237-8a08-9b927a52ff4c",
+    "f223ad2f-6dab-40a5-957d-56d84c0c7ecf"
+  ],
+  "System.Int32 GetNewAssetId(Game.AssetType assetType)": [
+    "AssetIdentities.json"
+  ],
+  "System.String Dump()": [
+    "0",
+    "Buff '{0}', context: {1} ({2}), id: {3}, world: {4} ({5}), applied: {6}, persistent: {7}, started: {8}, timeout: {9}",
+    "infinite",
+    "null"
+  ],
+  "System.String FinalizeFormattedAttributeDescription(System.Func`2<System.String, System.String> colorResolver, System.String formattedText)": [
+    "</color>",
+    "<color=#",
+    "<color=(\\w+)>",
+    ">",
+    "rarity"
+  ],
+  "System.String FinalizeValueString(System.Int32 attributeId, System.String valStr)": [
+    "71d438",
+    "f5d22e"
+  ],
+  "System.String GetAffixString()": [
+    ", "
+  ],
+  "System.String GetConversationString(System.String key, System.Func`2<System.String, System.String> colorResolver = null, System.Object[] args)": [
+    "??_",
+    "_??"
+  ],
+  "System.String GetCraftingOperationName()": [
+    "AddAffix",
+    "AddOpenAffix",
+    "Bless",
+    "Imbue",
+    "Link",
+    "ReforgeItem",
+    "Reinforce",
+    "RemoveAffix",
+    "Reroll",
+    "Restore"
+  ],
+  "System.String GetFormattedAttributeDescription(System.Func`2<System.String, System.String> colorResolver, System.Func`4<System.String, System.Collections.Generic.List`1<System.Int32>, System.Int32, System.String> valueColorResolver, System.Collections.Generic.List`1<System.Int32> attributes, System.Collections.Generic.List`1<System.Nullable`1<System.Double>> attributeValues)": [
+    "?"
+  ],
+  "System.String GetFormattedAttributeDescription(System.Func`2<System.String, System.String> colorResolver, System.Func`4<System.String, System.Collections.Generic.List`1<System.Int32>, System.Int32, System.String> valueColorResolver, System.Func`3<System.Int32, Game.Definitions.Languages.ParsedAttributeTranslationDefinitions+ValueResolutionTypes, System.Double> attributeValueResolver, System.Collections.Generic.List`1<System.Int32> attributes, System.Boolean includeRange, System.Boolean unknownValue, out System.String rangeString)": [
+    "-",
+    "[",
+    "]"
+  ],
+  "System.String GetFormattedAttributeDescription(System.Int32 gameAttributeId, System.Func`3<System.Int32, Game.Definitions.Languages.ParsedAttributeTranslationDefinitions+ValueResolutionTypes, System.Double> attributeValueResolver, System.Func`2<System.String, System.String> colorResolver, System.Func`4<System.String, System.Collections.Generic.List`1<System.Int32>, System.Int32, System.String> valueColorResolver, System.Boolean includeRange, System.Boolean unknownValue, out System.String rangeString, out System.Collections.Generic.List`1<System.Int32> attributeIdList)": [
+    "{0} ({1})"
+  ],
+  "System.String GetFormattedAttributeDescriptionTest(System.Func`2<System.String, System.String> colorResolver, System.Func`4<System.String, System.Collections.Generic.List`1<System.Int32>, System.Int32, System.String> valueColorResolver, System.Func`3<System.Int32, Game.Definitions.Languages.ParsedAttributeTranslationDefinitions+ValueResolutionTypes, System.Double> attributeValueResolver, System.Collections.Generic.List`1<System.Int32> attributes, System.Boolean includeRange, System.Boolean unknownValue, out System.String rangeString)": [
+    ""
+  ],
+  "System.String GetLevelName(Game.GameWorld world)": [
+    "0",
+    "?",
+    "Level_"
+  ],
+  "System.String GetNameBasedOnLevel()": [
+    "Adult",
+    "Child",
+    "Epic",
+    "Great",
+    "Legendary",
+    "Young"
+  ],
+  "System.String GetObjectName(System.String key, System.Object[] args)": [
+    "??_",
+    "_??"
+  ],
+  "System.String GetQuestString(System.String key, System.Func`2<System.String, System.String> colorResolver = null, System.Object[] args)": [
+    "??_",
+    "_??"
+  ],
+  "System.String GetString(System.String key, System.Object[] args)": [
+    "??_",
+    "_??"
+  ],
+  "System.String GetTranslatedDescription(System.Func`2<System.String, System.String> colorResolver)": [
+    "<color=(\\w+)>",
+    "{(.*?)}"
+  ],
+  "System.String GetTranslatedName()": [
+    "\n(",
+    " ",
+    ")",
+    "Depth",
+    "MonsterRarity_Boss",
+    "MonsterRarity_Champion",
+    "MonsterRarity_Rare",
+    "MonsterRarity_Unique"
+  ],
+  "System.String GetTranslatedTooltip()": [
+    "??"
+  ],
+  "System.String GetUIString(System.String key)": [
+    "<(\\w+[^>])>"
+  ],
+  "System.String GetUnformattedLocalizedAttributeString(System.String key)": [
+    "??_",
+    "_??"
+  ],
+  "System.String GetUnformattedLocalizedString(System.String key, System.Object[] args)": [
+    "<Unknown>",
+    "??_",
+    "_??"
+  ],
+  "System.String GetValueString(System.Double val, System.String suffix = null, System.String prefix = null, System.Int32 baseNumDecimals = 0)": [
+    "</color>",
+    "<color=#71d438>"
+  ],
+  "System.String GetValueString(System.Double val, System.String suffix = null, System.String prefix = null, System.Int32 baseNumDecimals = 0, System.Boolean isDuration = False)": [
+    "</color>",
+    "<color=#71d438>"
+  ],
+  "System.String GetValueStringDuration(System.Double val, System.String suffix = null, System.String prefix = null, System.Int32 baseNumDecimals = 1)": [
+    "</color>",
+    "<color=#71d438>"
+  ],
+  "System.String GetValueStringPercent(System.Double val, System.String suffix = %, System.String prefix = null, System.Int32 baseNumDecimals = 0)": [
+    "</color>",
+    "<color=#71d438>"
+  ],
+  "System.String GetValueStringRange(System.Double val, System.String suffix = null, System.String prefix = null, System.Int32 baseNumDecimals = 1)": [
+    "</color>",
+    "<color=#71d438>"
+  ],
+  "System.String GetWorldName(Game.GameWorld world)": [
+    "?",
+    "Town",
+    "UnknownWorld",
+    "_"
+  ],
+  "System.String InternalGetTranslatedDescription()": [
+    "%",
+    "+",
+    "<Separator>"
+  ],
+  "System.String InternalGetTranslatedDescription(System.Collections.Generic.List`1<System.Int32> addedAttributeIdList)": [
+    "",
+    "%",
+    "+"
+  ],
+  "System.String ReadJson(System.String filename, System.String path, System.Boolean decrypt = True)": [
+    ", Assembly-CSharp",
+    ", GameShared",
+    "/",
+    "://",
+    "\\",
+    "file:///"
+  ],
+  "System.String RegexMatch(System.Text.RegularExpressions.Match match, System.Int32 attributeId, System.Int32 arrayVariableCounter)": [
+    "",
+    " > 0 ?",
+    " ?",
+    ")",
+    "; result *= (1 + map[GameAttributes.",
+    "; result -= map[GameAttributes.",
+    "; result = GetMultipliedResult(result, map[GameAttributes.",
+    "GameAttributes.Constants.",
+    "MultiplyWith:",
+    "SubtractWith:",
+    "]",
+    "])",
+    "map._RawGetAttribute(GameAttributes.",
+    "map[GameAttributes."
+  ],
+  "System.String ResolveDescriptionParam(System.Text.RegularExpressions.Match m)": [
+    "%",
+    "{nil}"
+  ],
+  "System.String ResolveDescriptionParam(System.Text.RegularExpressions.Match m, System.Int32 points, Game.Definitions.PowerMasteryDefinition definition)": [
+    "%",
+    "d",
+    "r",
+    "{nil}"
+  ],
+  "System.String ResolveRangeTextValue(System.Text.RegularExpressions.Match match, Game.Definitions.Languages.ParsedAttributeTranslationDefinitions+AttributeTranslationEntry+ConditionalValueEntry entry, ref System.Int32 index)": [
+    "add",
+    "divide",
+    "multiply",
+    "subtract",
+    "{{{0}}}"
+  ],
+  "System.String ResolveTextColor(System.Text.RegularExpressions.Match m, System.Func`2<System.String, System.String> colorResolver)": [
+    "<color=#",
+    ">"
+  ],
+  "System.String ResolveTextColors(System.Func`2<System.String, System.String> colorResolver, System.String formattedText)": [
+    "<color=(\\w+)>"
+  ],
+  "System.String ResolveTextValue(System.Text.RegularExpressions.Match match, Game.Definitions.Languages.ParsedAttributeTranslationDefinitions+AttributeTranslationEntry+ConditionalValueEntry entry, ref System.Int32 index)": [
+    "add",
+    "divide",
+    "multiply",
+    "subtract",
+    "{{{0}}}"
+  ],
+  "System.String get_AdReward()": [
+    "AdReward"
+  ],
+  "System.String get_Admin()": [
+    "Admin"
+  ],
+  "System.String get_Blacksmith()": [
+    "Blacksmith"
+  ],
+  "System.String get_CombatLogMessage()": [
+    "{0} got blinded by {1}",
+    "{0} got chilled by {1}",
+    "{0} got frozen by {1}",
+    "{0} got poisoned by {1}",
+    "{0} got shocked by {1}",
+    "{0} got slowed by {1}",
+    "{0} got stunned by {1}",
+    "{0} started bleeding from {1}'s attack",
+    "{0} started burning from {1}'s attack"
+  ],
+  "System.String get_Destroy()": [
+    "Destroy"
+  ],
+  "System.String get_Disassemble()": [
+    "Disassemble"
+  ],
+  "System.String get_ErrorReimburse()": [
+    "ErrorReimburse"
+  ],
+  "System.String get_IAP()": [
+    "IAP"
+  ],
+  "System.String get_Loot()": [
+    "Loot"
+  ],
+  "System.String get_Merchant()": [
+    "Merchant"
+  ],
+  "System.String get_PowerName()": [
+    "<None>"
+  ],
+  "System.String get_PurchaseFeature()": [
+    "PurchaseFeature"
+  ],
+  "System.String get_Tutorial()": [
+    "Tutorial"
+  ],
+  "System.String get_UnknownLocalizedString()": [
+    "<Unknown>"
+  ],
+  "System.String get_UnknownString()": [
+    "<Unknown>"
+  ],
+  "System.String get_Vendor()": [
+    "Vendor"
+  ],
+  "System.String get_WorldNameTranslationKey()": [
+    "Object_CrystalGolemPortal",
+    "Object_FireGolemPortal",
+    "Object_StoneGolemPortal"
+  ],
+  "System.Void .cctor()": [
+    "Ability",
+    "ActiveGeneralSkill",
+    "ActiveSkill",
+    "AddAffix",
+    "AddOpenAffix",
+    "AggressiveTactic",
+    "AlgizRune",
+    "AliveIdleNonBossMonstersExist",
+    "AllResistancePotion",
+    "AllocateAttributes",
+    "AllowInTown",
+    "AllowOutsideCombat",
+    "Amulet",
+    "AnsuzRune",
+    "Armor",
+    "Arrow",
+    "ArrowOfRestoration",
+    "ArrowRain",
+    "ArrowRainGroundEffect",
+    "Arrows",
+    "ArrowstreamMinion",
+    "Artifact",
+    "AstralWalk",
+    "Attack",
+    "AttackSpeedPotion",
+    "AttributeRespec",
+    "AttributeRespecLarge",
+    "AttributeRespecSmall",
+    "AttributesTabTrigger",
+    "Axe1H",
+    "Axe2H",
+    "AxeSpecialization",
+    "Backflip",
+    "BackflipMirrorImageMinion",
+    "BaseType",
+    "Beast",
+    "BeastWithin",
+    "Belt",
+    "BerkananRune",
+    "Blacksmith",
+    "BlacksmithClickMerge",
+    "BlacksmithMoveSuccessSliderToMax",
+    "BlacksmithReagent",
+    "BlacksmithTool",
+    "Blizzard",
+    "BlizzardGroundEffect",
+    "BoneDragonSkeleton",
+    "BoneLinkEffect",
+    "Boots",
+    "BossHunter",
+    "Bow",
+    "BowReinforcement",
+    "Bracers",
+    "BuffLetItSnow",
+    "CanEnrage",
+    "CanSummonOdrTotem",
+    "ChainLightning",
+    "CheatDeath",
+    "Chest",
+    "ChristmasPresent",
+    "Class_Hunter_ArrowRain",
+    "Class_Hunter_Backflip",
+    "Class_Hunter_BeastWithin",
+    "Class_Hunter_Fade",
+    "Class_Hunter_FrozenArrow",
+    "Class_Hunter_FrozenArrow_Nova",
+    "Class_Hunter_ImpalingTrap",
+    "Class_Hunter_ImpalingTrapCast",
+    "Class_Hunter_ManaArrows",
+    "Class_Hunter_MarkOfTheChosen",
+    "Class_Hunter_Multishot",
+    "Class_Hunter_PowerShot",
+    "Class_Hunter_PowerShot_Load",
+    "Class_Hunter_RapidFire",
+    "Class_Hunter_SummonWolf",
+    "Class_Hunter_Thorns",
+    "Class_Mage_Blizzard",
+    "Class_Mage_ChainLightning_Cast",
+    "Class_Mage_ElementalSeal_Cast",
+    "Class_Mage_IceBlast_Cast",
+    "Class_Mage_IceBlast_Hit",
+    "Class_Mage_IceNova_Cast",
+    "Class_Mage_InfernalBlast_Cast",
+    "Class_Mage_InfernalBlast_Hit",
+    "Class_Mage_ManaShield_Cast",
+    "Class_Mage_PoisonCloud",
+    "Class_Mage_Teleport",
+    "Class_Mage_Thunderstrike",
+    "Class_Mage_Tornado",
+    "Class_Necromancer_AstralWalk",
+    "Class_Necromancer_BoneLink",
+    "Class_Necromancer_Decay",
+    "Class_Necromancer_DemonicPresence",
+    "Class_Necromancer_DrainLife",
+    "Class_Necromancer_Sacrifice",
+    "Class_Necromancer_Shadowbolt",
+    "Class_Necromancer_SummonDeath",
+    "Class_Necromancer_SummonDemon",
+    "Class_Necromancer_SummonSkeleton",
+    "Class_Necromancer_UnholyFocus",
+    "Class_Warrior_Cast_Shatter",
+    "Class_Warrior_Frenzy",
+    "Class_Warrior_IncrementalFortress",
+    "Class_Warrior_Intimidate",
+    "Class_Warrior_Might",
+    "Class_Warrior_Pounce",
+    "Class_Warrior_Pounce_Land",
+    "Class_Warrior_Slam",
+    "Class_Warrior_Sprint",
+    "Class_Warrior_WarStomp",
+    "Class_Warrior_Whirlwind",
+    "ClickPassiveSkills",
+    "ClickSkillsTab",
+    "Cloak",
+    "Cold",
+    "ColdStaff2H",
+    "ColdWand1H",
+    "CombatPet",
+    "CombatPetkeeper",
+    "ConcludeTutorialTrigger",
+    "ConfirmAttributeAllocation",
+    "Crossbow1H",
+    "CrystalGolem",
+    "CrystalGolemTrigger",
+    "CurrentPlayer",
+    "Curse",
+    "DagazRune",
+    "Dagger",
+    "DamageTargetPercentually",
+    "DeathMinion",
+    "DebuffBurning",
+    "DebuffGainedTrigger",
+    "DebuffShocked",
+    "DebuffSlowed",
+    "Decay",
+    "DecayBuff",
+    "DecayDebuff",
+    "DecayEffect",
+    "DecursingPotion",
+    "Default",
+    "DefaultAttackProxy",
+    "DefaultFireball",
+    "DefaultIceBolt",
+    "DefaultLightningBolt",
+    "DefaultPhysicalBolt",
+    "DefaultPoisonBolt",
+    "DefensePotion",
+    "DefensiveTactic",
+    "Demon",
+    "DemonMinion",
+    "DemonicPresenceBuff",
+    "DemonicPresenceDebuff",
+    "DemonicPresenceEffect",
+    "Disassembler",
+    "DiscardInventoryItem",
+    "Dragon",
+    "DrainLife",
+    "DrainLifeEffect",
+    "Dummy",
+    "DummyTrap",
+    "EhwazRune",
+    "Elder",
+    "ElementalSeal",
+    "ElementalSealBuff",
+    "ElementalSealBurnDebuff",
+    "ElementalSealFollowBuff",
+    "ElementalStaff2H",
+    "ElementalWand1H",
+    "EnchantedAnvil",
+    "EndLevelLootChest",
+    "EquipNewItem",
+    "Essence",
+    "EvilChest",
+    "ExperiencePotion",
+    "ExplodingFireArrow",
+    "ExplodingLightning",
+    "FehuRune",
+    "FindCraftableItemUpgrade",
+    "Fire",
+    "FireGolem",
+    "FireGolemTrigger",
+    "FireStaff2H",
+    "FireWand1H",
+    "Fists",
+    "Flee",
+    "Frenzy",
+    "FrostRunFrost",
+    "FrostRunGameModeCompleted",
+    "FrostRunPortal",
+    "FrozenArrow",
+    "FrozenArrowNova",
+    "GameModeSpawnArea",
+    "GeboRune",
+    "GeneralAbility",
+    "General_Buff",
+    "General_Cast_Bow",
+    "General_Cast_Buff",
+    "General_Cast_Curse",
+    "General_Cast_Melee",
+    "General_Cast_Mixology",
+    "General_Cast_Portal",
+    "General_Cast_Spitfire_Loop",
+    "General_Cast_Whirl",
+    "General_Contact_Bow",
+    "General_Contact_Bow2",
+    "General_Contact_Cold",
+    "General_Contact_Fire",
+    "General_Contact_Lightning",
+    "General_Contact_Physical",
+    "General_Contact_Poison",
+    "General_Footsteps_Concrete1",
+    "General_Footsteps_Concrete2",
+    "General_Hit_Bow",
+    "General_Hit_Cold",
+    "General_Hit_Fire",
+    "General_Hit_Flesh",
+    "General_Hit_Lightning",
+    "General_Hit_Physical",
+    "General_Hit_Poison",
+    "General_Item_FireNova",
+    "General_OpenChest",
+    "General_Resurrect",
+    "General_Use_Idol",
+    "General_Use_Lootbox",
+    "General_Use_Potion",
+    "Gloves",
+    "Golem",
+    "GolemPortal",
+    "GolemTrigger",
+    "GotoBlacksmith",
+    "GuildDefenseMaster",
+    "GuildDefenseRunestone",
+    "HagalazRune",
+    "HasKilledRecentlyBuff",
+    "HasReturnedToMaster",
+    "HasTotemChargeCold",
+    "HasTotemChargeFire",
+    "HasTotemChargeLightning",
+    "HasUnholyFocusBuff",
+    "HealthPotion",
+    "HeatingStone",
+    "HeavyBoots",
+    "HeavyBracers",
+    "HeavyChest",
+    "HeavyGloves",
+    "HeavyHelmet",
+    "HeavyLeggings",
+    "HeavyReinforcement",
+    "HeavyShoulders",
+    "HelMinion",
+    "HelSmallFireNova",
+    "Helheim",
+    "HelheimKey",
+    "HelheimPortal",
+    "Helmet",
+    "Hit_Cold",
+    "Hit_ExplodingFireArrow",
+    "Hit_Fire",
+    "Hit_InfernalBlast",
+    "Hit_Lightning",
+    "Hit_Physical",
+    "Hit_Physical2",
+    "Hit_Poison",
+    "Hit_Shadowbolt",
+    "Hit_Shatter",
+    "Hunger",
+    "HunterMirrorImageMinion",
+    "IHaveMinions",
+    "IHaveNoMinions",
+    "IceBlast",
+    "IceNova",
+    "Idol",
+    "ImAboveOrEqualToTier4",
+    "ImExpired",
+    "ImNotNormalMonster",
+    "ImbuingEssence",
+    "ImbuingEssenceEnchanted",
+    "ImpalingTrap",
+    "IncrementalFortress",
+    "InfernalBlast",
+    "IngwazRune",
+    "Interact",
+    "Intimidate",
+    "Iron",
+    "IsazRune",
+    "ItemComponent",
+    "ItemType",
+    "Item_BurningAuraEffect",
+    "Item_ChillingAuraEffect",
+    "Item_FireNova",
+    "Item_FreezeNova",
+    "IwazRune",
+    "JeraRune",
+    "Jewelry",
+    "JewelryReinforcement",
+    "Junk",
+    "KaunanRune",
+    "KibuElemental",
+    "KibuShockwave",
+    "KibuSmallLightningNova",
+    "KillMonsterPack",
+    "KillTarget",
+    "LaukazRune",
+    "Leggings",
+    "LessThan50PercentLife",
+    "LightBoots",
+    "LightBracers",
+    "LightChest",
+    "LightGloves",
+    "LightHelmet",
+    "LightLeggings",
+    "LightReinforcement",
+    "LightShoulders",
+    "Lightning",
+    "LightningStaff2H",
+    "LightningWand1H",
+    "Link",
+    "LivingBombEffect",
+    "Local",
+    "LocationCloseLocation",
+    "LocationOpenLocation",
+    "LootChest",
+    "LootItemClicked",
+    "LootPickedUpAll",
+    "Lootbox",
+    "LootboxChristmas",
+    "Mace1H",
+    "Mace2H",
+    "MaceSpecialization",
+    "ManaArrow",
+    "ManaArrows",
+    "ManaArrowsAbility",
+    "ManaPotion",
+    "ManaShield",
+    "MannazRune",
+    "ManualTactic",
+    "ManuallyTargetMonster",
+    "MarkOfTheChosen",
+    "MasterIsBeingAttacked",
+    "MasterIsNotBeingAttacked",
+    "MasteryBackflipSafetyFlip",
+    "MasteryChainLightningWeapon",
+    "MasteryFrozenArrowCrystallize",
+    "MasteryHungerAwakenedHunger",
+    "MasteryIceBlastCounterBlast",
+    "MasteryImpalingTrapDeviousTrap",
+    "MasteryIntimidateShieldUp",
+    "MasteryManaArrowsDrainingArrows",
+    "MasteryMarkOfTheChosenAutoMark",
+    "MasteryMixologyDuration",
+    "MasteryMultishotMultipleReload",
+    "MasteryPoisonCloudHealBuff",
+    "MasteryPowerShotPowerAttacks",
+    "MasterySummonWolfEnrage",
+    "MasterySummonWolfSpiritWolf",
+    "MasteryTeleportElusiveness",
+    "MasteryTeleportRecitement",
+    "MasteryThunderstrikeWrathOfThor",
+    "MasteryWarStompGroundShaker",
+    "Meditation",
+    "MediumBoots",
+    "MediumBracers",
+    "MediumChest",
+    "MediumGloves",
+    "MediumHelmet",
+    "MediumLeggings",
+    "MediumReinforcement",
+    "MediumShoulders",
+    "Melee",
+    "MeleeReinforcement",
+    "MeleeWeaponSwing",
+    "Merchant",
+    "Might",
+    "Minion",
+    "Mixology",
+    "Monster",
+    "MonsterAbility",
+    "MonsterAura",
+    "MonsterSkill",
+    "Monster_Aggro_Insect1",
+    "Monster_Aggro_LargeCreature5",
+    "Monster_Aggro_LargeCreature6",
+    "Monster_Aggro_LargeHumanoid1",
+    "Monster_Aggro_LargeHumanoid2",
+    "Monster_Aggro_SmallHumanoid2",
+    "Monster_BolomahlTripleStrike",
+    "Monster_BoneDragonSkeletonBurn",
+    "Monster_Die_Hissing1",
+    "Monster_Die_Insect1",
+    "Monster_Die_LargeCreature5",
+    "Monster_Die_LargeCreature6",
+    "Monster_Die_LargeHumanoid1",
+    "Monster_Die_LargeHumanoid2",
+    "Monster_Die_SmallHumanoid2",
+    "Monster_DragonFireBreath",
+    "Monster_FallenAngelRay",
+    "Monster_FireBreath",
+    "Monster_HalfContact_Flying",
+    "Monster_HalfContact_Hissing3",
+    "Monster_HalfContact_Hissing4",
+    "Monster_HalfContact_Insect1",
+    "Monster_HalfContact_Insect2",
+    "Monster_HalfContact_LargeCreature5",
+    "Monster_HalfContact_LargeCreature6",
+    "Monster_HalfContact_LargeHumanoid1",
+    "Monster_HalfContact_LargeHumanoid2",
+    "Monster_HalfContact_SmallHumanoid2",
+    "Monster_HelSmallFireNova",
+    "Monster_Hel_Aggro",
+    "Monster_Hel_Attack1",
+    "Monster_Hel_Attack2",
+    "Monster_Hel_Die",
+    "Monster_Hel_Summon",
+    "Monster_Hurt_LargeHumanoid2",
+    "Monster_KibuLightningExplode",
+    "Monster_KibuShock",
+    "Monster_KibuShockwave",
+    "Monster_KibuSummonElemental",
+    "Monster_OdrChargeRayCold",
+    "Monster_OdrChargeRayFire",
+    "Monster_OdrChargeRayLightning",
+    "Monster_OdrEnrage",
+    "Monster_OdrSlam",
+    "Monster_OdrTotemColdAttackCast",
+    "Monster_OdrTotemLightningAttack",
+    "Monster_Odr_Aggro",
+    "Monster_Odr_Attack",
+    "Monster_Odr_Die",
+    "Monster_VileDragonNova",
+    "Monster_WarchiefWhirlwind",
+    "Monster_WolfKingRoar",
+    "MoreThan50PercentLife",
+    "Movement",
+    "MovementSpeedPotion",
+    "NaudizRune",
+    "Niflheim",
+    "NiflheimPortal",
+    "NoRepeat",
+    "NotIntimidated",
+    "NotOnFullLife",
+    "Npc",
+    "OdrTotem",
+    "OdrTotemDead",
+    "OdrTotemHasNoCharges",
+    "OdrTotemIsAlive",
+    "OdrTotemSpawned",
+    "OdrTrap",
+    "OdrsTrailPortal",
+    "OffHand",
+    "Offensive",
+    "OneHandWeapon",
+    "Opal",
+    "OpenCharacterWindow",
+    "OpenCharacterWindowAfterLevelingUp",
+    "Orc",
+    "Other",
+    "Overkill",
+    "PassiveSkill",
+    "PerthoRune",
+    "Pet",
+    "PetCrow",
+    "PetDog",
+    "PetExperiencePotion",
+    "PetHasFreeInventorySpace",
+    "PetResurrectionPotion",
+    "PetSnake",
+    "PetSnowOxe",
+    "Petkeeper",
+    "Physical",
+    "PlaceSuggestedItemInBlacksmithSourceSlot",
+    "PlayerDiedTrigger",
+    "PlayerMinion",
+    "Poison",
+    "PoisonCloud",
+    "PoisonCloudEffect",
+    "PoisonCloudPoisonDebuff",
+    "PoisonStaff2H",
+    "PoisonWand1H",
+    "Portal",
+    "PortalEntered",
+    "Potion",
+    "Pounce",
+    "Pounce_Land",
+    "PowerShot",
+    "PowerShotArrow",
+    "PowerShot_Load",
+    "Projectile",
+    "Pure",
+    "RaidoRune",
+    "RampagePortal",
+    "ReRollAffixTypes",
+    "ReRollExplicitAffixValues",
+    "ReRollImplicitAffixValues",
+    "ReRollNumAffixes",
+    "ReRollNumAffixesEnchanted",
+    "RecoveredStashChest",
+    "RegularBoss",
+    "ReinforcedAnvil",
+    "Reinforcement",
+    "RejuvenationPotion",
+    "Relic",
+    "RemotePlayer",
+    "RemoveAffix",
+    "RepairDurability",
+    "ResetItem",
+    "ResurrectPlayer",
+    "Retaliation",
+    "Ring",
+    "RunAwayTactic",
+    "Rune",
+    "Sacrifice",
+    "Shadowbolt",
+    "Shatter",
+    "Shield",
+    "ShieldReinforcement",
+    "ShootRangedProjectile",
+    "Shoulders",
+    "ShowItemDirectUpgrade",
+    "SkeletonMinion",
+    "Slam",
+    "SocketItem",
+    "SowiloRune",
+    "Spear2H",
+    "SpearSpecialization",
+    "SpecialSkill",
+    "Spell",
+    "Spitfire",
+    "Sprint",
+    "Staff2H",
+    "StaffReinforcement",
+    "StashChest",
+    "StateCombat",
+    "StateIdle",
+    "StateRunOutOfCombat",
+    "StateWander",
+    "Steel",
+    "StoneGolem",
+    "StoneGolemTrigger",
+    "SummonDeath",
+    "SummonDeathMinion",
+    "SummonDemon",
+    "SummonDemonMinion",
+    "SummonHuginnMinion",
+    "SummonMuninnMinion",
+    "SummonSkeleton",
+    "SummonSkeletonMinion",
+    "SummonWolfMinion",
+    "SummonWolfSpiritMinion",
+    "Sword1H",
+    "Sword2H",
+    "SwordsSpecialization",
+    "Tactics",
+    "TargetCanBeInstaKilledByDeath",
+    "TargetFar",
+    "TargetIsEnemy",
+    "TargetNear",
+    "TargetNotTooFar",
+    "TargetNotTooFarFromMaster",
+    "TargetTooFar",
+    "TargetTooFarFromMaster",
+    "Teleport",
+    "Thorns",
+    "Thunderstrike",
+    "ThurisazRune",
+    "TitaniumOre",
+    "Titansteel",
+    "TiwazRune",
+    "Tome",
+    "Torch",
+    "Tornado",
+    "TownPortal",
+    "TreasureHunter",
+    "Tutorial",
+    "Tutorial_Ability",
+    "Tutorial_ActiveSkills",
+    "Tutorial_ActiveSkills_Management",
+    "Tutorial_ActiveSkills_Tooltip",
+    "Tutorial_ActiveSkills_Used1",
+    "Tutorial_ActiveSkills_Used3",
+    "Tutorial_Attacking",
+    "Tutorial_Attacking_Finish",
+    "Tutorial_Attacking_UnitFrameTips",
+    "Tutorial_Attribute_Allocation",
+    "Tutorial_Attribute_Stats",
+    "Tutorial_AttributesConfirmAllocation",
+    "Tutorial_Blacksmith_Merging",
+    "Tutorial_Blacksmith_Merging_SuggestedItemClicked",
+    "Tutorial_Blacksmith_Merging_SuggestedItems",
+    "Tutorial_CharacterWindow",
+    "Tutorial_Concluded",
+    "Tutorial_CraftableItemUpgrade",
+    "Tutorial_Died",
+    "Tutorial_EquipNewItem",
+    "Tutorial_ForceField",
+    "Tutorial_HealthPotion",
+    "Tutorial_HealthPotion_Used",
+    "Tutorial_Introduction",
+    "Tutorial_Inventory",
+    "Tutorial_ItemTooltip",
+    "Tutorial_ItemTooltip_Affixes",
+    "Tutorial_ItemTooltip_Implicit",
+    "Tutorial_ItemTooltip_PrefixAndSuffix",
+    "Tutorial_ItemTooltip_Type",
+    "Tutorial_Location",
+    "Tutorial_Location_Clicked",
+    "Tutorial_Loot_PickupAll",
+    "Tutorial_ManualMoving",
+    "Tutorial_Portal",
+    "Tutorial_Portal_Entered",
+    "Tutorial_SkillsTab",
+    "TwoHandMeleeWeapon",
+    "TwoHandWeapon",
+    "Undead",
+    "UnholyFocus",
+    "UniqueBearMinion",
+    "UniqueHuginnHasPulledMonsters",
+    "UniqueItemFireNova",
+    "UniqueItemFireballOnHit",
+    "UniqueItemFreezeNova",
+    "UniqueItem_ChillingAuraDebuff",
+    "UniqueItem_MuninnBuff",
+    "UniqueItem_NearbyEnemiesBurnDebuff",
+    "UniqueItem_SummonHuginnBuff",
+    "UniqueItem_SummonMuninnBuff",
+    "UruzRune",
+    "UseActiveSkill1",
+    "UseActiveSkill2",
+    "UseActiveSkill3",
+    "UseHealthPotion",
+    "VanaheimPortal",
+    "Wand1H",
+    "WarStomp",
+    "WarStompFireGroundEffect",
+    "WarStompGroundEffect",
+    "Weapon",
+    "Whirl",
+    "Whirlwind",
+    "WolfKingMinion",
+    "WolfMinion",
+    "WorldLootExists",
+    "WunjoRune"
+  ],
+  "System.Void .ctor(Game.GameWorld world)": [
+    "ObjectRecoveredStash",
+    "ObjectStash",
+    "ObjectTownPortal"
+  ],
+  "System.Void .ctor(Game.GameWorld world, Game.Definitions.MonsterDefinition minionDefinition, System.Int32 actorPrefabHash, Game.Actor master)": [
+    "",
+    "??",
+    "GuildRunestone",
+    "HraesvelgrBonusInfo",
+    "Textures\\Avatars\\CombatPet\\Durnir_1.png",
+    "Textures\\Avatars\\CombatPet\\Durnir_2.png",
+    "Textures\\Avatars\\CombatPet\\Durnir_3.png",
+    "Textures\\Avatars\\CombatPet\\Durnir_4.png",
+    "Textures\\Avatars\\CombatPet\\Durnir_5.png",
+    "Textures\\Avatars\\CombatPet\\Durnir_6.png",
+    "Textures\\Avatars\\CombatPet\\Eggther_1.png",
+    "Textures\\Avatars\\CombatPet\\Eggther_2.png",
+    "Textures\\Avatars\\CombatPet\\Eggther_3.png",
+    "Textures\\Avatars\\CombatPet\\Eggther_4.png",
+    "Textures\\Avatars\\CombatPet\\Eggther_5.png",
+    "Textures\\Avatars\\CombatPet\\Eggther_6.png",
+    "Textures\\Avatars\\CombatPet\\Fossegrim_1.png",
+    "Textures\\Avatars\\CombatPet\\Fossegrim_2.png",
+    "Textures\\Avatars\\CombatPet\\Fossegrim_3.png",
+    "Textures\\Avatars\\CombatPet\\Fossegrim_4.png",
+    "Textures\\Avatars\\CombatPet\\Fossegrim_5.png",
+    "Textures\\Avatars\\CombatPet\\Fossegrim_6.png",
+    "Textures\\Avatars\\CombatPet\\Hala_1.png",
+    "Textures\\Avatars\\CombatPet\\Hala_2.png",
+    "Textures\\Avatars\\CombatPet\\Hala_3.png",
+    "Textures\\Avatars\\CombatPet\\Hala_4.png",
+    "Textures\\Avatars\\CombatPet\\Hala_5.png",
+    "Textures\\Avatars\\CombatPet\\Hala_6.png",
+    "Textures\\Avatars\\CombatPet\\Hraesvelgr_1.png",
+    "Textures\\Avatars\\CombatPet\\Hraesvelgr_2.png",
+    "Textures\\Avatars\\CombatPet\\Hraesvelgr_3.png",
+    "Textures\\Avatars\\CombatPet\\Hraesvelgr_4.png",
+    "Textures\\Avatars\\CombatPet\\Hraesvelgr_5.png",
+    "Textures\\Avatars\\CombatPet\\Hraesvelgr_6.png"
+  ],
+  "System.Void .ctor(Game.GameWorld world, Game.Items.Implementations.HelheimPortal portalItem, System.Boolean isTown)": [
+    "ObjectHelheimPortal"
+  ],
+  "System.Void .ctor(Game.GameWorld world, Game.Items.Implementations.NiflheimPortal portalItem)": [
+    "ObjectNiflheimPortal"
+  ],
+  "System.Void .ctor(Game.GameWorld world, Game.Items.Implementations.OdrsTrailPortal portalItem)": [
+    "ObjectOdrsTrailPortal"
+  ],
+  "System.Void .ctor(Game.GameWorld world, Game.Items.Implementations.VanaheimPortal portalItem)": [
+    "ObjectVanaheimPortal"
+  ],
+  "System.Void .ctor(Game.GameWorld world, System.Int32 actorPrefabHash)": [
+    "Gizmo"
+  ],
+  "System.Void .ctor(Game.GameWorld world, System.Tuple`2<System.Int32, System.Int32> forcedTierAndWaypoint = null)": [
+    "ObjectFrostRunPortal"
+  ],
+  "System.Void .ctor(Game.Living body, Game.Definitions.BrainDefinition definition)": [
+    "Invalid power definition in brain: {0}"
+  ],
+  "System.Void .ctor(SharedNet.Constants.Game.WorldTypes type, System.Int32 runtimeId)": [
+    "Dungeon",
+    "Golem",
+    "GuildDefense",
+    "Helheim",
+    "Niflheim",
+    "Odrs Trail",
+    "Scenes/World_Dungeon/World_Dungeon.unity",
+    "Scenes/World_Golem/World_Golem.unity",
+    "Scenes/World_GuildDefense/World_GuildDefense.unity",
+    "Scenes/World_Helheim/World_Helheim.unity",
+    "Scenes/World_Niflheim/World_Niflheim.unity",
+    "Scenes/World_OdrsTrail/World_OdrsTrail.unity",
+    "Scenes/World_Town/World_Town.unity",
+    "Scenes/World_Tutorial/World_Tutorial.unity",
+    "Scenes/World_Vanaheim/World_Vanaheim.unity",
+    "Town",
+    "Tutorial",
+    "Vanaheim"
+  ],
+  "System.Void .ctor(ref Game.GameAttribute attribute, System.Boolean isManualDependency)": [
+    ""
+  ],
+  "System.Void AbortSiege(SharedNet.Constants.Game.GuildSiegeBattleOutcome outcome)": [
+    "GuildSiegeWithMember",
+    "IsCreatorSide",
+    "LatestProgress",
+    "LootMultiplier"
+  ],
+  "System.Void Activate()": [
+    "Quest {0} activated objective {1} {2} ",
+    "Quest {0} activated step {1}",
+    "Unknown"
+  ],
+  "System.Void AddAttributeValueDoubleArray(SharedNet.Constants.Game.AttributeOrigin origin, Game.GameAttributeDA attribute, System.Double value)": [
+    "Illegal value assignment for GameAttribute.{0} attempted at {1}:{2}"
+  ],
+  "System.Void AddItem(Game.SlotOperationSource operationSource, Game.Items.Item item, System.Int32 row, System.Int32 column, System.Int32 page, System.Boolean updateItemLocation = True)": [
+    "Grid already contains item {0}",
+    "InventoryGrid.AddItem: Source: {0}, item to add is null",
+    "You need to remove an item from the backpack before placing another item there"
+  ],
+  "System.Void AddSkill(Game.SlotOperationSource operationSource, Game.Skill power, System.Int32 row, System.Int32 column)": [
+    "You need to remove a skill from the grid before placing another skill there"
+  ],
+  "System.Void Advance(System.Int32 questHash)": [
+    "Trying to advance quest {0} which doesn't exist"
+  ],
+  "System.Void Advance(System.String quest)": [
+    " which doesn't exist",
+    "Trying to advance quest "
+  ],
+  "System.Void ApplyAttributes()": [
+    "[BUFF] Buff.ApplyAttributes: Applying {0} attributes from buff: {1}"
+  ],
+  "System.Void AwakenMonsters(Game.Living except)": [
+    "DungeonMonsterSpawnArea: Trying to awaken destroyed monster"
+  ],
+  "System.Void BindAttributeFunctions()": [
+    "Game.NordicandiaScriptedGameAttributeFuncs"
+  ],
+  "System.Void CalculateItemAttributesAndSetBonuses(Game.IAttributeHolder target = null, Game.Inventory inventory = null, Game.SlotOperationSource equipItemOperationSource = 1, System.Boolean removeSetBonusAttributes = True)": [
+    "DummySet",
+    "Undefined"
+  ],
+  "System.Void CancelChanneledSkill(Game.Actor user, System.Int32 powerHash)": [
+    "cancel channel for power {0}, but it doesn't have an open channel to cancel"
+  ],
+  "System.Void ChangeCombatPet(Game.Definitions.MonsterDefinition definition, System.Boolean apply)": [
+    "CombatPetDurnir",
+    "CombatPetEggther",
+    "CombatPetFossegrim",
+    "CombatPetHala",
+    "CombatPetHraesvelgr"
+  ],
+  "System.Void ChangeToLocalDeviceAccount(System.String localAccountName)": [
+    "Guest",
+    "_"
+  ],
+  "System.Void Character_OnDied(System.Object sender, Game.DeathPayload e)": [
+    "Player:Died:ByDamageType:",
+    "Player:Died:ByMonsterRarity:",
+    "Player:Died:InWorld:",
+    "Player:Died:InWorldLevel:",
+    "Player:Died:NumAttackingMonsters",
+    "Unknown",
+    "by_damage_type",
+    "by_monster_rarity",
+    "character_died",
+    "num_attackers",
+    "player_died",
+    "world",
+    "world_level"
+  ],
+  "System.Void CheckIfPackShouldBeSpawned()": [
+    "finish-niflheim"
+  ],
+  "System.Void Clear(Game.SlotOperationSource operationSource, System.Boolean updateLocation = True)": [
+    "InventoryGrid.Clear: Grid still contains item {0} '{1}' after clearing",
+    "Item_delete"
+  ],
+  "System.Void Complete()": [
+    " completed unassigned step",
+    "Quest ",
+    "Quest {0} completed step {1}",
+    "Quest {0} deactivated objective {1} {2} "
+  ],
+  "System.Void Conversation_ConversationEnded(System.Object sender, System.Boolean interrupted)": [
+    "Conversation completed was not opened: {0}",
+    "Conversation {0} ended (Interrupted: {1})"
+  ],
+  "System.Void Conversation_ConversationStarted(System.Object sender, System.EventArgs e)": [
+    " started",
+    "Conversation "
+  ],
+  "System.Void ConvertRawAttributeTranslations()": [
+    "#",
+    "(?:(#|-?\\d+\\.?\\d*|-?\\d+)\\|(#|-?\\d+\\.?\\d*|-?\\d+))|(#|-?\\d+\\.?\\d*|-?\\d+)",
+    "{(\\-)?(?:(Add|Multiply|Divide)\\((\\d+,?\\d*)*\\)|(\\d+))\\.?(\\d+)?\\*?(\\d+\\.?\\d*|\\d+)?(r)?(d)?}"
+  ],
+  "System.Void CreatePower()": [
+    "CreatePower: Invalid power hash"
+  ],
+  "System.Void Deactivate()": [
+    " deactivated unassigned step",
+    "Quest ",
+    "Quest {0} deactivated objective {1} {2} ",
+    "Quest {0} deactivated step {1}"
+  ],
+  "System.Void Deserialize(Game.SerializedCharacterData+SerializedConversations dto)": [
+    "Conversation not found from old hash: {0}",
+    "Conversation not found: {0}"
+  ],
+  "System.Void Deserialize(Game.SerializedPlayerAccountData dto)": [
+    " ",
+    "Duped account shared stash item {0}@{1}_{2}_{3}",
+    "Failed to deserialize item",
+    "\u0414\u0415\u0421\u0415\u0420\u0418\u0410\u041b\u0418\u0417\u041e\u0412\u0410\u041b\u0418 "
+  ],
+  "System.Void Deserialize(Game.SerializedPlayerGameModeAccountData dto)": [
+    "Duped account shared stash item {0}@{1}_{2}_{3}",
+    "Duped character shared stash item {0}@{1}_{2}_{3}_{4}, found existing item at {5}_{6}_{7}",
+    "PlayerGameModeAccount: Failed to deserialize item (null)"
+  ],
+  "System.Void Destroy()": [
+    "Destroying character",
+    "Error destroying world {0}: World is already destroyed",
+    "Quest {0} has objective {1} {2} that is NULL",
+    "Unknown"
+  ],
+  "System.Void Dump(System.Text.StringBuilder sb)": [
+    "\n",
+    "\n---------- END DUMP ----------",
+    "\n-----------------------------------------",
+    "\nAffixSource: {0}",
+    "\nDefinitionIntegerId: {0}",
+    "\nGameAttributes:",
+    "\nRarity: {0}",
+    "\nType: ",
+    "\n{0}{1}[{2}]: {3}",
+    " (",
+    ")",
+    ",",
+    "---------- START DUMP ----------",
+    ": ",
+    "LOCAL",
+    "SCRIPTED"
+  ],
+  "System.Void EndGameMode()": [
+    "ObjectFrostRunPortal",
+    "finish-golem"
+  ],
+  "System.Void EquipItem(Game.SlotOperationSource operationSource, Game.Items.Item item, SharedNet.Constants.Game.ItemSlotTypes slot, System.Boolean validEquipmentRequest = True, System.Boolean invalidateDeferredAttributes = True)": [
+    "Item_equip"
+  ],
+  "System.Void FinishedLevel(Common.Types.Math.Vector3D bossDeathPosition)": [
+    "finish-helheim"
+  ],
+  "System.Void GameModeGolem(Game.GameWorld fromWorld, Common.Types.Math.Vector3D fromPosition, System.Boolean start = False)": [
+    "No golem mode found for golem "
+  ],
+  "System.Void GenerateMana(System.Double quantity)": [
+    "Trying to add negative mana {0}"
+  ],
+  "System.Void IncrementLegendary()": [
+    "Snowman_Legendary_Count"
+  ],
+  "System.Void IncrementRegular()": [
+    "Snowman_Regular_Count"
+  ],
+  "System.Void IncrementStrong()": [
+    "Snowman_Strong_Count"
+  ],
+  "System.Void Init()": [
+    "%",
+    "Duplicate id in character attributes: '{0}'",
+    "Duplicate name in character attributes: '{0}'"
+  ],
+  "System.Void InitAttributeTranslations(System.Collections.Generic.List`1<Game.Definitions.Languages.RawAttribTransDef+TransEntry> attributeTranslationTempDataList)": [
+    "#",
+    "(?:(#|-?\\d+\\.?\\d*|-?\\d+)\\|(#|-?\\d+\\.?\\d*|-?\\d+))|(#|-?\\d+\\.?\\d*|-?\\d+)",
+    "{(\\-)?(?:(Add|Multiply|Divide)\\((\\d+,?\\d*)*\\)|(\\d+))\\.?(\\d+)?\\*?(\\d+\\.?\\d*|\\d+)?(r)?(d)?}"
+  ],
+  "System.Void InitQuadtree(Common.Types.Math.Vector2F minAABB, Common.Types.Math.Vector2F maxAABB)": [
+    "QuadTree already initialized"
+  ],
+  "System.Void InternalDump(System.Text.StringBuilder sb)": [
+    "\n-----------------------------------------",
+    "\nAffixes:",
+    "\nName: "
+  ],
+  "System.Void InternalFixedUpdate(System.Double elapsedTime)": [
+    "GameModeNotification_GuildSiegeWave",
+    "Tooltip_ImplicitMonsterLevel"
+  ],
+  "System.Void InternalInitializePowerParameters(System.Int32 rank)": [
+    "Hunter"
+  ],
+  "System.Void InternalRemoveBuffsIf(Game.Actor target, System.Func`2<Game.Buff, System.Boolean> pred, System.Action`1<Game.Buff> onBuffRemovedCallback = null)": [
+    "): Skipping removal of buff since it's not applied: ",
+    "No World",
+    "[BUFF] BuffManager.InternalRemoveBuffsIf ("
+  ],
+  "System.Void InternalUpdate(System.Double elapsedTime)": [
+    "[DUNGEON RUN] Targeting end chest"
+  ],
+  "System.Void InvalidateAttributeDependentsCache(SharedNet.Constants.Game.AttributeOrigin origin, Game.GameAttribute attribute, ref System.Int32 depth)": [
+    " as dependency ",
+    " which does not have a valid script func",
+    "Attribute ",
+    "NULL"
+  ],
+  "System.Void LevelUp(System.Double numLevels = 1, System.Boolean storeLevelsPerMinute = True)": [
+    "Level_100",
+    "Level_20",
+    "Level_200",
+    "Level_300",
+    "Level_400",
+    "Level_50",
+    "Level_500"
+  ],
+  "System.Void Load()": [
+    " has a duplicate name",
+    " loaded",
+    "Quest "
+  ],
+  "System.Void LoadHandlers()": [
+    "Unimplemented buff: {0}",
+    "Unimplemented power: {0}"
+  ],
+  "System.Void MoveNext()": [
+    "",
+    ")",
+    ", Assembly-CSharp",
+    ", GameShared",
+    "/",
+    "://",
+    "??",
+    "AchievementGroups.json",
+    "Achievements.json",
+    "AffixGroups.json",
+    "Affixes.json",
+    "AssetIdentities.json",
+    "Attributes",
+    "Brains.json",
+    "Buffs.json",
+    "CharacterAvatarFrames.json",
+    "CharacterAvatars.json",
+    "CharacterClasses.json",
+    "CharacterRaces.json",
+    "Conversations",
+    "Conversations.json",
+    "Definitions/",
+    "Droprates.json",
+    "DungeonMonsterSpawnArea: Dead monster position: {0}",
+    "DungeonRunGameMode.FinishedLevel",
+    "Error_CannotRetrieveTimeToEnterHelheim",
+    "Error_NoAttemptsToEnterHelheim",
+    "FinishPortal",
+    "GameBalance.json",
+    "GlobalMonsterAffixes.json",
+    "GuildBadges.json",
+    "ItemSets.json",
+    "ItemTypes.json",
+    "Items.json",
+    "LootFilterItemTypes.json",
+    "Minions.json",
+    "MonsterAffixes.json",
+    "MonsterKill",
+    "MonsterTypes.json",
+    "Monsters.json",
+    "Object_CrystalGolemPortal",
+    "Object_FireGolemPortal",
+    "Object_StoneGolemPortal",
+    "Objects",
+    "Player:PickedUpLoot:ItemRarity:",
+    "Player:PickedUpLoot:ItemType:",
+    "PowerMasteries.json",
+    "PowerTags.json",
+    "PowerTypes.json",
+    "Powers.json",
+    "Quests",
+    "Quests.json",
+    "Strings",
+    "Tags.json",
+    "Unknown",
+    "Worlds.json",
+    "YouNeedAKeyToEnterHelheim",
+    "[DUNGEON RUN] Cannot finish level, current game mode is invalid (",
+    "[DUNGEON RUN] Cannot spawn end chest, world is destroyed! (",
+    "[DUNGEON RUN] Cannot target end chest, player is in another world (",
+    "[DUNGEON RUN] Finished level",
+    "[DUNGEON RUN] Finished level (",
+    "[DUNGEON RUN] Monster died in another game mode! (",
+    "[DUNGEON RUN] Spawned end chest",
+    "[DUNGEON RUN] Spawning chest...",
+    "[DUNGEON RUN] Targeting end chest",
+    "[DUNGEON RUN] Unknown target killed (",
+    "[DUNGEON RUN] killed ({0}, Alive: {1})",
+    "[ItemRelocator] Offline opal pickup rejected ({0}), item stays in the loot grid",
+    "[ODRS TRAIL] Finished level",
+    "[VANAHEIM] Finished level",
+    "\\",
+    "file:///",
+    "finish-odrs-trail",
+    "finish-vanaheim",
+    "gain-loot-opals",
+    "item_type",
+    "legendarySnowmanId = ",
+    "null",
+    "null world",
+    "player_picked_up_loot",
+    "rarity",
+    "snowmanRegularId = ",
+    "strongSnowmanId = "
+  ],
+  "System.Void NewDesignEvent(System.String eventName)": [
+    "Trying to log empty design event"
+  ],
+  "System.Void NewFirebaseDesignEvent(System.String eventName, Firebase.Analytics.Parameter[] parameters)": [
+    "Firebase Analytics Event: ",
+    "Trying to log empty design event"
+  ],
+  "System.Void NewProgressionEvent(Game.GameAnalyticsProgressionStatus progressionStatus, System.String progression01, System.String progression02, System.String progression03)": [
+    " (",
+    ")",
+    ":",
+    "Analytics: NewProgressionEvent - "
+  ],
+  "System.Void NewProgressionEvent(Game.GameAnalyticsProgressionStatus progressionStatus, System.String progression01, System.String progression02, System.String progression03, System.Int32 score)": [
+    "Analytics: NewProgressionEvent - {0}:{1}:{2} ({3}) - {4}"
+  ],
+  "System.Void NewWorldProgressionEvent(Game.AnalyticsCollector+ProgressionEventTypes eventType, Game.GameAnalyticsProgressionStatus status, Game.GameWorld world)": [
+    "_",
+    "false",
+    "level_start",
+    "true"
+  ],
+  "System.Void NewWorldProgressionEvent(Game.AnalyticsCollector+ProgressionEventTypes eventType, Game.GameAnalyticsProgressionStatus status, Game.GameWorld world, System.Int32 score)": [
+    "_",
+    "false",
+    "level_end",
+    "true"
+  ],
+  "System.Void OnLeave(Game.GameWorld world)": [
+    "World still contains item {0} '{1}' in slot {2} (not loot) when character left world"
+  ],
+  "System.Void OnUse(Game.Character player, Game.Items.Item target)": [
+    "Player:UseItem:",
+    "name",
+    "player_use_item"
+  ],
+  "System.Void ParseAttributeFormatting()": [
+    "' which doesn't exist",
+    "(\"[^\"\\\\]*(?:\\\\.[^\"\\\\] *)*\")",
+    "Language attribute entry references attribute '",
+    "hidden"
+  ],
+  "System.Void Pause(System.Boolean force = False)": [
+    " (forced)",
+    "Pausing game{0}, counter={1}"
+  ],
+  "System.Void PlayLine(System.Int32 lineIndex)": [
+    "Trying to play conversation line {0} for conversation '{1}' outside tree node range! Node count is {2}",
+    "Trying to play conversation line {0} for conversation '{1}' with invalid node selection type '{2}'"
+  ],
+  "System.Void ProcessAttributes(System.IO.StreamWriter fout)": [
+    "$0",
+    "(Constants\\.)?(MultiplyWith\\:|SubtractWith\\:)?([A-Za-z_]\\w*)(\\.Agg)?(?=[^\\:\\(\\w]|\\z)( \\?)?",
+    "Math.Floor(",
+    "Math.Max(",
+    "Math.Min(",
+    "Math.Pow(",
+    "MultiplyWith\\:",
+    "ScriptedAttributeInitializer.Pin(",
+    "SubtractWith\\:",
+    "\\d+\\.\\d+",
+    "floor\\(",
+    "max\\(",
+    "min\\(",
+    "pin\\(",
+    "pow\\("
+  ],
+  "System.Void Quest_OnQuestCompleted(System.Object sender, System.EventArgs e)": [
+    " completed",
+    "Quest "
+  ],
+  "System.Void Quest_OnQuestPendingActivation(System.Object sender, System.EventArgs e)": [
+    " pending activation",
+    "Quest "
+  ],
+  "System.Void Quest_OnQuestStarted(System.Object sender, System.EventArgs e)": [
+    " started",
+    "Quest "
+  ],
+  "System.Void Quests_OnQuestCompleted(System.Object sender, System.EventArgs e)": [
+    ":Completed",
+    "Quest:",
+    "name",
+    "quest_completed"
+  ],
+  "System.Void Quests_OnQuestStarted(System.Object sender, System.EventArgs e)": [
+    ":Started",
+    "Quest:",
+    "name",
+    "quest_started"
+  ],
+  "System.Void RefreshAccountType()": [
+    "Guest"
+  ],
+  "System.Void RegisterWorldScene(SharedNet.Constants.Game.WorldTypes worldType, WorldScene worldScene)": [
+    "Trying to register world scene for world {0} which does not exist"
+  ],
+  "System.Void RemoveAttributes()": [
+    "[BUFF] Buff.RemoveAttributes: Removing {0} attributes from buff: {1}"
+  ],
+  "System.Void RemoveItem(Game.SlotOperationSource operationSource, Game.Items.Item item, System.Boolean updateItemLocation = True)": [
+    "Grid does not contain item {0}",
+    "InventoryGrid.RemoveItem: Source: {0}, item to remove is null"
+  ],
+  "System.Void RemoveItem(Game.SlotOperationSource operationSource, Game.PowerScript power)": [
+    "Grid does not contain skill {0}",
+    "SkillGrid.RemoveItem: Source: {0}, skill to remove is null"
+  ],
+  "System.Void ResetIfNeeded()": [
+    "Snowman_Legendary_BlockUntil",
+    "Snowman_Legendary_Count",
+    "Snowman_Regular_BlockUntil",
+    "Snowman_Regular_Count",
+    "Snowman_Strong_BlockUntil",
+    "Snowman_Strong_Count"
+  ],
+  "System.Void ResetQuest(System.Int32 questHash, System.Boolean activateFirstStep = False)": [
+    "Trying to reset quest {0} which doesn't exist"
+  ],
+  "System.Void Resume(System.Boolean force = False)": [
+    " (forced)",
+    "Resuming game{0}, counter={1}"
+  ],
+  "System.Void SaveAllDefinitions()": [
+    "AchievementGroups.json",
+    "Achievements.json",
+    "AffixGroups.json",
+    "Affixes.json",
+    "AssetIdentities.json",
+    "AttributeTranslations.json",
+    "Brains.json",
+    "Buffs.json",
+    "CharacterAvatarFrames.json",
+    "CharacterAvatars.json",
+    "CharacterClasses.json",
+    "CharacterRaces.json",
+    "Conversations.json",
+    "Droprates.json",
+    "GameBalance.json",
+    "GlobalMonsterAffixes.json",
+    "GuildBadges.json",
+    "ItemSets.json",
+    "ItemTypes.json",
+    "Items.json",
+    "LootFilterItemTypes.json",
+    "Minions.json",
+    "MonsterAffixes.json",
+    "MonsterTypes.json",
+    "Monsters.json",
+    "PowerMasteries.json",
+    "PowerTags.json",
+    "PowerTypes.json",
+    "Powers.json",
+    "Quests.json",
+    "Tags.json",
+    "Worlds.json"
+  ],
+  "System.Void SaveByteArrayToFile(System.Byte[] data, System.String filename, System.String fileExtension, System.String path)": [
+    "/",
+    "\\",
+    "old"
+  ],
+  "System.Void SaveStringToFile(System.String data, System.String filename, System.String fileExtension, System.String path)": [
+    "/",
+    "\\",
+    "old"
+  ],
+  "System.Void SetAttributeValue(SharedNet.Constants.Game.AttributeOrigin origin, Game.GameAttribute attribute, Game.GameAttributeValue value)": [
+    "Illegal value assignment for GameAttribute.{0} attempted at {1}:{2}"
+  ],
+  "System.Void SetAttributeValueDoubleArray(SharedNet.Constants.Game.AttributeOrigin origin, Game.GameAttributeDA attribute, Game.GameAttributeValueDoubleArray value)": [
+    "Illegal value assignment for GameAttribute.{0} attempted at {1}:{2}"
+  ],
+  "System.Void SetCustomUserId(System.String userId)": [
+    "Analytics: Current character: "
+  ],
+  "System.Void SetupStartingItems(Game.Character ch, Game.GameWorld world)": [
+    "Hunter",
+    "Mage",
+    "Necromancer",
+    "Warrior"
+  ],
+  "System.Void Start(System.Double elapsedTime, System.Nullable`1<Common.Types.Math.Vector3D> targetPosition = null, Game.Skill+SkillUserContexts skillUserContext = 0)": [
+    "Skill {0} started when it cannot run due to {1}"
+  ],
+  "System.Void StartConversation(System.Int32 conversationHashSafe, System.Action onConversationEnd, System.Boolean allowCompletedReplay)": [
+    "Conversation is already open: {0}",
+    "Conversation not found: {0}"
+  ],
+  "System.Void StepCompleted()": [
+    "Trying to complete the current step which is NULL for quest "
+  ],
+  "System.Void SummonArrowstream(Game.Actor target)": [
+    "No minion definition found for '{0}'"
+  ],
+  "System.Void SummonBear()": [
+    "No minion definition found for '{0}'"
+  ],
+  "System.Void TransferRemoveBuffs(System.Collections.Generic.List`1<Game.Buff> buffsToRemove)": [
+    "): BuffManager does not contain actor ",
+    "): No buffs to remove from list",
+    "): Removing buff from list: ",
+    "): Skipping buff removal from list since it's not applied: ",
+    "No World",
+    "[BUFF] BuffManager.TransferRemoveBuffs (",
+    "[BUFF] BuffManager.TransferRemoveBuffs ({0}): Removing {1} buffs",
+    "null"
+  ],
+  "System.Void UpdateBonusInfo(System.Int32 currentKillCount)": [
+    "HraesvelgrBonusInfo"
+  ],
+  "System.Void UpdateCounter(Game.QuestObjective objective)": [
+    " on unassigned step completed objective ",
+    " on unassigned step updated counter for objective ",
+    "NULL",
+    "Quest ",
+    "Quest {0} on step {1} completed objective {2}",
+    "Quest {0} on step {1} updated counter for objective {2}"
+  ],
+  "System.Void UpdatePotionPurchaseCount(System.String potionType, System.Int32 quantity)": [
+    " \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e ",
+    "\u0417\u0410\u041f\u0418\u0421\u0410\u041b\u0418 \u0412 ",
+    "\u042d\u0422\u041e \u0423\u0416\u0415 \u0415\u0421\u041b\u0418 \u041c\u0410\u041a\u0421\u0418\u041c\u0423\u041c \u041f\u041e\u0425\u041e\u0414\u0423"
+  ],
+  "System.Void WriteJson(System.String filename, T obj, System.String path, System.Boolean encrypt)": [
+    "/",
+    "\\",
+    "old"
+  ],
+  "T CreateBuff(Game.IGameContext gameContext, System.Object[] args)": [
+    "Unimplemented buff: {0}"
+  ],
+  "T CreateCooldownBuff(Game.IGameContext gameContext, System.Object[] args)": [
+    "Unimplemented buff: {0}"
+  ],
+  "T CreatePower(Game.Actor user, Game.GameWorld world, System.Object[] args)": [
+    "Unimplemented power: {0}"
+  ]
+}

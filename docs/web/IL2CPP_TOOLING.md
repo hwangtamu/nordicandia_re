@@ -63,3 +63,16 @@
   赋值的；这些字段由某 cctor 从字符串字面量初始化。要逐条映射 `reasonText → CraftingReason_*`，
   需继续：定位初始化这些字段的 cctor，并解析其字符串字面量加载。
 - 下一步可写一个小工具直接引用内置 `LibCpp2IL.dll`，遍历方法指令、解析字符串字面量操作数（比修 IL 输出更直接）。
+
+## 已解决：字符串字面量 → 指令
+
+Cpp2IL 的 ARM64 lifter 不产出 `ldstr`，但这些 release 构建里字符串字面量经 **GOT 槽**间接加载
+（文件内为 0，运行时填充）。解析链：
+```
+ISIL 的 Move vX, [GOT_addr]
+  -> ELF .rela.dyn 中 GOT_addr 的 R_AARCH64_RELATIVE addend = metadata-usage token 地址
+  -> android-metadata.json addressMap.stringLiterals[token] = 字符串文本
+```
+`tools/web-content/resolve_il2cpp_strings.py` 建立 `got_to_string.json`（本包 **37,303** 条），
+并输出 `generated/method_strings.json`（方法签名 → 其引用的字符串）。`--annotate-out` 可把字符串
+注解写回 ISIL 副本。用它可以逐方法、逐条件读出客户端逻辑（已用于制作系统，见 `CRAFTING_EXTRACTED.md`）。

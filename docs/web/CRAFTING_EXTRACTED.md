@@ -155,3 +155,41 @@ Disassembler / Disassembler_Advanced / Disassembler_Auto_Discard
   与制作无关）；令牌值也只出现在数据段（`0x56740B0`），代码段内没有立即数引用。
 - 结论：该 release 构建通过间接机制（`Il2CppCodeGenModule` 的字符串字面量表）引用，需 Il2CppDumper
   级别的解析器才能把"某指令 → 字面量"。因此**条件 → 理由键的逐条映射暂未完成**；规则条目本身已完整枚举。
+
+## 制作操作 → 校验理由（ClientVerified，已打通字符串解析）
+
+通过 `tools/web-content/resolve_il2cpp_strings.py` 解析：GOT 槽（文件内为 0）→ ELF `.rela.dyn`
+重定位 addend → metadata-usage token 地址 → `stringLiterals` 文本。由此把每个制作操作的 `CanCraft`
+（基类 `Artifact.CanCraft` + 子类追加条件）解析出它会返回的理由：
+
+| 制作操作（`GetCraftingOperationName`） | 校验理由（`CraftingReason_*`，去掉前缀） |
+|---|---|
+| `Artifact`（基类） | `TypeNotEligable`、`NotEnoughMaterials`、`CannotCraftOnImbued`、`Ready` |
+| `AddAffix` / `AddOpenAffix` | `NumAffixesAlreadyMaxed` |
+| `RemoveAffix` | `Remove_NotEnoughAffixes` |
+| `ReRollAffixTypes` / `ReRollExplicitAffixValues` | `HasNoNonImplicitAffixes` |
+| `ReRollImplicitAffixValues` | `HasNoImplicitAffixes` |
+| `ReRollNumAffixes` | `BlacksmithRerollNumAffixesWarning` |
+| `Link` | `LinkNotEnoughAffixes`、`TooHighRarity` |
+| `Reinforcement`（基础） | `NoImplicits`、`ReinforcementMaxed` |
+| `MeleeReinforcement` | `NotMelee` |
+| `BowReinforcement` | `NotRanged` |
+| `StaffReinforcement` | `NotStaff` |
+| `ShieldReinforcement` | `NotShield` |
+| `LightReinforcement` | `NotLightArmor` |
+| `MediumReinforcement` | `NotMediumArmor` |
+| `HeavyReinforcement` | `NotHeavyArmor` |
+| `JewelryReinforcement` | `NotJewelry` |
+| `HeatingStone` | `CannotApplyLowerRarityAffix`、`CannotUpgradeMaxRarity`、`CanOnlyHaveOneSSRarity`、`CannotUseMultipleHeatingStones`、`MissingMergableItem` |
+| `Anvil` | `CannotUseMultipleAnvils` |
+| `ImbuingEssence` / `ImbuingEssenceEnchanted` | `BlacksmithImbueWarning` |
+| `RelicOfBlessing` | `BlessingMaxed`、`NotEquippable` |
+| `RepairDurability` | `ItemHasNoDurability`、`AlreadyRestored` |
+| `Rune` | `TypeNotEligable`、`CannotCraftOnImbued`、`Ready` |
+
+制作操作名集合：`AddAffix`、`AddOpenAffix`、`Bless`、`Imbue`、`Link`、`ReforgeItem`、`Reinforce`、
+`RemoveAffix`、`Reroll`、`Restore`。
+
+条件逻辑也可读（例：`Artifact.CanCraft` 中 `Item.get_IsImbued(targetItem)` 为真且 `!allowOnImbued`
+→ `CannotCraftOnImbued`；否则如前所述）。注解版 ISIL 见
+`tmp/cpp2il-annotated/Items/Implementations/*.txt`（用 `--annotate-out` 生成）。
