@@ -1,3 +1,4 @@
+using Game;
 using MagicOnion;
 using SharedNet.Api;
 using Nordicandia.Server.State;
@@ -45,6 +46,40 @@ public sealed partial class InventoryServiceApiImpl
             Successful = successful,
             SourceItems = sourceItems,
             SmeltingResult = result,
+        });
+    }
+
+    /// <summary>Essence craft. Consumes Iron with the recovered cost formula and rolls the recovered
+    /// success chance, merging the source items' affixes onto the Blacksmith target on success.</summary>
+    public UnaryResult<CraftEssenceItemResponse> CraftEssenceItem(CraftEssenceItemRequest req)
+    {
+        if (req == null || req.CharacterId == Guid.Empty)
+            throw new Grpc.Core.RpcException(new Grpc.Core.Status(Grpc.Core.StatusCode.InvalidArgument, "Missing character"));
+        var (ok, success, result, _, _) = GameStore.Instance.CraftEssenceItem(Owner, req.CharacterId, req.OverheatSliderValue);
+        return UnaryResult.FromResult(new CraftEssenceItemResponse
+        {
+            OperationSuccessful = ok,
+            SuccessFirstTime = success,
+            Result = result,
+            Tools = new SerializedItems { Items = new List<SerializedItem>() },
+            ChangedIronInstances = new List<IronStackEntry>(),
+        });
+    }
+
+    /// <summary>Essence craft (v2 request shape: Iron + Titansteel hints).</summary>
+    public UnaryResult<CraftEssenceItemResponse2> CraftEssenceItem2(CraftEssenceItemRequest2 req)
+    {
+        if (req == null || req.CharacterId == Guid.Empty)
+            throw new Grpc.Core.RpcException(new Grpc.Core.Status(Grpc.Core.StatusCode.InvalidArgument, "Missing character"));
+        var (ok, success, result, _, _) = GameStore.Instance.CraftEssenceItem(Owner, req.CharacterId, req.OverheatSliderValue);
+        return UnaryResult.FromResult(new CraftEssenceItemResponse2
+        {
+            OperationSuccessful = ok,
+            SuccessFirstTime = success,
+            Result = result,
+            Tools = new SerializedItems { Items = new List<SerializedItem>() },
+            ChangedIronInstances = new List<ReagentStackEntry>(),
+            ChangedTitansteelInstances = new List<ReagentStackEntry>(),
         });
     }
 

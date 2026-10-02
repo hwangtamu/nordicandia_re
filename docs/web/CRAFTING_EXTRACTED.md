@@ -209,8 +209,10 @@ GetNumIronCost(sourceItems, essence, targetItem, baseCost, qualitySlider, overhe
 - `GetNumItemsCost = (目标可合并词缀数相关值) × overheatSliderValue`（`Multiply`；与 Titansteel 同式，
   内部先 `CraftingUtils.GetMergableAffixes` 取可合并词缀数）。
 
-**仍缺**（因此 `CraftEssenceItem(2)`/`CraftRelicItem`/`SocketItem`/`ItemAddNewSocket`/`TradeWithSetItemMerchant`
-仍为空桩）：
+**已实现**：`GameStore.CraftEssenceItem` 消耗 Iron（`GetNumIronCost`）、按 `GetHighestChanceToSucceed` 掷骰、
+成功时把源物品词缀并入目标（简化词缀合并，容量 = `2 + rarity/3`）；`InventoryService.CraftEssenceItem(2)` 已接线。
+
+**仍缺**（因此 `CraftRelicItem`/`SocketItem`/`ItemAddNewSocket`/`TradeWithSetItemMerchant` 仍为空桩）：
 - 精华制作的成功/失败产出物品与 `ChangedIronInstances`/`Tools` 结构；
 - `getCostFromRarity` 的逐稀有度消耗表；
 - 遗物制作（`CraftRelicItem`）的目标物品来源与产出；

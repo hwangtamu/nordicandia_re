@@ -1382,6 +1382,79 @@ public sealed class GameStore : IDisposable
         return (items ?? new List<SerializedItem>()).Where(i => i != null).ToList();
     });
 
+    // ---- Essence craft -------------------------------------------------------------
+
+    /// <summary>Per-rarity material cost, recovered from HeatingStone.getCostFromRarity: 1 except
+    /// 8 -> 2, 9 -> 3, 10 -> 10.</summary>
+    private static int CostFromRarity(int rarity) => rarity switch { 8 => 2, 9 => 3, 10 => 10, _ => 1 };
+
+    /// <summary>Consumes <paramref name="amount"/> across the given stacks (attribute 19 holds the
+    /// stack size); stacks emptied to zero are removed.</summary>
+    private static void ConsumeStacks(List<SerializedItem> items, List<SerializedItem> stacks, int amount)
+    {
+        var remaining = amount;
+        foreach (var stack in stacks)
+        {
+            if (remaining <= 0) break;
+            var current = (int)(GetItemAttribute(stack, SharedNet.Constants.Game.AttributeOrigin.Item, ItemStackAttributeId) ?? 1);
+            if (current <= 0) continue;
+            var take = Math.Min(current, remaining);
+            remaining -= take;
+            if (current - take <= 0) items.Remove(stack);
+            else SetItemAttribute(stack, SharedNet.Constants.Game.AttributeOrigin.Item, ItemStackAttributeId, current - take);
+        }
+    }
+
+    /// <summary>
+    /// Simplified essence craft. Consumes Iron using the recovered cost formula
+    /// (<c>GetNumIronCost = (int)(overheat * getCostFromRarity(rarity) * 0.5)</c>) and rolls the
+    /// recovered success chance (<c>GetHighestChanceToSucceed = rarity &lt; 10 ? 0.25 : 1.0</c>).
+    /// On success the source items' affixes are merged onto the Blacksmith target item, up to its
+    /// rarity's affix capacity. The merge is a documented simplification of the client's affix
+    /// pipeline (which uses full item generation); the cost and success formulas are ClientVerified.
+    /// </summary>
+    public (bool OperationSuccessful, bool Success, SerializedItem Result, SerializedItems SourceItems, int IronConsumed)
+        CraftEssenceItem(Guid owner, Guid characterId, int overheatSliderValue) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        data.Items ??= new SerializedItems { Items = new List<SerializedItem>() };
+        data.Items.Items ??= new List<SerializedItem>();
+        var items = data.Items.Items;
+        var target = items.FirstOrDefault(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_TargetItem);
+        var sources = items.Where(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem).ToList();
+        var sourceSnapshot = new SerializedItems { Items = sources.Select(CloneItem).ToList() };
+        if (target == null || sources.Count == 0)
+            return (false, false, null, sourceSnapshot, 0);
+
+        var rarity = (int)target.BaseRarity;
+        var ironCost = Math.Max(1, (int)(Math.Max(1, overheatSliderValue) * CostFromRarity(rarity) * 0.5));
+        var ironStacks = items.Where(i => i != null && i.DefinitionIntegerId == ItemIronId).ToList();
+        var available = ironStacks.Sum(i => (int)(GetItemAttribute(i, SharedNet.Constants.Game.AttributeOrigin.Item, ItemStackAttributeId) ?? 1));
+        if (available < ironCost)
+            return (false, false, null, sourceSnapshot, 0);
+        ConsumeStacks(items, ironStacks, ironCost);
+
+        var rate = rarity < 10 ? 0.25 : 1.0;
+        var success = Random.Shared.NextDouble() <= rate;
+        if (success)
+        {
+            target.Affixes ??= new List<SerializedAffix>();
+            var capacity = 2 + Math.Clamp(rarity / 3, 0, 4);
+            foreach (var source in sources)
+                foreach (var affix in source.Affixes ?? Enumerable.Empty<SerializedAffix>())
+                {
+                    if (affix == null || target.Affixes.Count >= capacity) continue;
+                    if (target.Affixes.Any(a => a != null && a.DefinitionIntegerId == affix.DefinitionIntegerId)) continue;
+                    target.Affixes.Add(affix);
+                }
+            items.RemoveAll(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem);
+        }
+
+        c.Data = Pack(data);
+        return (true, success, CloneItem(target), sourceSnapshot, ironCost);
+    });
+
     /// <summary>Highest level among the account's Season / Season-Hardcore characters, used
     /// as the season reward track level.</summary>
     public int SeasonLevel(Guid owner)

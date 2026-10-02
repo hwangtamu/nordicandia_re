@@ -23,6 +23,7 @@ static class AcceptanceRegressionTests
         WebCharacterGetsRecoveredRatings();
         EquippedWeaponFeedsWeaponDamage();
         SmeltAndDisassembleConsumeSources();
+        CraftEssenceConsumesIron();
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
@@ -324,6 +325,45 @@ static class AcceptanceRegressionTests
             Check(tConsumed.Items.Count == 1, "trade: consumes the offered items");
             Check(tInventory.Items.Any(i => i.DefinitionIntegerId == 606), "trade: grants the product stack");
             Check(store.GetItems(owner, characterId).All(i => i.Slot != ItemSlotTypes.YourTrade), "trade: empties the trade window");
+        }
+    }
+
+    private static void CraftEssenceConsumesIron()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var (store, registry, owner, characterId, _) = Create("r10", 100);
+        using (store)
+        {
+            SerializedItem Iron() => new()
+            {
+                Id = Guid.NewGuid(), Name = "Iron", Slot = ItemSlotTypes.Inventory, DefinitionIntegerId = 63, BaseRarity = 0,
+                Attributes = new SerializedAttributes
+                {
+                    Values = new Dictionary<AttributeOrigin, Dictionary<int, GameAttributeValue>>
+                    {
+                        [AttributeOrigin.Item] = new()
+                        {
+                            [18] = new GameAttributeValue { Value = 1000, ValueD = 1000 },
+                            [19] = new GameAttributeValue { Value = 1, ValueD = 1 },
+                        },
+                    },
+                    MultiplicativeValues = new(),
+                },
+            };
+
+            var target = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 5));
+            target.Slot = ItemSlotTypes.Blacksmith_TargetItem;
+            var source = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 6));
+            source.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            var items = new List<SerializedItem> { target, source };
+            for (var i = 0; i < 6; i++) items.Add(Iron());
+            store.GrantItems(owner, characterId, items);
+
+            var (ok, _, _, _, ironConsumed) = store.CraftEssenceItem(owner, characterId, 10);
+            Check(ok, "essence: operation runs with a target, a source and enough iron");
+            Check(ironConsumed > 0, "essence: consumes the recovered iron cost");
+            var remainingIron = store.GetItems(owner, characterId).Count(i => i.DefinitionIntegerId == 63);
+            Check(remainingIron < 6, "essence: the iron stacks are actually deducted");
         }
     }
 
