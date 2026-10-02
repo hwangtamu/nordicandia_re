@@ -79,6 +79,31 @@ IsCriticalHit = CalculateChance( Crit_Chance_{CurrentHand|AttackSpell}_Total * C
 网页端暂未接入闪避/格挡，因为网页角色的属性表只有 Offense/Defense/Recovery（缺少闪避/格挡来源）；
 接入需要先还原 `Character.CalculateCombatAttributes` 的完整属性合成。
 
+## 1d. 属性合成管线（架构已确认）
+
+`Character.CalculateCombatAttributes(...)` 反汇编显示：它不直接算装备属性，而是**读取已经由脚本 getter 合成的
+`*_Total` 属性**，再算显示用的 `Estimated_*`：
+
+```
+Estimated_Physical_Damage_Reduction = CalculatePhysicalDamageReduction(
+        Armor_Total, <参考伤害>, Base_Physical_Damage_Reduction_Bonus, Physical_Damage_Reduction_Max)
+Hit_Chance_Cap                      = CalculateChanceToHit(
+        AttackRating_Total, <目标闪避>, Hit_Chance_Bonus_Percent, Hit_Chance_Cap)
+Estimated_Chance_To_Evade_Attacks   = CalculateChanceToHit(
+        Evasion_Total, <攻击方命中>, ...)
+Estimated_World_Resist_Penalty      = f(World_Tier, World_Tier_Unlocked, Options_LastMonsterLevel)
+```
+
+属性来源链：
+```
+物品/等级/Buff → Attributes[origin]  →  226 条脚本 getter  →  *_Total
+   (Armor_Total = Armor_SubTotal * Armor_Focus_Factor_Constitution * (1+Armor_Bonus_Percent) * Base_Armor_Multiplier, ...)
+→ CalculateCombatAttributes → Estimated_* / 战斗结算
+```
+
+**结论**：伤害/命中/减伤的公式已全部还原；要在网页端真正跑起来，必须先实现「物品/等级 → 全部属性」的合成
+（226 条脚本 getter + 装备属性贡献）。这是下一步的里程碑（实现量明确，不再是“未知”）。
+
 ## 2. 武器伤害合成（ClientVerified，来自属性脚本）
 
 物理武器伤害（每手）：
