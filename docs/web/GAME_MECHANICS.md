@@ -130,7 +130,11 @@ scaled = ( OwnerLevelMultiplier * Pow(ownerLevel - OwnerLevelThreshold, OwnerLev
 | 饰品/护甲 | `Resistance_All`(1002) | `Resistance_*_Total_Capped` |
 
 实测：装等护甲使 `Armor_Total` 251.4→404.2；主手使伤害包 389.4（物理 268.8 + 元素 120.6）。
-id 与公式为 ClientVerified；数值幅度仍为 Provisional（`ItemGenerator` 的基础值生成未逐条还原）。
+id 与公式为 ClientVerified。**基础数值已标定**：`ItemCatalog`（458 个真实物品定义，来自 `Items.json`）
+提供每件物品的隐式基础值（武器：`Local_Implicit_Physical_Base_Damage_Min/Delta`、`Local_Implicit_Base_Attack_Speed`、
+`Local_Base_Crit_Chance`；护甲：`Local_Implicit_Base_Armor`/`Evasion`），掉落按槽位选真实物品定义并掷取隐式区间。
+例：SteelHammer 物理 17-19/delta 10-13/攻速 1.296/暴击 7%；实测主手伤害包 42.4。
+**仍为 Provisional**：物品等级/稀有度对隐式值的缩放（`GameBalance.ScalingFunctions`）尚未接入。
 
 **词缀**：`AffixCatalog`（18 个真实词缀，来自 `Affixes.json`）授予客户端属性：
 `Strength/Dexterity/Intelligence/Vitality/Constitution/Agility_Bonus_Percent`(109-130)、

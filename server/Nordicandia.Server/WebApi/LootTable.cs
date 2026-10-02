@@ -61,10 +61,15 @@ public static class LootTable
 
     public static SerializedItem CreateItem(LootDrop drop)
     {
-        var names = SlotNames.TryGetValue(drop.Slot, out var list) ? list : new[] { "Trinket" };
-        var name = names[Math.Abs(Hash(drop.Level, drop.Slot)) % names.Length];
-        var baseStats = StatsFor(drop.Slot, drop.Rarity, drop.Level);
         var rng = new CombatRandom(drop.Seed == 0 ? 0x2545F4914F6CDD1DUL : drop.Seed);
+        var definition = ItemCatalog.Pick(drop.Slot, rng);
+        var fallbackNames = SlotNames.TryGetValue(drop.Slot, out var list) ? list : new[] { "Trinket" };
+        var name = definition?.Name ?? fallbackNames[Math.Abs(Hash(drop.Level, drop.Slot)) % fallbackNames.Length];
+        var definitionId = definition?.IntegerId ?? 0;
+        var baseStats = StatsFor(drop.Slot, drop.Rarity, drop.Level);
+        // Rolls a real implicit value when the definition has one; else the provisional fallback.
+        double RollImplicit(string attributeName, double fallback)
+            => definition is { } d && d.TryGet(attributeName, out var v) ? v.Min + rng.NextDouble() * (v.Max - v.Min) : fallback;
 
         // Affixes are drawn from the real client affix catalog; counts follow the web rarity curve.
         var affixCount = 1 + (drop.Rarity >= 3 ? 1 : 0) + (drop.Rarity >= 5 ? 1 : 0);
@@ -91,32 +96,47 @@ public static class LootTable
             [AttrRequiredLevel] = Value(Math.Max(1, drop.Level)),
         };
         // Items carry the client's attribute ids so the recovered synthesis formulas drive the
-        // character's ratings. The magnitudes reuse the provisional offence/defence roll and are
-        // documented Provisional; the ids/formulas are ClientVerified.
+        // character's ratings. Base values come from the real item definition's implicit affixes
+        // (rolled), with the provisional curve as fallback.
         if (drop.Slot == 12)
         {
-            // Main-hand: physical + one random elemental damage, attack speed, weapon crit, range.
-            itemAttributes[507] = Value(Math.Round(offense * 0.8));   // Item_Weapon_Physical_Damage_Min_MainHand
-            itemAttributes[508] = Value(Math.Round(offense * 0.4));   // ..._Delta_MainHand
+            // Main-hand: physical (implicit) + one random element, attack speed, weapon crit, range.
+            var physMin = RollImplicit("Local_Implicit_Physical_Base_Damage_Min", offense * 0.8);
+            var physDelta = RollImplicit("Local_Implicit_Physical_Base_Damage_Delta", offense * 0.4);
+            itemAttributes[2500] = Value(Math.Round(physMin, 4)); // Local_Implicit_Physical_Base_Damage_Min
+            itemAttributes[2501] = Value(Math.Round(physDelta, 4)); // ..._Delta
+            itemAttributes[507] = Value(Math.Round(physMin, 4));   // Item_Weapon_Physical_Damage_Min_MainHand
+            itemAttributes[508] = Value(Math.Round(physDelta, 4)); // ..._Delta_MainHand
             var element = new[] { 1407, 1507, 1607, 1707 }[(int)(rng.NextDouble() * 4) & 3];
-            itemAttributes[element] = Value(Math.Round(offense * 0.35));
-            itemAttributes[element + 1] = Value(Math.Round(offense * 0.2));
-            itemAttributes[454] = Value(Math.Round(1.3 + drop.Rarity * 0.06, 3));  // Item_Attack_Speed_MainHand
-            itemAttributes[701] = Value(Math.Round(0.04 + drop.Rarity * 0.004, 4)); // Item_Crit_Chance_MainHand
-            itemAttributes[217] = Value(2 + Math.Round(drop.Rarity * 0.2, 1));      // Item_Attack_Range_MainHand
+            itemAttributes[element] = Value(Math.Round(physMin * 0.5, 4));
+            itemAttributes[element + 1] = Value(Math.Round(physDelta * 0.5, 4));
+            var speed = RollImplicit("Local_Implicit_Base_Attack_Speed", 1.3 + drop.Rarity * 0.06);
+            itemAttributes[462] = Value(Math.Round(speed, 4));      // Local_Implicit_Base_Attack_Speed
+            itemAttributes[454] = Value(Math.Round(speed, 4));      // Item_Attack_Speed_MainHand
+            var critPct = RollImplicit("Local_Base_Crit_Chance", 4 + drop.Rarity * 0.4);
+            itemAttributes[718] = Value(Math.Round(critPct, 4));    // Local_Base_Crit_Chance (percent)
+            itemAttributes[701] = Value(Math.Round(critPct / 100.0, 4)); // Item_Crit_Chance_MainHand (fraction)
+            itemAttributes[217] = Value(2 + Math.Round(drop.Rarity * 0.2, 1)); // Item_Attack_Range_MainHand
         }
         else if (drop.Slot == 13)
         {
-            // Off-hand (shield): armour + block.
-            itemAttributes[251] = Value(Math.Round(defense * 0.5));   // Armor
-            itemAttributes[455] = Value(Math.Round(1.2 + drop.Rarity * 0.04, 3));  // Item_Attack_Speed_OffHand
+            var offArmor = RollImplicit("Local_Implicit_Base_Armor", defense * 0.5);
+            itemAttributes[273] = Value(Math.Round(offArmor, 4));   // Local_Implicit_Base_Armor
+            itemAttributes[251] = Value(Math.Round(offArmor, 4));   // Armor
+            itemAttributes[455] = Value(Math.Round(1.2 + drop.Rarity * 0.04, 3)); // Item_Attack_Speed_OffHand
         }
         else
         {
             // Armour: Armor_Total reads the plain Armor attribute; boots/cloaks/wrists also evade.
-            itemAttributes[251] = Value(Math.Round(defense * 0.6));   // Armor
+            var armor = RollImplicit("Local_Implicit_Base_Armor", defense * 0.6);
+            itemAttributes[273] = Value(Math.Round(armor, 4));      // Local_Implicit_Base_Armor
+            itemAttributes[251] = Value(Math.Round(armor, 4));      // Armor
             if (drop.Slot is 4 or 5 or 9)
-                itemAttributes[256] = Value(Math.Round(defense * 0.35)); // Evasion
+            {
+                var evasion = RollImplicit("Local_Implicit_Base_Evasion", defense * 0.35);
+                itemAttributes[276] = Value(Math.Round(evasion, 4)); // Local_Implicit_Base_Evasion
+                itemAttributes[256] = Value(Math.Round(evasion, 4)); // Evasion
+            }
             // Accessories and armour carry a small all-resistance (Resistance_All = 1002).
             itemAttributes[1002] = Value(Math.Round(defense * 0.0006, 4));
         }
@@ -131,7 +151,7 @@ public static class LootTable
             Id = Guid.NewGuid(),
             Name = $"{name} ({RarityName(drop.Rarity)}){suffix}",
             Slot = ItemSlotTypes.Inventory,
-            DefinitionIntegerId = 0,
+            DefinitionIntegerId = definitionId,
             BaseRarity = (Rarity)Math.Clamp(drop.Rarity, 0, 11),
             Location = new SerializedItemInventoryLocation { Page = 1, Row = 0, Column = 0 },
             Attributes = new SerializedAttributes

@@ -1,0 +1,28 @@
+{
+  "Staff2H": {
+    "Local_Base_Crit_Chance": [
+      5.0,
+      5.0
+    ],
+    "Local_Implicit_Base_Attack_Speed": [
+      1.6200000000000003,
+      1.6200000000000003
+    ]
+  },
+  "TwoHandWeapon": {
+    "Local_Base_Crit_Chance": [
+      7.0,
+      7.0
+    ]
+  },
+  "Weapon": {
+    "Local_Base_Crit_Chance": [
+      4.0,
+      6.0
+    ],
+    "Local_Implicit_Base_Attack_Speed": [
+      1.296,
+      1.296
+    ]
+  }
+}

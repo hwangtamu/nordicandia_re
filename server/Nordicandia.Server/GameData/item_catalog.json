@@ -1,0 +1,7998 @@
+{
+  "Armbands": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        17.5,
+        20.0
+      ]
+    },
+    "integerId": 93,
+    "type": "HeavyBracers"
+  },
+  "Axe": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.5552000000000001,
+        1.5552000000000001
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        10.0,
+        12.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        6.0,
+        8.0
+      ]
+    },
+    "integerId": 1,
+    "type": "Axe1H"
+  },
+  "BandedLeggnings": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        65.0
+      ]
+    },
+    "integerId": 172,
+    "type": "MediumLeggings"
+  },
+  "BeardedAxe": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2312000000000003,
+        1.2312000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        12.0,
+        14.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        12.0,
+        14.0
+      ]
+    },
+    "integerId": 90,
+    "type": "Axe2H"
+  },
+  "Belt": {
+    "implicit": {
+      "Attributes_All_Bonus_Percent": [
+        15.0,
+        20.0
+      ]
+    },
+    "integerId": 9,
+    "type": "Belt"
+  },
+  "BreastPlate": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        70.0,
+        75.0
+      ]
+    },
+    "integerId": 6,
+    "type": "HeavyChest"
+  },
+  "BrownCowl": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        50.0,
+        55.0
+      ]
+    },
+    "integerId": 189,
+    "type": "LightHelmet"
+  },
+  "Buckler": {
+    "implicit": {
+      "Local_Base_Block_Chance": [
+        10.0,
+        12.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        150.0,
+        180.0
+      ]
+    },
+    "integerId": 30,
+    "type": "Shield"
+  },
+  "Cap": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 48,
+    "type": "MediumHelmet"
+  },
+  "Casque": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        40.0,
+        45.0
+      ]
+    },
+    "integerId": 15,
+    "type": "HeavyHelmet"
+  },
+  "ChainBoots": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        20.0,
+        22.5
+      ]
+    },
+    "integerId": 54,
+    "type": "MediumBoots"
+  },
+  "ChainGloves": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        17.5,
+        20.0
+      ]
+    },
+    "integerId": 22,
+    "type": "HeavyGloves"
+  },
+  "ChainMail": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        75.0,
+        80.0
+      ]
+    },
+    "integerId": 25,
+    "type": "HeavyChest"
+  },
+  "Christmas_CandyCane": {
+    "implicit": {
+      "Buff_Duration": [
+        600.0,
+        600.0
+      ]
+    },
+    "integerId": 345,
+    "type": "Consumable"
+  },
+  "ChromaticStaff": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        2.0,
+        2.0
+      ]
+    },
+    "integerId": 303,
+    "type": "ElementalStaff2H"
+  },
+  "ChromaticWand": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        3.0,
+        3.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.75,
+        1.75
+      ],
+      "Local_Implicit_Cold_Base_Damage_Delta": [
+        1.0,
+        3.0
+      ],
+      "Local_Implicit_Cold_Base_Damage_Min": [
+        1.0,
+        3.0
+      ],
+      "Local_Implicit_Fire_Base_Damage_Delta": [
+        1.0,
+        3.0
+      ],
+      "Local_Implicit_Fire_Base_Damage_Min": [
+        1.0,
+        3.0
+      ],
+      "Local_Implicit_Lightning_Base_Damage_Delta": [
+        1.0,
+        3.0
+      ],
+      "Local_Implicit_Lightning_Base_Damage_Min": [
+        1.0,
+        3.0
+      ],
+      "Local_Implicit_Poison_Base_Damage_Delta": [
+        1.0,
+        3.0
+      ],
+      "Local_Implicit_Poison_Base_Damage_Min": [
+        1.0,
+        3.0
+      ]
+    },
+    "integerId": 383,
+    "type": "ElementalWand1H"
+  },
+  "Claymore": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.4256000000000002,
+        1.4256000000000002
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        11.0,
+        13.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        11.0,
+        13.0
+      ]
+    },
+    "integerId": 43,
+    "type": "Sword2H"
+  },
+  "ClothSpaulders": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 208,
+    "type": "LightShoulders"
+  },
+  "Crossbow": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        5.0,
+        6.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.9,
+        1.9
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        1.0,
+        2.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        7.0,
+        9.0
+      ]
+    },
+    "integerId": 375,
+    "type": "Crossbow1H"
+  },
+  "CrudeHammer": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Base_Stun_Chance": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        11.0,
+        11.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        15.0,
+        17.0
+      ]
+    },
+    "integerId": 107,
+    "type": "Mace2H"
+  },
+  "DecoratedHands": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        30.0,
+        35.0
+      ]
+    },
+    "integerId": 195,
+    "type": "LightGloves"
+  },
+  "DoubleAxe": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.6848000000000003,
+        1.6848000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        3.0,
+        5.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        9.0,
+        11.0
+      ]
+    },
+    "integerId": 2,
+    "type": "Axe1H"
+  },
+  "DoubleCrossbow": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        4.0,
+        4.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.1,
+        2.1
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        1.0,
+        2.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        6.0,
+        9.0
+      ]
+    },
+    "integerId": 376,
+    "type": "Crossbow1H"
+  },
+  "DoubleLayeredLeggings": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        70.0,
+        75.0
+      ]
+    },
+    "integerId": 174,
+    "type": "MediumLeggings"
+  },
+  "EmeraldStaff": {
+    "implicit": {
+      "Local_Implicit_Poison_Base_Damage_Delta": [
+        9.0,
+        11.0
+      ],
+      "Local_Implicit_Poison_Base_Damage_Min": [
+        11.0,
+        13.0
+      ]
+    },
+    "integerId": 186,
+    "type": "PoisonStaff2H"
+  },
+  "EmeraldWand": {
+    "implicit": {
+      "Local_Implicit_Base_Attack_Speed": [
+        1.85,
+        1.85
+      ],
+      "Local_Implicit_Poison_Base_Damage_Delta": [
+        4.0,
+        6.0
+      ],
+      "Local_Implicit_Poison_Base_Damage_Min": [
+        7.0,
+        9.0
+      ]
+    },
+    "integerId": 382,
+    "type": "PoisonWand1H"
+  },
+  "EssenceLootboxSmall": {
+    "implicit": {
+      "RequiredLevel": [
+        1000000.0,
+        1000000.0
+      ]
+    },
+    "integerId": 287,
+    "type": "Lootbox"
+  },
+  "FeatheredArrows": {
+    "implicit": {
+      "Attack_Range_Bonus_Percent": [
+        5.0,
+        10.0
+      ]
+    },
+    "integerId": 178,
+    "type": "Arrows"
+  },
+  "FieldPlate": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        90.0,
+        95.0
+      ]
+    },
+    "integerId": 28,
+    "type": "HeavyChest"
+  },
+  "Flamberge": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.1016000000000001,
+        1.1016000000000001
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        3.0,
+        4.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        20.0,
+        22.0
+      ]
+    },
+    "integerId": 46,
+    "type": "Sword2H"
+  },
+  "FlatHammer": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        7.0,
+        9.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        11.0,
+        13.0
+      ]
+    },
+    "integerId": 109,
+    "type": "Mace2H"
+  },
+  "FortifiedShoulders": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        60.0,
+        65.0
+      ]
+    },
+    "integerId": 99,
+    "type": "HeavyShoulders"
+  },
+  "FreyaNecklace2025": {
+    "implicit": {
+      "Magic_Find_Bonus_Percent": [
+        30.0,
+        50.0
+      ]
+    },
+    "integerId": 627,
+    "type": "Amulet"
+  },
+  "FullHelm": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        35.0,
+        40.0
+      ]
+    },
+    "integerId": 14,
+    "type": "HeavyHelmet"
+  },
+  "FurryShoulderguards": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        60.0,
+        65.0
+      ]
+    },
+    "integerId": 207,
+    "type": "LightShoulders"
+  },
+  "Gambeson": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        85.0,
+        90.0
+      ]
+    },
+    "integerId": 62,
+    "type": "MediumChest"
+  },
+  "Gauntlets": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        22.5,
+        25.0
+      ]
+    },
+    "integerId": 24,
+    "type": "HeavyGloves"
+  },
+  "GiantSword": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.08864,
+        1.08864
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        14.0,
+        16.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        14.0,
+        16.0
+      ]
+    },
+    "integerId": 44,
+    "type": "Sword2H"
+  },
+  "GreatElixirOfDreams": {
+    "implicit": {
+      "Experience_AFK_Doubler_Granted_Duration": [
+        86400.0,
+        86400.0
+      ],
+      "Experience_AFK_Doubler_Granted_Percent": [
+        100.0,
+        100.0
+      ]
+    },
+    "integerId": 609,
+    "type": "AFKExperincePotion"
+  },
+  "GreatElixirOfDreamsShort": {
+    "implicit": {
+      "Experience_AFK_Doubler_Granted_Duration": [
+        43200.0,
+        43200.0
+      ],
+      "Experience_AFK_Doubler_Granted_Percent": [
+        100.0,
+        100.0
+      ]
+    },
+    "integerId": 622,
+    "type": "AFKExperincePotion"
+  },
+  "GreatElixirOfImmortality": {
+    "implicit": {
+      "Ressurection_Granted_Duration": [
+        14400.0,
+        14400.0
+      ]
+    },
+    "integerId": 610,
+    "type": "ResurrectionPotion"
+  },
+  "GreatElixirOfImmortalityShort": {
+    "implicit": {
+      "Ressurection_Granted_Duration": [
+        3600.0,
+        3600.0
+      ]
+    },
+    "integerId": 619,
+    "type": "ResurrectionPotion"
+  },
+  "GreatElixirOfInsomnia": {
+    "implicit": {
+      "AutoFight_Granted_Duration": [
+        28800.0,
+        28800.0
+      ]
+    },
+    "integerId": 614,
+    "type": "AutoFightPotion"
+  },
+  "GreatElixirOfInsomniaShort": {
+    "implicit": {
+      "AutoFight_Granted_Duration": [
+        3600.0,
+        3600.0
+      ]
+    },
+    "integerId": 620,
+    "type": "AutoFightPotion"
+  },
+  "GreatElixirOfKnowledge": {
+    "implicit": {
+      "Experience_Granted_Duration": [
+        28800.0,
+        28800.0
+      ],
+      "Experience_Granted_Percent": [
+        20.0,
+        20.0
+      ]
+    },
+    "integerId": 606,
+    "type": "ExperiencePotion"
+  },
+  "GreatElixirOfKnowledgeShort": {
+    "implicit": {
+      "Experience_Granted_Duration": [
+        3600.0,
+        3600.0
+      ],
+      "Experience_Granted_Percent": [
+        20.0,
+        20.0
+      ]
+    },
+    "integerId": 618,
+    "type": "ExperiencePotion"
+  },
+  "GreatElixirOfQuantity": {
+    "implicit": {
+      "Item_Quantity_Potion_Granted_Duration": [
+        28800.0,
+        28800.0
+      ],
+      "Item_Quantity_Potion_Granted_Percent": [
+        50.0,
+        50.0
+      ]
+    },
+    "integerId": 616,
+    "type": "ItemQuantityPotion"
+  },
+  "GreatElixirOfQuantityShort": {
+    "implicit": {
+      "Item_Quantity_Potion_Granted_Duration": [
+        3600.0,
+        3600.0
+      ],
+      "Item_Quantity_Potion_Granted_Percent": [
+        50.0,
+        50.0
+      ]
+    },
+    "integerId": 621,
+    "type": "ItemQuantityPotion"
+  },
+  "GreatSword": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        0.93312,
+        0.93312
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        16.0,
+        16.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        17.0,
+        19.0
+      ]
+    },
+    "integerId": 47,
+    "type": "Sword2H"
+  },
+  "Greaves": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        17.5,
+        20.0
+      ]
+    },
+    "integerId": 18,
+    "type": "HeavyBoots"
+  },
+  "GreenRaiment": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 199,
+    "type": "LightChest"
+  },
+  "GreenWristbands": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ]
+    },
+    "integerId": 201,
+    "type": "LightBracers"
+  },
+  "HandAxe": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.0736000000000003,
+        2.0736000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        6.0,
+        8.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        5.0,
+        7.0
+      ]
+    },
+    "integerId": 0,
+    "type": "Axe1H"
+  },
+  "HardLeatherArmor": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        75.0,
+        80.0
+      ]
+    },
+    "integerId": 60,
+    "type": "MediumChest"
+  },
+  "HeavyAxe": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        8.0,
+        10.0
+      ]
+    },
+    "integerId": 89,
+    "type": "Axe2H"
+  },
+  "HeavyCrossbow": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.8,
+        1.8
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        3.0,
+        4.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        6.0,
+        9.0
+      ]
+    },
+    "integerId": 378,
+    "type": "Crossbow1H"
+  },
+  "HeavyGloves": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        22.5,
+        25.0
+      ]
+    },
+    "integerId": 57,
+    "type": "MediumGloves"
+  },
+  "HeavyGreaves": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        22.5,
+        25.0
+      ]
+    },
+    "integerId": 20,
+    "type": "HeavyBoots"
+  },
+  "HeavyHammer": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        4.0,
+        6.0
+      ],
+      "Local_Base_Stun_Chance": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        6.0,
+        8.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        10.0,
+        12.0
+      ]
+    },
+    "integerId": 119,
+    "type": "Mace1H"
+  },
+  "HeavyPlatedBoots": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        20.0,
+        22.5
+      ]
+    },
+    "integerId": 19,
+    "type": "HeavyBoots"
+  },
+  "HeavySword": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.6848000000000003,
+        1.6848000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        3.0,
+        3.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        10.0,
+        10.0
+      ]
+    },
+    "integerId": 115,
+    "type": "Sword1H"
+  },
+  "HelheimPortal": {
+    "implicit": {
+      "Area_Increased_Item_Level_Requirement": [
+        -25.0,
+        -25.0
+      ],
+      "Area_Item_Drop_Quantity_Bonus_Percent": [
+        300.0,
+        300.0
+      ],
+      "Area_Item_Level_Bonus": [
+        150.0,
+        150.0
+      ],
+      "Area_Monster_Experience_Bonus": [
+        200.0,
+        200.0
+      ],
+      "Area_Monsters_Damage_Bonus_Percent": [
+        100.0,
+        100.0
+      ],
+      "Area_Monsters_Life_Bonus_Percent": [
+        400.0,
+        400.0
+      ]
+    },
+    "integerId": 337,
+    "type": "HelheimPortal"
+  },
+  "Helm": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        30.0,
+        35.0
+      ]
+    },
+    "integerId": 13,
+    "type": "HeavyHelmet"
+  },
+  "Hood": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        40.0,
+        45.0
+      ]
+    },
+    "integerId": 187,
+    "type": "LightHelmet"
+  },
+  "HugeHealthPotion": {
+    "implicit": {
+      "Life_Granted_Duration": [
+        2.0,
+        2.0
+      ],
+      "Life_Granted_Percent": [
+        110.0,
+        130.0
+      ]
+    },
+    "integerId": 41,
+    "type": "HealthPotion"
+  },
+  "HugeManaPotion": {
+    "implicit": {
+      "Mana_Granted_Duration": [
+        12.0,
+        14.0
+      ],
+      "Mana_Granted_Percent": [
+        140.0,
+        160.0
+      ]
+    },
+    "integerId": 182,
+    "type": "ManaPotion"
+  },
+  "HugeRejuvenationPotion": {
+    "implicit": {
+      "Life_Granted_Duration": [
+        8.0,
+        8.8
+      ],
+      "Life_Granted_Percent": [
+        55.0,
+        65.0
+      ],
+      "Mana_Granted_Duration": [
+        16.0,
+        17.0
+      ],
+      "Mana_Granted_Percent": [
+        70.0,
+        80.0
+      ]
+    },
+    "integerId": 213,
+    "type": "RejuvenationPotion"
+  },
+  "IdolOfCraftingLarge": {
+    "implicit": {
+      "Buff_Duration": [
+        1800.0,
+        1800.0
+      ],
+      "Crafting_Reagents_Drop_Weight_Bonus_Percent": [
+        100.0,
+        100.0
+      ]
+    },
+    "integerId": 293,
+    "type": "IdolOfCrafting"
+  },
+  "IdolOfCraftingMedium": {
+    "implicit": {
+      "Buff_Duration": [
+        1800.0,
+        1800.0
+      ],
+      "Crafting_Reagents_Drop_Weight_Bonus_Percent": [
+        50.0,
+        50.0
+      ]
+    },
+    "integerId": 292,
+    "type": "IdolOfCrafting"
+  },
+  "IdolOfCraftingSmall": {
+    "implicit": {
+      "Buff_Duration": [
+        1800.0,
+        1800.0
+      ],
+      "Crafting_Reagents_Drop_Weight_Bonus_Percent": [
+        25.0,
+        25.0
+      ]
+    },
+    "integerId": 291,
+    "type": "IdolOfCrafting"
+  },
+  "IdolOfExperienceLarge": {
+    "implicit": {
+      "Buff_Duration": [
+        1800.0,
+        1800.0
+      ],
+      "Experience_Bonus_When_Active_Percent": [
+        100.0,
+        100.0
+      ]
+    },
+    "integerId": 296,
+    "type": "IdolOfExperience"
+  },
+  "IdolOfExperienceMedium": {
+    "implicit": {
+      "Buff_Duration": [
+        1800.0,
+        1800.0
+      ],
+      "Experience_Bonus_When_Active_Percent": [
+        50.0,
+        50.0
+      ]
+    },
+    "integerId": 295,
+    "type": "IdolOfExperience"
+  },
+  "IdolOfExperienceSmall": {
+    "implicit": {
+      "Buff_Duration": [
+        1800.0,
+        1800.0
+      ],
+      "Experience_Bonus_When_Active_Percent": [
+        25.0,
+        25.0
+      ]
+    },
+    "integerId": 294,
+    "type": "IdolOfExperience"
+  },
+  "InfusedArmwraps": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        30.0,
+        35.0
+      ]
+    },
+    "integerId": 203,
+    "type": "LightBracers"
+  },
+  "IronHammer": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Base_Stun_Chance": [
+        6.0,
+        8.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        7.0,
+        9.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        13.0,
+        15.0
+      ]
+    },
+    "integerId": 108,
+    "type": "Mace2H"
+  },
+  "IronLeggings": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        60.0,
+        65.0
+      ]
+    },
+    "integerId": 96,
+    "type": "HeavyLeggings"
+  },
+  "IronMace": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        4.0,
+        6.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.944,
+        1.944
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        7.0,
+        7.0
+      ]
+    },
+    "integerId": 120,
+    "type": "Mace1H"
+  },
+  "IronShield": {
+    "implicit": {
+      "Local_Base_Block_Chance": [
+        16.0,
+        20.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        275.0,
+        300.0
+      ]
+    },
+    "integerId": 92,
+    "type": "Shield"
+  },
+  "IronSpaulders": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        70.0,
+        75.0
+      ]
+    },
+    "integerId": 101,
+    "type": "HeavyShoulders"
+  },
+  "Item_GreatHelm": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        45.0,
+        50.0
+      ]
+    },
+    "integerId": 16,
+    "type": "HeavyHelmet"
+  },
+  "JaggedSword": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.0736000000000003,
+        2.0736000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        2.0,
+        4.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        7.0,
+        9.0
+      ]
+    },
+    "integerId": 114,
+    "type": "Sword1H"
+  },
+  "Javelin": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        7.0,
+        9.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        13.0,
+        14.0
+      ]
+    },
+    "integerId": 150,
+    "type": "Spear2H"
+  },
+  "Katana": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.3328,
+        2.3328
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        6.0,
+        8.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        4.0,
+        6.0
+      ]
+    },
+    "integerId": 113,
+    "type": "Sword1H"
+  },
+  "LargeGarment": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 198,
+    "type": "LightChest"
+  },
+  "LargeHealthPotion": {
+    "implicit": {
+      "Life_Granted_Duration": [
+        2.0,
+        2.0
+      ],
+      "Life_Granted_Percent": [
+        80.0,
+        100.0
+      ]
+    },
+    "integerId": 40,
+    "type": "HealthPotion"
+  },
+  "LargeManaPotion": {
+    "implicit": {
+      "Mana_Granted_Duration": [
+        8.0,
+        10.0
+      ],
+      "Mana_Granted_Percent": [
+        80.0,
+        100.0
+      ]
+    },
+    "integerId": 181,
+    "type": "ManaPotion"
+  },
+  "LargeRejuvenationPotion": {
+    "implicit": {
+      "Life_Granted_Duration": [
+        6.0,
+        6.6
+      ],
+      "Life_Granted_Percent": [
+        40.0,
+        50.0
+      ],
+      "Mana_Granted_Duration": [
+        10.0,
+        12.0
+      ],
+      "Mana_Granted_Percent": [
+        40.0,
+        50.0
+      ]
+    },
+    "integerId": 212,
+    "type": "RejuvenationPotion"
+  },
+  "LayeredShoulders": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        70.0,
+        75.0
+      ]
+    },
+    "integerId": 209,
+    "type": "LightShoulders"
+  },
+  "LayeredVest": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 197,
+    "type": "LightChest"
+  },
+  "LeatherArmor": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        70.0,
+        75.0
+      ]
+    },
+    "integerId": 59,
+    "type": "MediumChest"
+  },
+  "LeatherBoots": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        15.0,
+        17.5
+      ]
+    },
+    "integerId": 52,
+    "type": "MediumBoots"
+  },
+  "LeatherBracers": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        20.0,
+        22.5
+      ]
+    },
+    "integerId": 170,
+    "type": "MediumBracers"
+  },
+  "LeatherGloves": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        15.0,
+        17.5
+      ]
+    },
+    "integerId": 55,
+    "type": "MediumGloves"
+  },
+  "LeatherHelm": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        40.0,
+        45.0
+      ]
+    },
+    "integerId": 51,
+    "type": "MediumHelmet"
+  },
+  "LeatherLeggings": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 173,
+    "type": "MediumLeggings"
+  },
+  "LeatherShoulders": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        65.0
+      ]
+    },
+    "integerId": 175,
+    "type": "MediumShoulders"
+  },
+  "LeatherSpaulders": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        70.0,
+        75.0
+      ]
+    },
+    "integerId": 177,
+    "type": "MediumShoulders"
+  },
+  "LightBow": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.56,
+        1.56
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        4.0,
+        6.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        10.0,
+        12.0
+      ]
+    },
+    "integerId": 121,
+    "type": "Bow"
+  },
+  "LightCrossbow": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        4.0,
+        4.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.0,
+        2.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        1.0,
+        3.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        6.0,
+        9.0
+      ]
+    },
+    "integerId": 374,
+    "type": "Crossbow1H"
+  },
+  "LightGauntlets": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        15.0,
+        17.5
+      ]
+    },
+    "integerId": 21,
+    "type": "HeavyGloves"
+  },
+  "LightHammer": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        4.0,
+        6.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.5552000000000001,
+        1.5552000000000001
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        4.0,
+        6.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        9.0,
+        11.0
+      ]
+    },
+    "integerId": 117,
+    "type": "Mace1H"
+  },
+  "LightPlate": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        85.0,
+        90.0
+      ]
+    },
+    "integerId": 27,
+    "type": "HeavyChest"
+  },
+  "LightPlatedBoots": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        15.0,
+        17.5
+      ]
+    },
+    "integerId": 17,
+    "type": "HeavyBoots"
+  },
+  "LightSword": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.944,
+        1.944
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        8.0,
+        10.0
+      ]
+    },
+    "integerId": 45,
+    "type": "Sword2H"
+  },
+  "LongSword": {
+    "implicit": {
+      "ExtraSwing_Chance_Current_Hand": [
+        7.0,
+        8.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.8144,
+        1.8144
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        9.0,
+        11.0
+      ]
+    },
+    "integerId": 42,
+    "type": "Sword2H"
+  },
+  "Longbow": {
+    "implicit": {
+      "Local_Base_Attack_Range": [
+        700.0,
+        700.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.45,
+        1.45
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        4.0,
+        6.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        9.0,
+        13.0
+      ]
+    },
+    "integerId": 300,
+    "type": "Bow"
+  },
+  "Manica": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        25.0,
+        37.5
+      ]
+    },
+    "integerId": 94,
+    "type": "HeavyBracers"
+  },
+  "Mask": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        35.0,
+        40.0
+      ]
+    },
+    "integerId": 50,
+    "type": "MediumHelmet"
+  },
+  "MediumDefensePotion": {
+    "implicit": {
+      "Defense_Final_Granted_Duration": [
+        1500.0,
+        1500.0
+      ],
+      "Defense_Final_Granted_Percent": [
+        20.0,
+        20.0
+      ]
+    },
+    "integerId": 451,
+    "type": "DefensePotion"
+  },
+  "MediumHealthPotion": {
+    "implicit": {
+      "Life_Granted_Duration": [
+        4.0,
+        4.5
+      ],
+      "Life_Granted_Percent": [
+        50.0,
+        65.0
+      ]
+    },
+    "integerId": 39,
+    "type": "HealthPotion"
+  },
+  "MediumManaPotion": {
+    "implicit": {
+      "Mana_Granted_Duration": [
+        6.0,
+        7.0
+      ],
+      "Mana_Granted_Percent": [
+        50.0,
+        65.0
+      ]
+    },
+    "integerId": 180,
+    "type": "ManaPotion"
+  },
+  "MediumMovementSpeedPotion": {
+    "implicit": {
+      "Movement_Speed_Final_Granted_Duration": [
+        3000.0,
+        3000.0
+      ],
+      "Movement_Speed_Final_Granted_Percent": [
+        20.0,
+        20.0
+      ]
+    },
+    "integerId": 450,
+    "type": "MovementSpeedPotion"
+  },
+  "MediumRejuvenationPotion": {
+    "implicit": {
+      "Life_Granted_Duration": [
+        4.0,
+        4.4
+      ],
+      "Life_Granted_Percent": [
+        25.0,
+        32.5
+      ],
+      "Mana_Granted_Duration": [
+        7.0,
+        9.0
+      ],
+      "Mana_Granted_Percent": [
+        25.0,
+        32.5
+      ]
+    },
+    "integerId": 211,
+    "type": "RejuvenationPotion"
+  },
+  "MilitaryAxe": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.4256000000000002,
+        1.4256000000000002
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        4.0,
+        6.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        10.0,
+        12.0
+      ]
+    },
+    "integerId": 4,
+    "type": "Axe1H"
+  },
+  "OdrsTrailPortal": {
+    "implicit": {
+      "Area_Monsters_Attack_Range_Bonus_Percent": [
+        50.0,
+        50.0
+      ],
+      "Area_Monsters_Damage_Bonus_Percent": [
+        30.0,
+        30.0
+      ],
+      "Area_Monsters_Life_Bonus_Percent": [
+        50.0,
+        50.0
+      ],
+      "Boss_Chance_To_Drop_A_Set_Item_When_Slain": [
+        11.0,
+        15.0
+      ]
+    },
+    "integerId": 362,
+    "type": "OdrsTrailPortal"
+  },
+  "PaddedBoots": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        17.5,
+        20.0
+      ]
+    },
+    "integerId": 53,
+    "type": "MediumBoots"
+  },
+  "PaddedBracers": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        22.5,
+        25.0
+      ]
+    },
+    "integerId": 171,
+    "type": "MediumBracers"
+  },
+  "Pauldrons": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 100,
+    "type": "HeavyShoulders"
+  },
+  "PlateMail": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        95.0,
+        100.0
+      ]
+    },
+    "integerId": 29,
+    "type": "HeavyChest"
+  },
+  "PlatedLeggings": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        70.0,
+        75.0
+      ]
+    },
+    "integerId": 98,
+    "type": "HeavyLeggings"
+  },
+  "QuiltedArmor": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 58,
+    "type": "MediumChest"
+  },
+  "QuiltedVestment": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 200,
+    "type": "LightChest"
+  },
+  "RedCape": {
+    "implicit": {
+      "Crit_Chance_Bonus_Percent": [
+        15.0,
+        20.0
+      ]
+    },
+    "integerId": 102,
+    "type": "Cloak"
+  },
+  "ReinforcedBoots": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 191,
+    "type": "LightBoots"
+  },
+  "ReinforcedCap": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        30.0,
+        35.0
+      ]
+    },
+    "integerId": 49,
+    "type": "MediumHelmet"
+  },
+  "ReinforcedGauntlets": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        20.0,
+        22.5
+      ]
+    },
+    "integerId": 23,
+    "type": "HeavyGloves"
+  },
+  "ReinforcedGrips": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 194,
+    "type": "LightGloves"
+  },
+  "ReinforcedLeatherGloves": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        17.5,
+        20.0
+      ]
+    },
+    "integerId": 56,
+    "type": "MediumGloves"
+  },
+  "ReinforcedLeggings": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 97,
+    "type": "HeavyLeggings"
+  },
+  "ReinforcedShoulders": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 176,
+    "type": "MediumShoulders"
+  },
+  "Robe": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 196,
+    "type": "LightChest"
+  },
+  "RubyStaff": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        9.0,
+        9.0
+      ],
+      "Local_Implicit_Fire_Base_Damage_Delta": [
+        4.0,
+        6.0
+      ],
+      "Local_Implicit_Fire_Base_Damage_Min": [
+        13.0,
+        16.0
+      ]
+    },
+    "integerId": 183,
+    "type": "FireStaff2H"
+  },
+  "RubyWand": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        8.0,
+        8.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.8,
+        1.8
+      ],
+      "Local_Implicit_Fire_Base_Damage_Delta": [
+        2.0,
+        4.0
+      ],
+      "Local_Implicit_Fire_Base_Damage_Min": [
+        7.0,
+        12.0
+      ]
+    },
+    "integerId": 379,
+    "type": "FireWand1H"
+  },
+  "SantaHat2025": {
+    "implicit": {
+      "Item_Quantity_Bonus_Percent": [
+        10.0,
+        50.0
+      ]
+    },
+    "integerId": 626,
+    "type": "LightHelmet"
+  },
+  "SapphireStaff": {
+    "implicit": {
+      "Local_Implicit_Base_Attack_Speed": [
+        1.5,
+        1.5
+      ],
+      "Local_Implicit_Cold_Base_Damage_Delta": [
+        5.0,
+        7.0
+      ],
+      "Local_Implicit_Cold_Base_Damage_Min": [
+        14.0,
+        16.0
+      ]
+    },
+    "integerId": 184,
+    "type": "ColdStaff2H"
+  },
+  "SapphireWand": {
+    "implicit": {
+      "Local_Implicit_Base_Attack_Speed": [
+        1.9,
+        1.9
+      ],
+      "Local_Implicit_Cold_Base_Damage_Delta": [
+        3.0,
+        5.0
+      ],
+      "Local_Implicit_Cold_Base_Damage_Min": [
+        7.0,
+        9.0
+      ]
+    },
+    "integerId": 380,
+    "type": "ColdWand1H"
+  },
+  "Sash": {
+    "implicit": {
+      "Magic_Find_Bonus_Percent": [
+        80.0,
+        100.0
+      ]
+    },
+    "integerId": 7,
+    "type": "Belt"
+  },
+  "ScaleMail": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        2.0,
+        2.75
+      ]
+    },
+    "integerId": 5,
+    "type": "HeavyChest"
+  },
+  "SerratedAxe": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        6.0,
+        8.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        10.0,
+        12.0
+      ]
+    },
+    "integerId": 111,
+    "type": "Axe2H"
+  },
+  "Set_Balmung": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "ExtraSwing_Chance_Current_Hand": [
+        10.0,
+        10.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.9200000000000004,
+        1.9200000000000004
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        15.0,
+        15.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        18.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        100.0,
+        100.0
+      ]
+    },
+    "integerId": 147,
+    "type": "Sword1H"
+  },
+  "Set_Heavy_TheBerserker_Belt": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 160,
+    "type": "Belt"
+  },
+  "Set_Heavy_TheBerserker_Boots": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        35.0,
+        37.5
+      ]
+    },
+    "integerId": 162,
+    "type": "HeavyBoots"
+  },
+  "Set_Heavy_TheBerserker_Bracers": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        0.25,
+        0.25
+      ]
+    },
+    "integerId": 165,
+    "type": "HeavyBracers"
+  },
+  "Set_Heavy_TheBerserker_Chest": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        250.0,
+        270.0
+      ]
+    },
+    "integerId": 164,
+    "type": "HeavyChest"
+  },
+  "Set_Heavy_TheBerserker_Cloak": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 166,
+    "type": "Cloak"
+  },
+  "Set_Heavy_TheBerserker_Gloves": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        55.0,
+        60.0
+      ]
+    },
+    "integerId": 163,
+    "type": "HeavyGloves"
+  },
+  "Set_Heavy_TheBerserker_Helmet": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        62.5,
+        75.0
+      ]
+    },
+    "integerId": 161,
+    "type": "HeavyHelmet"
+  },
+  "Set_Heavy_TheBerserker_Leggings": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        190.0,
+        210.0
+      ]
+    },
+    "integerId": 167,
+    "type": "HeavyLeggings"
+  },
+  "Set_Heavy_TheBerserker_Shoulders": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        190.0,
+        210.0
+      ]
+    },
+    "integerId": 168,
+    "type": "HeavyShoulders"
+  },
+  "Set_Heavy_TheBoneWall_Belt": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Minion_Inheritance_Life_Bonus_Percent": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 470,
+    "type": "Belt"
+  },
+  "Set_Heavy_TheBoneWall_Boots": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        60.0,
+        65.0
+      ],
+      "Minion_Inheritance_Life_Bonus_Percent": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 472,
+    "type": "HeavyBoots"
+  },
+  "Set_Heavy_TheBoneWall_Bracers": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        0.25,
+        0.25
+      ],
+      "Minion_Inheritance_Life_Bonus_Percent": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 475,
+    "type": "HeavyBracers"
+  },
+  "Set_Heavy_TheBoneWall_Chest": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        270.0,
+        300.0
+      ],
+      "Minion_Inheritance_Life_Bonus_Percent": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 474,
+    "type": "HeavyChest"
+  },
+  "Set_Heavy_TheBoneWall_Cloak": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Minion_Inheritance_Life_Bonus_Percent": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 476,
+    "type": "Cloak"
+  },
+  "Set_Heavy_TheBoneWall_Gloves": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        60.0,
+        65.0
+      ],
+      "Minion_Inheritance_Life_Bonus_Percent": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 473,
+    "type": "HeavyGloves"
+  },
+  "Set_Heavy_TheBoneWall_Helmet": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        100.0,
+        120.0
+      ],
+      "Minion_Inheritance_Life_Bonus_Percent": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 471,
+    "type": "HeavyHelmet"
+  },
+  "Set_Heavy_TheBoneWall_Leggings": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        210.0,
+        230.0
+      ],
+      "Minion_Inheritance_Life_Bonus_Percent": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 477,
+    "type": "HeavyLeggings"
+  },
+  "Set_Heavy_TheBoneWall_Shoulders": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        210.0,
+        230.0
+      ],
+      "Minion_Inheritance_Life_Bonus_Percent": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 478,
+    "type": "HeavyShoulders"
+  },
+  "Set_Heavy_TheDreadnought_Belt": {
+    "implicit": {
+      "Base_Physical_Damage_Reduction_Bonus": [
+        3.0,
+        5.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 499,
+    "type": "Belt"
+  },
+  "Set_Heavy_TheDreadnought_Boots": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Base_Physical_Damage_Reduction_Bonus": [
+        2.0,
+        3.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        90.0,
+        100.0
+      ]
+    },
+    "integerId": 157,
+    "type": "HeavyBoots"
+  },
+  "Set_Heavy_TheDreadnought_Bracers": {
+    "implicit": {
+      "Base_Physical_Damage_Reduction_Bonus": [
+        2.0,
+        3.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        0.25,
+        0.25
+      ]
+    },
+    "integerId": 500,
+    "type": "HeavyBracers"
+  },
+  "Set_Heavy_TheDreadnought_Chest": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Base_Physical_Damage_Reduction_Bonus": [
+        2.0,
+        3.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        450.0,
+        500.0
+      ]
+    },
+    "integerId": 154,
+    "type": "HeavyChest"
+  },
+  "Set_Heavy_TheDreadnought_Cloak": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Base_Physical_Damage_Reduction_Bonus": [
+        2.0,
+        3.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 501,
+    "type": "Cloak"
+  },
+  "Set_Heavy_TheDreadnought_Gloves": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Base_Physical_Damage_Reduction_Bonus": [
+        2.0,
+        3.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        90.0,
+        100.0
+      ]
+    },
+    "integerId": 158,
+    "type": "HeavyGloves"
+  },
+  "Set_Heavy_TheDreadnought_Helmet": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Base_Physical_Damage_Reduction_Bonus": [
+        2.0,
+        3.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        140.0,
+        160.0
+      ]
+    },
+    "integerId": 153,
+    "type": "HeavyHelmet"
+  },
+  "Set_Heavy_TheDreadnought_Leggings": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Base_Physical_Damage_Reduction_Bonus": [
+        2.0,
+        3.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        300.0,
+        320.0
+      ]
+    },
+    "integerId": 155,
+    "type": "HeavyLeggings"
+  },
+  "Set_Heavy_TheDreadnought_Shoulders": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Base_Physical_Damage_Reduction_Bonus": [
+        2.0,
+        3.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        300.0,
+        320.0
+      ]
+    },
+    "integerId": 156,
+    "type": "HeavyShoulders"
+  },
+  "Set_Heavy_TheMarauder_Belt": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 138,
+    "type": "Belt"
+  },
+  "Set_Heavy_TheMarauder_Boots": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        60.0,
+        65.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 140,
+    "type": "HeavyBoots"
+  },
+  "Set_Heavy_TheMarauder_Bracers": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        0.25,
+        0.25
+      ],
+      "Magic_Find_Bonus_Percent": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 143,
+    "type": "HeavyBracers"
+  },
+  "Set_Heavy_TheMarauder_Chest": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        270.0,
+        300.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 142,
+    "type": "HeavyChest"
+  },
+  "Set_Heavy_TheMarauder_Gloves": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        60.0,
+        65.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 141,
+    "type": "HeavyGloves"
+  },
+  "Set_Heavy_TheMarauder_Helmet": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        100.0,
+        120.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 139,
+    "type": "HeavyHelmet"
+  },
+  "Set_Heavy_TheMarauder_Leggings": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        210.0,
+        230.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 145,
+    "type": "HeavyLeggings"
+  },
+  "Set_Heavy_TheMarauder_Shoulders": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        210.0,
+        230.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 146,
+    "type": "HeavyShoulders"
+  },
+  "Set_Light_TheDiscoverer_Belt": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 364,
+    "type": "Belt"
+  },
+  "Set_Light_TheDiscoverer_Boots": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 366,
+    "type": "LightBoots"
+  },
+  "Set_Light_TheDiscoverer_Bracers": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        25.0,
+        30.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 369,
+    "type": "LightBracers"
+  },
+  "Set_Light_TheDiscoverer_Chest": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 368,
+    "type": "LightChest"
+  },
+  "Set_Light_TheDiscoverer_Cloak": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 370,
+    "type": "Cloak"
+  },
+  "Set_Light_TheDiscoverer_Gloves": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 367,
+    "type": "LightGloves"
+  },
+  "Set_Light_TheDiscoverer_Helmet": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        45.0,
+        50.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 365,
+    "type": "LightHelmet"
+  },
+  "Set_Light_TheDiscoverer_Leggings": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        65.0,
+        70.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 371,
+    "type": "LightLeggings"
+  },
+  "Set_Light_TheDiscoverer_Shoulders": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        70.0,
+        75.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 372,
+    "type": "LightShoulders"
+  },
+  "Set_Light_TheSorcerer_Belt": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 324,
+    "type": "Belt"
+  },
+  "Set_Light_TheSorcerer_Boots": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ]
+    },
+    "integerId": 326,
+    "type": "LightBoots"
+  },
+  "Set_Light_TheSorcerer_Bracers": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 329,
+    "type": "LightBracers"
+  },
+  "Set_Light_TheSorcerer_Chest": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 328,
+    "type": "LightChest"
+  },
+  "Set_Light_TheSorcerer_Cloak": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 330,
+    "type": "Cloak"
+  },
+  "Set_Light_TheSorcerer_Gloves": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ]
+    },
+    "integerId": 327,
+    "type": "LightGloves"
+  },
+  "Set_Light_TheSorcerer_Helmet": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        45.0,
+        50.0
+      ]
+    },
+    "integerId": 325,
+    "type": "LightHelmet"
+  },
+  "Set_Light_TheSorcerer_Leggings": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 331,
+    "type": "LightLeggings"
+  },
+  "Set_Light_TheSorcerer_Shoulders": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        70.0,
+        75.0
+      ]
+    },
+    "integerId": 332,
+    "type": "LightShoulders"
+  },
+  "Set_Light_TheSoulOfGroa_Belt": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Minion_Inheritance_Weapon_Damage_Bonus_Percent": [
+        4.0,
+        6.0
+      ]
+    },
+    "integerId": 488,
+    "type": "Belt"
+  },
+  "Set_Light_TheSoulOfGroa_Boots": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ],
+      "Minion_Inheritance_Weapon_Damage_Bonus_Percent": [
+        3.0,
+        5.0
+      ]
+    },
+    "integerId": 490,
+    "type": "LightBoots"
+  },
+  "Set_Light_TheSoulOfGroa_Bracers": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        25.0,
+        30.0
+      ],
+      "Minion_Inheritance_Weapon_Damage_Bonus_Percent": [
+        3.0,
+        5.0
+      ]
+    },
+    "integerId": 493,
+    "type": "LightBracers"
+  },
+  "Set_Light_TheSoulOfGroa_Chest": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ],
+      "Minion_Inheritance_Weapon_Damage_Bonus_Percent": [
+        3.0,
+        5.0
+      ]
+    },
+    "integerId": 492,
+    "type": "LightChest"
+  },
+  "Set_Light_TheSoulOfGroa_Gloves": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ],
+      "Minion_Inheritance_Weapon_Damage_Bonus_Percent": [
+        3.0,
+        5.0
+      ]
+    },
+    "integerId": 491,
+    "type": "LightGloves"
+  },
+  "Set_Light_TheSoulOfGroa_Helmet": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        45.0,
+        50.0
+      ],
+      "Minion_Inheritance_Weapon_Damage_Bonus_Percent": [
+        3.0,
+        5.0
+      ]
+    },
+    "integerId": 489,
+    "type": "LightHelmet"
+  },
+  "Set_Light_TheSoulOfGroa_Leggings": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        65.0,
+        70.0
+      ],
+      "Minion_Inheritance_Weapon_Damage_Bonus_Percent": [
+        3.0,
+        5.0
+      ]
+    },
+    "integerId": 495,
+    "type": "LightLeggings"
+  },
+  "Set_Light_TheSoulOfGroa_Shoulders": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        70.0,
+        75.0
+      ],
+      "Minion_Inheritance_Weapon_Damage_Bonus_Percent": [
+        3.0,
+        5.0
+      ]
+    },
+    "integerId": 496,
+    "type": "LightShoulders"
+  },
+  "Set_Medium_EmbodimentOfUllr_Belt": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 305,
+    "type": "Belt"
+  },
+  "Set_Medium_EmbodimentOfUllr_Boots": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ]
+    },
+    "integerId": 307,
+    "type": "MediumBoots"
+  },
+  "Set_Medium_EmbodimentOfUllr_Bracers": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ]
+    },
+    "integerId": 310,
+    "type": "MediumBracers"
+  },
+  "Set_Medium_EmbodimentOfUllr_Chest": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        240.0,
+        260.0
+      ]
+    },
+    "integerId": 309,
+    "type": "MediumChest"
+  },
+  "Set_Medium_EmbodimentOfUllr_Cloak": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 312,
+    "type": "Cloak"
+  },
+  "Set_Medium_EmbodimentOfUllr_Gloves": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ]
+    },
+    "integerId": 308,
+    "type": "MediumGloves"
+  },
+  "Set_Medium_EmbodimentOfUllr_Helmet": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        90.0,
+        110.0
+      ]
+    },
+    "integerId": 306,
+    "type": "MediumHelmet"
+  },
+  "Set_Medium_EmbodimentOfUllr_Leggings": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        190.0,
+        210.0
+      ]
+    },
+    "integerId": 311,
+    "type": "MediumLeggings"
+  },
+  "Set_Medium_EmbodimentOfUllr_Shoulders": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        190.0,
+        210.0
+      ]
+    },
+    "integerId": 313,
+    "type": "MediumShoulders"
+  },
+  "Set_Medium_TheHorde_Belt": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Minion_Kill_Magic_Find_Bonus_Percent": [
+        100.0,
+        140.0
+      ]
+    },
+    "integerId": 479,
+    "type": "Belt"
+  },
+  "Set_Medium_TheHorde_Boots": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ],
+      "Minion_Kill_Magic_Find_Bonus_Percent": [
+        40.0,
+        50.0
+      ]
+    },
+    "integerId": 481,
+    "type": "MediumBoots"
+  },
+  "Set_Medium_TheHorde_Bracers": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ],
+      "Minion_Kill_Magic_Find_Bonus_Percent": [
+        40.0,
+        50.0
+      ]
+    },
+    "integerId": 484,
+    "type": "MediumBracers"
+  },
+  "Set_Medium_TheHorde_Chest": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        240.0,
+        260.0
+      ],
+      "Minion_Kill_Magic_Find_Bonus_Percent": [
+        40.0,
+        50.0
+      ]
+    },
+    "integerId": 483,
+    "type": "MediumChest"
+  },
+  "Set_Medium_TheHorde_Cloak": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Minion_Kill_Magic_Find_Bonus_Percent": [
+        40.0,
+        50.0
+      ]
+    },
+    "integerId": 485,
+    "type": "Cloak"
+  },
+  "Set_Medium_TheHorde_Gloves": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ],
+      "Minion_Kill_Magic_Find_Bonus_Percent": [
+        40.0,
+        50.0
+      ]
+    },
+    "integerId": 482,
+    "type": "MediumGloves"
+  },
+  "Set_Medium_TheHorde_Helmet": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        90.0,
+        110.0
+      ],
+      "Minion_Kill_Magic_Find_Bonus_Percent": [
+        40.0,
+        50.0
+      ]
+    },
+    "integerId": 480,
+    "type": "MediumHelmet"
+  },
+  "Set_Medium_TheHorde_Leggings": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        190.0,
+        210.0
+      ],
+      "Minion_Kill_Magic_Find_Bonus_Percent": [
+        40.0,
+        50.0
+      ]
+    },
+    "integerId": 486,
+    "type": "MediumLeggings"
+  },
+  "Set_Medium_TheHorde_Shoulders": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        190.0,
+        210.0
+      ],
+      "Minion_Kill_Magic_Find_Bonus_Percent": [
+        40.0,
+        50.0
+      ]
+    },
+    "integerId": 487,
+    "type": "MediumShoulders"
+  },
+  "Set_Medium_TheMarauder_Cloak": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 144,
+    "type": "Cloak"
+  },
+  "Set_Medium_TheScavenger_Belt": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 348,
+    "type": "Belt"
+  },
+  "Set_Medium_TheScavenger_Boots": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 349,
+    "type": "MediumBoots"
+  },
+  "Set_Medium_TheScavenger_Bracers": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 352,
+    "type": "MediumBracers"
+  },
+  "Set_Medium_TheScavenger_Chest": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        240.0,
+        260.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 351,
+    "type": "MediumChest"
+  },
+  "Set_Medium_TheScavenger_Cloak": {
+    "implicit": {
+      "Base_Life_Max": [
+        12.0,
+        15.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 353,
+    "type": "Cloak"
+  },
+  "Set_Medium_TheScavenger_Gloves": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 350,
+    "type": "MediumGloves"
+  },
+  "Set_Medium_TheScavenger_Helmet": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        90.0,
+        110.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 347,
+    "type": "MediumHelmet"
+  },
+  "Set_Medium_TheScavenger_Leggings": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        190.0,
+        210.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 354,
+    "type": "MediumLeggings"
+  },
+  "Set_Medium_TheScavenger_Shoulders": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        190.0,
+        210.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 355,
+    "type": "MediumShoulders"
+  },
+  "Set_Mimung": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "ExtraSwing_Chance_Current_Hand": [
+        10.0,
+        10.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.16,
+        2.16
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        3.0,
+        3.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        20.0,
+        20.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        100.0,
+        100.0
+      ]
+    },
+    "integerId": 148,
+    "type": "Sword1H"
+  },
+  "Set_SoulOfGroa_Wand": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        9.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.9,
+        1.9
+      ],
+      "Local_Implicit_Poison_Base_Damage_Delta": [
+        12.0,
+        15.0
+      ],
+      "Local_Implicit_Poison_Base_Damage_Min": [
+        11.0,
+        14.0
+      ],
+      "Minion_Inheritance_Weapon_Damage_Bonus_Percent": [
+        4.0,
+        6.0
+      ]
+    },
+    "integerId": 497,
+    "type": "PoisonWand1H"
+  },
+  "Set_TheSoulOfGroa_Book": {
+    "implicit": {
+      "Local_Base_Block_Chance_Spell": [
+        15.0,
+        20.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ],
+      "Minion_Inheritance_Weapon_Damage_Bonus_Percent": [
+        4.0,
+        6.0
+      ]
+    },
+    "integerId": 498,
+    "type": "Tome"
+  },
+  "ShortBow": {
+    "implicit": {
+      "Local_Base_Attack_Range": [
+        500.0,
+        500.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.8,
+        1.8
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        3.0,
+        4.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        9.0,
+        11.0
+      ]
+    },
+    "integerId": 302,
+    "type": "Bow"
+  },
+  "ShortSword": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.2032000000000003,
+        2.2032000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        5.0,
+        7.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        5.0,
+        7.0
+      ]
+    },
+    "integerId": 112,
+    "type": "Sword1H"
+  },
+  "SimpleGloves": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ]
+    },
+    "integerId": 193,
+    "type": "LightGloves"
+  },
+  "SimpleLeggings": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        60.0,
+        65.0
+      ]
+    },
+    "integerId": 204,
+    "type": "LightLeggings"
+  },
+  "SkullCap": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 12,
+    "type": "HeavyHelmet"
+  },
+  "SmallAttackSpeedPotion": {
+    "implicit": {
+      "Attack_Speed_Final_Granted_Duration": [
+        1500.0,
+        1500.0
+      ],
+      "Attack_Speed_Final_Granted_Percent": [
+        20.0,
+        20.0
+      ]
+    },
+    "integerId": 449,
+    "type": "AttackSpeedPotion"
+  },
+  "SmallExperiencePotion": {
+    "implicit": {
+      "Experience_Granted_Duration": [
+        300.0,
+        300.0
+      ],
+      "Experience_Granted_Percent": [
+        10.0,
+        10.0
+      ]
+    },
+    "integerId": 448,
+    "type": "ExperiencePotion"
+  },
+  "SmallHealthPotion": {
+    "implicit": {
+      "Life_Granted_Duration": [
+        2.0,
+        2.5
+      ],
+      "Life_Granted_Percent": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 38,
+    "type": "HealthPotion"
+  },
+  "SmallManaPotion": {
+    "implicit": {
+      "Mana_Granted_Duration": [
+        4.0,
+        4.6
+      ],
+      "Mana_Granted_Percent": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 179,
+    "type": "ManaPotion"
+  },
+  "SmallRejuvenationPotion": {
+    "implicit": {
+      "Life_Granted_Duration": [
+        2.0,
+        2.4
+      ],
+      "Life_Granted_Percent": [
+        12.5,
+        15.0
+      ],
+      "Mana_Granted_Duration": [
+        5.0,
+        6.0
+      ],
+      "Mana_Granted_Percent": [
+        15.0,
+        20.0
+      ]
+    },
+    "integerId": 210,
+    "type": "RejuvenationPotion"
+  },
+  "SmallShield": {
+    "implicit": {
+      "Local_Base_Block_Chance": [
+        19.0,
+        23.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        180.0,
+        225.0
+      ]
+    },
+    "integerId": 64,
+    "type": "Shield"
+  },
+  "SplintMail": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 26,
+    "type": "HeavyChest"
+  },
+  "SteelBow": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.3,
+        1.3
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        10.0,
+        14.0
+      ]
+    },
+    "integerId": 301,
+    "type": "Bow"
+  },
+  "SteelCrossbow": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        9.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.5,
+        1.5
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        2.0,
+        4.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        8.0,
+        11.0
+      ]
+    },
+    "integerId": 377,
+    "type": "Crossbow1H"
+  },
+  "SteelHammer": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Base_Stun_Chance": [
+        10.0,
+        12.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        10.0,
+        13.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        17.0,
+        19.0
+      ]
+    },
+    "integerId": 110,
+    "type": "Mace2H"
+  },
+  "StitchedLeggings": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        70.0,
+        75.0
+      ]
+    },
+    "integerId": 206,
+    "type": "LightLeggings"
+  },
+  "StoneHammer": {
+    "implicit": {
+      "Local_Implicit_Base_Attack_Speed": [
+        1.6848000000000003,
+        1.6848000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        6.0,
+        8.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        7.0,
+        9.0
+      ]
+    },
+    "integerId": 118,
+    "type": "Mace1H"
+  },
+  "StripedBreeches": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 205,
+    "type": "LightLeggings"
+  },
+  "StuddedLeatherArmor": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 61,
+    "type": "MediumChest"
+  },
+  "StuffedBracers": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        17.5,
+        20.0
+      ]
+    },
+    "integerId": 169,
+    "type": "MediumBracers"
+  },
+  "StuffedCloak": {
+    "implicit": {
+      "Resistance_All": [
+        5.0,
+        8.0
+      ]
+    },
+    "integerId": 105,
+    "type": "Cloak"
+  },
+  "TinyAllResistancePotion": {
+    "implicit": {
+      "All_Resistance_Final_Granted_Duration": [
+        15.0,
+        15.0
+      ],
+      "All_Resistance_Final_Granted_Percent": [
+        10.0,
+        10.0
+      ]
+    },
+    "integerId": 359,
+    "type": "AllResistancePotion"
+  },
+  "TinyAttackSpeedPotion": {
+    "implicit": {
+      "Attack_Speed_Final_Granted_Duration": [
+        15.0,
+        15.0
+      ],
+      "Attack_Speed_Final_Granted_Percent": [
+        10.0,
+        10.0
+      ]
+    },
+    "integerId": 356,
+    "type": "AttackSpeedPotion"
+  },
+  "TinyDefensePotion": {
+    "implicit": {
+      "Defense_Final_Granted_Duration": [
+        15.0,
+        15.0
+      ],
+      "Defense_Final_Granted_Percent": [
+        10.0,
+        10.0
+      ]
+    },
+    "integerId": 358,
+    "type": "DefensePotion"
+  },
+  "TinyExperiencePotion": {
+    "implicit": {
+      "Experience_Granted_Duration": [
+        30.0,
+        30.0
+      ],
+      "Experience_Granted_Percent": [
+        10.0,
+        10.0
+      ]
+    },
+    "integerId": 222,
+    "type": "ExperiencePotion"
+  },
+  "TinyMovementSpeedPotion": {
+    "implicit": {
+      "Movement_Speed_Final_Granted_Duration": [
+        30.0,
+        30.0
+      ],
+      "Movement_Speed_Final_Granted_Percent": [
+        10.0,
+        10.0
+      ]
+    },
+    "integerId": 357,
+    "type": "MovementSpeedPotion"
+  },
+  "Tome1": {
+    "implicit": {
+      "Local_Base_Block_Chance_Spell": [
+        10.0,
+        12.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 384,
+    "type": "Tome"
+  },
+  "Tome2": {
+    "implicit": {
+      "Local_Base_Block_Chance_Spell": [
+        12.0,
+        14.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 385,
+    "type": "Tome"
+  },
+  "Tome3": {
+    "implicit": {
+      "Local_Base_Block_Chance_Spell": [
+        14.0,
+        17.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 386,
+    "type": "Tome"
+  },
+  "Tome4": {
+    "implicit": {
+      "Local_Base_Block_Chance_Spell": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 387,
+    "type": "Tome"
+  },
+  "TopazStaff": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Lightning_Base_Damage_Delta": [
+        20.0,
+        21.0
+      ],
+      "Local_Implicit_Lightning_Base_Damage_Min": [
+        5.0,
+        7.0
+      ]
+    },
+    "integerId": 185,
+    "type": "LightningStaff2H"
+  },
+  "TopazWand": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        6.0,
+        6.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.0,
+        2.0
+      ],
+      "Local_Implicit_Lightning_Base_Damage_Delta": [
+        12.0,
+        14.0
+      ],
+      "Local_Implicit_Lightning_Base_Damage_Min": [
+        2.0,
+        4.0
+      ]
+    },
+    "integerId": 381,
+    "type": "LightningWand1H"
+  },
+  "TowerShield": {
+    "implicit": {
+      "Local_Base_Block_Chance": [
+        20.0,
+        24.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        225.0,
+        250.0
+      ]
+    },
+    "integerId": 91,
+    "type": "Shield"
+  },
+  "Trident": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        10.0,
+        12.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        20.0,
+        22.0
+      ]
+    },
+    "integerId": 151,
+    "type": "Spear2H"
+  },
+  "Unique_AbundancePendant": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Item_Quantity_Bonus_Percent": [
+        10.0,
+        15.0
+      ]
+    },
+    "integerId": 282,
+    "type": "Amulet"
+  },
+  "Unique_AlchemistsLeggings": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 576,
+    "type": "LightLeggings"
+  },
+  "Unique_AmuletOfElements": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Weapon_Damage_Converted_To_Cold_Percent": [
+        10.0,
+        50.0
+      ],
+      "Weapon_Damage_Converted_To_Fire_Percent": [
+        10.0,
+        50.0
+      ],
+      "Weapon_Damage_Converted_To_Lightning_Percent": [
+        10.0,
+        50.0
+      ],
+      "Weapon_Damage_Converted_To_Poison_Percent": [
+        10.0,
+        50.0
+      ]
+    },
+    "integerId": 464,
+    "type": "Amulet"
+  },
+  "Unique_AmuletOfFocus": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 456,
+    "type": "Amulet"
+  },
+  "Unique_AmuletOfSeidr": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Resistance_Curse": [
+        45.0,
+        50.0
+      ]
+    },
+    "integerId": 445,
+    "type": "Amulet"
+  },
+  "Unique_AssassinsCap": {
+    "implicit": {
+      "Crit_Damage_Bonus_Percent": [
+        30.0,
+        50.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        30.0,
+        35.0
+      ]
+    },
+    "integerId": 516,
+    "type": "MediumHelmet"
+  },
+  "Unique_AxeOfThunder": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.74,
+        1.74
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        16.0,
+        16.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        20.0,
+        20.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        120.0,
+        150.0
+      ],
+      "Physical_Weapon_Damage_Converted_To_Lightning_Percent": [
+        27.0,
+        33.0
+      ]
+    },
+    "integerId": 280,
+    "type": "Axe1H"
+  },
+  "Unique_BeltOfAbjuration": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Unique_Force_Field_Percent_Gained_When_Casting_Skill": [
+        0.2,
+        0.3
+      ]
+    },
+    "integerId": 461,
+    "type": "Belt"
+  },
+  "Unique_BeltOfAthleticism": {
+    "implicit": {
+      "Dodge_Chance_Bonus": [
+        1.0,
+        2.0
+      ],
+      "Dodge_Chance_Spell_Bonus": [
+        1.0,
+        2.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 459,
+    "type": "Belt"
+  },
+  "Unique_BeltOfLife": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Life_Bonus_Percent": [
+        200.0,
+        250.0
+      ]
+    },
+    "integerId": 462,
+    "type": "Belt"
+  },
+  "Unique_BeltOfWarmth": {
+    "implicit": {
+      "Damage_Taken_Converted_To_Cold_Percent": [
+        10.0,
+        20.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 460,
+    "type": "Belt"
+  },
+  "Unique_BootsOfBloodletting": {
+    "implicit": {
+      "Bleed_Damage_Increased_Percent": [
+        50.0,
+        80.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        17.5,
+        20.0
+      ]
+    },
+    "integerId": 523,
+    "type": "MediumBoots"
+  },
+  "Unique_BootsOfComfort": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        17.5,
+        20.0
+      ],
+      "Resistance_All": [
+        15.0,
+        20.0
+      ]
+    },
+    "integerId": 505,
+    "type": "MediumBoots"
+  },
+  "Unique_BootsOfLightning": {
+    "implicit": {
+      "ChainLightning_Additional_Max_Num_Chains": [
+        2.0,
+        3.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ],
+      "Resistance_Lightning": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 526,
+    "type": "LightBoots"
+  },
+  "Unique_BootsOfShielding": {
+    "implicit": {
+      "ForceField_Bonus_Percent": [
+        40.0,
+        60.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ]
+    },
+    "integerId": 525,
+    "type": "LightBoots"
+  },
+  "Unique_BootsOfTheMammoth": {
+    "implicit": {
+      "Damage_Taken_Converted_To_Cold_Percent": [
+        15.0,
+        20.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        15.0,
+        17.5
+      ],
+      "Resistance_Cold": [
+        40.0,
+        60.0
+      ]
+    },
+    "integerId": 521,
+    "type": "HeavyBoots"
+  },
+  "Unique_BootsOfTheStampede": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        15.0,
+        17.5
+      ],
+      "Movement_Speed_Bonus_Percent": [
+        8.0,
+        12.0
+      ]
+    },
+    "integerId": 506,
+    "type": "HeavyBoots"
+  },
+  "Unique_BootsOfWizardry": {
+    "implicit": {
+      "Buff_Stack_Duration": [
+        4.0,
+        4.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ],
+      "Unique_Increased_Intelligence_Per_Attack_Spell_Used_Recently": [
+        110.0,
+        140.0
+      ]
+    },
+    "integerId": 522,
+    "type": "LightBoots"
+  },
+  "Unique_BowOfTorching": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Fire_Resistance_Penetration": [
+        20.0,
+        25.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ],
+      "Physical_Weapon_Damage_Converted_To_Fire_Percent": [
+        50.0,
+        60.0
+      ]
+    },
+    "integerId": 322,
+    "type": "Bow"
+  },
+  "Unique_Bow_AngelsAlacrity": {
+    "implicit": {
+      "Local_Attack_Speed_Bonus_Percent": [
+        30.0,
+        40.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ],
+      "Movement_Speed_Bonus_Percent": [
+        15.0,
+        20.0
+      ]
+    },
+    "integerId": 401,
+    "type": "Bow"
+  },
+  "Unique_Bow_Argentum": {
+    "implicit": {
+      "Attack_Range_Bonus_Percent": [
+        25.0,
+        30.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ],
+      "Power_Projectile_Speed_Bonus": [
+        20.0,
+        25.0
+      ]
+    },
+    "integerId": 398,
+    "type": "Bow"
+  },
+  "Unique_Bow_Arrowstream": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        30.0,
+        50.0
+      ],
+      "Power_Duration": [
+        4.0,
+        4.0
+      ],
+      "Unique_Summon_Trap_That_Fires_Arrow_Stream_On_Auto_Attack_Cooldown": [
+        4.0,
+        5.0
+      ],
+      "Unique_Summon_Trap_That_Fires_Arrow_Stream_On_Auto_Attack_Weapon_Damage_Percent": [
+        80.0,
+        100.0
+      ]
+    },
+    "integerId": 409,
+    "type": "Bow"
+  },
+  "Unique_Bow_BowOfGluttony": {
+    "implicit": {
+      "Buff_Stack_Duration": [
+        4.0,
+        4.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        60.0,
+        80.0
+      ],
+      "Physical_Life_Leech": [
+        3.0,
+        3.3
+      ],
+      "Unique_Increased_Leech_Rate_Per_Kill_Percent": [
+        5.0,
+        7.0
+      ]
+    },
+    "integerId": 402,
+    "type": "Bow"
+  },
+  "Unique_Bow_FeralCall": {
+    "implicit": {
+      "Life_Bonus_Percent": [
+        90.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ],
+      "Unique_Summon_Bear_With_Percent_Of_Your_Life": [
+        250.0,
+        300.0
+      ],
+      "Unique_Summon_Bear_With_Percent_Of_Your_Life_Cooldown": [
+        15.0,
+        20.0
+      ]
+    },
+    "integerId": 407,
+    "type": "Bow"
+  },
+  "Unique_Bow_FletchersRage": {
+    "implicit": {
+      "Armor_Piercing_Percent": [
+        15.0,
+        18.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Crit_Chance_Percent_Bonus": [
+        40.0,
+        60.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ]
+    },
+    "integerId": 399,
+    "type": "Bow"
+  },
+  "Unique_Bow_MoltenBow": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ],
+      "Unique_Auto_Attacks_Are_Fire_Arrows_That_Explode_Weapon_Damage_Percent": [
+        40.0,
+        60.0
+      ]
+    },
+    "integerId": 400,
+    "type": "Bow"
+  },
+  "Unique_BowmastersTunic": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        80.0,
+        85.0
+      ],
+      "Power_Projectile_Speed_Bonus": [
+        15.0,
+        20.0
+      ]
+    },
+    "integerId": 542,
+    "type": "MediumChest"
+  },
+  "Unique_BracersOfLife": {
+    "implicit": {
+      "Life_Bonus_Percent": [
+        80.0,
+        100.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        0.25,
+        0.25
+      ]
+    },
+    "integerId": 552,
+    "type": "HeavyBracers"
+  },
+  "Unique_BracersOfNecromancy": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 559,
+    "type": "LightBracers"
+  },
+  "Unique_BracersOfSorcery": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        25.0,
+        30.0
+      ],
+      "Mana_Gained_On_Kill": [
+        2.0,
+        2.5
+      ]
+    },
+    "integerId": 560,
+    "type": "LightBracers"
+  },
+  "Unique_BracersOfSpeed": {
+    "implicit": {
+      "Attack_Speed_Bonus_Percent": [
+        5.0,
+        10.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        0.25,
+        0.25
+      ]
+    },
+    "integerId": 550,
+    "type": "HeavyBracers"
+  },
+  "Unique_BracersOfWinter": {
+    "implicit": {
+      "Cold_Resistance_Penetration": [
+        5.0,
+        10.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        17.5,
+        20.0
+      ],
+      "Resistance_Cold": [
+        40.0,
+        50.0
+      ]
+    },
+    "integerId": 553,
+    "type": "MediumBracers"
+  },
+  "Unique_BurningGloves": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ],
+      "Weapon_Fire_Damage_Bonus_Percent": [
+        15.0,
+        25.0
+      ]
+    },
+    "integerId": 537,
+    "type": "LightGloves"
+  },
+  "Unique_ChainOfTheAesir": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Unique_Increased_Item_Quantity_For_Each_Equipped_Imbued_Non_Set_Item": [
+        2.0,
+        3.0
+      ],
+      "Unique_Increased_Item_Quantity_For_Each_Equipped_Imbued_Set_Item": [
+        0.75,
+        1.0
+      ],
+      "Unique_Increased_Movement_Speed_For_Each_Equipped_Imbued_Non_Set_Item": [
+        1.5,
+        2.0
+      ],
+      "Unique_Increased_Movement_Speed_For_Each_Equipped_Imbued_Set_Item": [
+        0.5,
+        0.75
+      ]
+    },
+    "integerId": 453,
+    "type": "Amulet"
+  },
+  "Unique_ChestOfBaldr": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        80.0,
+        85.0
+      ],
+      "Vitality_Bonus_Percent": [
+        80.0,
+        100.0
+      ]
+    },
+    "integerId": 544,
+    "type": "MediumChest"
+  },
+  "Unique_ChestOfImmortality": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        80.0,
+        85.0
+      ],
+      "Unique_Less_Damage_Taken_On_Full_Mana": [
+        10.0,
+        15.0
+      ]
+    },
+    "integerId": 538,
+    "type": "HeavyChest"
+  },
+  "Unique_ChestOfSkadi": {
+    "implicit": {
+      "Dodge_Chance_Bonus_Percent": [
+        30.0,
+        40.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 541,
+    "type": "MediumChest"
+  },
+  "Unique_CowlOfAcrobatics": {
+    "implicit": {
+      "Dodge_Chance_Bonus_Percent": [
+        30.0,
+        40.0
+      ],
+      "Dodge_Chance_Spell_Percent_Bonus": [
+        15.0,
+        20.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        30.0,
+        35.0
+      ]
+    },
+    "integerId": 517,
+    "type": "MediumHelmet"
+  },
+  "Unique_DamageRing": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 599,
+    "type": "Ring"
+  },
+  "Unique_DimensionalLoop": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Item_Quantity_In_Niflheim_Bonus_Percent": [
+        6.0,
+        8.0
+      ],
+      "Portals_Drop_Weight_Bonus_Percent": [
+        10.0,
+        15.0
+      ]
+    },
+    "integerId": 333,
+    "type": "Ring"
+  },
+  "Unique_EludingRobe": {
+    "implicit": {
+      "Dodge_Chance_Spell_Percent_Bonus": [
+        30.0,
+        40.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 546,
+    "type": "LightChest"
+  },
+  "Unique_ExpRing": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Experience_Bonus_Percent": [
+        3.0,
+        6.0
+      ]
+    },
+    "integerId": 600,
+    "type": "Ring"
+  },
+  "Unique_FaustianBargain": {
+    "implicit": {
+      "Amplify_Damage_Taken_Percent": [
+        10.0,
+        15.0
+      ],
+      "Base_Life_Max": [
+        7.0,
+        11.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 319,
+    "type": "Amulet"
+  },
+  "Unique_FireGloves": {
+    "implicit": {
+      "Fire_Resistance_Penetration": [
+        15.0,
+        20.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        20.0,
+        22.5
+      ]
+    },
+    "integerId": 596,
+    "type": "HeavyGloves"
+  },
+  "Unique_GauntletsOfValor": {
+    "implicit": {
+      "Attack_Speed_Bonus_Percent": [
+        10.0,
+        15.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        20.0,
+        22.5
+      ],
+      "Strength_Bonus_Percent": [
+        50.0,
+        70.0
+      ]
+    },
+    "integerId": 527,
+    "type": "HeavyGloves"
+  },
+  "Unique_GlacialRod": {
+    "implicit": {
+      "Cold_Life_Leech": [
+        3.0,
+        4.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Cold_Damage_Percent": [
+        70.0,
+        90.0
+      ],
+      "Local_Crit_Chance_Percent_Bonus": [
+        40.0,
+        60.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.5,
+        1.5
+      ]
+    },
+    "integerId": 323,
+    "type": "ColdStaff2H"
+  },
+  "Unique_GlovesOfCommand": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ],
+      "Minion_Inheritance_Attack_Speed_Bonus_Percent": [
+        5.0,
+        10.0
+      ]
+    },
+    "integerId": 534,
+    "type": "LightGloves"
+  },
+  "Unique_GlovesOfPurity": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ],
+      "Resistance_Curse": [
+        25.0,
+        35.0
+      ]
+    },
+    "integerId": 535,
+    "type": "LightGloves"
+  },
+  "Unique_GlovesOfTheMagi": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ],
+      "Mana_Regen_Bonus_Percent": [
+        30.0,
+        50.0
+      ]
+    },
+    "integerId": 536,
+    "type": "LightGloves"
+  },
+  "Unique_HatOfSpellcasting": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        85.0,
+        100.0
+      ]
+    },
+    "integerId": 502,
+    "type": "LightHelmet"
+  },
+  "Unique_Heartpiercer": {
+    "implicit": {
+      "Crit_Damage_Bonus_Percent": [
+        40.0,
+        50.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ],
+      "Projectile_Auto_Attacks_Pierce_Chance": [
+        12.0,
+        15.0
+      ]
+    },
+    "integerId": 334,
+    "type": "Bow"
+  },
+  "Unique_Heartseeker": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Crit_Chance_Bonus_Percent": [
+        40.0,
+        50.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 454,
+    "type": "Ring"
+  },
+  "Unique_HelmOfDeflection": {
+    "implicit": {
+      "Block_Chance_Percent_Bonus": [
+        15.0,
+        20.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        25.0,
+        30.0
+      ],
+      "Resistance_All": [
+        15.0,
+        20.0
+      ]
+    },
+    "integerId": 514,
+    "type": "HeavyHelmet"
+  },
+  "Unique_HelmOfImmortality": {
+    "implicit": {
+      "Life_Bonus_Percent": [
+        120.0,
+        150.0
+      ],
+      "Life_Regen_Bonus_Percent": [
+        20.0,
+        25.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 508,
+    "type": "HeavyHelmet"
+  },
+  "Unique_HelmOfTheValkyrie": {
+    "implicit": {
+      "Crit_Chance_Bonus_Percent": [
+        30.0,
+        40.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 518,
+    "type": "HeavyHelmet"
+  },
+  "Unique_HelmOfTrueshot": {
+    "implicit": {
+      "Dexterity_Bonus_Percent": [
+        70.0,
+        100.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        30.0,
+        35.0
+      ]
+    },
+    "integerId": 512,
+    "type": "MediumHelmet"
+  },
+  "Unique_HelmOfUnleashedRage": {
+    "implicit": {
+      "Attack_Speed_Bonus_Percent": [
+        15.0,
+        20.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        30.0,
+        35.0
+      ]
+    },
+    "integerId": 515,
+    "type": "MediumHelmet"
+  },
+  "Unique_HelsWrath": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Fire_Nova_Damage": [
+        40.0,
+        50.0
+      ],
+      "Fire_Nova_On_Hit_Chance": [
+        2.0,
+        5.0
+      ],
+      "Resistance_Fire": [
+        50.0,
+        75.0
+      ]
+    },
+    "integerId": 339,
+    "type": "Ring"
+  },
+  "Unique_HoodOfPower": {
+    "implicit": {
+      "Base_Mana_Max": [
+        25.0,
+        40.0
+      ],
+      "Intelligence_Bonus_Percent": [
+        80.0,
+        100.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        85.0,
+        100.0
+      ]
+    },
+    "integerId": 511,
+    "type": "LightHelmet"
+  },
+  "Unique_ImpenetrableGloves": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        20.0,
+        22.5
+      ],
+      "Unique_Increased_Armor_Percent_On_Taken_Physical_Hit": [
+        5.0,
+        8.0
+      ],
+      "Unique_Increased_Armor_Percent_On_Taken_Physical_Hit_Duration": [
+        2.0,
+        2.0
+      ]
+    },
+    "integerId": 530,
+    "type": "HeavyGloves"
+  },
+  "Unique_ItemQuantityRing": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Item_Quantity_Bonus_Percent": [
+        4.0,
+        7.0
+      ]
+    },
+    "integerId": 602,
+    "type": "Ring"
+  },
+  "Unique_LavaPlate": {
+    "implicit": {
+      "Damage_Taken_Converted_To_Fire_Percent": [
+        15.0,
+        25.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        80.0,
+        85.0
+      ],
+      "Resistance_Fire": [
+        40.0,
+        60.0
+      ]
+    },
+    "integerId": 540,
+    "type": "HeavyChest"
+  },
+  "Unique_LeggingsOfAvoidance": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 570,
+    "type": "MediumLeggings"
+  },
+  "Unique_LeggingsOfCelerity": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        65.0,
+        70.0
+      ],
+      "Movement_Speed_Bonus_Percent": [
+        5.0,
+        8.0
+      ]
+    },
+    "integerId": 571,
+    "type": "MediumLeggings"
+  },
+  "Unique_LeggingsOfInfinitePower": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 573,
+    "type": "LightLeggings"
+  },
+  "Unique_LeggingsOfLoot": {
+    "implicit": {
+      "Item_Quantity_Bonus_Percent": [
+        2.0,
+        5.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        65.0,
+        70.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        100.0,
+        130.0
+      ]
+    },
+    "integerId": 567,
+    "type": "HeavyLeggings"
+  },
+  "Unique_LeggingsOfPiercing": {
+    "implicit": {
+      "Armor_Piercing_Percent": [
+        2.0,
+        5.0
+      ],
+      "Dexterity_Bonus_Percent": [
+        40.0,
+        60.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 572,
+    "type": "MediumLeggings"
+  },
+  "Unique_LeggingsOfProtection": {
+    "implicit": {
+      "Base_Physical_Damage_Reduction_Bonus": [
+        4.0,
+        6.0
+      ],
+      "Constitution_Bonus_Percent": [
+        60.0,
+        80.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 566,
+    "type": "HeavyLeggings"
+  },
+  "Unique_LeggingsOfRegeneration": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 565,
+    "type": "HeavyLeggings"
+  },
+  "Unique_LeggingsOfSwiftRegeneration": {
+    "implicit": {
+      "ForceField_Regen_Delay_Bonus": [
+        0.4,
+        0.8
+      ],
+      "Local_Implicit_Base_ForceField": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 575,
+    "type": "LightLeggings"
+  },
+  "Unique_LifeRing": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Life_Bonus_Percent": [
+        40.0,
+        80.0
+      ]
+    },
+    "integerId": 601,
+    "type": "Ring"
+  },
+  "Unique_LightningGloves": {
+    "implicit": {
+      "Lightning_Resistance_Penetration": [
+        15.0,
+        20.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ]
+    },
+    "integerId": 598,
+    "type": "LightGloves"
+  },
+  "Unique_LivsNecklace": {
+    "implicit": {
+      "Base_Life_Max": [
+        24.0,
+        32.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Life_Bonus_Percent": [
+        50.0,
+        70.0
+      ]
+    },
+    "integerId": 321,
+    "type": "Amulet"
+  },
+  "Unique_LokulfsHood": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        85.0,
+        100.0
+      ]
+    },
+    "integerId": 510,
+    "type": "LightHelmet"
+  },
+  "Unique_LokulfsWisdom": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 314,
+    "type": "Ring"
+  },
+  "Unique_LuckyBracers": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        25.0,
+        30.0
+      ],
+      "Magic_Find_Bonus_Percent": [
+        100.0,
+        150.0
+      ]
+    },
+    "integerId": 557,
+    "type": "LightBracers"
+  },
+  "Unique_LuckyShoulders": {
+    "implicit": {
+      "Item_Quantity_Bonus_Percent": [
+        3.0,
+        6.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        70.0,
+        75.0
+      ]
+    },
+    "integerId": 587,
+    "type": "LightShoulders"
+  },
+  "Unique_ManaStone": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Base_Mana_Max": [
+        50.0,
+        70.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 455,
+    "type": "Ring"
+  },
+  "Unique_MantleOfElements": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ],
+      "Resistance_Max_Bonus": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 547,
+    "type": "LightChest"
+  },
+  "Unique_MantleOfMinions": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ],
+      "Minion_Inheritance_Force_Field_Bonus_Percent": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 548,
+    "type": "LightChest"
+  },
+  "Unique_MantleOfSkirnir": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        80.0,
+        85.0
+      ],
+      "Strength_Bonus_Percent": [
+        80.0,
+        100.0
+      ]
+    },
+    "integerId": 543,
+    "type": "MediumChest"
+  },
+  "Unique_Medium_BranchingGloves": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ],
+      "Projectile_Auto_Attacks_Fork_Chance": [
+        5.0,
+        8.0
+      ]
+    },
+    "integerId": 533,
+    "type": "MediumGloves"
+  },
+  "Unique_Medium_ColdGloves": {
+    "implicit": {
+      "Cold_Resistance_Penetration": [
+        15.0,
+        20.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ]
+    },
+    "integerId": 597,
+    "type": "MediumGloves"
+  },
+  "Unique_Medium_GlovesOfCriticalStrikes": {
+    "implicit": {
+      "Crit_Chance_Bonus_Percent": [
+        20.0,
+        30.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ]
+    },
+    "integerId": 531,
+    "type": "MediumGloves"
+  },
+  "Unique_Medium_GlovesOfPowershot": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ],
+      "Power_Power_Shot_Increased_Action_Speed_Percent": [
+        30.0,
+        50.0
+      ]
+    },
+    "integerId": 532,
+    "type": "MediumGloves"
+  },
+  "Unique_Medium_VargrsBond": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        60.0,
+        70.0
+      ],
+      "Power_SummonWolf_Attack_Speed_Bonus": [
+        20.0,
+        30.0
+      ],
+      "Power_SummonWolf_Life_Bonus_Percent": [
+        40.0,
+        60.0
+      ],
+      "Power_SummonWolf_Resistances_Bonus_Percent_Final": [
+        20.0,
+        30.0
+      ]
+    },
+    "integerId": 315,
+    "type": "MediumGloves"
+  },
+  "Unique_NaturesYouth": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Life_Regen_Bonus_Percent": [
+        30.0,
+        40.0
+      ],
+      "Mana_Regen_Bonus_Percent": [
+        20.0,
+        30.0
+      ]
+    },
+    "integerId": 458,
+    "type": "Belt"
+  },
+  "Unique_OneHandedAxe2": {
+    "implicit": {
+      "Base_AttackRating": [
+        750.0,
+        850.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.96,
+        1.96
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        16.0,
+        16.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        20.0,
+        20.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        50.0,
+        70.0
+      ]
+    },
+    "integerId": 390,
+    "type": "Axe1H"
+  },
+  "Unique_OneHandedAxe3": {
+    "implicit": {
+      "Deadly_Strike_Chance_With_Axes": [
+        8.0,
+        10.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        9.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.78,
+        1.78
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        16.0,
+        16.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        23.0,
+        23.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        55.0,
+        65.0
+      ]
+    },
+    "integerId": 388,
+    "type": "Axe1H"
+  },
+  "Unique_OneHandedAxe4": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.88,
+        1.88
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        16.0,
+        16.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        20.0,
+        20.0
+      ],
+      "Strength_Bonus_Percent": [
+        80.0,
+        90.0
+      ]
+    },
+    "integerId": 391,
+    "type": "Axe1H"
+  },
+  "Unique_OneHandedAxe5": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.67,
+        1.67
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        16.0,
+        16.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        20.0,
+        20.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        100.0,
+        120.0
+      ],
+      "Unique_Freeze_Enemies_On_Kill_Radius": [
+        3.0,
+        4.0
+      ]
+    },
+    "integerId": 392,
+    "type": "Axe1H"
+  },
+  "Unique_OneHandedColdWand1": {
+    "implicit": {
+      "Local_Implicit_Base_Attack_Speed": [
+        1.8,
+        1.8
+      ],
+      "Local_Implicit_Cold_Base_Damage_Delta": [
+        3.0,
+        5.0
+      ],
+      "Local_Implicit_Cold_Base_Damage_Min": [
+        7.0,
+        9.0
+      ]
+    },
+    "integerId": 468,
+    "type": "ColdWand1H"
+  },
+  "Unique_OneHandedCrossbow1": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.05,
+        2.05
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        60.0,
+        80.0
+      ],
+      "Unique_Huginn_Attracted_Enemies_Deal_Less_Damage_Percent": [
+        20.0,
+        25.0
+      ]
+    },
+    "integerId": 417,
+    "type": "Crossbow1H"
+  },
+  "Unique_OneHandedCrossbow2": {
+    "implicit": {
+      "Buff_Stack_Duration": [
+        4.0,
+        4.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.05,
+        2.05
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        60.0,
+        80.0
+      ]
+    },
+    "integerId": 427,
+    "type": "Crossbow1H"
+  },
+  "Unique_OneHandedCrossbow3": {
+    "implicit": {
+      "Armor_Piercing_Percent": [
+        7.0,
+        10.0
+      ],
+      "Crit_Damage_Bonus_Percent": [
+        30.0,
+        40.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Crit_Chance_Percent_Bonus": [
+        60.0,
+        70.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ]
+    },
+    "integerId": 428,
+    "type": "Crossbow1H"
+  },
+  "Unique_OneHandedCrossbow4": {
+    "implicit": {
+      "Buff_Stack_Duration": [
+        4.0,
+        4.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.95,
+        1.95
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        50.0,
+        70.0
+      ],
+      "Unique_Gain_Strength_Percent_For_Each_Missed_Auto_Attack": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 429,
+    "type": "Crossbow1H"
+  },
+  "Unique_OneHandedCrossbow5": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.9,
+        1.9
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        18.0,
+        22.0
+      ]
+    },
+    "integerId": 469,
+    "type": "Crossbow1H"
+  },
+  "Unique_OneHandedElementalWand1": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Fire_Base_Damage_Delta": [
+        4.0,
+        5.0
+      ],
+      "Local_Implicit_Fire_Base_Damage_Min": [
+        18.0,
+        22.0
+      ]
+    },
+    "integerId": 433,
+    "type": "ElementalWand1H"
+  },
+  "Unique_OneHandedFireWand1": {
+    "implicit": {
+      "Crit_Damage_Bonus_Percent": [
+        60.0,
+        75.0
+      ],
+      "Fire_Life_Leech": [
+        1.5,
+        2.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        8.0
+      ],
+      "Local_Crit_Chance_Percent_Bonus": [
+        40.0,
+        60.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.7,
+        1.7
+      ],
+      "Local_Implicit_Fire_Base_Damage_Delta": [
+        2.0,
+        4.0
+      ],
+      "Local_Implicit_Fire_Base_Damage_Min": [
+        7.0,
+        12.0
+      ]
+    },
+    "integerId": 465,
+    "type": "FireWand1H"
+  },
+  "Unique_OneHandedLightningWand1": {
+    "implicit": {
+      "Local_Attack_Range_Bonus_Percent": [
+        20.0,
+        30.0
+      ],
+      "Local_Base_Crit_Chance": [
+        5.0,
+        6.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.6,
+        1.6
+      ],
+      "Local_Implicit_Lightning_Base_Damage_Delta": [
+        12.0,
+        14.0
+      ],
+      "Local_Implicit_Lightning_Base_Damage_Min": [
+        2.0,
+        4.0
+      ],
+      "Unique_Chain_Lightning_On_Auto_Attack_Chance": [
+        8.0,
+        10.0
+      ],
+      "Unique_Chain_Lightning_On_Auto_Attack_Weapon_Damage_Percent": [
+        80.0,
+        100.0
+      ]
+    },
+    "integerId": 434,
+    "type": "LightningWand1H"
+  },
+  "Unique_OneHandedLightningWand2": {
+    "implicit": {
+      "Buff_Stack_Duration": [
+        4.0,
+        4.0
+      ],
+      "Local_Base_Crit_Chance": [
+        5.0,
+        6.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.1,
+        2.1
+      ],
+      "Local_Implicit_Lightning_Base_Damage_Delta": [
+        12.0,
+        14.0
+      ],
+      "Local_Implicit_Lightning_Base_Damage_Min": [
+        2.0,
+        4.0
+      ],
+      "Unique_Attack_Speed_Percent_Gained_Per_Attack_Spell_Used_Recently": [
+        3.0,
+        5.0
+      ]
+    },
+    "integerId": 467,
+    "type": "LightningWand1H"
+  },
+  "Unique_OneHandedMace1": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Life_Leech_Maximum_Recovery_Bonus_Percent": [
+        10.0,
+        15.0
+      ],
+      "Life_Leech_Rate_Bonus_Percent": [
+        15.0,
+        20.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.85,
+        1.85
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        25.0,
+        25.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        60.0,
+        90.0
+      ]
+    },
+    "integerId": 403,
+    "type": "Mace1H"
+  },
+  "Unique_OneHandedMace2": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.93,
+        1.93
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        25.0,
+        25.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        80.0,
+        90.0
+      ],
+      "Unique_Throw_Hammer_On_Auto_Attack_Hit_Chance": [
+        20.0,
+        25.0
+      ],
+      "Unique_Throw_Hammer_On_Auto_Attack_Hit_Weapon_Damage_Percent": [
+        80.0,
+        120.0
+      ]
+    },
+    "integerId": 404,
+    "type": "Mace1H"
+  },
+  "Unique_OneHandedMace3": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.6,
+        1.6
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        25.0,
+        25.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        200.0,
+        300.0
+      ]
+    },
+    "integerId": 405,
+    "type": "Mace1H"
+  },
+  "Unique_OneHandedMace4": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.78,
+        1.78
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        25.0,
+        25.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        80.0,
+        100.0
+      ],
+      "Unique_Thunderstrike_On_Auto_Attack_Hit_Chance": [
+        5.0,
+        10.0
+      ],
+      "Unique_Thunderstrike_On_Auto_Attack_Hit_Weapon_Damage_Percent": [
+        280.0,
+        350.0
+      ]
+    },
+    "integerId": 406,
+    "type": "Mace1H"
+  },
+  "Unique_OneHandedSword1": {
+    "implicit": {
+      "Bleed_Damage_Increased_Percent": [
+        100.0,
+        150.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.21,
+        2.21
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        15.0,
+        20.0
+      ]
+    },
+    "integerId": 393,
+    "type": "Sword1H"
+  },
+  "Unique_OneHandedSword2": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.95,
+        1.95
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        25.0,
+        25.0
+      ],
+      "Physical_Weapon_Damage_Converted_To_Fire_Percent": [
+        25.0,
+        35.0
+      ],
+      "Unique_Fireball_Random_Target_On_Auto_Attack_Hit_Chance": [
+        25.0,
+        30.0
+      ],
+      "Unique_Fireball_Random_Target_On_Auto_Attack_Hit_Weapon_Damage_Percent": [
+        120.0,
+        140.0
+      ]
+    },
+    "integerId": 395,
+    "type": "Sword1H"
+  },
+  "Unique_OneHandedSword3": {
+    "implicit": {
+      "Dexterity_Bonus_Percent": [
+        40.0,
+        50.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        2.0,
+        2.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        25.0,
+        25.0
+      ],
+      "Melee_Auto_Attacks_Splash_Damage_Bonus_Percent": [
+        40.0,
+        50.0
+      ],
+      "Melee_Auto_Attacks_Splash_Damage_Cone_Radius_Bonus_Percent": [
+        40.0,
+        60.0
+      ]
+    },
+    "integerId": 396,
+    "type": "Sword1H"
+  },
+  "Unique_OneHandedSword4": {
+    "implicit": {
+      "Armor_Piercing_Percent": [
+        10.0,
+        15.0
+      ],
+      "Crit_Damage_Bonus_Percent": [
+        75.0,
+        85.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.91,
+        1.91
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        25.0,
+        25.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        70.0,
+        80.0
+      ]
+    },
+    "integerId": 397,
+    "type": "Sword1H"
+  },
+  "Unique_PauldronsOfSafety": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        65.0,
+        70.0
+      ],
+      "Unique_Town_Portal_Reduced_Damage_Taken": [
+        70.0,
+        80.0
+      ],
+      "Unique_Town_Portal_Reduced_Damage_Taken_Duration": [
+        1.0,
+        1.5
+      ]
+    },
+    "integerId": 577,
+    "type": "HeavyShoulders"
+  },
+  "Unique_PiercingArrows": {
+    "implicit": {
+      "Armor_Piercing_Percent": [
+        10.0,
+        15.0
+      ]
+    },
+    "integerId": 605,
+    "type": "Arrows"
+  },
+  "Unique_PiercingRing": {
+    "implicit": {
+      "Armor_Piercing_Percent": [
+        10.0,
+        15.0
+      ],
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 463,
+    "type": "Ring"
+  },
+  "Unique_PlateOfRiches": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 539,
+    "type": "HeavyChest"
+  },
+  "Unique_PoisonedShoulders": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        70.0,
+        75.0
+      ],
+      "Weapon_Poison_Damage_Bonus_Percent": [
+        10.0,
+        20.0
+      ]
+    },
+    "integerId": 585,
+    "type": "LightShoulders"
+  },
+  "Unique_PouncingBoots": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        15.0,
+        17.5
+      ],
+      "Power_Pounce_Delay_Cooldown_By_Seconds": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 520,
+    "type": "HeavyBoots"
+  },
+  "Unique_PreciseBracers": {
+    "implicit": {
+      "AttackRating_Bonus_Percent": [
+        40.0,
+        60.0
+      ],
+      "Attack_Range_Bonus_Percent": [
+        10.0,
+        15.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        17.5,
+        20.0
+      ]
+    },
+    "integerId": 556,
+    "type": "MediumBracers"
+  },
+  "Unique_ProtectiveBracers": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        17.5,
+        20.0
+      ],
+      "Reduced_Crit_Damage_Taken": [
+        10.0,
+        15.0
+      ]
+    },
+    "integerId": 555,
+    "type": "MediumBracers"
+  },
+  "Unique_ProtectiveLeggings": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        65.0,
+        70.0
+      ],
+      "Reduced_Crit_Damage_Taken": [
+        10.0,
+        20.0
+      ]
+    },
+    "integerId": 574,
+    "type": "LightLeggings"
+  },
+  "Unique_RapidBracers": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        17.5,
+        20.0
+      ],
+      "Unique_Rapid_Fire_Attack_Speed_Bonus_Percent": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 554,
+    "type": "MediumBracers"
+  },
+  "Unique_RecklessLeggings": {
+    "implicit": {
+      "Amplify_Damage_Taken_Percent": [
+        10.0,
+        15.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 569,
+    "type": "MediumLeggings"
+  },
+  "Unique_RobeOfTheSage": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 545,
+    "type": "LightChest"
+  },
+  "Unique_RoyaltyStone": {
+    "implicit": {
+      "Attributes_All_Bonus_Percent": [
+        25.0,
+        30.0
+      ],
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 318,
+    "type": "Ring"
+  },
+  "Unique_SettingStone": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ]
+    },
+    "integerId": 343,
+    "type": "Amulet"
+  },
+  "Unique_Shadowboots": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ],
+      "Movement_Speed_Bonus_Percent": [
+        8.0,
+        12.0
+      ]
+    },
+    "integerId": 504,
+    "type": "LightBoots"
+  },
+  "Unique_Shield2": {
+    "implicit": {
+      "Buff_Stack_Duration": [
+        4.0,
+        4.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Armor_Bonus_Percent": [
+        40.0,
+        60.0
+      ],
+      "Local_Base_Block_Chance": [
+        23.0,
+        30.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        600.0,
+        850.0
+      ]
+    },
+    "integerId": 438,
+    "type": "Shield"
+  },
+  "Unique_Shield3": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Block_Chance": [
+        24.0,
+        32.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        600.0,
+        850.0
+      ],
+      "Unique_Retaliation_Range_Bonus_Percent": [
+        20.0,
+        30.0
+      ]
+    },
+    "integerId": 439,
+    "type": "Shield"
+  },
+  "Unique_Shield4": {
+    "implicit": {
+      "Blocked_Damage_Taken_Bonus": [
+        -5.0,
+        -10.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Armor_Bonus_Percent": [
+        120.0,
+        150.0
+      ],
+      "Local_Base_Block_Chance": [
+        27.0,
+        36.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        600.0,
+        850.0
+      ],
+      "Physical_Damage_Reduction_Max": [
+        3.0,
+        5.0
+      ]
+    },
+    "integerId": 440,
+    "type": "Shield"
+  },
+  "Unique_Shield5": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Extra_Swing_Reproc_Chance_Swords": [
+        8.0,
+        10.0
+      ],
+      "Life_Bonus_Percent": [
+        120.0,
+        150.0
+      ],
+      "Local_Armor_Bonus_Percent": [
+        50.0,
+        70.0
+      ],
+      "Local_Base_Block_Chance": [
+        20.0,
+        25.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        600.0,
+        850.0
+      ]
+    },
+    "integerId": 441,
+    "type": "Shield"
+  },
+  "Unique_Shield6": {
+    "implicit": {
+      "Damage_Taken_Converted_To_Fire_Percent": [
+        30.0,
+        40.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Block_Chance": [
+        25.0,
+        32.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        600.0,
+        850.0
+      ],
+      "Resistance_Fire": [
+        75.0,
+        90.0
+      ]
+    },
+    "integerId": 444,
+    "type": "Shield"
+  },
+  "Unique_ShockingBracers": {
+    "implicit": {
+      "Lightning_Resistance_Penetration": [
+        5.0,
+        10.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 558,
+    "type": "LightBracers"
+  },
+  "Unique_ShouldersOfAvoidance": {
+    "implicit": {
+      "Dodge_Chance_Bonus_Percent": [
+        20.0,
+        25.0
+      ],
+      "Evasion_Bonus_Percent": [
+        50.0,
+        70.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 582,
+    "type": "MediumShoulders"
+  },
+  "Unique_ShouldersOfFury": {
+    "implicit": {
+      "Crit_Chance_Bonus_Percent": [
+        20.0,
+        30.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        65.0,
+        70.0
+      ]
+    },
+    "integerId": 583,
+    "type": "MediumShoulders"
+  },
+  "Unique_ShouldersOfMagicProtection": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        65.0,
+        70.0
+      ],
+      "Resistance_Cold": [
+        80.0,
+        100.0
+      ],
+      "Resistance_Fire": [
+        80.0,
+        100.0
+      ],
+      "Resistance_Lightning": [
+        80.0,
+        100.0
+      ],
+      "Resistance_Max_Bonus": [
+        1.0,
+        2.0
+      ],
+      "Resistance_Poison": [
+        80.0,
+        100.0
+      ]
+    },
+    "integerId": 579,
+    "type": "HeavyShoulders"
+  },
+  "Unique_ShouldersOfMana": {
+    "implicit": {
+      "Base_Mana_Max": [
+        30.0,
+        50.0
+      ],
+      "Local_Implicit_Base_Evasion": [
+        65.0,
+        70.0
+      ],
+      "Mana_Regen_Bonus_Percent": [
+        30.0,
+        40.0
+      ]
+    },
+    "integerId": 581,
+    "type": "MediumShoulders"
+  },
+  "Unique_ShouldersOfNecromancy": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        70.0,
+        75.0
+      ]
+    },
+    "integerId": 588,
+    "type": "LightShoulders"
+  },
+  "Unique_ShouldersOfShadow": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        65.0,
+        70.0
+      ],
+      "Movement_Speed_Bonus_Percent": [
+        5.0,
+        10.0
+      ]
+    },
+    "integerId": 584,
+    "type": "MediumShoulders"
+  },
+  "Unique_ShouldersOfTheBarbarian": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        65.0,
+        70.0
+      ],
+      "Strength_Bonus_Percent": [
+        50.0,
+        70.0
+      ]
+    },
+    "integerId": 578,
+    "type": "HeavyShoulders"
+  },
+  "Unique_ShouldersOfTheLeech": {
+    "implicit": {
+      "Life_Leech_Maximum_Recovery_Bonus_Percent": [
+        20.0,
+        30.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        65.0,
+        70.0
+      ],
+      "Physical_Life_Leech": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 580,
+    "type": "HeavyShoulders"
+  },
+  "Unique_SkullGauntlets": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        20.0,
+        22.5
+      ],
+      "Reduced_Enemy_Stun_Threshold": [
+        20.0,
+        30.0
+      ]
+    },
+    "integerId": 528,
+    "type": "HeavyGloves"
+  },
+  "Unique_SteadfastBoots": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        15.0,
+        17.5
+      ],
+      "Unique_Gain_Life_Regen_Per_Second_You_Are_Standing_Still": [
+        0.8,
+        1.0
+      ],
+      "Unique_Gain_Life_Regen_Per_Second_You_Are_Standing_Still_Max_Regen": [
+        3.0,
+        3.0
+      ]
+    },
+    "integerId": 519,
+    "type": "HeavyBoots"
+  },
+  "Unique_StoneOfKnowledge": {
+    "implicit": {
+      "Base_Life_Max": [
+        19.0,
+        24.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Experience_Bonus_Percent": [
+        15.0,
+        20.0
+      ]
+    },
+    "integerId": 340,
+    "type": "Amulet"
+  },
+  "Unique_SwiftBoots": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        17.5,
+        20.0
+      ],
+      "Movement_Speed_Bonus_Percent": [
+        8.0,
+        12.0
+      ]
+    },
+    "integerId": 507,
+    "type": "MediumBoots"
+  },
+  "Unique_TheBulwark": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Armor_Bonus_Percent": [
+        80.0,
+        120.0
+      ],
+      "Local_Base_Block_Chance": [
+        30.0,
+        40.0
+      ],
+      "Local_Base_Block_Chance_Spell": [
+        20.0,
+        25.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        600.0,
+        850.0
+      ]
+    },
+    "integerId": 281,
+    "type": "Shield"
+  },
+  "Unique_TitaniumChest": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        200.0,
+        200.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        80.0,
+        85.0
+      ],
+      "Physical_Damage_Reduction_Max": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 509,
+    "type": "HeavyChest"
+  },
+  "Unique_Tome1": {
+    "implicit": {
+      "Cold_Life_Leech": [
+        1.5,
+        2.0
+      ],
+      "Fire_Life_Leech": [
+        1.5,
+        2.0
+      ],
+      "Life_Bonus_Percent": [
+        150.0,
+        200.0
+      ],
+      "Lightning_Life_Leech": [
+        1.5,
+        2.0
+      ],
+      "Local_Base_Block_Chance_Spell": [
+        20.0,
+        25.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ],
+      "Poison_Life_Leech": [
+        1.5,
+        2.0
+      ]
+    },
+    "integerId": 421,
+    "type": "Tome"
+  },
+  "Unique_Tome2": {
+    "implicit": {
+      "Local_Base_Block_Chance_Spell": [
+        15.0,
+        20.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 442,
+    "type": "Tome"
+  },
+  "Unique_Tome3": {
+    "implicit": {
+      "Local_Base_Block_Chance_Spell": [
+        25.0,
+        30.0
+      ],
+      "Local_ForceField_Bonus_Percent": [
+        450.0,
+        550.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        80.0,
+        85.0
+      ]
+    },
+    "integerId": 443,
+    "type": "Tome"
+  },
+  "Unique_TumblingBoots": {
+    "implicit": {
+      "Local_Implicit_Base_Evasion": [
+        17.5,
+        20.0
+      ],
+      "Unique_Backflip_Grants_Percent_Movement_Speed_Bonus": [
+        15.0,
+        20.0
+      ],
+      "Unique_Backflip_Grants_Percent_Movement_Speed_Duration": [
+        3.0,
+        4.0
+      ]
+    },
+    "integerId": 524,
+    "type": "MediumBoots"
+  },
+  "Unique_TwoHandedAxe1": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        12.0,
+        16.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        20.0,
+        24.0
+      ],
+      "Unique_More_Attack_Speed_Per_Nearby_Bleeding_Enemy_Radius": [
+        4.0,
+        5.0
+      ]
+    },
+    "integerId": 220,
+    "type": "Axe2H"
+  },
+  "Unique_TwoHandedAxe2": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Life_Leech_Maximum_Recovery_Bonus_Percent": [
+        20.0,
+        25.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        12.0,
+        16.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        20.0,
+        24.0
+      ],
+      "Physical_Life_Leech": [
+        2.0,
+        2.5
+      ],
+      "Unique_More_Life_For_Each_Nearby_Enemy_Radius": [
+        3.0,
+        5.0
+      ]
+    },
+    "integerId": 435,
+    "type": "Axe2H"
+  },
+  "Unique_TwoHandedAxe3": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        12.0,
+        16.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        20.0,
+        24.0
+      ],
+      "Unique_More_Weapon_Damage_For_Each_Nearby_Enemy_Radius": [
+        4.0,
+        6.0
+      ]
+    },
+    "integerId": 437,
+    "type": "Axe2H"
+  },
+  "Unique_TwoHandedColdStaff2": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        6.0,
+        6.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.45,
+        1.45
+      ],
+      "Resistance_Cold": [
+        50.0,
+        60.0
+      ],
+      "Unique_Chilling_Aura_Percent_Weapon_Damage_Per_Second": [
+        15.0,
+        20.0
+      ]
+    },
+    "integerId": 408,
+    "type": "ColdStaff2H"
+  },
+  "Unique_TwoHandedElementalStaff1": {
+    "implicit": {
+      "Buff_Stack_Duration": [
+        2.0,
+        2.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Attack_Speed_Bonus_Percent": [
+        40.0,
+        60.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.5,
+        1.5
+      ]
+    },
+    "integerId": 416,
+    "type": "ElementalStaff2H"
+  },
+  "Unique_TwoHandedElementalStaff2": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Elemental_Damage_Percent": [
+        70.0,
+        90.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.5,
+        1.5
+      ],
+      "Weapon_Damage_Converted_To_Cold_Percent": [
+        25.0,
+        25.0
+      ],
+      "Weapon_Damage_Converted_To_Fire_Percent": [
+        25.0,
+        25.0
+      ],
+      "Weapon_Damage_Converted_To_Lightning_Percent": [
+        25.0,
+        25.0
+      ],
+      "Weapon_Damage_Converted_To_Poison_Percent": [
+        25.0,
+        25.0
+      ]
+    },
+    "integerId": 430,
+    "type": "ElementalStaff2H"
+  },
+  "Unique_TwoHandedFireStaff1": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Fire_Damage_Percent": [
+        60.0,
+        80.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.5,
+        1.5
+      ],
+      "Unique_Auto_Attacks_Is_Spitfire_Weapon_Damage_Percent_Per_Second": [
+        70.0,
+        90.0
+      ]
+    },
+    "integerId": 411,
+    "type": "FireStaff2H"
+  },
+  "Unique_TwoHandedFireStaff2": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.6,
+        1.6
+      ],
+      "Unique_Bleed_Percent_Of_Life_Per_Second_In_Combat": [
+        2.5,
+        5.0
+      ]
+    },
+    "integerId": 422,
+    "type": "FireStaff2H"
+  },
+  "Unique_TwoHandedFireStaff3": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.6,
+        1.6
+      ]
+    },
+    "integerId": 466,
+    "type": "FireStaff2H"
+  },
+  "Unique_TwoHandedLightningStaff1": {
+    "implicit": {
+      "Base_Mana_Max": [
+        40.0,
+        50.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.8,
+        1.8
+      ],
+      "Unique_Tornado_On_Auto_Attack_Chance": [
+        6.0,
+        8.0
+      ],
+      "Unique_Tornado_On_Auto_Attack_Chance_Weapon_Damage_Percent": [
+        120.0,
+        150.0
+      ]
+    },
+    "integerId": 414,
+    "type": "LightningStaff2H"
+  },
+  "Unique_TwoHandedLightningStaff2": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.5,
+        1.5
+      ],
+      "Local_Lightning_Damage_Percent": [
+        70.0,
+        90.0
+      ],
+      "Unique_Cast_Thunderstrike_On_Thunderstrike_Delay_Seconds": [
+        0.5,
+        1.0
+      ]
+    },
+    "integerId": 423,
+    "type": "LightningStaff2H"
+  },
+  "Unique_TwoHandedMace1": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        10.0,
+        13.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        17.0,
+        19.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        120.0,
+        150.0
+      ],
+      "Local_Stun_Chance_Percent_Bonus": [
+        200.0,
+        250.0
+      ]
+    },
+    "integerId": 320,
+    "type": "Mace2H"
+  },
+  "Unique_TwoHandedMace2": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        10.0,
+        13.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        17.0,
+        19.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        90.0,
+        110.0
+      ],
+      "Melee_Auto_Attacks_Splash_Damage_Bonus_Percent": [
+        80.0,
+        100.0
+      ]
+    },
+    "integerId": 335,
+    "type": "Mace2H"
+  },
+  "Unique_TwoHandedMace3": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        10.0,
+        13.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        17.0,
+        19.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        60.0,
+        80.0
+      ],
+      "Unique_Stomp_After_Casting_Pounce_Weapon_Damage_Percent": [
+        40.0,
+        60.0
+      ]
+    },
+    "integerId": 426,
+    "type": "Mace2H"
+  },
+  "Unique_TwoHandedPoisonStaff1": {
+    "implicit": {
+      "Buff_Stack_Duration": [
+        4.0,
+        4.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Attack_Speed_Bonus_Percent": [
+        30.0,
+        40.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.5,
+        1.5
+      ],
+      "Unique_More_Intelligence_Per_Active_Projectile_Percent": [
+        3.0,
+        4.0
+      ]
+    },
+    "integerId": 415,
+    "type": "PoisonStaff2H"
+  },
+  "Unique_TwoHandedPoisonStaff2": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.5,
+        1.5
+      ],
+      "Local_Poison_Damage_Percent": [
+        90.0,
+        120.0
+      ],
+      "Projectile_Auto_Attacks_Chain_Chance": [
+        40.0,
+        50.0
+      ]
+    },
+    "integerId": 424,
+    "type": "PoisonStaff2H"
+  },
+  "Unique_TwoHandedSpear1": {
+    "implicit": {
+      "Buff_Stack_Duration": [
+        4.0,
+        4.0
+      ],
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        12.0,
+        16.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        20.0,
+        24.0
+      ],
+      "Local_Physical_Damage_Percent": [
+        60.0,
+        80.0
+      ],
+      "Unique_Gain_Percent_Armor_Piercing_Per_Kill": [
+        1.5,
+        2.0
+      ]
+    },
+    "integerId": 410,
+    "type": "Spear2H"
+  },
+  "Unique_TwoHandedSpear2": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        12.0,
+        16.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        20.0,
+        24.0
+      ],
+      "Unique_More_Weapon_Damage_For_Each_Nearby_Enemy_Radius": [
+        4.0,
+        5.0
+      ]
+    },
+    "integerId": 436,
+    "type": "Spear2H"
+  },
+  "Unique_TwoHandedSword1": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.6799999999999997,
+        1.6799999999999997
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        16.0,
+        20.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        16.0,
+        20.0
+      ],
+      "Mana_Regen_Bonus_Percent": [
+        35.0,
+        40.0
+      ]
+    },
+    "integerId": 221,
+    "type": "Sword2H"
+  },
+  "Unique_TwoHandedSword2": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.6799999999999997,
+        1.6799999999999997
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        16.0,
+        20.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        16.0,
+        20.0
+      ],
+      "Unique_Nearby_Enemies_Burn_Percent_Weapon_Damage_Per_Second": [
+        20.0,
+        30.0
+      ]
+    },
+    "integerId": 394,
+    "type": "Sword2H"
+  },
+  "Unique_TwoHandedSword3": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.6799999999999997,
+        1.6799999999999997
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        16.0,
+        20.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        16.0,
+        20.0
+      ],
+      "Unique_Whirl_On_Auto_Attack_Chance": [
+        15.0,
+        20.0
+      ],
+      "Unique_Whirl_On_Auto_Attack_Chance_Weapon_Damage_Percent": [
+        250.0,
+        300.0
+      ]
+    },
+    "integerId": 425,
+    "type": "Sword2H"
+  },
+  "Unique_UnbreakableBracers": {
+    "implicit": {
+      "Armor_Bonus_Percent": [
+        30.0,
+        50.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        0.25,
+        0.25
+      ]
+    },
+    "integerId": 551,
+    "type": "HeavyBracers"
+  },
+  "Unique_UnstoppableLeggings": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        65.0,
+        70.0
+      ],
+      "Physical_Damage_Reduction_Max": [
+        2.0,
+        3.0
+      ]
+    },
+    "integerId": 568,
+    "type": "HeavyLeggings"
+  },
+  "Unique_VampiresThirst": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Life_Leech_Maximum_Recovery_Bonus_Percent": [
+        30.0,
+        40.0
+      ],
+      "Life_Leech_Rate_Bonus_Percent": [
+        20.0,
+        25.0
+      ]
+    },
+    "integerId": 316,
+    "type": "Belt"
+  },
+  "Unique_VampiricCloak": {
+    "implicit": {
+      "Life_Leech_Rate_Bonus_Percent": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 562,
+    "type": "Cloak"
+  },
+  "Unique_VampiricGloves": {
+    "implicit": {
+      "Life_Leech_Maximum_Recovery_Bonus_Percent": [
+        20.0,
+        30.0
+      ],
+      "Local_Implicit_Base_Armor": [
+        20.0,
+        22.5
+      ]
+    },
+    "integerId": 529,
+    "type": "HeavyGloves"
+  },
+  "Unique_VileTouch": {
+    "implicit": {
+      "Durability_Implicit_Base": [
+        100.0,
+        110.0
+      ],
+      "Poison_Chance_On_Hit": [
+        10.0,
+        15.0
+      ],
+      "Poison_Resistance_Penetration": [
+        15.0,
+        25.0
+      ]
+    },
+    "integerId": 457,
+    "type": "Belt"
+  },
+  "Unique_WarlordsHelm": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        25.0,
+        30.0
+      ],
+      "Strength_Bonus_Percent": [
+        70.0,
+        90.0
+      ]
+    },
+    "integerId": 513,
+    "type": "HeavyHelmet"
+  },
+  "Unique_WideswingBracers": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        0.25,
+        0.25
+      ],
+      "Melee_Auto_Attacks_Splash_Damage_Bonus_Percent": [
+        20.0,
+        30.0
+      ]
+    },
+    "integerId": 549,
+    "type": "HeavyBracers"
+  },
+  "Unique_WizardsShoulderguards": {
+    "implicit": {
+      "Intelligence_Bonus_Percent": [
+        60.0,
+        90.0
+      ],
+      "Local_Implicit_Base_ForceField": [
+        70.0,
+        75.0
+      ]
+    },
+    "integerId": 586,
+    "type": "LightShoulders"
+  },
+  "Unique_WrathOfSouls": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        85.0,
+        100.0
+      ],
+      "Minion_Inheritance_Weapon_Damage_Bonus_Percent": [
+        8.0,
+        10.0
+      ]
+    },
+    "integerId": 503,
+    "type": "LightHelmet"
+  },
+  "UruzRune": {
+    "implicit": {
+      "Life_Leech_Maximum_Recovery_Bonus_Percent": [
+        2.0,
+        2.0
+      ]
+    },
+    "integerId": 87,
+    "type": "UruzRune"
+  },
+  "Vambraces": {
+    "implicit": {
+      "Local_Implicit_Base_Armor": [
+        0.25,
+        0.25
+      ]
+    },
+    "integerId": 95,
+    "type": "HeavyBracers"
+  },
+  "VanaheimPortal": {
+    "implicit": {
+      "Area_Item_Drop_Quantity_Bonus_Percent": [
+        180.0,
+        200.0
+      ],
+      "Area_Monsters_Attack_Range_Bonus_Percent": [
+        20.0,
+        20.0
+      ],
+      "Area_Monsters_Damage_Bonus_Percent": [
+        100.0,
+        100.0
+      ],
+      "Area_Monsters_Life_Bonus_Percent": [
+        150.0,
+        150.0
+      ]
+    },
+    "integerId": 595,
+    "type": "VanaheimPortal"
+  },
+  "WarAxe": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.944,
+        1.944
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        5.0,
+        7.0
+      ]
+    },
+    "integerId": 3,
+    "type": "Axe1H"
+  },
+  "WarPike": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        16.0,
+        18.0
+      ]
+    },
+    "integerId": 152,
+    "type": "Spear2H"
+  },
+  "WarSword": {
+    "implicit": {
+      "ExtraSwing_Chance_Current_Hand": [
+        10.0,
+        10.0
+      ],
+      "Local_Base_Crit_Chance": [
+        8.0,
+        11.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.5552000000000001,
+        1.5552000000000001
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        5.0,
+        5.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        10.0,
+        10.0
+      ]
+    },
+    "integerId": 116,
+    "type": "Sword1H"
+  },
+  "WizardsBoots": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        30.0,
+        35.0
+      ]
+    },
+    "integerId": 192,
+    "type": "LightBoots"
+  },
+  "WizardsHat": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        45.0,
+        50.0
+      ]
+    },
+    "integerId": 188,
+    "type": "LightHelmet"
+  },
+  "WoodenArrows": {
+    "implicit": {
+      "Crit_Damage_Bonus_Percent": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 317,
+    "type": "Arrows"
+  },
+  "WoodenHammer": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Base_Stun_Chance": [
+        7.0,
+        9.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        12.0,
+        14.0
+      ]
+    },
+    "integerId": 106,
+    "type": "Mace2H"
+  },
+  "WoodenSpear": {
+    "implicit": {
+      "Local_Base_Crit_Chance": [
+        7.0,
+        7.0
+      ],
+      "Local_Implicit_Base_Attack_Speed": [
+        1.2960000000000003,
+        1.2960000000000003
+      ],
+      "Local_Implicit_Physical_Base_Damage_Delta": [
+        8.0,
+        10.0
+      ],
+      "Local_Implicit_Physical_Base_Damage_Min": [
+        14.0,
+        15.0
+      ]
+    },
+    "integerId": 149,
+    "type": "Spear2H"
+  },
+  "WovenSlippers": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        20.0,
+        25.0
+      ]
+    },
+    "integerId": 190,
+    "type": "LightBoots"
+  },
+  "WrappedBracers": {
+    "implicit": {
+      "Local_Implicit_Base_ForceField": [
+        25.0,
+        30.0
+      ]
+    },
+    "integerId": 202,
+    "type": "LightBracers"
+  }
+}
