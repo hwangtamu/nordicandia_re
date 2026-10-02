@@ -214,3 +214,6 @@ html, body, #app {
 .npc-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; }
 .npc-row.picked { background: rgba(201, 162, 74, 0.12); }
 .npc-slot { font-size: 11px; padding: 1px 6px; border-radius: 4px; background: rgba(201, 162, 74, 0.12); color: var(--gold); }
+
+/* Attribute rows have no rarity cell, so give the name room and keep the stat/button inline. */
+#attrs-items .inv-row { grid-template-columns: 1fr auto auto; }
