@@ -116,7 +116,9 @@ R4 equal-version eviction: True/ok, Aequipped=True
 
 ### 仍未完成
 
-- 属性→公式映射已完成：`extract_attribute_formulas.py` 产出全部 **226** 条（id/名称/公式），见
-  `generated/attribute_formulas.json` 与 `GAME_MECHANICS.md`。仍缺基础属性来源与表达式求值器，
-  即最小依赖链的输入侧。
+- 属性→公式映射已完成：`extract_attribute_formulas.py` 产出 **308** 条脚本（含常量脚本），见
+  `generated/attribute_formulas.json`；常量 `extract_constants.py` 41 条；求值器 `AttributeFormula`。
+  最小依赖链已用真实存档验证（`CharacterAttributeChainTests`：`Strength_Total=290`、`Armor_Total≈251`、
+  `AttackRating_Total≈19.8`）。**仍缺**：把这些属性接进 `CombatantStats`（目前仍只用 Offense/Defense/Recovery）、
+  以及元素抗性/DoT/AI/离线。
 - 元素抗性/穿透应用、DoT、AI、离线收益仍为缺口。

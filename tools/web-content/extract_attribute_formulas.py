@@ -29,6 +29,8 @@ OUT = ROOT / "tools/web-content/generated/attribute_formulas.json"
 CTOR = re.compile(r"call\s+0x[0-9a-f]+\s+.*GameAttribute(?:D|DA|I|IA)__ctor")
 DX = re.compile(r"mov\s+dx, (0x[0-9a-f]+)")
 SCRIPT_REG = re.compile(r"mov\s+(r[89]), qword ptr \[rip \+ 0x[0-9a-f]+\]\s+(.*)$")
+# A script can be a full expression or a bare constant/identifier (e.g. "1").
+NON_SCRIPT = re.compile(r"^_Z|^[0-9A-Fa-f]{6,}$")
 
 
 def main() -> int:
@@ -42,7 +44,7 @@ def main() -> int:
     last_script: str | None = None
     for line in ASM.read_text(errors="ignore").splitlines():
         if CTOR.search(line):
-            if last_id is not None and last_script and re.search(r"[()]", last_script):
+            if last_id is not None and last_script:
                 rows[last_id] = {"name": name_by_id.get(last_id, "?"), "script": last_script}
             last_id = last_script = None
             continue
@@ -50,8 +52,8 @@ def main() -> int:
         if m:
             last_id = int(m.group(1), 16)
         m = SCRIPT_REG.search(line)
-        # Prefer an expression-looking string; a plain identifier is the name, not the script.
-        if m and re.search(r"[()]", m.group(2)):
+        # r9 carries the script (expression or constant); the name is loaded via [rsp+0x20].
+        if m and not NON_SCRIPT.match(m.group(2).strip()):
             last_script = m.group(2).strip()
 
     OUT.write_text(json.dumps({str(k): v for k, v in rows.items()}, indent=2))

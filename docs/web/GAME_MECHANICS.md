@@ -54,7 +54,7 @@ block/dodge/resistance 均有对应的 Total 公式（见 attribute_scripts.json
 
 `tools/web-content/extract_attribute_formulas.py` 解析桌面 `GameAttributes` 的静态构造，把每个脚本属性的
 **enum id → 名称 → 公式** 配对出来（`GameAttributeD/I` 的 `ctor(this, id, default, script, name, ...)`，
-公式在 `r9`、名称在 `[rsp+0x20]`）。产出 `tools/web-content/generated/attribute_formulas.json`，共 **226 条**：
+公式在 `r9`、名称在 `[rsp+0x20]`）。产出 `tools/web-content/generated/attribute_formulas.json`，共 **308 条**（含像 `Armor_Focus_Factor_Constitution = 1` 这样的常量脚本与标识符脚本）：
 
 ```
 0x10c Armor_Factor_Constitution => (Constitution_Total * Constants.Armor_Per_Constitution_Factor)
@@ -66,8 +66,15 @@ block/dodge/resistance 均有对应的 Total 公式（见 attribute_scripts.json
 公式语言：中缀 `+ - * /`、括号、`Pin(a,min,max)`（钳制）、`Min(a,b)`、`Pow`、`Constants.X`、
 后缀 `MultiplyWith:X`（= 乘 `(1+X)`）、以及三元 `(Cond ? A : B)`（双持/武器类型）。
 
-**仍缺**：基础属性来源（`Base_Strength`/`Base_Constitution`/`Base_Agility`/`Life_Per_Level_Multiplier` 等
-来自种族/职业/等级/装备），以及一个表达式求值器——这是「最小属性依赖链」剩余的输入侧工作。
+**常量**：`extract_constants.py` 从 Android `Game.Constants` getter 提取 41 个常量
+（`Armor_Per_Constitution_Factor=0.03`、`Attack_Rating_Per_Dexterity=0.32`、`Life_Per_Vitality=0.05` 等），
+存于 `generated/constants.json`。**求值器**：`Nordicandia.Simulation.AttributeFormula` 已实现该公式语言。
+
+**最小属性依赖链已验证**：用真实存档的属性表
+（`fixtures/character_attributes.json`，来自 `server/data/world.json` 某角色）、308 条公式与常量，
+`CharacterAttributeChainTests` 递归求值得到 `Strength_Total=(15+275)=290`、
+`Armor_Total≈251.4`、`AttackRating_Total≈19.8`、`Evasion_Total≈40.0`、`Life_Max_Total≈558.8`、
+`Mana_Max_Total=125`。基础属性（`Base_Strength` 等）来自存档 origin 0，物品属性来自 origin 1。
 
 ## 怪物 / 物品缩放（数据已提取，公式 Inferred）
 

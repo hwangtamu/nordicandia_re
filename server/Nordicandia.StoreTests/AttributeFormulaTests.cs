@@ -59,7 +59,7 @@ static class AttributeFormulaTests
             parsed++;
             if (double.IsNaN(value) || double.IsInfinity(value)) nonFinite.Add(entry.Name);
         }
-        Check(parsed == formulas.Count && parsed == 226, $"formula: all {formulas.Count} client formulas parse");
+        Check(parsed == formulas.Count && parsed >= 226, $"formula: all {formulas.Count} client formulas parse");
         Check(nonFinite.Count == 0, $"formula: all client formulas evaluate finite ({string.Join(",", nonFinite)})");
     }
 

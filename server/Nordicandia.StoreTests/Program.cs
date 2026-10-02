@@ -57,3 +57,5 @@ ManaMasteryTests.Run();
 AcceptanceRegressionTests.Run();
 
 AttributeFormulaTests.Run();
+
+CharacterAttributeChainTests.Run();
