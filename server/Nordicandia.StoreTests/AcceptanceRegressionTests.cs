@@ -19,6 +19,26 @@ static class AcceptanceRegressionTests
         StaleCommandsAreRejected();
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
+        FreshCharacterClearsBoss();
+    }
+
+    private static void FreshCharacterClearsBoss()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        foreach (var (classId, label) in new[] { (0, "Warrior"), (4, "Hunter"), (5, "Mage"), (6, "Necromancer") })
+        {
+            var instance = new CombatInstance(
+                CombatantStats.FromRealtime(Nordicandia.Server.WebApi.WebApiEndpoints.StarterOffense, Nordicandia.Server.WebApi.WebApiEndpoints.StarterDefense, Nordicandia.Server.WebApi.WebApiEndpoints.StarterRecovery, 1), 0, 0, 0, 0, seed: 777,
+                classPowers: Nordicandia.Server.WebApi.PowerCatalog.ForClass(classId));
+            var seconds = 0.0;
+            while (instance.DungeonsCleared == 0 && seconds < 300)
+            {
+                instance.Advance(0.5);
+                seconds += 0.5;
+            }
+            Console.WriteLine($"INFO fresh {label}: cleared={instance.DungeonsCleared} in {seconds:F0}s kills={instance.Kills} level={instance.PlayerLevel} hp={instance.PlayerHp:F0}");
+            Check(instance.DungeonsCleared >= 1, $"R-fresh: a fresh {label} clears the boss");
+        }
     }
 
     private static void RegistrationPolicyIsShared()

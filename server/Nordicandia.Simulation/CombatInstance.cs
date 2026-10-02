@@ -238,7 +238,7 @@ public sealed class CombatInstance
     {
         var level = MonsterLevel;
         var profile = profiles[index % profiles.Length];
-        var maxHp = (40 + level * 22) * profile.HpMult;
+        var maxHp = (30 + level * 16) * profile.HpMult;
         return new CombatMonster
         {
             Index = index,
@@ -248,7 +248,7 @@ public sealed class CombatInstance
             Z = z,
             Hp = alive ? maxHp : 0,
             MaxHp = maxHp,
-            Offense = (4 + level * 1.5) * profile.OffenseMult,
+            Offense = (3 + level * 1.2) * profile.OffenseMult,
             Defense = (2 + level * 1.5) * profile.DefenseMult,
             Speed = profile.Speed,
             Alive = alive,
@@ -268,9 +268,9 @@ public sealed class CombatInstance
             IsBoss = true,
             X = 0,
             Z = -12,
-            MaxHp = 300 + level * 120,
-            Hp = 300 + level * 120,
-            Offense = 10 + level * 4,
+            MaxHp = 200 + level * 80,
+            Hp = 200 + level * 80,
+            Offense = 8 + level * 3,
             Defense = 20 + level * 8,
             Speed = 2.0,
             AttackInterval = 2.0,

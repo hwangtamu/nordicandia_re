@@ -69,6 +69,25 @@ AVATAR_TEXTURE_PATTERNS = [
 ]
 
 
+DUNGEON_TEXTURE_PATTERNS = [r"_BC($|_)", r"Base_Color"]
+
+
+def texture_for_mesh(mesh_name: str) -> str:
+    """Provisional mesh -> base-colour texture mapping for the dungeon kit."""
+    n = mesh_name.lower()
+    if "floor" in n or "flor" in n or "cliff" in n:
+        return "Stone_Base_Color"
+    if "wall" in n or "column" in n or "railing" in n:
+        return "T_ENV_MOD_Wall_01_v3_BC_Blue"
+    if "planks" in n or "door" in n:
+        return "T_wood_planks_dungeon_04_BC"
+    if "brazier" in n or "torch" in n or "metal" in n:
+        return "T_metal_dungeon_01_BC"
+    if "debris" in n or "wallshelf" in n or "orevein" in n:
+        return "T_PROP_orevein_dungeon_BC"
+    return "Stone_Base_Color"
+
+
 def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -111,13 +130,40 @@ def export_kit(z: zipfile.ZipFile, manifest: dict) -> None:
             "triangles": int(len(tm.faces)),
             "bytes": len(glb),
         })
+    # Base-colour textures for the kit.
+    tex_dir = out_dir / "textures"
+    tex_dir.mkdir(parents=True, exist_ok=True)
+    tex_pats = [re.compile(p) for p in DUNGEON_TEXTURE_PATTERNS]
+    textures = []
+    for obj in env.objects:
+        if obj.type.name != "Texture2D":
+            continue
+        tex = obj.read()
+        tname = tex.m_Name or ""
+        if not any(p.search(tname) for p in tex_pats):
+            continue
+        try:
+            image = tex.image
+            if image is None:
+                continue
+            buf = io.BytesIO()
+            image.save(buf, format="PNG")
+        except Exception as exc:  # noqa: BLE001
+            print(f"  ! skip tex {tname}: {exc}")
+            continue
+        fname = re.sub(r"[^A-Za-z0-9_.-]", "_", tname) + ".png"
+        (tex_dir / fname).write_bytes(buf.getvalue())
+        textures.append({"name": tname, "file": f"kit/dungeon_default/textures/{fname}", "bytes": len(buf.getvalue())})
+    for mesh in exported:
+        mesh["texture"] = texture_for_mesh(mesh["name"])
     manifest["kit"] = {
         "bundle": name,
         "bundleSha256": sha256(raw),
         "meshes": sorted(exported, key=lambda m: m["name"]),
+        "textures": sorted(textures, key=lambda t: t["name"]),
     }
     total = sum(m["bytes"] for m in exported)
-    print(f"kit: {len(exported)} meshes, {total/1024:.0f} KiB")
+    print(f"kit: {len(exported)} meshes, {len(textures)} textures, {total/1024:.0f} KiB")
 
 
 def export_avatars(z: zipfile.ZipFile, manifest: dict) -> None:

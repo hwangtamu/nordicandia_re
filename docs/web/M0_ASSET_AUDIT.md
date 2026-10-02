@@ -55,11 +55,12 @@ UnityPy.load(bundle)
 ## 本次导出结果（content version `m0-1`）
 
 * `web/public/assets/kit/dungeon_default/*.glb` — 25 个环境网格，共约 248 KiB。
+* `web/public/assets/kit/dungeon_default/textures/*.png` — 10 张地城基础色贴图（石材/墙/木/金属），客户端按网格名映射并叠加。
 * `web/public/assets/avatars/*.png` — 197 张头像/图标（玩家种族、怪物立绘、`MonstersAvatarIcons_*`）。
 * 合计约 11 MB，符合「首场景传输 ~20 MB」预算的初步预期（尚未压缩、尚未按需分包）。
 
 ## 已确认的缺口
 
 * **无骨骼角色/怪物模型**（按上述设计不作为首版阻塞）。
-* **网格未带贴图**：M0 的 GLB 仅几何，运行时用 Babylon 材质着色；后续可按 Renderer→Material→Texture 关系把贴图烘焙进 GLB。
+* **贴图**：已导出 10 张基础色贴图，客户端按网格名启发式映射（地面→石材、墙柱→墙贴图、木板/门→木贴图、火盆→金属）；GLB 仍为几何，贴图由运行时材质叠加。
 * **Wood Elf / Satyr 缺失 `ActorImage` 图标**（`Human_02_nobg 1`、`69`），`export_content.py` 会报告，客户端回退到 `RaceHuman`。

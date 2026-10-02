@@ -10,175 +10,252 @@
         "file": "kit/dungeon_default/CliffEdge_Straight.glb",
         "vertices": 96,
         "triangles": 48,
-        "bytes": 5140
+        "bytes": 5140,
+        "texture": "Stone_Base_Color"
       },
       {
         "name": "Door",
         "file": "kit/dungeon_default/Door.glb",
         "vertices": 413,
         "triangles": 158,
-        "bytes": 16704
+        "bytes": 16704,
+        "texture": "T_wood_planks_dungeon_04_BC"
       },
       {
         "name": "Door",
         "file": "kit/dungeon_default/Door.glb",
         "vertices": 318,
         "triangles": 164,
-        "bytes": 13688
+        "bytes": 13688,
+        "texture": "T_wood_planks_dungeon_04_BC"
       },
       {
         "name": "DoorOneWay",
         "file": "kit/dungeon_default/DoorOneWay.glb",
         "vertices": 490,
         "triangles": 186,
-        "bytes": 19536
+        "bytes": 19536,
+        "texture": "T_wood_planks_dungeon_04_BC"
       },
       {
         "name": "DoorSlabL",
         "file": "kit/dungeon_default/DoorSlabL.glb",
         "vertices": 144,
         "triangles": 58,
-        "bytes": 6920
+        "bytes": 6920,
+        "texture": "T_wood_planks_dungeon_04_BC"
       },
       {
         "name": "DoorSlabR",
         "file": "kit/dungeon_default/DoorSlabR.glb",
         "vertices": 140,
         "triangles": 58,
-        "bytes": 6804
+        "bytes": 6804,
+        "texture": "T_wood_planks_dungeon_04_BC"
       },
       {
         "name": "Floor_Slab_lrg",
         "file": "kit/dungeon_default/Floor_Slab_lrg.glb",
         "vertices": 381,
         "triangles": 152,
-        "bytes": 15640
+        "bytes": 15640,
+        "texture": "Stone_Base_Color"
       },
       {
         "name": "Floor_Slab_sml",
         "file": "kit/dungeon_default/Floor_Slab_sml.glb",
         "vertices": 363,
         "triangles": 138,
-        "bytes": 14904
+        "bytes": 14904,
+        "texture": "Stone_Base_Color"
       },
       {
         "name": "Flor_Slab_md",
         "file": "kit/dungeon_default/Flor_Slab_md.glb",
         "vertices": 346,
         "triangles": 135,
-        "bytes": 14324
+        "bytes": 14324,
+        "texture": "Stone_Base_Color"
       },
       {
         "name": "MOD_Column_01_base",
         "file": "kit/dungeon_default/MOD_Column_01_base.glb",
         "vertices": 64,
         "triangles": 32,
-        "bytes": 4068
+        "bytes": 4068,
+        "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
       },
       {
         "name": "MOD_Column_01_capital",
         "file": "kit/dungeon_default/MOD_Column_01_capital.glb",
         "vertices": 44,
         "triangles": 22,
-        "bytes": 3304
+        "bytes": 3304,
+        "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
       },
       {
         "name": "MOD_Column_01_large",
         "file": "kit/dungeon_default/MOD_Column_01_large.glb",
         "vertices": 188,
         "triangles": 130,
-        "bytes": 9236
+        "bytes": 9236,
+        "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
       },
       {
         "name": "MOD_Column_01_small",
         "file": "kit/dungeon_default/MOD_Column_01_small.glb",
         "vertices": 52,
         "triangles": 34,
-        "bytes": 3724
+        "bytes": 3724,
+        "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
       },
       {
         "name": "MOD_Floor_01_O_straight_med",
         "file": "kit/dungeon_default/MOD_Floor_01_O_straight_med.glb",
         "vertices": 4,
         "triangles": 2,
-        "bytes": 1592
+        "bytes": 1592,
+        "texture": "Stone_Base_Color"
       },
       {
         "name": "MOD_Floor_01_O_straight_tiny",
         "file": "kit/dungeon_default/MOD_Floor_01_O_straight_tiny.glb",
         "vertices": 4,
         "triangles": 2,
-        "bytes": 1620
+        "bytes": 1620,
+        "texture": "Stone_Base_Color"
       },
       {
         "name": "MOD_Railing_01_column",
         "file": "kit/dungeon_default/MOD_Railing_01_column.glb",
         "vertices": 104,
         "triangles": 52,
-        "bytes": 5592
+        "bytes": 5592,
+        "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
       },
       {
         "name": "MOD_Railing_01_straight",
         "file": "kit/dungeon_default/MOD_Railing_01_straight.glb",
         "vertices": 264,
         "triangles": 148,
-        "bytes": 11796
+        "bytes": 11796,
+        "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
       },
       {
         "name": "MOD_Railing_01_straight_half",
         "file": "kit/dungeon_default/MOD_Railing_01_straight_half.glb",
         "vertices": 138,
         "triangles": 76,
-        "bytes": 6896
+        "bytes": 6896,
+        "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
       },
       {
         "name": "MOD_Wall_01_O_straight_large",
         "file": "kit/dungeon_default/MOD_Wall_01_O_straight_large.glb",
         "vertices": 4,
         "triangles": 2,
-        "bytes": 1756
+        "bytes": 1756,
+        "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
       },
       {
         "name": "SM_PROP_brazier_dungeon_02",
         "file": "kit/dungeon_default/SM_PROP_brazier_dungeon_02.glb",
         "vertices": 584,
         "triangles": 544,
-        "bytes": 26872
+        "bytes": 26872,
+        "texture": "T_metal_dungeon_01_BC"
       },
       {
         "name": "SM_PROP_debris_stones_dungeon_01",
         "file": "kit/dungeon_default/SM_PROP_debris_stones_dungeon_01.glb",
         "vertices": 60,
         "triangles": 66,
-        "bytes": 4384
+        "bytes": 4384,
+        "texture": "T_PROP_orevein_dungeon_BC"
       },
       {
         "name": "SM_PROP_debris_stones_dungeon_04",
         "file": "kit/dungeon_default/SM_PROP_debris_stones_dungeon_04.glb",
         "vertices": 85,
         "triangles": 100,
-        "bytes": 5580
+        "bytes": 5580,
+        "texture": "T_PROP_orevein_dungeon_BC"
       },
       {
         "name": "SM_PROP_planks_dungeon_05",
         "file": "kit/dungeon_default/SM_PROP_planks_dungeon_05.glb",
         "vertices": 128,
         "triangles": 68,
-        "bytes": 6584
+        "bytes": 6584,
+        "texture": "T_wood_planks_dungeon_04_BC"
       },
       {
         "name": "SM_PROP_torch_standing_dungeon",
         "file": "kit/dungeon_default/SM_PROP_torch_standing_dungeon.glb",
         "vertices": 971,
         "triangles": 796,
-        "bytes": 42288
+        "bytes": 42288,
+        "texture": "T_metal_dungeon_01_BC"
       },
       {
         "name": "SM_PROP_wallshelf_dungeon_03",
         "file": "kit/dungeon_default/SM_PROP_wallshelf_dungeon_03.glb",
         "vertices": 96,
         "triangles": 60,
-        "bytes": 5432
+        "bytes": 5432,
+        "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+      }
+    ],
+    "textures": [
+      {
+        "name": "Stone_Base_Color",
+        "file": "kit/dungeon_default/textures/Stone_Base_Color.png",
+        "bytes": 334798
+      },
+      {
+        "name": "T_ENV_MOD_Floor_01_v3_BC",
+        "file": "kit/dungeon_default/textures/T_ENV_MOD_Floor_01_v3_BC.png",
+        "bytes": 404431
+      },
+      {
+        "name": "T_ENV_MOD_StoneStack_01_v3_BC",
+        "file": "kit/dungeon_default/textures/T_ENV_MOD_StoneStack_01_v3_BC.png",
+        "bytes": 320014
+      },
+      {
+        "name": "T_ENV_MOD_StoneStack_01_v3_BC_Blue",
+        "file": "kit/dungeon_default/textures/T_ENV_MOD_StoneStack_01_v3_BC_Blue.png",
+        "bytes": 317065
+      },
+      {
+        "name": "T_ENV_MOD_Wall_01_v3_BC_Blue",
+        "file": "kit/dungeon_default/textures/T_ENV_MOD_Wall_01_v3_BC_Blue.png",
+        "bytes": 444222
+      },
+      {
+        "name": "T_FX_sprite_fire_dungeon_BC",
+        "file": "kit/dungeon_default/textures/T_FX_sprite_fire_dungeon_BC.png",
+        "bytes": 15984
+      },
+      {
+        "name": "T_PROP_orevein_dungeon_BC",
+        "file": "kit/dungeon_default/textures/T_PROP_orevein_dungeon_BC.png",
+        "bytes": 277474
+      },
+      {
+        "name": "T_metal_dungeon_01_BC",
+        "file": "kit/dungeon_default/textures/T_metal_dungeon_01_BC.png",
+        "bytes": 96225
+      },
+      {
+        "name": "T_wood_planks_dungeon_03_BC",
+        "file": "kit/dungeon_default/textures/T_wood_planks_dungeon_03_BC.png",
+        "bytes": 22514
+      },
+      {
+        "name": "T_wood_planks_dungeon_04_BC",
+        "file": "kit/dungeon_default/textures/T_wood_planks_dungeon_04_BC.png",
+        "bytes": 14808
       }
     ]
   },

@@ -21,6 +21,12 @@ public static class WebApiEndpoints
     private const string CookieName = "nord_session";
     private const string SessionHeader = "Authorization";
 
+    // Provisional starter stats for web-created characters (the native client computes its
+    // own). Tuned so a fresh solo character can complete the dungeon loop.
+    public const double StarterOffense = 60;
+    public const double StarterDefense = 40;
+    public const double StarterRecovery = 12;
+
     private static bool DevMode =>
         Environment.GetEnvironmentVariable("NORD_WEB_DEV") is "1" or "true";
 
@@ -132,7 +138,7 @@ public static class WebApiEndpoints
             {
                 // Provisional starter values until the web client reports client-accurate
                 // stats, or the character is imported from an existing save.
-                Offense = 35, Defense = 20, Recovery = 6,
+                Offense = StarterOffense, Defense = StarterDefense, Recovery = StarterRecovery,
             };
             var header = GameStore.Instance.CreateCharacter(user.UserId, new CreateCharacterRequest
             {

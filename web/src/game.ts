@@ -25,7 +25,7 @@ import {
 import "@babylonjs/loaders/glTF";
 
 import { CombatEnvelope, CombatSnapshot, LootDrop, MonsterState } from "./api";
-import { ContentManifest, monsterIcon, raceIcon } from "./content";
+import { ContentManifest, loadManifest, monsterIcon, raceIcon } from "./content";
 
 export interface HudState {
   health: number;
@@ -172,14 +172,32 @@ export class World {
       "MOD_Column_01_large",
       "SM_PROP_brazier_dungeon_02",
     ];
+    // Mesh -> base-colour texture mapping exported alongside the kit.
+    let textureByMesh = new Map<string, string>();
+    try {
+      const manifest = await loadManifest();
+      textureByMesh = new Map(manifest.kit.meshes.filter((m) => m.texture).map((m) => [m.name, m.texture as string]));
+    } catch (error) {
+      console.warn("[kit] manifest unavailable, using plain materials", error);
+    }
     await Promise.all(
       names.map(async (name) => {
         try {
           const result = await SceneLoader.ImportMeshAsync("", KIT, `${name}.glb`, this.scene);
           const root = result.meshes[0] as TransformNode;
+          const texture = textureByMesh.get(name);
+          let material: StandardMaterial | null = null;
+          if (texture) {
+            material = new StandardMaterial(`${name}_mat`, this.scene);
+            material.diffuseTexture = new Texture(`${KIT}textures/${texture}.png`, this.scene);
+            material.specularColor = new Color3(0.04, 0.04, 0.04);
+            material.ambientColor = new Color3(0.4, 0.4, 0.4);
+          }
           result.meshes.forEach((mesh) => {
             mesh.isPickable = false;
-            if (mesh.material) {
+            if (material && mesh.getTotalVertices() > 0) {
+              mesh.material = material;
+            } else if (mesh.material) {
               (mesh.material as StandardMaterial).specularColor = new Color3(0.05, 0.05, 0.05);
             }
           });

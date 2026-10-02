@@ -121,6 +121,24 @@ export interface ClassPool {
 let cached: ContentManifest | null = null;
 let cachedPowers: PowersDocument | null = null;
 
+let cachedManifest: AssetManifest | null = null;
+
+export interface AssetManifest {
+  contentVersion: string;
+  kit: {
+    meshes: { name: string; file: string; texture?: string }[];
+    textures: { name: string; file: string }[];
+  };
+}
+
+export async function loadManifest(): Promise<AssetManifest> {
+  if (cachedManifest) return cachedManifest;
+  const response = await fetch("/assets/manifest.json");
+  if (!response.ok) throw new Error("manifest.json missing; run tools/web-content/export_assets.py");
+  cachedManifest = (await response.json()) as AssetManifest;
+  return cachedManifest;
+}
+
 export async function loadContent(): Promise<ContentManifest> {
   if (cached) return cached;
   const response = await fetch("/assets/content.json");

@@ -65,7 +65,7 @@ public static class CombatModel
 {
     /// <summary>Provisional health curve: 100 at level 1, growing 40/level.</summary>
     public static double MaxHealth(CombatantStats stats, RuleConfidence confidence = RuleConfidence.Provisional)
-        => 100.0 + 40.0 * Math.Max(1, stats.Level);
+        => 150.0 + 50.0 * Math.Max(1, stats.Level);
 
     /// <summary>
     /// Provisional mitigation: armor scales against an attacker-level baseline so low
