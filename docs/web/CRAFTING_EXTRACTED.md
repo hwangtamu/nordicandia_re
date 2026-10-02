@@ -205,7 +205,9 @@ GetNumIronCost(sourceItems, essence, targetItem, baseCost, qualitySlider, overhe
 ```
 - `ProcessSuccessRate` 在此基础上再乘 `值 × 常量(0x…838) × 上述几率`（`FMUL`），并在参考实现中设置
   `secondarySuccessRate`。
-- `GetNumItemsCost` 按目标物品稀有度累加（`getCostFromRarity`）。
+- `getCostFromRarity(rarity) = 1`，例外：`8→2`、`9→3`、`10→10`（`MOV/CINC/CSEL` 链）。
+- `GetNumItemsCost = (目标可合并词缀数相关值) × overheatSliderValue`（`Multiply`；与 Titansteel 同式，
+  内部先 `CraftingUtils.GetMergableAffixes` 取可合并词缀数）。
 
 **仍缺**（因此 `CraftEssenceItem(2)`/`CraftRelicItem`/`SocketItem`/`ItemAddNewSocket`/`TradeWithSetItemMerchant`
 仍为空桩）：
