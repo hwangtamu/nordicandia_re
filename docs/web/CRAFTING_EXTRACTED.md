@@ -224,3 +224,14 @@ GetNumIronCost(sourceItems, essence, targetItem, baseCost, qualitySlider, overhe
 - 套装商人（`TradeWithSetItemMerchant`）的换购规则。
 
 这些需要继续用 Cpp2IL+字面量工具逐操作解出产出与消耗（不建议靠猜实现）。
+
+## 套装商人（`WindowSetItemMerchant`）分析结论
+
+- 客户端 `WindowSetItemMerchant.GenerateMerchantOffers`/`CreateNpcItems` 只负责发
+  `NetClient.GenerateSetItemMerchantOffers` 并在 `TaskAwaiter.GetResult` 后把响应渲染到 UI；
+  `Game.SetItemMerchant` 只是一个 `InteractiveNpc`（`OnEnter`）。
+- **报价与换购规则在服务端**（`GenerateSetItemMerchantOffers` 生成 `OfferedItems`，
+  `TradeWithSetItemMerchant(ItemId)` 返回 `ResultItem`），客户端的静态代码里没有可还原的生成逻辑。
+- 可用素材：`gamedata_decrypted/ItemSets.json`（11 套，按 `NumItems` 阈值给套装词缀）。
+- 因此 `TradeWithSetItemMerchant`/`GenerateSetItemMerchantOffers` **保持空桩**（返回空），
+  不靠猜测实现；若要实现，需要按套装数据与物品词缀自行设计"普通物品 → 套装物品"的生成规则。
