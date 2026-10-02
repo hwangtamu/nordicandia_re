@@ -217,12 +217,12 @@ GetNumIronCost(sourceItems, essence, targetItem, baseCost, qualitySlider, overhe
 成功时把源物品词缀并入目标：逐个比较 `DefinitionIntegerId`，已存在且新词缀稀有度更高时替换，否则在
 容量内新增（容量仍为 web 近似 `2 + clamp(rarity/3, 0, 4)`）。词缀目录（`affix_catalog.json`）现在带有
 客户端 `ItemAffixDefinition.GenerationType`（1=Prefix、2=Suffix、0=Implicit、4=Set），生成的物品词缀在
-`AttrAffixType`（99008）上保留该类型，供后续按 `IsPrefixOrSuffix`/`IsOpenAffix` 精确过滤使用。
-`InventoryService.CraftEssenceItem(2)` 已接线。
+`AttrAffixType`（99008）上保留该类型；合并只接受 `IsPrefixOrSuffix`（1/2）的词缀，对应
+`GetMergableAffixes` 的 `IsPrefixOrSuffix` 过滤。`InventoryService.CraftEssenceItem(2)` 已接线。
 
-> 说明：客户端 `GetMergableAffixes` 的真实判定是“目标上存在可用的 Open_Prefix_Slot/Open_Suffix_Slot 占位符
-> 词缀”，而网页物品没有这些占位符词缀，因此容量仍为文档化的近似；`IsPrefixOrSuffix`/`ByAttribute` 已就绪，
-> 等占位符模型补齐后再替换近似规则。
+> 说明：客户端 `GetMergableAffixes` 还需要目标上存在可用的 Open_Prefix_Slot（389）/Open_Suffix_Slot（390）
+> 占位符词缀；网页物品没有这些占位符，因此容量仍为文档化的近似。`IsOpenAffix` 的 id 已还原，等占位符
+> 模型补齐后再替换近似规则。
 
 **已实现**：`GameStore.CraftRelicItem`（消耗源遗物 + 祝福目标词缀）；`GameStore.ItemAddNewSocket`
 （`GetRequiredTitansteelReagentsForAddingSockets = 现有槽数+1`）；`GameStore.SocketItem`（把源宝石嵌入空槽，
