@@ -25,6 +25,7 @@ static class AcceptanceRegressionTests
         SmeltAndDisassembleConsumeSources();
         CraftEssenceConsumesIron();
         RealAffixesCarryClientAttributes();
+        SetBonusesAndEquipRequirements();
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
@@ -326,6 +327,38 @@ static class AcceptanceRegressionTests
             Check(tConsumed.Items.Count == 1, "trade: consumes the offered items");
             Check(tInventory.Items.Any(i => i.DefinitionIntegerId == 606), "trade: grants the product stack");
             Check(store.GetItems(owner, characterId).All(i => i.Slot != ItemSlotTypes.YourTrade), "trade: empties the trade window");
+        }
+    }
+
+    private static void SetBonusesAndEquipRequirements()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var (store, registry, owner, characterId, _) = Create("r11", 100);
+        using (store)
+        {
+            // Set bonus: two equipped pieces of set 0 grant its 2-piece breakpoint.
+            var piece1 = LootTable.CreateItem(new LootDrop(3, 5, 10, false, 31));
+            var piece2 = LootTable.CreateItem(new LootDrop(8, 5, 10, false, 32));
+            foreach (var piece in new[] { piece1, piece2 })
+            {
+                piece.Slot = (ItemSlotTypes)LootTable.EquipSlotOf(piece);
+                piece.Attributes.Values[AttributeOrigin.Item][LootTable.AttrSetId] =
+                    new GameAttributeValue { Value = 0, ValueD = 0 };
+            }
+            store.GrantItems(owner, characterId, new List<SerializedItem> { piece1, piece2 });
+            var expected = SetCatalog.ActiveBonuses(0, 2);
+            var map = store.GetAttributeMap(owner, characterId);
+            Check(expected.Count > 0, "set: breakpoint 2 provides bonuses");
+            Check(expected.All(kv => Math.Abs(map.GetValueOrDefault(kv.Key) - kv.Value) < 1e-6),
+                "set: the 2-piece bonus is applied to the attribute map");
+
+            // Level requirement: an item far above the character's level cannot be equipped.
+            var highLevel = LootTable.CreateItem(new LootDrop(3, 5, 60, false, 33));
+            store.GrantItems(owner, characterId, new List<SerializedItem> { highLevel });
+            var version = registry.Advance(owner, characterId).Combat.Version;
+            var result = registry.ApplyCommand(owner, characterId, "r11-high", version,
+                new WebCommandRequest("equip", ItemId: highLevel.Id));
+            Check(!result.Applied && result.Reason == "level_requirement", "equip: the level requirement blocks a too-high item");
         }
     }
 

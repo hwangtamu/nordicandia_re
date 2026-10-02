@@ -19,6 +19,10 @@ public static class LootTable
     public const int AttrDefense = 99002;
     public const int AttrRecovery = 99003;
     public const int AttrEquipSlot = 99004;
+    /// <summary>Web-only attribute holding the item's set id (SetCatalog key); enables set bonuses.</summary>
+    public const int AttrSetId = 99005;
+    /// <summary>Web-only attribute holding the level required to equip the item.</summary>
+    public const int AttrRequiredLevel = 99006;
 
     private static readonly Dictionary<int, string[]> SlotNames = new()
     {
@@ -84,6 +88,7 @@ public static class LootTable
             [AttrDefense] = Value(defense),
             [AttrRecovery] = Value(recovery),
             [AttrEquipSlot] = Value(drop.Slot),
+            [AttrRequiredLevel] = Value(Math.Max(1, drop.Level)),
         };
         // Items carry the client's attribute ids so the recovered synthesis formulas drive the
         // character's ratings. The magnitudes reuse the provisional offence/defence roll and are
@@ -114,6 +119,12 @@ public static class LootTable
                 itemAttributes[256] = Value(Math.Round(defense * 0.35)); // Evasion
             // Accessories and armour carry a small all-resistance (Resistance_All = 1002).
             itemAttributes[1002] = Value(Math.Round(defense * 0.0006, 4));
+        }
+        // Rare+ equipment rolls a set; equipping enough pieces grants the set bonuses.
+        if (drop.Rarity >= 4 && SetCatalog.Count > 0)
+        {
+            var setIds = SetCatalog.Ids;
+            itemAttributes[AttrSetId] = Value(setIds[(int)(rng.NextDouble() * setIds.Count) % setIds.Count]);
         }
         var item = new SerializedItem
         {

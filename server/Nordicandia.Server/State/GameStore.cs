@@ -759,6 +759,7 @@ public sealed class GameStore : IDisposable
                         result[attrId] = result.GetValueOrDefault(attrId) + value.ValueD;
                 }
             }
+            var setCounts = new Dictionary<int, int>();
             Add(data?.Attributes);
             if (data?.Items?.Items != null)
                 foreach (var item in data.Items.Items)
@@ -768,7 +769,18 @@ public sealed class GameStore : IDisposable
                     Add(item.Attributes);
                     if (item.Affixes != null)
                         foreach (var affix in item.Affixes) Add(affix?.Attributes);
+                    if (item.Attributes?.Values != null
+                        && item.Attributes.Values.TryGetValue(SharedNet.Constants.Game.AttributeOrigin.Item, out var map)
+                        && map != null && map.TryGetValue(LootTable.AttrSetId, out var setId))
+                    {
+                        var setIdValue = (int)setId.ValueD;
+                        setCounts[setIdValue] = setCounts.GetValueOrDefault(setIdValue) + 1;
+                    }
                 }
+            // Item-set bonuses: a breakpoint grants its attributes once enough pieces are equipped.
+            foreach (var (setId, count) in setCounts)
+                foreach (var (attrId, value) in SetCatalog.ActiveBonuses(setId, count))
+                    result[attrId] = result.GetValueOrDefault(attrId) + value;
             return result;
         }
     }

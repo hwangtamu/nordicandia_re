@@ -138,3 +138,10 @@ id 与公式为 ClientVerified；数值幅度仍为 Provisional（`ItemGenerator
 `Crit_Chance_Bonus_Percent`(705)、`Crit_Damage_Bonus_Percent`(713)、`Attack_Speed_Bonus_Percent`(451)、
 `Resistance_Fire/Cold/Lightning/Poison/All`(1000/1011/1012/1013/1002)，数值按稀有度区间掷取。
 `GetAttributeMap` 现在只计入**已装备**物品（含其词缀）的属性。
+
+**套装（`SetCatalog`）**：11 套（`ItemSets.json`），按装备件数触发断点（如 2/4/6/9），
+授予的属性并入 `GetAttributeMap`（例：Heavy_TheMarauder 2 件 → `Movement_Speed_Bonus_Percent=20`）。
+稀有度 ≥4 的装备随机带套装 id（web 属性 99005）。
+
+**装备等级需求**：物品带 `AttrRequiredLevel`(=掉落等级)；超过角色等级 + 宽容带(99006/20) 时
+`equip` 返回 `level_requirement`（宽容带为 Provisional，客户端精确规则未还原）。

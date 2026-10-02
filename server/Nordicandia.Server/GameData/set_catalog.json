@@ -1,0 +1,522 @@
+{
+  "0": {
+    "breakpoints": [
+      {
+        "attributes": [
+          {
+            "attributeId": 1101,
+            "attributeName": "Movement_Speed_Bonus_Percent",
+            "value": 20.0
+          }
+        ],
+        "numItems": 2
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 2000,
+            "attributeName": "Set_Shatter_Increased_MagicFind_On_Kill",
+            "value": 200.0
+          }
+        ],
+        "numItems": 4
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 356,
+            "attributeName": "Magic_Find_Bonus_Percent",
+            "value": 300.0
+          }
+        ],
+        "numItems": 6
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 367,
+            "attributeName": "Item_Quantity_Bonus_Percent",
+            "value": 50.0
+          }
+        ],
+        "numItems": 9
+      }
+    ],
+    "name": "Heavy_TheMarauder"
+  },
+  "1": {
+    "breakpoints": [
+      {
+        "attributes": [
+          {
+            "attributeId": 689,
+            "attributeName": null,
+            "value": 1.0
+          },
+          {
+            "attributeId": 409,
+            "attributeName": null,
+            "value": -100.0
+          }
+        ],
+        "numItems": 2
+      }
+    ],
+    "name": "Weapon_VolundrsBravery"
+  },
+  "2": {
+    "breakpoints": [
+      {
+        "attributes": [
+          {
+            "attributeId": 1002,
+            "attributeName": "Resistance_All",
+            "value": 30.0
+          }
+        ],
+        "numItems": 2
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 305,
+            "attributeName": "Life_Regen_Bonus",
+            "value": 2.0
+          }
+        ],
+        "numItems": 4
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 346,
+            "attributeName": "Life_Leech_Maximum_Recovery_Bonus_Percent",
+            "value": 50.0
+          }
+        ],
+        "numItems": 6
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 544,
+            "attributeName": null,
+            "value": 1.0
+          }
+        ],
+        "numItems": 9
+      }
+    ],
+    "name": "Heavy_TheDreadnought"
+  },
+  "23": {
+    "breakpoints": [
+      {
+        "attributes": [
+          {
+            "attributeId": 294,
+            "attributeName": null,
+            "value": 1.0
+          }
+        ],
+        "numItems": 2
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 717,
+            "attributeName": "Armor_Piercing_Percent",
+            "value": 25.0
+          }
+        ],
+        "numItems": 4
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 267,
+            "attributeName": "Knockback_Magnitude",
+            "value": 0.2
+          }
+        ],
+        "numItems": 6
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 292,
+            "attributeName": null,
+            "value": 100.0
+          }
+        ],
+        "numItems": 9
+      }
+    ],
+    "name": "Medium_EmbodimentOfUllr"
+  },
+  "24": {
+    "breakpoints": [
+      {
+        "attributes": [
+          {
+            "attributeId": 220,
+            "attributeName": "Attack_Range_Bonus_Percent",
+            "value": 20.0
+          }
+        ],
+        "numItems": 2
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 3110,
+            "attributeName": "ForceField_Regen_Delay_Bonus",
+            "value": 1.0
+          }
+        ],
+        "numItems": 4
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 332,
+            "attributeName": null,
+            "value": 25.0
+          }
+        ],
+        "numItems": 6
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 96,
+            "attributeName": null,
+            "value": -50.0
+          }
+        ],
+        "numItems": 9
+      }
+    ],
+    "name": "Light_TheSorcerer"
+  },
+  "25": {
+    "breakpoints": [
+      {
+        "attributes": [
+          {
+            "attributeId": 109,
+            "attributeName": "Strength_Bonus_Percent",
+            "value": 80.0
+          }
+        ],
+        "numItems": 2
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 2006,
+            "attributeName": "Set_Magic_Find_Bonus_When_Summon_Wolf_Is_Active",
+            "value": 150.0
+          }
+        ],
+        "numItems": 4
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 2005,
+            "attributeName": "Set_Chance_To_Find_Additional_Iron_On_Drop",
+            "value": 30.0
+          }
+        ],
+        "numItems": 6
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 2004,
+            "attributeName": "Set_Item_Quantity_Bonus_Per_Arrow_Fired_Recently",
+            "value": 3.0
+          },
+          {
+            "attributeId": 184,
+            "attributeName": "Buff_Stack_Duration",
+            "value": 4.0
+          },
+          {
+            "attributeId": 2007,
+            "attributeName": null,
+            "value": 30.0
+          }
+        ],
+        "numItems": 9
+      }
+    ],
+    "name": "Medium_TheScavenger"
+  },
+  "26": {
+    "breakpoints": [
+      {
+        "attributes": [
+          {
+            "attributeId": 97,
+            "attributeName": null,
+            "value": -20.0
+          }
+        ],
+        "numItems": 2
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 367,
+            "attributeName": "Item_Quantity_Bonus_Percent",
+            "value": 15.0
+          }
+        ],
+        "numItems": 4
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 591,
+            "attributeName": "Set_Magic_Find_Bonus_Per_Attack_Spell_Used_Recently",
+            "value": 150.0
+          },
+          {
+            "attributeId": 593,
+            "attributeName": null,
+            "value": 10.0
+          },
+          {
+            "attributeId": 184,
+            "attributeName": "Buff_Stack_Duration",
+            "value": 4.0
+          }
+        ],
+        "numItems": 6
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 595,
+            "attributeName": "Set_Chance_To_Gain_Additional_S_Rarity_Item_On_S_Rarity_Drop",
+            "value": 40.0
+          }
+        ],
+        "numItems": 9
+      }
+    ],
+    "name": "Light_TheDiscoverer"
+  },
+  "27": {
+    "breakpoints": [
+      {
+        "attributes": [
+          {
+            "attributeId": 688,
+            "attributeName": null,
+            "value": 20.0
+          }
+        ],
+        "numItems": 2
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 411,
+            "attributeName": "Physical_Damage_Reduction_Max",
+            "value": 5.0
+          }
+        ],
+        "numItems": 4
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 735,
+            "attributeName": "Minion_Inheritance_Armor_Evasion_Bonus_Percent",
+            "value": 50.0
+          }
+        ],
+        "numItems": 6
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 823,
+            "attributeName": null,
+            "value": 4.0
+          }
+        ],
+        "numItems": 9
+      }
+    ],
+    "name": "Heavy_TheBoneWall"
+  },
+  "28": {
+    "breakpoints": [
+      {
+        "attributes": [
+          {
+            "attributeId": 97,
+            "attributeName": null,
+            "value": -20.0
+          }
+        ],
+        "numItems": 2
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 1101,
+            "attributeName": "Movement_Speed_Bonus_Percent",
+            "value": 25.0
+          }
+        ],
+        "numItems": 4
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 116,
+            "attributeName": null,
+            "value": 20.0
+          }
+        ],
+        "numItems": 6
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 828,
+            "attributeName": "Item_Quantity_Bonus_Percent_Per_Active_Minion",
+            "value": 3.0
+          }
+        ],
+        "numItems": 9
+      }
+    ],
+    "name": "Medium_TheHorde"
+  },
+  "29": {
+    "breakpoints": [
+      {
+        "attributes": [
+          {
+            "attributeId": 824,
+            "attributeName": null,
+            "value": 2.0
+          }
+        ],
+        "numItems": 6
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 96,
+            "attributeName": null,
+            "value": -15.0
+          }
+        ],
+        "numItems": 2
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 737,
+            "attributeName": "Minion_Inheritance_Force_Field_Bonus_Percent",
+            "value": 30.0
+          }
+        ],
+        "numItems": 4
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 826,
+            "attributeName": "Life_Leech_Percent_Given_To_ForceField",
+            "value": 30.0
+          },
+          {
+            "attributeId": 827,
+            "attributeName": null,
+            "value": 1.0
+          }
+        ],
+        "numItems": 10
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 829,
+            "attributeName": "Set_Shadowbolt_Inflicts_Debuff_With_More_Damage_Taken_By_Minions",
+            "value": 20.0
+          }
+        ],
+        "numItems": 8
+      }
+    ],
+    "name": "Light_TheSoulOfGroa"
+  },
+  "3": {
+    "breakpoints": [
+      {
+        "attributes": [
+          {
+            "attributeId": 2001,
+            "attributeName": "Set_Movement_Speed_Burst_When_Killed_Recently",
+            "value": 30.0
+          }
+        ],
+        "numItems": 2
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 451,
+            "attributeName": "Attack_Speed_Bonus_Percent",
+            "value": 25.0
+          }
+        ],
+        "numItems": 4
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 2002,
+            "attributeName": "Set_Chance_To_Fully_Heal_On_Kill",
+            "value": 30.0
+          }
+        ],
+        "numItems": 6
+      },
+      {
+        "attributes": [
+          {
+            "attributeId": 545,
+            "attributeName": "Set_TheBerserker_Berserk_Increased_Strength_Percent_Per_Stack",
+            "value": 80.0
+          },
+          {
+            "attributeId": 546,
+            "attributeName": "Set_TheBerserker_Berserk_Less_Armor_Percent_Per_Stack",
+            "value": 8.0
+          },
+          {
+            "attributeId": 547,
+            "attributeName": null,
+            "value": 10.0
+          },
+          {
+            "attributeId": 184,
+            "attributeName": "Buff_Stack_Duration",
+            "value": 3.0
+          }
+        ],
+        "numItems": 9
+      }
+    ],
+    "name": "Heavy_TheBerserker"
+  }
+}

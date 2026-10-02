@@ -26,6 +26,10 @@ public sealed class CombatRegistry
     private readonly object gate = new();
     private readonly Dictionary<Guid, Entry> entries = new();
 
+    /// <summary>Grace band above the character's level within which an item may still be equipped
+    /// (the web loot drops near the player's level; the exact client rule is not recovered).</summary>
+    private const int LevelRequirementGrace = 20;
+
     public CombatRegistry(GameStore store, TimeProvider clock = null)
     {
         this.store = store;
@@ -306,6 +310,11 @@ public sealed class CombatRegistry
 
         var slot = LootTable.EquipSlotOf(item);
         if (slot is < 0 or > 13) return (false, "not_equippable");
+        // Level requirement: the item's level must not exceed the character's by more than a
+        // grace band (the web loot drops near the player's level; the band is Provisional).
+        var requiredLevel = (int)LootTable.AttributeOf(item, LootTable.AttrRequiredLevel);
+        if (requiredLevel > entry.Instance.PlayerLevel + LevelRequirementGrace)
+            return (false, "level_requirement");
 
         // Enforce one item per equip slot: anything already there returns to the bag.
         var operations = new List<ItemOperationEntry>();
