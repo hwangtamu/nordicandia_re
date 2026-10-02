@@ -42,7 +42,8 @@ Rarity weights (M2)       = Droprates.json 真实权重 F..SS（ClientVerified�
 
 * 输入：`Offense=100, Defense=0, Level=10` 攻击 `Defense=50, Level=10`，
   `AttackProfile(1.0, critChance=0.25, critMult=2.0, variance=0.10)`，`seed=1`。
-* 输出：`damage=75.998424, crit=false, confidence=Provisional`。
+* 输出：`damage=108.336688, crit=false, confidence=ClientVerified`。
+  （命中/暴击/减伤现已按客户端反汇编实现：`CalculateChanceToHit`、`CalculateChance`、`CalculatePhysicalDamageReduction`。）
 * 该样本在 `WebM0Tests` 中打印；公式一旦改动会改变输出，需同步更新文档与校准记录。
 
 ### 校准计划（M0 之后）

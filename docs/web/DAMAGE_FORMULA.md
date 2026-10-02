@@ -42,6 +42,27 @@ ApplyDamageReduction(reduction, damage) = max(0, damage * (1 - reduction))
 所以网页端 `CombatModel.Mitigation(defense, level)` 仍为 Provisional，但**应用方式与此一致**
 （`damage * (1 - mitigation)`，下限 1）。
 
+## 1b. 命中与暴击判定（ClientVerified）
+
+反汇编 `Game.Calculator.CalculateChanceToHit(atk, def, bonus, cap)`：
+
+```
+chance = clamp( 1.05*atk / (Pow(def*0.5, 0.75) + atk) + bonus , 0.05 , cap )
+```
+（常数 `1.05`、下限 `0.05` 从字面量池读出。）
+
+反汇编 `Game.Calculator.CalculateChance(chance)`：
+
+```
+CalculateChance(chance) = chance > 0 && Shared.Core.Rand.Value <= chance
+```
+
+`HitPayload.IsCriticalHit` 选择 `Crit_Chance_AttackSpell_Total`（法术/治疗）或 `Crit_Chance_CurrentHand_Total`，
+乘上 payload 的 `CritChanceMultiplier` 后调用 `CalculateChance`；
+`IsDodged`/`IsBlocked`/`IsEvaded` 同样通过 `CalculateChance(对应闪避/格挡/命中属性)` 判定。
+
+网页端 `CombatModel.ChanceToHit` / `RollChance` / `ResolveHit` 已按此实现（先判定命中，再判定暴击，再做减伤与浮动）。
+
 ## 2. 武器伤害合成（ClientVerified，来自属性脚本）
 
 物理武器伤害（每手）：

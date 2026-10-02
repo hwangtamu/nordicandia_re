@@ -53,7 +53,7 @@ public readonly record struct AttackProfile(
     double Variance = 0.10);
 
 /// <summary>Result of one resolved hit.</summary>
-public readonly record struct DamageResult(double Damage, bool Critical, RuleConfidence Confidence);
+public readonly record struct DamageResult(double Damage, bool Critical, RuleConfidence Confidence, bool Hit = true);
 
 /// <summary>
 /// M0 combat sample. The real client's damage pipeline has not been recovered yet, so
@@ -94,6 +94,27 @@ public static class CombatModel
     public static double Mitigation(double defense, int attackerLevel)
         => PhysicalDamageReduction(defense, Math.Max(1, attackerLevel));
 
+    /// <summary>Constants from <c>Game.Calculator.CalculateChanceToHit</c>.</summary>
+    public const double ChanceToHitMultiplier = 1.05;
+    public const double ChanceToHitMin = 0.05;
+
+    /// <summary>ClientVerified port of <c>Game.Calculator.CalculateChanceToHit(attackRating,
+    /// defenseRating, bonus, cap)</c>:
+    /// <c>clamp(1.05*attackRating / (Pow(defenseRating*0.5, 0.75) + attackRating) + bonus, 0.05, cap)</c>.</summary>
+    public static double ChanceToHit(double attackRating, double defenseRating, double bonus = 0.0,
+        double cap = 1.0)
+    {
+        var atk = Math.Max(0.0, attackRating);
+        var def = Math.Max(0.0, defenseRating);
+        var value = ChanceToHitMultiplier * atk / (Math.Pow(def * 0.5, 0.75) + atk) + bonus;
+        return Math.Clamp(value, ChanceToHitMin, cap);
+    }
+
+    /// <summary>ClientVerified port of <c>Game.Calculator.CalculateChance(chance)</c>:
+    /// <c>chance &gt; 0 &amp;&amp; Rand.Value &lt;= chance</c>.</summary>
+    public static bool RollChance(double chance, CombatRandom rng)
+        => chance > 0.0 && rng.NextDouble() <= chance;
+
     /// <summary>Expected damage before variance, useful for balancing and tests.</summary>
     public static double ExpectedDamage(CombatantStats attacker, CombatantStats defender, AttackProfile profile)
     {
@@ -113,13 +134,16 @@ public static class CombatModel
         AttackProfile profile,
         CombatRandom rng)
     {
+        // ClientVerified order: roll to hit, then crit, then mitigate and apply variance.
+        var hit = RollChance(ChanceToHit(attacker.Offense, defender.Defense), rng);
+        var critical = RollChance(profile.CritChance, rng);
+        if (!hit) return new DamageResult(0.0, false, RuleConfidence.ClientVerified, false);
         var raw = Math.Max(0, attacker.Offense) * Math.Max(0, profile.SkillMultiplier);
         var mitigated = raw * (1.0 - PhysicalDamageReduction(defender.Defense, raw));
         var variance = 1.0 + (rng.NextDouble() * 2.0 - 1.0) * Math.Max(0, profile.Variance);
-        var critical = rng.NextDouble() < Math.Clamp(profile.CritChance, 0.0, 1.0);
         var critFactor = critical ? Math.Max(1.0, profile.CritMultiplier) : 1.0;
         var damage = Math.Max(1.0, mitigated * Math.Max(0.05, variance) * critFactor);
-        return new DamageResult(damage, critical, RuleConfidence.Provisional);
+        return new DamageResult(damage, critical, RuleConfidence.ClientVerified, true);
     }
 
     /// <summary>Experience granted for a kill at <paramref name="monsterLevel"/>.

@@ -50,7 +50,7 @@ block/dodge/resistance 均有对应的 Total 公式（见 attribute_scripts.json
 | 机制 | 现状 | 需做什么 |
 |---|---|---|
 | ~~护甲→减伤曲线~~ | ✅ 已还原 `CalculatePhysicalDamageReduction = min(armor/(armor+50·damage)+bonus, cap)` | — |
-| **命中/暴击/格挡/闪避判定** | 属性公式已还原，判定与随机范围未还原 | 反汇编 `HitPayload`/`Actor.ApplyDamage` 的 RNG 与阈值 |
+| ~~命中/暴击判定~~ | ✅ `CalculateChanceToHit = clamp(1.05·atk/(Pow(def/2,0.75)+atk)+bonus, 0.05, cap)`；`CalculateChance = chance>0 && Rand<=chance`（暴击/闪避/格挡/命中同源） | 格挡/闪避的具体属性选择与减伤后续处理待补 |
 | **元素抗性与穿透** | 属性 getter 已定位，应用未还原 | 反汇编 `InternalApplyDamageConversion` |
 | **怪物属性/AI** | 5 类原型为占位 | 反汇编 `Monster.CalculateAttributes` / `Brain` |
 | **持续伤害/DoT、生命偷取** | 字段名已恢复 | 反汇编对应 `Buff` |

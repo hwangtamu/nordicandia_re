@@ -22,6 +22,16 @@ static class AcceptanceRegressionTests
         FreshCharacterClearsBoss();
         SkillSemanticsMatchClientClasses();
         DamageReductionMatchesClient();
+        ChanceToHitMatchesClient();
+    }
+
+    private static void ChanceToHitMatchesClient()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var m = Nordicandia.Simulation.CombatModel.ChanceToHit(100, 100);
+        Check(Math.Abs(m - 1.05 * 100 / (Math.Pow(50, 0.75) + 100)) < 1e-9, "formula: chanceToHit = 1.05*atk/(Pow(def/2,0.75)+atk)");
+        Check(Math.Abs(Nordicandia.Simulation.CombatModel.ChanceToHit(0, 100) - 0.05) < 1e-9, "formula: chanceToHit floor 0.05");
+        Check(Math.Abs(Nordicandia.Simulation.CombatModel.ChanceToHit(100000, 1) - 1.0) < 1e-9, "formula: chanceToHit cap 1.0");
     }
 
     private static void DamageReductionMatchesClient()
