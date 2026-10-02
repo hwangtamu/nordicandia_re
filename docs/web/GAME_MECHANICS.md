@@ -134,7 +134,11 @@ id 与公式为 ClientVerified。**基础数值已标定**：`ItemCatalog`（458
 提供每件物品的隐式基础值（武器：`Local_Implicit_Physical_Base_Damage_Min/Delta`、`Local_Implicit_Base_Attack_Speed`、
 `Local_Base_Crit_Chance`；护甲：`Local_Implicit_Base_Armor`/`Evasion`），掉落按槽位选真实物品定义并掷取隐式区间。
 例：SteelHammer 物理 17-19/delta 10-13/攻速 1.296/暴击 7%；实测主手伤害包 42.4。
-**仍为 Provisional**：物品等级/稀有度对隐式值的缩放（`GameBalance.ScalingFunctions`）尚未接入。
+**等级缩放已接入**（`ScalingCatalog`）：按客户端 `GameBalance.ScalingFunctions`（38 条）与
+`ItemAttributeSpecifierDefinition.GetMinMaxValues` 解码的公式
+`factor = 1 + FinalMult·(TierMult·max(0,Pow(worldLevel/8+worldLevel,TierExp)−1) + Pow(LevelMult·level,LevelExp))`
+缩放武器伤害（`WeaponFlatDamageScaling`）与护甲（`ArmorFlatArmorScaling`/`ArmorFlatEvasionScaling`）。
+实测同类型武器 lvl10→24.33、lvl60→27.25。
 
 **词缀**：`AffixCatalog`（18 个真实词缀，来自 `Affixes.json`）授予客户端属性：
 `Strength/Dexterity/Intelligence/Vitality/Constitution/Agility_Bonus_Percent`(109-130)、

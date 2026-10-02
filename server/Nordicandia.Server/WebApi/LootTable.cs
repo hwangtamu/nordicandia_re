@@ -68,12 +68,16 @@ public static class LootTable
         var definitionId = definition?.IntegerId ?? 0;
         var baseStats = StatsFor(drop.Slot, drop.Rarity, drop.Level);
         // Rolls a real implicit value for the item's rarity when the definition has one; else the
-        // provisional fallback.
-        double RollImplicit(string attributeName, double fallback)
+        // provisional fallback. The result is scaled by level via GameBalance.ScalingFunctions
+        // (matching the client's GetMinMaxValues).
+        double RollImplicit(string attributeName, double fallback, double scale = 1.0)
         {
             var range = definition?.Find(attributeName)?.For(drop.Rarity);
-            return range is { } r ? r.Roll(rng) : fallback;
+            return (range is { } r ? r.Roll(rng) : fallback) * scale;
         }
+        var weaponScale = ScalingCatalog.WeaponDamageFactor(drop.Level);
+        var armorScale = ScalingCatalog.ArmorFactor(drop.Level);
+        var evasionScale = ScalingCatalog.EvasionFactor(drop.Level);
 
         // Affixes are drawn from the real client affix catalog; counts follow the web rarity curve.
         var affixCount = 1 + (drop.Rarity >= 3 ? 1 : 0) + (drop.Rarity >= 5 ? 1 : 0);
@@ -105,8 +109,8 @@ public static class LootTable
         if (drop.Slot == 12)
         {
             // Main-hand: physical (implicit) + one random element, attack speed, weapon crit, range.
-            var physMin = RollImplicit("Local_Implicit_Physical_Base_Damage_Min", offense * 0.8);
-            var physDelta = RollImplicit("Local_Implicit_Physical_Base_Damage_Delta", offense * 0.4);
+            var physMin = RollImplicit("Local_Implicit_Physical_Base_Damage_Min", offense * 0.8, weaponScale);
+            var physDelta = RollImplicit("Local_Implicit_Physical_Base_Damage_Delta", offense * 0.4, weaponScale);
             itemAttributes[2500] = Value(Math.Round(physMin, 4)); // Local_Implicit_Physical_Base_Damage_Min
             itemAttributes[2501] = Value(Math.Round(physDelta, 4)); // ..._Delta
             itemAttributes[507] = Value(Math.Round(physMin, 4));   // Item_Weapon_Physical_Damage_Min_MainHand
@@ -124,7 +128,7 @@ public static class LootTable
         }
         else if (drop.Slot == 13)
         {
-            var offArmor = RollImplicit("Local_Implicit_Base_Armor", defense * 0.5);
+            var offArmor = RollImplicit("Local_Implicit_Base_Armor", defense * 0.5, armorScale);
             itemAttributes[273] = Value(Math.Round(offArmor, 4));   // Local_Implicit_Base_Armor
             itemAttributes[251] = Value(Math.Round(offArmor, 4));   // Armor
             itemAttributes[455] = Value(Math.Round(1.2 + drop.Rarity * 0.04, 3)); // Item_Attack_Speed_OffHand
@@ -132,12 +136,12 @@ public static class LootTable
         else
         {
             // Armour: Armor_Total reads the plain Armor attribute; boots/cloaks/wrists also evade.
-            var armor = RollImplicit("Local_Implicit_Base_Armor", defense * 0.6);
+            var armor = RollImplicit("Local_Implicit_Base_Armor", defense * 0.6, armorScale);
             itemAttributes[273] = Value(Math.Round(armor, 4));      // Local_Implicit_Base_Armor
             itemAttributes[251] = Value(Math.Round(armor, 4));      // Armor
             if (drop.Slot is 4 or 5 or 9)
             {
-                var evasion = RollImplicit("Local_Implicit_Base_Evasion", defense * 0.35);
+                var evasion = RollImplicit("Local_Implicit_Base_Evasion", defense * 0.35, evasionScale);
                 itemAttributes[276] = Value(Math.Round(evasion, 4)); // Local_Implicit_Base_Evasion
                 itemAttributes[256] = Value(Math.Round(evasion, 4)); // Evasion
             }

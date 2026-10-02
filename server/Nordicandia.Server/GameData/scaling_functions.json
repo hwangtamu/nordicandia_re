@@ -1,0 +1,306 @@
+{
+  "AdditionalSItemPerSDropScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.2,
+    "tierMultiplier": 0.02
+  },
+  "AmuletFlatDamageScaling": {
+    "finalMult": 1.2,
+    "levelExponent": 0.36,
+    "levelMultiplier": 0.001,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "ArmorFlatArmorScaling": {
+    "finalMult": 3.0,
+    "levelExponent": 0.37,
+    "levelMultiplier": 0.002,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "ArmorFlatEvasionScaling": {
+    "finalMult": 3.0,
+    "levelExponent": 0.67,
+    "levelMultiplier": 0.004,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "ArmorFlatForceFieldScaling": {
+    "finalMult": 0.2,
+    "levelExponent": 0.28,
+    "levelMultiplier": 0.002,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "ArmorPenetrationScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.4,
+    "tierMultiplier": 0.01
+  },
+  "AttackRangeScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.4,
+    "tierMultiplier": 0.01
+  },
+  "AttackRatingPercentScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.65,
+    "tierMultiplier": 0.01
+  },
+  "AttackSpeedPercentScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.3,
+    "tierMultiplier": 0.01
+  },
+  "AttributePercentBonus": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.65,
+    "tierMultiplier": 0.01
+  },
+  "CritChancePercentScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.1,
+    "tierMultiplier": 0.01
+  },
+  "CritDamagePercentBonus": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.45,
+    "tierMultiplier": 0.01
+  },
+  "CurseResistanceScaling": {
+    "finalMult": 0.7,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.2,
+    "tierMultiplier": 0.02
+  },
+  "DamageToMonsterScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.3,
+    "levelMultiplier": 0.04,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "DefenseAffixPercentScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.55,
+    "tierMultiplier": 0.01
+  },
+  "ExperienceBonusScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.3,
+    "tierMultiplier": 0.01
+  },
+  "FlatAttackRatingScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 0.85,
+    "levelMultiplier": 0.002,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "FlatLifeScaling": {
+    "finalMult": 0.06,
+    "levelExponent": 1.26,
+    "levelMultiplier": 1.3,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "ImplicitFlatArmorScaling": {
+    "finalMult": 2.0,
+    "levelExponent": 0.37,
+    "levelMultiplier": 0.002,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "ImplicitFlatDamageScaling": {
+    "finalMult": 0.3,
+    "levelExponent": 0.37,
+    "levelMultiplier": 0.005,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "ImplicitFlatEvasionScaling": {
+    "finalMult": 2.0,
+    "levelExponent": 0.67,
+    "levelMultiplier": 0.004,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "ImplicitFlatForceFieldScaling": {
+    "finalMult": 0.15,
+    "levelExponent": 0.28,
+    "levelMultiplier": 0.002,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "ImplicitFlatLifeScaling": {
+    "finalMult": 0.05,
+    "levelExponent": 1.26,
+    "levelMultiplier": 1.3,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "ItemQuantityPerArrowStackSizeScaling": {
+    "finalMult": 0.7,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.2,
+    "tierMultiplier": 0.01
+  },
+  "ItemQuantityPercentScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.3,
+    "tierMultiplier": 0.01
+  },
+  "LeechRateScalingPercent": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.2,
+    "tierMultiplier": 0.01
+  },
+  "LeechScalingPercent": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.3,
+    "tierMultiplier": 0.01
+  },
+  "LifePercentScalingPercent": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.6,
+    "tierMultiplier": 0.01
+  },
+  "LocalDamagePercentScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.6,
+    "tierMultiplier": 0.01
+  },
+  "LocalDefensePercentScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.6,
+    "tierMultiplier": 0.01
+  },
+  "MagicFindPerAttackSpellStackSizeScaling": {
+    "finalMult": 0.7,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.2,
+    "tierMultiplier": 0.02
+  },
+  "MagicFindPercentScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.45,
+    "tierMultiplier": 0.01
+  },
+  "ManaRegenPercentScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.2,
+    "tierMultiplier": 0.01
+  },
+  "ManaScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.35,
+    "tierMultiplier": 0.01
+  },
+  "MoreGenericScaling": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.3,
+    "tierMultiplier": 0.01
+  },
+  "None": {
+    "finalMult": 1.0,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  },
+  "ResistancePercentScaling": {
+    "finalMult": 1.2,
+    "levelExponent": 1.0,
+    "levelMultiplier": 0.0,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.55,
+    "tierMultiplier": 0.01
+  },
+  "WeaponFlatDamageScaling": {
+    "finalMult": 0.8,
+    "levelExponent": 0.36,
+    "levelMultiplier": 0.001,
+    "levelThreshold": 0.0,
+    "tierExponent": 1.0,
+    "tierMultiplier": 0.0
+  }
+}

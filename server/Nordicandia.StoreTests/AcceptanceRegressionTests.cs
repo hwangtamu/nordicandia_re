@@ -370,6 +370,14 @@ static class AcceptanceRegressionTests
         Check(item.Affixes.Count > 0, "affixes: a rare item rolls affixes");
         Check(item.Affixes.All(a => a.DefinitionIntegerId > 0 && a.DefinitionIntegerId < 9000),
             "affixes: carry client attribute ids (not the provisional web ids)");
+
+        // Level scaling (GameBalance.ScalingFunctions): a higher-level weapon of the same type
+        // rolls at least as much base damage.
+        var lowLevel = LootTable.CreateItem(new LootDrop(12, 5, 10, false, 5000));
+        var highLevel = LootTable.CreateItem(new LootDrop(12, 5, 60, false, 5000));
+        Console.WriteLine($"INFO scaling: weapon min lvl10={LootTable.AttributeOf(lowLevel, 507):F2} lvl60={LootTable.AttributeOf(highLevel, 507):F2}");
+        Check(LootTable.AttributeOf(highLevel, 507) >= LootTable.AttributeOf(lowLevel, 507),
+            "scaling: a higher-level weapon has >= base damage (same definition/rarity)");
     }
 
     private static void CraftEssenceConsumesIron()
