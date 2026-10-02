@@ -13,7 +13,11 @@ namespace Nordicandia.Server.WebApi;
 public static class AffixCatalog
 {
     public readonly record struct Range(int? Rarity, double Min, double Max);
-    public readonly record struct Affix(string Name, int AttributeId, string AttributeName, IReadOnlyList<Range> Ranges);
+    public readonly record struct Affix(string Name, int AttributeId, string AttributeName, int GenerationType, IReadOnlyList<Range> Ranges)
+    {
+        /// <summary>AffixType: 1 = Prefix, 2 = Suffix (0/3 are implicit/both).</summary>
+        public bool IsPrefixOrSuffix => GenerationType is 1 or 2;
+    }
 
     private static readonly Lazy<IReadOnlyList<Affix>> All = new(Load);
     public static IReadOnlyList<Affix> Entries => All.Value;
@@ -36,10 +40,18 @@ public static class AffixCatalog
         using var stream = assembly.GetManifestResourceStream(resource)!;
         var raw = JsonSerializer.Deserialize<Dictionary<string, Raw>>(stream,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
-        return raw.Select(kv => new Affix(kv.Key, kv.Value.AttributeId, kv.Value.AttributeName,
+        return raw.Select(kv => new Affix(kv.Key, kv.Value.AttributeId, kv.Value.AttributeName, kv.Value.GenerationType,
             kv.Value.Ranges.Select(r => new Range(r.Rarity, r.Min, r.Max)).ToList())).ToList();
     }
 
-    private sealed record Raw(int AttributeId, string AttributeName, List<RawRange> Ranges);
+    /// <summary>The catalog affix that grants <paramref name="attributeId"/>, or null.</summary>
+    public static Affix? ByAttribute(int attributeId)
+    {
+        foreach (var affix in Entries)
+            if (affix.AttributeId == attributeId) return affix;
+        return null;
+    }
+
+    private sealed record Raw(int AttributeId, string AttributeName, int GenerationType, List<RawRange> Ranges);
     private sealed record RawRange(int? Rarity, double Min, double Max);
 }

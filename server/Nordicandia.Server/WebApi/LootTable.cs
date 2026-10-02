@@ -25,6 +25,8 @@ public static class LootTable
     public const int AttrRequiredLevel = 99006;
     /// <summary>Web-only flag (1) marking a unique/legendary item.</summary>
     public const int AttrUnique = 99007;
+    /// <summary>Web-only attribute holding an affix's AffixType (1=Prefix, 2=Suffix).</summary>
+    public const int AttrAffixType = 99008;
 
     private static readonly Dictionary<int, string[]> SlotNames = new()
     {
@@ -202,6 +204,7 @@ public static class LootTable
                         [AttributeOrigin.Item] = new()
                         {
                             [a.Affix.AttributeId] = Value(Math.Round(a.Value, 4)),
+                            [AttrAffixType] = Value(a.Affix.GenerationType),
                         },
                     },
                     MultiplicativeValues = new(),
@@ -246,9 +249,18 @@ public static class LootTable
 
     public static bool IsEquipped(SerializedItem item) => (int)item.Slot is >= 0 and <= 13;
 
+    /// <summary>True when the item carries the given attribute, even at value 0 (set id 0 is a
+    /// valid set, so presence — not value — is what marks a set item).</summary>
+    public static bool HasAttribute(SerializedItem item, int attributeId)
+    {
+        if (item?.Attributes?.Values == null) return false;
+        if (!item.Attributes.Values.TryGetValue(AttributeOrigin.Item, out var map) || map == null) return false;
+        return map.ContainsKey(attributeId);
+    }
+
     /// <summary>True for a unique/legendary or set item (used by the drop-pity counter).</summary>
     public static bool IsUniqueOrSet(SerializedItem item)
-        => AttributeOf(item, AttrUnique) > 0 || AttributeOf(item, AttrSetId) > 0;
+        => AttributeOf(item, AttrUnique) > 0 || HasAttribute(item, AttrSetId);
 
     /// <summary>Sum of equipment bonuses over equipped items.</summary>
     public static (double Offense, double Defense, double Recovery) EquipmentBonus(IEnumerable<SerializedItem> items)

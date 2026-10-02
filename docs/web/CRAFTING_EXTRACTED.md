@@ -210,7 +210,15 @@ GetNumIronCost(sourceItems, essence, targetItem, baseCost, qualitySlider, overhe
   内部先 `CraftingUtils.GetMergableAffixes` 取可合并词缀数）。
 
 **已实现**：`GameStore.CraftEssenceItem` 消耗 Iron（`GetNumIronCost`）、按 `GetHighestChanceToSucceed` 掷骰、
-成功时把源物品词缀并入目标（简化词缀合并，容量 = `2 + rarity/3`）；`InventoryService.CraftEssenceItem(2)` 已接线。
+成功时把源物品词缀并入目标：逐个比较 `DefinitionIntegerId`，已存在且新词缀稀有度更高时替换，否则在
+容量内新增（容量仍为 web 近似 `2 + clamp(rarity/3, 0, 4)`）。词缀目录（`affix_catalog.json`）现在带有
+客户端 `ItemAffixDefinition.GenerationType`（1=Prefix、2=Suffix、0=Implicit、4=Set），生成的物品词缀在
+`AttrAffixType`（99008）上保留该类型，供后续按 `IsPrefixOrSuffix`/`IsOpenAffix` 精确过滤使用。
+`InventoryService.CraftEssenceItem(2)` 已接线。
+
+> 说明：客户端 `GetMergableAffixes` 的真实判定是“目标上存在可用的 Open_Prefix_Slot/Open_Suffix_Slot 占位符
+> 词缀”，而网页物品没有这些占位符词缀，因此容量仍为文档化的近似；`IsPrefixOrSuffix`/`ByAttribute` 已就绪，
+> 等占位符模型补齐后再替换近似规则。
 
 **已实现**：`GameStore.CraftRelicItem`（消耗源遗物 + 祝福目标词缀）；`GameStore.ItemAddNewSocket`
 （`GetRequiredTitansteelReagentsForAddingSockets = 现有槽数+1`）；`GameStore.SocketItem`（把源宝石嵌入空槽，
@@ -218,7 +226,7 @@ GetNumIronCost(sourceItems, essence, targetItem, baseCost, qualitySlider, overhe
 
 **仍缺**（因此 `TradeWithSetItemMerchant`/`GenerateSetItemMerchantOffers`/`MergePortals`/`LockItems` 仍为空桩）：
 - 精华制作的成功/失败产出物品与 `ChangedIronInstances`/`Tools` 结构；
-- `getCostFromRarity` 的逐稀有度消耗表；
+- `GetMergableAffixes` 的 Open_Prefix_Slot/Open_Suffix_Slot 占位符模型（当前用稀有度容量近似）；
 - 遗物制作（`CraftRelicItem`）的目标物品来源与产出；
 - 镶嵌（`SocketItem`/`ItemAddNewSocket`）的插槽与消耗规则；
 - 套装商人（`TradeWithSetItemMerchant`）的换购规则。

@@ -1515,13 +1515,23 @@ public sealed class GameStore : IDisposable
         var success = Random.Shared.NextDouble() <= rate;
         if (success)
         {
+            // Merge the source items' affixes onto the target: an affix that already exists is
+            // upgraded only when the incoming affix is rarer (client OnMergeAffix -> RemoveAffix /
+            // ResetRarity / AddAffix); a new affix fills capacity (documented web approximation of
+            // GetMergableAffixes' IsPrefixOrSuffix + IsOpenAffix open-slot test).
             target.Affixes ??= new List<SerializedAffix>();
             var capacity = 2 + Math.Clamp(rarity / 3, 0, 4);
             foreach (var source in sources)
-                foreach (var affix in source.Affixes ?? Enumerable.Empty<SerializedAffix>())
+                foreach (var affix in (source.Affixes ?? new List<SerializedAffix>()).Where(x => x != null))
                 {
-                    if (affix == null || target.Affixes.Count >= capacity) continue;
-                    if (target.Affixes.Any(a => a != null && a.DefinitionIntegerId == affix.DefinitionIntegerId)) continue;
+                    var existing = target.Affixes.FirstOrDefault(x => x != null && x.DefinitionIntegerId == affix.DefinitionIntegerId);
+                    if (existing != null)
+                    {
+                        if ((int)affix.Rarity > (int)existing.Rarity)
+                            target.Affixes[target.Affixes.IndexOf(existing)] = affix;
+                        continue;
+                    }
+                    if (target.Affixes.Count >= capacity) continue;
                     target.Affixes.Add(affix);
                 }
             items.RemoveAll(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem);

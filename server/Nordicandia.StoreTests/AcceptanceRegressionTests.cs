@@ -504,6 +504,37 @@ static class AcceptanceRegressionTests
             var remainingIron = store.GetItems(owner, characterId).Count(i => i.DefinitionIntegerId == 63);
             Check(remainingIron < 6, "essence: the iron stacks are actually deducted");
 
+            // Affix merge: a rarity-10 target always succeeds; its affixes are the rarity-upgraded
+            // union of the target's and the source's (up to capacity). Clear the previous craft's
+            // Blacksmith slots so the merge uses its own target/source.
+            store.SetItemSlots(owner, characterId, new Dictionary<Guid, ItemSlotTypes>
+            {
+                [target.Id] = ItemSlotTypes.Inventory,
+                [source.Id] = ItemSlotTypes.Inventory,
+            });
+            var mergeTarget = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 71));
+            mergeTarget.Slot = ItemSlotTypes.Blacksmith_TargetItem;
+            var mergeSource = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 72));
+            mergeSource.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            var iron2 = new List<SerializedItem>();
+            for (var i = 0; i < 60; i++) iron2.Add(Iron());
+            store.GrantItems(owner, characterId, new List<SerializedItem> { mergeTarget, mergeSource }.Concat(iron2).ToList());
+            var (mOk, mSuccess, mResult, _, _) = store.CraftEssenceItem(owner, characterId, 10);
+            Check(mOk && mSuccess, "merge: a rarity-10 target succeeds deterministically");
+            var originalIds = mergeTarget.Affixes.Select(a => a.DefinitionIntegerId).ToList();
+            var sourceIds = mergeSource.Affixes.Select(a => a.DefinitionIntegerId).ToList();
+            var resultIds = mResult.Affixes.Select(a => a.DefinitionIntegerId).ToList();
+            var union = originalIds.Concat(sourceIds).Distinct().ToList();
+            // Rarity 10 => affix capacity 2 + clamp(10/3,0,4) = 5; the merge is the union capped at it.
+            var capacity = 2 + Math.Clamp((int)mResult.BaseRarity / 3, 0, 4);
+            Check(originalIds.Count > 0 && originalIds.All(resultIds.Contains),
+                "merge: the target keeps its original affixes");
+            Check(resultIds.All(union.Contains), "merge: the result only contains target/source affixes");
+            Check(resultIds.Count == Math.Min(capacity, union.Count),
+                "merge: the merge fills the target's affix capacity");
+            Check(sourceIds.Any(id => !originalIds.Contains(id) && resultIds.Contains(id)),
+                "merge: at least one new source affix is adopted");
+
             // Relic craft: consume a source relic and bless the target's affixes.
             var relicTarget = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 7));
             relicTarget.Slot = ItemSlotTypes.Blacksmith_TargetItem;
