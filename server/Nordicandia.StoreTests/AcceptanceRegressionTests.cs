@@ -84,6 +84,9 @@ static class AcceptanceRegressionTests
         Check(mage.Active.First(a => a.Name == "ChainLightning").Effect == "chain", "semantics: ChainLightning -> chain");
         Check(necro.Active.First(a => a.Name == "SummonSkeleton").Effect == "summon", "semantics: SummonSkeleton < PowerScript -> summon");
         Check(necro.Active.First(a => a.Name == "Shadowbolt").Effect == "projectile", "semantics: Shadowbolt < ProjectileSkill -> projectile");
+        Check(Nordicandia.Simulation.SkillDamageTypes.For("IceNova") == "Cold", "semantics: IceNova deals Cold");
+        Check(Nordicandia.Simulation.SkillDamageTypes.For("ChainLightning") == "Lightning", "semantics: ChainLightning deals Lightning");
+        Check(Nordicandia.Simulation.SkillDamageTypes.For("Slam") == "Physical", "semantics: Slam deals Physical");
     }
 
     private static void FreshCharacterClearsBoss()

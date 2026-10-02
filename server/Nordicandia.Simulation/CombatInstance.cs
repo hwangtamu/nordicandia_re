@@ -18,6 +18,7 @@ public sealed class CombatMonster
     public double MaxHp { get; set; }
     public double Offense { get; set; }
     public double Defense { get; set; }
+    public double Armor { get; set; }
     public DamageBundle Damage { get; set; }
     public ResistanceBundle Resistances { get; set; }
     public double Speed { get; set; } = 2.4;
@@ -222,7 +223,7 @@ public sealed class CombatInstance
     }
 
     private static CombatantStats MonsterStats(CombatMonster monster)
-        => new(monster.Offense, monster.Defense, 0, monster.Level, Resistances: monster.Resistances);
+        => new(monster.Offense, monster.Defense, 0, monster.Level, Armor: monster.Armor, Resistances: monster.Resistances);
 
     private double EffectiveMaxHealth() => CombatModel.MaxHealth(PlayerStats())
         * (1 + passive.HealthBonus);
@@ -298,6 +299,7 @@ public sealed class CombatInstance
             MaxHp = maxHp,
             Offense = offense,
             Defense = (2 + level * 1.5) * profile.DefenseMult,
+            Armor = (10 + level * 6) * profile.DefenseMult,
             Damage = damage,
             Resistances = profile.Resistances,
             Speed = profile.Speed,
@@ -322,6 +324,7 @@ public sealed class CombatInstance
             Hp = 200 + level * 80,
             Offense = 8 + level * 3,
             Defense = 20 + level * 8,
+            Armor = 60 + level * 20,
             Damage = new DamageBundle(Physical: 0.5, Cold: 0.5).Scale(8 + level * 3),
             Resistances = new ResistanceBundle(Fire: 0.2, Cold: 0.5, Lightning: 0.2, Poison: 0.2),
             Speed = 2.0,
@@ -618,7 +621,7 @@ public sealed class CombatInstance
                 var stun = StunSecondsOf(skill);
                 foreach (var monster in inRange)
                 {
-                    var hit = ResolveSkill(monster, skill.Multiplier);
+                    var hit = ResolveSkill(monster, skill, skill.Multiplier);
                     total += hit.Damage;
                     DamageMonster(monster, hit.Damage);
                     if (stun > 0) monster.StunTimer = Math.Max(monster.StunTimer, stun);
@@ -641,7 +644,7 @@ public sealed class CombatInstance
                 var currentMultiplier = skill.Multiplier;
                 foreach (var monster in candidates.Take(maxTargets))
                 {
-                    var hit = ResolveSkill(monster, currentMultiplier);
+                    var hit = ResolveSkill(monster, skill, currentMultiplier);
                     total += hit.Damage;
                     DamageMonster(monster, hit.Damage);
                     currentMultiplier *= decay;
@@ -683,7 +686,7 @@ public sealed class CombatInstance
                 var target = NearestAliveMonster(14);
                 if (target is null) return new SkillOutcome(false, 0, -1, "no_target");
                 BeginCast(skillId, skill);
-                var hit = ResolveSkill(target, skill.Multiplier);
+                var hit = ResolveSkill(target, skill, skill.Multiplier);
                 DamageMonster(target, hit.Damage);
                 var total = hit.Damage;
                 if (skill.Values.ContainsKey("Power_Projectile_Pierce_Chance") ||
@@ -691,7 +694,7 @@ public sealed class CombatInstance
                 {
                     foreach (var extra in AliveMonstersInRadius(6).Where(m => m.Index != target.Index).Take(2))
                     {
-                        var pierce = ResolveSkill(extra, skill.Multiplier * 0.5);
+                        var pierce = ResolveSkill(extra, skill, skill.Multiplier * 0.5);
                         total += pierce.Damage;
                         DamageMonster(extra, pierce.Damage);
                     }
@@ -704,7 +707,7 @@ public sealed class CombatInstance
                 var target = NearestAliveMonster(8);
                 if (target is null) return new SkillOutcome(false, 0, -1, "no_target");
                 BeginCast(skillId, skill);
-                var hit = ResolveSkill(target, skill.Multiplier);
+                var hit = ResolveSkill(target, skill, skill.Multiplier);
                 DamageMonster(target, hit.Damage);
                 var stun = StunSecondsOf(skill);
                 if (stun > 0) target.StunTimer = Math.Max(target.StunTimer, stun);
@@ -727,11 +730,23 @@ public sealed class CombatInstance
         return 0;
     }
 
-    private DamageResult ResolveSkill(CombatMonster target, double multiplier)
-        => CombatModel.ResolveBundleAttack(
-            PlayerStats(), PlayerDamageBundle(), MonsterStats(target), target.Resistances,
+    private DamageResult ResolveSkill(CombatMonster target, SkillProfile skill, double multiplier)
+    {
+        // A skill's element overrides the weapon's own split ("X% weapon damage as <element>").
+        var weapon = PlayerDamageBundle();
+        var bundle = SkillDamageTypes.For(skill.Name) switch
+        {
+            "Fire" => new DamageBundle(Fire: weapon.Total),
+            "Cold" => new DamageBundle(Cold: weapon.Total),
+            "Lightning" => new DamageBundle(Lightning: weapon.Total),
+            "Poison" => new DamageBundle(Poison: weapon.Total),
+            _ => weapon,
+        };
+        return CombatModel.ResolveBundleAttack(
+            PlayerStats(), bundle, MonsterStats(target), target.Resistances,
             new AttackProfile(multiplier, 0.15, 2.0, 0.08),
             rng);
+    }
 
     private double Distance(CombatMonster monster)
         => Math.Sqrt(Math.Pow(monster.X - PlayerX, 2) + Math.Pow(monster.Z - PlayerZ, 2));
