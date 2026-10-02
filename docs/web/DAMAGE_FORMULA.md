@@ -104,6 +104,19 @@ Estimated_World_Resist_Penalty      = f(World_Tier, World_Tier_Unlocked, Options
 **结论**：伤害/命中/减伤的公式已全部还原；要在网页端真正跑起来，必须先实现「物品/等级 → 全部属性」的合成
 （226 条脚本 getter + 装备属性贡献）。这是下一步的里程碑（实现量明确，不再是“未知”）。
 
+## 1e. 元素抗性 / 减伤应用（ClientVerified）
+
+`Game.Calculator.ApplyDamageReduction(damageReduction, rawDamage)`（`0x02BAF34C`）：
+```
+return Max(0, rawDamage * (1 - damageReduction))
+```
+反汇编：`FMUL d0,d0,d1; FSUB d0,d1,d0; FCMP d0,#0; FCSEL d0,#0,d0,MI` —— 即 `raw·(1−red)`，下限 0。
+
+元素抗性在 `GameCalculator.CalculateEffectiveElementalDamagePerSecond`（`0x…`）中先对每类抗性取
+`Math.Min(1, resistance)`（上限 1.0），再按上式应用到对应元素伤害。伤害转换另有
+`GameCalculator.ConvertWeaponDamage` / `InternalApplyDamageConversion`（把一类伤害按百分比转成
+其他元素），与抗性减免相互独立。
+
 ## 2. 武器伤害合成（ClientVerified，来自属性脚本）
 
 物理武器伤害（每手）：
