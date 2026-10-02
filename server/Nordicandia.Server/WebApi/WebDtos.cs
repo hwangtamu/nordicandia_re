@@ -68,3 +68,5 @@ public sealed record WebAllocateAttributesRequest(
     double Constitution = 0, double Agility = 0, double Mindpower = 0);
 
 public sealed record NpcBuyRequest(Guid CatalogItemId, bool UseOpals = false);
+
+public sealed record NpcSetTradeRequest(Guid OfferItemId);

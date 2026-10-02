@@ -30,6 +30,9 @@ public sealed class CombatRegistry
     /// (the web loot drops near the player's level; the exact client rule is not recovered).</summary>
     private const int LevelRequirementGrace = 20;
 
+    /// <summary>Guaranteed unique/set after this many drops without one (a web pity rule).</summary>
+    private const int UniquePityDrops = 120;
+
     public CombatRegistry(GameStore store, TimeProvider clock = null)
     {
         this.store = store;
@@ -69,6 +72,8 @@ public sealed class CombatRegistry
         public int FlushedOpals;
         public int FlushedKills;
         public long FlushedVersion;
+        // Drops since the last unique/set; at the threshold the next drop is forced unique.
+        public int UniquePity;
         public readonly List<LootDropView> RecentLoot = new();
     }
 
@@ -375,7 +380,17 @@ public sealed class CombatRegistry
     {
         var drops = entry.Instance.DrainDrops();
         if (drops.Count == 0) return;
-        var items = drops.Select(LootTable.CreateItem).ToList();
+        // Drop pity: force a unique once enough drops have gone by without one, so the rarest
+        // tier is reachable in a session. Set items also reset the counter.
+        var items = new List<SerializedItem>();
+        foreach (var drop in drops)
+        {
+            entry.UniquePity++;
+            var force = entry.UniquePity >= UniquePityDrops ? ItemCatalog.RarityType.Unique : (ItemCatalog.RarityType?)null;
+            var item = LootTable.CreateItem(drop, force);
+            if (LootTable.IsUniqueOrSet(item)) entry.UniquePity = 0;
+            items.Add(item);
+        }
         store.GrantItems(owner, characterId, items);
         foreach (var item in items)
         {

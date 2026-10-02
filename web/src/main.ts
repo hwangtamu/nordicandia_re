@@ -390,7 +390,7 @@ function renderInventory(inventory: WebInventory, onToggle: (itemId: string, equ
   const sorted = [...inventory.items].sort((a, b) => Number(b.equipped) - Number(a.equipped) || b.rarity - a.rarity);
   for (const item of sorted) {
     const row = document.createElement("div");
-    row.className = `inv-row${item.equipped ? " equipped" : ""}`;
+    row.className = `inv-row${item.equipped ? " equipped" : ""}${itemGlow(item.name)}`;
     const stats = `+${Math.round(item.offense)} off · +${Math.round(item.defense)} def · +${Math.round(item.recovery)} rec`;
     const affixes = item.affixes && item.affixes.length ? item.affixes.map((a) => `<span class="affix">${escapeHtml(a)}</span>`).join(" ") : "";
     row.innerHTML = `
@@ -407,7 +407,7 @@ function renderInventory(inventory: WebInventory, onToggle: (itemId: string, equ
   }
 }
 
-type NpcTab = "smelt" | "disassemble" | "essence" | "relic" | "socket" | "add-socket" | "trade" | "buy";
+type NpcTab = "smelt" | "disassemble" | "essence" | "relic" | "socket" | "add-socket" | "trade" | "buy" | "set";
 
 const npcEl = document.getElementById("npc") as HTMLDivElement;
 const npcTitleEl = document.getElementById("npc-title") as HTMLElement;
@@ -475,6 +475,7 @@ const NPc_TABS: Record<string, { label: string; hint: string }> = {
   "add-socket": { label: "Add Socket", hint: "Pick a target; consumes Titansteel to add a socket." },
   trade: { label: "Trade", hint: "Offer items for the selected merchant product." },
   buy: { label: "Buy", hint: "Purchase a product with silver or opals." },
+  set: { label: "Set", hint: "Trade an item for a set item of the same slot (set merchant)." },
 };
 
 function openNpc(mode: "smith" | "merchant"): void {
@@ -503,7 +504,7 @@ function renderNpc(): void {
   npcTitleEl.textContent = npcMode === "smith" ? "Blacksmith" : "Merchant";
   const tabs: NpcTab[] = npcMode === "smith"
     ? ["smelt", "disassemble", "essence", "relic", "socket", "add-socket"]
-    : ["buy", "trade"];
+    : ["buy", "trade", "set"];
   if (!tabs.includes(npcTab)) npcTab = tabs[0];
   npcTabsEl.innerHTML = tabs.map((t) =>
     `<button class="npc-tab${t === npcTab ? " active" : ""}" data-tab="${t}">${NPc_TABS[t].label}</button>`).join("");
@@ -524,6 +525,19 @@ function renderNpc(): void {
     for (const button of Array.from(npcBodyEl.querySelectorAll("[data-buy]"))) {
       const el = button as HTMLButtonElement;
       el.addEventListener("click", () => void buyProduct(el.dataset.id!, el.dataset.buy === "opal"));
+    }
+    return;
+  }
+  if (npcTab === "set") {
+    npcBodyEl.innerHTML = items.length === 0
+      ? `<div class="inv-empty">No items in the bag.</div>`
+      : items.map((item) => `<div class="npc-row">
+        <span class="inv-name">${escapeHtml(item.name)}</span>
+        <span class="inv-stats">+${Math.round(item.offense)} off</span>
+        <button class="inv-btn" data-set-trade="${item.id}">Set</button></div>`).join("");
+    for (const button of Array.from(npcBodyEl.querySelectorAll("[data-set-trade]"))) {
+      const el = button as HTMLButtonElement;
+      el.addEventListener("click", () => void setTrade(el.dataset.setTrade!));
     }
     return;
   }
@@ -570,6 +584,25 @@ function onClickItem(itemId: string): void {
   renderNpc();
 }
 
+async function setTrade(offerItemId: string): Promise<void> {
+  if (!npcCharacterId) return;
+  npcStatusEl.textContent = "Trading…";
+  try {
+    const result = await api.setTrade(npcCharacterId, offerItemId);
+    inventoryCache = result.inventory;
+    npcStatusEl.textContent = result.applied ? "Set item received" : "Could not trade that item";
+    renderNpc();
+  } catch (error) {
+    npcStatusEl.textContent = `Failed: ${error instanceof Error ? error.message : String(error)}`;
+  }
+}
+
+function itemGlow(name: string): string {
+  if (name.startsWith("Unique_")) return " glow-unique";
+  if (name.startsWith("Set_")) return " glow-set";
+  return "";
+}
+
 async function buyProduct(catalogItemId: string, useOpals: boolean): Promise<void> {
   if (!npcCharacterId) return;
   npcStatusEl.textContent = "Buying…";
@@ -586,7 +619,7 @@ async function buyProduct(catalogItemId: string, useOpals: boolean): Promise<voi
 function showLoot(loot: LootDrop[]): void {
   for (const drop of loot) {
     const el = document.createElement("div");
-    el.className = "loot-item";
+    el.className = `loot-item${itemGlow(drop.name)}`;
     el.style.color = RARITY_COLORS[drop.rarity] ?? "#ccc";
     el.textContent = `${RARITY_NAMES[drop.rarity] ?? "?"} ${drop.name}`;
     lootFeedEl.appendChild(el);

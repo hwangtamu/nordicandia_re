@@ -294,6 +294,36 @@ public static class WebApiEndpoints
             }
         });
 
+        // Set-item merchant: offers a set item per offered item, and trades one for its set item.
+        group.MapPost("/characters/{id:guid}/npc/set-offers", (HttpContext ctx, Guid id, NpcItemsRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var slots = new Dictionary<Guid, SharedNet.Constants.Game.ItemSlotTypes>();
+            foreach (var itemId in req?.ItemIds ?? new List<Guid>())
+                slots[itemId] = SharedNet.Constants.Game.ItemSlotTypes.YourTrade;
+            GameStore.Instance.SetItemSlots(user.UserId, id, slots);
+            var (applied, yourOffer, offered) = GameStore.Instance.GenerateSetItemMerchantOffers(user.UserId, id);
+            return Results.Ok(new { applied, yourOfferItems = yourOffer, offeredItems = offered, inventory = CombatRegistry.Instance.Inventory(user.UserId, id) });
+        });
+
+        group.MapPost("/characters/{id:guid}/npc/set-trade", (HttpContext ctx, Guid id, NpcSetTradeRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var offerItemId = req?.OfferItemId ?? Guid.Empty;
+            GameStore.Instance.SetItemSlots(user.UserId, id, new Dictionary<Guid, SharedNet.Constants.Game.ItemSlotTypes>
+            {
+                [offerItemId] = SharedNet.Constants.Game.ItemSlotTypes.YourTrade,
+            });
+            var (applied, result) = GameStore.Instance.TradeWithSetItemMerchant(user.UserId, id, offerItemId);
+            return Results.Ok(new { applied, resultItem = result, inventory = CombatRegistry.Instance.Inventory(user.UserId, id) });
+        });
+
         // Attribute allocation: read the current allocation/totals and apply pending deltas.
         group.MapGet("/characters/{id:guid}/attributes", (HttpContext ctx, Guid id) =>
         {

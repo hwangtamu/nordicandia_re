@@ -29,6 +29,7 @@ static class AcceptanceRegressionTests
         UniqueAndSetItemDefinitions();
         NpcSlotPlacementSmelts();
         AttributeAllocationAccumulates();
+        SetMerchantAndDropPity();
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
@@ -331,6 +332,29 @@ static class AcceptanceRegressionTests
             Check(tInventory.Items.Any(i => i.DefinitionIntegerId == 606), "trade: grants the product stack");
             Check(store.GetItems(owner, characterId).All(i => i.Slot != ItemSlotTypes.YourTrade), "trade: empties the trade window");
         }
+    }
+
+    private static void SetMerchantAndDropPity()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var (store, _, owner, characterId, _) = Create("r14", 100);
+        using (store)
+        {
+            var offer = LootTable.CreateItem(new LootDrop(3, 5, 10, false, 61));
+            offer.Slot = ItemSlotTypes.YourTrade;
+            store.GrantItems(owner, characterId, new List<SerializedItem> { offer });
+            var (applied, _, offered) = store.GenerateSetItemMerchantOffers(owner, characterId);
+            Check(applied, "set merchant: generates offers for the trade-window items");
+            Check(offered.Items.Count == 1 && LootTable.IsUniqueOrSet(offered.Items[0]),
+                "set merchant: the offer is a set item");
+            var (traded, result) = store.TradeWithSetItemMerchant(owner, characterId, offer.Id);
+            Check(traded && result.Items.Count == 1 && result.Items[0].Name.StartsWith("Set_"),
+                "set merchant: trading grants a set item");
+        }
+        // Drop pity: a forced drop is a unique.
+        var forced = LootTable.CreateItem(new LootDrop(3, 5, 10, false, 62), ItemCatalog.RarityType.Unique);
+        Check(LootTable.IsUniqueOrSet(forced) && forced.Name.StartsWith("Unique_"),
+            "pity: a forced drop is a unique item");
     }
 
     private static void AttributeAllocationAccumulates()

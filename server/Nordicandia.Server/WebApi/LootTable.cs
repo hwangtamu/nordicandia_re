@@ -23,6 +23,8 @@ public static class LootTable
     public const int AttrSetId = 99005;
     /// <summary>Web-only attribute holding the level required to equip the item.</summary>
     public const int AttrRequiredLevel = 99006;
+    /// <summary>Web-only flag (1) marking a unique/legendary item.</summary>
+    public const int AttrUnique = 99007;
 
     private static readonly Dictionary<int, string[]> SlotNames = new()
     {
@@ -59,11 +61,12 @@ public static class LootTable
     public static string RarityName(int rarity)
         => rarity >= 0 && rarity < RarityNames.Length ? RarityNames[rarity] : "?";
 
-    public static SerializedItem CreateItem(LootDrop drop)
+    public static SerializedItem CreateItem(LootDrop drop, ItemCatalog.RarityType? forceRarityType = null)
     {
         var rng = new CombatRandom(drop.Seed == 0 ? 0x2545F4914F6CDD1DUL : drop.Seed);
-        // Roll Normal/Unique/Set using the client weights, then pick a matching definition.
-        var rarityType = ItemCatalog.RollRarityType(rng);
+        // Roll Normal/Unique/Set using the client weights (or use the forced type, e.g. a set
+        // merchant offer or a pity-guaranteed unique), then pick a matching definition.
+        var rarityType = forceRarityType ?? ItemCatalog.RollRarityType(rng);
         var definition = ItemCatalog.Pick(drop.Slot, rarityType, rng);
         var fallbackNames = SlotNames.TryGetValue(drop.Slot, out var list) ? list : new[] { "Trinket" };
         var name = definition?.Name ?? fallbackNames[Math.Abs(Hash(drop.Level, drop.Slot)) % fallbackNames.Length];
@@ -163,6 +166,7 @@ public static class LootTable
                     itemAttributes[attributeId] = Value(Math.Round(range.Roll(rng), 4));
             }
         }
+        if (definition is { IsUnique: true }) itemAttributes[AttrUnique] = Value(1);
         // Set items carry their definition's set id; other rare+ items roll a random set.
         if (definition is { SetId: { } definitionSetId })
             itemAttributes[AttrSetId] = Value(definitionSetId);
@@ -241,6 +245,10 @@ public static class LootTable
     public static int EquipSlotOf(SerializedItem item) => (int)AttributeOf(item, AttrEquipSlot);
 
     public static bool IsEquipped(SerializedItem item) => (int)item.Slot is >= 0 and <= 13;
+
+    /// <summary>True for a unique/legendary or set item (used by the drop-pity counter).</summary>
+    public static bool IsUniqueOrSet(SerializedItem item)
+        => AttributeOf(item, AttrUnique) > 0 || AttributeOf(item, AttrSetId) > 0;
 
     /// <summary>Sum of equipment bonuses over equipped items.</summary>
     public static (double Offense, double Defense, double Recovery) EquipmentBonus(IEnumerable<SerializedItem> items)

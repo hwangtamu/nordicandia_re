@@ -4,6 +4,7 @@ using Game;
 using Grpc.Core;
 using MessagePack;
 using Nordicandia.Server.WebApi;
+using Nordicandia.Simulation;
 using SharedNet.Api;
 using SharedNet.Constants;
 using SharedNet.Dto;
@@ -1413,6 +1414,49 @@ public sealed class GameStore : IDisposable
         c.Data = Pack(data);
         return (items ?? new List<SerializedItem>()).Where(i => i != null).ToList();
     });
+
+    /// <summary>Set-item merchant: pairs each item the player placed in the YourTrade slot with a
+    /// set item of the same equip slot. The generation is deterministic per offered item, so the
+    /// offer shown to the client matches the item granted by the trade.</summary>
+    public (bool Applied, SerializedItems YourOfferItems, SerializedItems OfferedItems)
+        GenerateSetItemMerchantOffers(Guid owner, Guid characterId) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        var items = data.Items?.Items ?? new List<SerializedItem>();
+        var offers = items
+            .Where(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.YourTrade).ToList();
+        return (offers.Count > 0,
+            new SerializedItems { Items = offers.Select(CloneItem).ToList() },
+            new SerializedItems { Items = offers.Select(SetOfferFor).ToList() });
+    });
+
+    /// <summary>Trades one offered item for its set item (the deterministic offer).</summary>
+    public (bool Applied, SerializedItems ResultItem) TradeWithSetItemMerchant(Guid owner, Guid characterId, Guid itemId) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        var items = data.Items?.Items ?? new List<SerializedItem>();
+        var offer = items.FirstOrDefault(i => i != null && i.Id == itemId
+            && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.YourTrade);
+        if (offer == null) return (false, new SerializedItems { Items = new List<SerializedItem>() });
+        var setItem = SetOfferFor(offer);
+        items.Remove(offer);
+        items.Add(setItem);
+        c.Data = Pack(data);
+        return (true, new SerializedItems { Items = new List<SerializedItem> { setItem } });
+    });
+
+    /// <summary>Builds the set item offered for an equipped-slot item (deterministic by item id).</summary>
+    private static SerializedItem SetOfferFor(SerializedItem source)
+    {
+        var slot = LootTable.EquipSlotOf(source);
+        var level = (int)(GetItemAttribute(source, SharedNet.Constants.Game.AttributeOrigin.Item, LootTable.AttrRequiredLevel) ?? 1);
+        var seed = (ulong)(uint)source.Id.GetHashCode() * 2654435761UL + 1;
+        return LootTable.CreateItem(
+            new LootDrop(slot, (int)source.BaseRarity, Math.Max(1, level), false, seed),
+            ItemCatalog.RarityType.Set);
+    }
 
     // ---- Essence craft -------------------------------------------------------------
 

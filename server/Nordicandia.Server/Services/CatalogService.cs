@@ -272,8 +272,26 @@ public sealed class CatalogServiceApiImpl : ServiceBase<ICatalogServiceApi>, ICa
             InventoryItems = inventory,
         });
     }
+    /// <summary>Offers a set item for each item the player placed in the trade window.</summary>
     public UnaryResult<GenerateSetItemMerchantOffersResponse> ViewSetItemMerchantOffers(GenerateSetItemMerchantOffersRequest req)
-        => UnaryResult.FromResult(Defaults.Create<GenerateSetItemMerchantOffersResponse>());
+    {
+        if (req == null || req.CharacterId is not { } characterId || characterId == Guid.Empty)
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Missing character"));
+        var (_, yourOffer, offered) = GameStore.Instance.GenerateSetItemMerchantOffers(Owner, characterId);
+        return UnaryResult.FromResult(new GenerateSetItemMerchantOffersResponse
+        {
+            YourOfferItems = yourOffer,
+            OfferedItems = offered,
+        });
+    }
+
+    /// <summary>Trades one offered item for its set item.</summary>
     public UnaryResult<TradeWithSetItemMerchantResponse> TradeWithSetItemMerchant(TradeWithSetItemMerchantRequest req)
-        => UnaryResult.FromResult(Defaults.Create<TradeWithSetItemMerchantResponse>());
+    {
+        if (req == null || req.CharacterId is not { } characterId || characterId == Guid.Empty)
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Missing character"));
+        var (applied, result) = GameStore.Instance.TradeWithSetItemMerchant(Owner, characterId, req.ItemId);
+        if (!applied) throw new RpcException(new Status(StatusCode.FailedPrecondition, "Put the item in the trade window first"));
+        return UnaryResult.FromResult(new TradeWithSetItemMerchantResponse { ResultItem = result });
+    }
 }

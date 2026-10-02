@@ -257,6 +257,21 @@ export const api = {
       body: JSON.stringify({ offerItemIds, catalogItemId, stacks }),
     }),
 
+  setOffers: (characterId: string, itemIds: string[]) =>
+    request<{ applied: boolean; yourOfferItems: unknown; offeredItems: unknown; inventory: WebInventory }>(
+      `/characters/${characterId}/npc/set-offers`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itemIds }),
+      }),
+
+  setTrade: (characterId: string, offerItemId: string) =>
+    request<{ applied: boolean; resultItem: unknown; inventory: WebInventory }>(`/characters/${characterId}/npc/set-trade`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ offerItemId }),
+    }),
+
   buy: (characterId: string, catalogItemId: string, useOpals: boolean) =>
     request<{ purchased: boolean; newBalance: number; inventory: WebInventory }>(`/characters/${characterId}/npc/buy`, {
       method: "POST",
