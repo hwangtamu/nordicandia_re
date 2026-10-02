@@ -91,3 +91,57 @@ cctor 填充的 `Dictionary<Rarity, double>`（`0x02C8568C`）：
 # 见本文件“已还原公式”一节的地址；用 capstone 反汇编 tmp/apk-libil2cpp.so
 PY
 ```
+
+## 制作校验规则词汇（来自客户端字符串表）
+
+从 `global-metadata.dat` 的字符串表提取（`android-metadata.json`→`stringLiterals`）。这些是客户端
+`CraftingReason_*` / `MergeReason_*` / `SmeltingReason_*` 翻译键，直接枚举了制作/合并/熔炼的校验规则。
+
+### 制作（Blacksmith / Craft / Essence / Relic / Socket）
+```
+CraftingReason_Ready / Crafting_Success / Crafting_Failed / Crafting_InProgress
+CraftingOverheat_Success / CraftingOverheat_Failed / CraftingDurabilityDamage
+CraftingReason_MissingSource / MissingTarget / MissingEssence / MissingMergableItem
+CraftingReason_MissingSocketTarget / MissingTargetEssenceCraft / MultipleCraftingOperations
+CraftingReason_NotEnoughMaterials / TooHighLevelRequired / TooHighRarity / TypeMismatch / TypeNotEligable
+CraftingReason_NotEquippable / NotMelee / NotRanged / NotStaff / NotShield
+CraftingReason_NotLightArmor / NotMediumArmor / NotHeavyArmor / NotJewelry
+CraftingReason_HasNoImplicitAffixes / HasNoNonImplicitAffixes / NoImplicits / NumAffixesAlreadyMaxed
+CraftingReason_CannotApplyLowerRarityAffix / CannotCraftOnImbued / CannotUpgradeMaxRarity
+CraftingReason_CannotUseMultipleAnvils / CannotUseMultipleHeatingStones
+CraftingReason_CannotUseReinforcementForEssenceCraft / CannotUseRelicForEssenceCraft
+CraftingReason_CannotUseEssenceForRelicCraft / EssenceNotEligableOnType
+CraftingReason_SourceTypeNotMergable / LinkNotEnoughAffixes / Remove_NotEnoughAffixes
+CraftingReason_NoMatchingOrOpenSlotFound / NoMatchingAndRoomForNewAffixesFound
+CraftingReason_TargetItemHasNoFreeSockets / TargetItemHasNoRoomForMoreSockets
+CraftingReason_ReinforcementMaxed / AlreadyRestored / BlessingMaxed / CanOnlyHaveOneSSRarity
+CraftingReason_ItemHasNoDurability
+Crafting_SuccessRate / Crafting_SecondarySuccessRate / Crafting_MaterialUsed(WithTotal)
+Crafting_Reagents_Drop_Weight_Bonus_Percent
+```
+
+### 合并（Merge，词缀/传送门）
+```
+MergeReason_Ready / MergeReason_Merging / MergeReason_CannotMergeMultipleTypes
+MergeInstructions / MergePortals / DisassembleItemEstimation
+```
+
+### 熔炼（Smelting）
+```
+SmeltingReason_Ready / SmeltingReason_Smelting / SmeltingOutput
+```
+
+### 分解（Disassemble）
+```
+Disassemble / DisassembleItems / DisassembleWarning
+Disassembler / Disassembler_Advanced / Disassembler_Auto_Discard
+```
+
+## 相关类型字段（用于读反汇编）
+- `Game.Affixes.Affix`：`+0x20 = Rarity`、`+0x24 = AffixSource`、`+0x28 = AffixDefinition`、`+0x40 = Attributes`。
+- `ItemAffixDefinition`：`+0x28 = GenerationType`、`+0x2C = Domain`、`+0x30 = GroupId`、`+0x48 = Name`、`+0x50 = Hidden`、`+0x51 = IsLocked`、`+0x58 = AttributeSpecifierDefinitionList`。
+- 判定 lambda `_GetDisassemblableAffixes_b__14_0`（`0x02C86C40`）：`IsPrefixOrSuffix() && Rarity>=2 && !(集合判定)`；集合/委托来自 `CraftingUtils.<>c` 静态闭包字段（`+0x90` 起）。
+
+## 原始元数据
+`global-metadata.dat` 可从 `dist/android-arm64-online-patched/com.IterativeStudios.Nordicandia.apk`
+（`assets/bin/Data/Managed/Metadata/`）提取，用于解析 IL2CPP 字符串字面量（`tmp/global-metadata.dat`）。
