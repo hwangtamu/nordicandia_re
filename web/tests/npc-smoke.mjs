@@ -70,6 +70,7 @@ try {
   const merchantTitle = await page.textContent("#npc-title");
   const merchantRows = await page.$$eval("#npc-body .npc-row", (rows) => rows.length);
   const buyButtons = await page.$$eval("#npc-body [data-buy]", (rows) => rows.length);
+  const merchantTabs = await page.$$eval("#npc-tabs .npc-tab", (rows) => rows.map((r) => r.textContent));
   await page.click("#npc-close");
 
   // Attribute panel.
@@ -83,13 +84,14 @@ try {
 
   console.log(`smith: ${smithTitle} tabs=[${smithTabs.join(", ")}]`);
   console.log(`add-socket hint: ${addSocketHint}`);
-  console.log(`merchant: ${merchantTitle} products=${merchantRows} buyButtons=${buyButtons}`);
+  console.log(`merchant: ${merchantTitle} tabs=[${merchantTabs.join(", ")}] products=${merchantRows} buyButtons=${buyButtons}`);
   console.log(`attributes: rows=${attrRows} points=${attrPoints}`);
   console.log(`screenshot: ${out}`);
   const realErrors = errors.filter((e) => !e.includes("favicon"));
   if (smithTabs.length < 6) throw new Error("Blacksmith should expose its six tabs");
   if (merchantRows < 1) throw new Error("Merchant catalog did not render");
   if (buyButtons < 2) throw new Error("Merchant Buy tab should offer silver and opal purchases");
+  if (merchantTabs.length < 3) throw new Error("Merchant should expose Buy/Trade/Set tabs");
   if (attrRows !== 7) throw new Error("Attribute panel should list the seven attributes");
   if (realErrors.length) throw new Error("browser errors:\n" + realErrors.join("\n"));
   console.log("PASS npc smoke");
