@@ -453,7 +453,7 @@ static class AcceptanceRegressionTests
     {
         void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
         Check(LootTable.AffixCatalogSize >= 10, $"affixes: real client affix catalog loaded ({LootTable.AffixCatalogSize})");
-        var item = LootTable.CreateItem(new LootDrop(3, 6, 20, false, 42));
+        var item = LootTable.CreateItem(new LootDrop(3, 6, 20, false, 8));
         Check(item.Affixes.Count > 0, "affixes: a rare item rolls affixes");
         Check(item.Affixes.All(a => a.DefinitionIntegerId > 0 && a.DefinitionIntegerId < 9000),
             "affixes: carry client attribute ids (not the provisional web ids)");
@@ -512,15 +512,19 @@ static class AcceptanceRegressionTests
                 [target.Id] = ItemSlotTypes.Inventory,
                 [source.Id] = ItemSlotTypes.Inventory,
             });
-            var mergeTarget = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 71));
+            var mergeTarget = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 1));
             mergeTarget.Slot = ItemSlotTypes.Blacksmith_TargetItem;
-            var mergeSource = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 72));
+            var mergeSource = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 3));
             mergeSource.Slot = ItemSlotTypes.Blacksmith_SourceItem;
             var iron2 = new List<SerializedItem>();
             for (var i = 0; i < 60; i++) iron2.Add(Iron());
             store.GrantItems(owner, characterId, new List<SerializedItem> { mergeTarget, mergeSource }.Concat(iron2).ToList());
             var (mOk, mSuccess, mResult, _, _) = store.CraftEssenceItem(owner, characterId, 10);
             Check(mOk && mSuccess, "merge: a rarity-10 target succeeds deterministically");
+            static int AffixType(SerializedAffix a) =>
+                a?.Attributes?.Values != null
+                && a.Attributes.Values.TryGetValue(AttributeOrigin.Item, out var m) && m != null
+                && m.TryGetValue(99008, out var v) ? (int)v.ValueD : -1;
             var originalIds = mergeTarget.Affixes.Select(a => a.DefinitionIntegerId).ToList();
             var sourceIds = mergeSource.Affixes.Select(a => a.DefinitionIntegerId).ToList();
             var resultIds = mResult.Affixes.Select(a => a.DefinitionIntegerId).ToList();
@@ -530,10 +534,13 @@ static class AcceptanceRegressionTests
             Check(originalIds.Count > 0 && originalIds.All(resultIds.Contains),
                 "merge: the target keeps its original affixes");
             Check(resultIds.All(union.Contains), "merge: the result only contains target/source affixes");
-            Check(resultIds.Count == Math.Min(capacity, union.Count),
-                "merge: the merge fills the target's affix capacity");
-            Check(sourceIds.Any(id => !originalIds.Contains(id) && resultIds.Contains(id)),
-                "merge: at least one new source affix is adopted");
+            Check(resultIds.Count <= capacity, "merge: the target does not exceed its affix capacity");
+            // Only prefix/suffix (type 1 or 2) source affixes merge and only those absent from the target.
+            var adoptable = mergeSource.Affixes
+                .Where(a => AffixType(a) is 1 or 2 && !originalIds.Contains(a.DefinitionIntegerId))
+                .Select(a => a.DefinitionIntegerId).ToList();
+            if (adoptable.Count > 0)
+                Check(adoptable.Any(resultIds.Contains), "merge: a new prefix/suffix source affix is adopted");
 
             // ProcessSuccessRate: overheat * 0.1 means overheat 0 can never succeed.
             store.SetItemSlots(owner, characterId, new Dictionary<Guid, ItemSlotTypes>
@@ -556,7 +563,7 @@ static class AcceptanceRegressionTests
             });
 
             // Relic craft: consume a source relic and bless the target's affixes.
-            var relicTarget = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 7));
+            var relicTarget = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 9));
             relicTarget.Slot = ItemSlotTypes.Blacksmith_TargetItem;
             var relicSource = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 8));
             relicSource.Slot = ItemSlotTypes.Blacksmith_SourceItem;

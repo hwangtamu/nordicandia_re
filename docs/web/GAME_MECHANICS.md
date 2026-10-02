@@ -149,7 +149,9 @@ id 与公式为 ClientVerified。**基础数值已标定**：`ItemCatalog`（458
 `Armor_Bonus_Percent`(252)、`Evasion_Bonus_Percent`(257)、`AttackRating_Bonus_Percent`(204)、
 `Crit_Chance_Bonus_Percent`(705)、`Crit_Damage_Bonus_Percent`(713)、`Attack_Speed_Bonus_Percent`(451)、
 `Resistance_Fire/Cold/Lightning/Poison/All`(1000/1011/1012/1013/1002)，数值按稀有度区间掷取。
-`GetAttributeMap` 现在只计入**已装备**物品（含其词缀）的属性。
+每件物品的词缀**条数**取自客户端 `Droprates.NumAffixesRatio`（`{0:7000,1:1400,2:1400,3:600,4:600,5:300,6:300}`，
+ClientVerified；`ItemGenerator.InitializeNumAffixesPool` 用它构建加权随机器、`GetRandomNumAffixes` 抽取），
+不再是网页自编的 1–3 条曲线。`GetAttributeMap` 现在只计入**已装备**物品（含其词缀）的属性。
 
 **套装（`SetCatalog`）**：11 套（`ItemSets.json`），按装备件数触发断点（如 2/4/6/9），
 授予的属性并入 `GetAttributeMap`（例：Heavy_TheMarauder 2 件 → `Movement_Speed_Bonus_Percent=20`）。

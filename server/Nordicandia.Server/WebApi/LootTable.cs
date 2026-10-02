@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Text.Json;
 using Game;
 using Nordicandia.Simulation;
 using SharedNet.Constants.Game;
@@ -27,6 +29,38 @@ public static class LootTable
     public const int AttrUnique = 99007;
     /// <summary>Web-only attribute holding an affix's AffixType (1=Prefix, 2=Suffix).</summary>
     public const int AttrAffixType = 99008;
+
+    private static readonly Lazy<IReadOnlyList<(int Count, int Weight)>> AffixCountWeights = new(LoadAffixCountWeights);
+
+    /// <summary>Affix-count distribution from Droprates.json.NumAffixesRatio. ClientVerified data:
+    /// <c>ItemGenerator.InitializeNumAffixesPool</c> builds a weighted int randomizer from exactly
+    /// this table and <c>GetRandomNumAffixes</c> draws from it.</summary>
+    public static IReadOnlyList<(int Count, int Weight)> NumAffixesWeights => AffixCountWeights.Value;
+
+    private static IReadOnlyList<(int Count, int Weight)> LoadAffixCountWeights()
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        var resource = assembly.GetManifestResourceNames()
+            .First(n => n.EndsWith("GameData.num_affixes_ratio.json", StringComparison.Ordinal));
+        using var stream = assembly.GetManifestResourceStream(resource)!;
+        var raw = JsonSerializer.Deserialize<Dictionary<string, int>>(stream)!;
+        return raw.OrderBy(kv => int.Parse(kv.Key)).Select(kv => (int.Parse(kv.Key), kv.Value)).ToList();
+    }
+
+    /// <summary>Weighted affix-count roll (the client's <c>GetRandomNumAffixes</c>).</summary>
+    public static int RollAffixCount(CombatRandom rng)
+    {
+        var weights = AffixCountWeights.Value;
+        var total = weights.Sum(w => w.Weight);
+        if (total <= 0) return 1;
+        var roll = rng.NextDouble() * total;
+        foreach (var (count, weight) in weights)
+        {
+            roll -= weight;
+            if (roll < 0) return count;
+        }
+        return weights[^1].Count;
+    }
 
     private static readonly Dictionary<int, string[]> SlotNames = new()
     {
@@ -66,6 +100,9 @@ public static class LootTable
     public static SerializedItem CreateItem(LootDrop drop, ItemCatalog.RarityType? forceRarityType = null)
     {
         var rng = new CombatRandom(drop.Seed == 0 ? 0x2545F4914F6CDD1DUL : drop.Seed);
+        // A separate stream for affix generation, so the count/values don't shift the base item's
+        // weapon/armour rolls (the client uses one global Rand; the web keeps its seeded streams).
+        var affixRng = new CombatRandom((drop.Seed == 0 ? 0x2545F4914F6CDD1DUL : drop.Seed) ^ 0xA24BAED4963EE407UL);
         // Roll Normal/Unique/Set using the client weights (or use the forced type, e.g. a set
         // merchant offer or a pity-guaranteed unique), then pick a matching definition.
         var rarityType = forceRarityType ?? ItemCatalog.RollRarityType(rng);
@@ -86,8 +123,9 @@ public static class LootTable
         var armorScale = ScalingCatalog.ArmorFactor(drop.Level);
         var evasionScale = ScalingCatalog.EvasionFactor(drop.Level);
 
-        // Affixes are drawn from the real client affix catalog; counts follow the web rarity curve.
-        var affixCount = 1 + (drop.Rarity >= 3 ? 1 : 0) + (drop.Rarity >= 5 ? 1 : 0);
+        // Affixes are drawn from the real client affix catalog; the count comes from the client's
+        // NumAffixesRatio distribution (GetRandomNumAffixes), not a web rarity curve.
+        var affixCount = RollAffixCount(affixRng);
         var offense = baseStats.Offense;
         var defense = baseStats.Defense;
         var recovery = baseStats.Recovery;
@@ -96,9 +134,9 @@ public static class LootTable
         var used = new HashSet<string>();
         for (var i = 0; i < affixCount && pool.Count > 0; i++)
         {
-            var affix = pool[(int)(rng.NextDouble() * pool.Count) % pool.Count];
+            var affix = pool[(int)(affixRng.NextDouble() * pool.Count) % pool.Count];
             if (!used.Add(affix.Name)) continue;
-            chosen.Add((affix, AffixCatalog.Roll(affix, drop.Rarity, rng)));
+            chosen.Add((affix, AffixCatalog.Roll(affix, drop.Rarity, affixRng)));
         }
 
         var suffix = string.Concat(chosen.Select(a => " " + a.Affix.Name));

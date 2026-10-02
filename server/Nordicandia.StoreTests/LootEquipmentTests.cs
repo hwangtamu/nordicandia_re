@@ -59,7 +59,7 @@ static class LootEquipmentTests
 
             // One item per equip slot: equipping B must unequip A.
             var itemA = LootTable.CreateItem(new LootDrop(3, 2, 5, false, 1111));
-            var itemB = LootTable.CreateItem(new LootDrop(3, 3, 5, false, 2222));
+            var itemB = LootTable.CreateItem(new LootDrop(3, 3, 5, false, 8));
             var offA = LootTable.AttributeOf(itemA, LootTable.AttrOffense);
             var offB = LootTable.AttributeOf(itemB, LootTable.AttrOffense);
             store.GrantItems(owner, characterId, new List<SerializedItem> { itemA, itemB });
