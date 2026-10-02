@@ -141,6 +141,8 @@ public sealed class CombatInstance
     public double CritChance { get; private set; }
     public double LifeMax { get; private set; }
     public double ManaMax { get; private set; }
+    public DamageBundle Damage { get; private set; }
+    public ResistanceBundle Resistances { get; private set; }
     public int PlayerLevel { get; private set; }
     public double Experience { get; private set; }
     public int Silver { get; private set; }
@@ -201,10 +203,12 @@ public sealed class CombatInstance
         CritChance = stats.CritChance;
         LifeMax = stats.LifeMax;
         ManaMax = stats.ManaMax;
+        Damage = stats.Damage;
+        Resistances = stats.Resistances;
     }
 
     private CombatantStats PlayerStats() => new(EffectiveOffense(), Defense, Recovery, PlayerLevel,
-        AttackRating, Armor, Evasion, CritChance, LifeMax, ManaMax);
+        AttackRating, Armor, Evasion, CritChance, LifeMax, ManaMax, Damage, Resistances);
 
     private double EffectiveMaxHealth() => CombatModel.MaxHealth(PlayerStats())
         * (1 + passive.HealthBonus);
@@ -212,7 +216,8 @@ public sealed class CombatInstance
     /// <summary>Mana pool: the recovered Mana_Max_Total when available, else 40 + 10/level.</summary>
     private double EffectiveMaxMana() => ManaMax > 0 ? ManaMax : 40 + 10 * Math.Max(1, PlayerLevel);
 
-    private double EffectiveOffense() => Offense * (1 + passive.OffenseBonus + (offenseBuffTimer > 0 ? offenseBuffBonus : 0));
+    private double EffectiveOffense() => (Damage.Total > 0 ? Damage.Total : Offense)
+        * (1 + passive.OffenseBonus + (offenseBuffTimer > 0 ? offenseBuffBonus : 0));
 
     /// <summary>Replace the class kit (e.g. after a mastery point is allocated).</summary>
     public void UpdatePowers(ClassPowers powers)

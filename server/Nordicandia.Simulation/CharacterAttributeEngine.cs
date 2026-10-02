@@ -12,6 +12,16 @@ namespace Nordicandia.Simulation;
 /// The formula data is embedded from <c>GameData/</c>. Per-character state lives in
 /// <see cref="Evaluation"/>, so a single engine instance can evaluate many characters.
 /// </summary>
+/// <summary>Raw damage split by type (physical + the four elements).</summary>
+public readonly record struct DamageBundle(double Physical = 0, double Fire = 0, double Cold = 0,
+    double Lightning = 0, double Poison = 0)
+{
+    public double Total => Physical + Fire + Cold + Lightning + Poison;
+}
+
+/// <summary>Per-element resistance, already capped by Resistance_Max_Total (<= 0.95).</summary>
+public readonly record struct ResistanceBundle(double Fire = 0, double Cold = 0, double Lightning = 0, double Poison = 0);
+
 public sealed class CharacterAttributeEngine
 {
     private static readonly Lazy<CharacterAttributeEngine> Default = new(Load);
@@ -114,6 +124,25 @@ public sealed class CharacterAttributeEngine
         public double CritDamageTotal => Resolve("Crit_Damage_Total");
         public double LifeMax => Resolve("Life_Max_Total");
         public double ManaMax => Resolve("Mana_Max_Total");
+        /// <summary>Average main-hand weapon damage per type. Per GameCalculator.FillRawMainHandAverageDamage
+        /// the average for a type is <c>Min_Total + Delta_Total * 0.5</c> ("delta" is the max-min spread).</summary>
+        public DamageBundle WeaponDamage => new(
+            AverageWeapon("Weapon_Physical_Damage"),
+            AverageWeapon("Weapon_Fire_Damage"),
+            AverageWeapon("Weapon_Cold_Damage"),
+            AverageWeapon("Weapon_Lightning_Damage"),
+            AverageWeapon("Weapon_Poison_Damage"));
+
+        private double AverageWeapon(string prefix)
+            => Resolve(prefix + "_Min_MainHand_Total") + 0.5 * Resolve(prefix + "_Delta_MainHand_Total");
+
+        /// <summary>Capped elemental resistances (Resistance_*_Total_Capped = Min(total, Resistance_Max_Total)).</summary>
+        public ResistanceBundle Resistances => new(
+            Resolve("Resistance_Fire_Total_Capped"),
+            Resolve("Resistance_Cold_Total_Capped"),
+            Resolve("Resistance_Lightning_Total_Capped"),
+            Resolve("Resistance_Poison_Total_Capped"));
+
         public double Strength => Resolve("Strength_Total");
         public double Dexterity => Resolve("Dexterity_Total");
         public double Constitution => Resolve("Constitution_Total");

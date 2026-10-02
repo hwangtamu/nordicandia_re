@@ -40,6 +40,15 @@ static class AcceptanceRegressionTests
             "resistance: reduction above 1 floors at 0");
         Check(Math.Abs(Nordicandia.Simulation.CombatModel.EffectiveElementalDamage(100, 1.5)) < 1e-9,
             "resistance: elemental resistance is capped at 1.0");
+
+        // Full bundle: physical through armour, each element through its resistance.
+        var bundle = new Nordicandia.Simulation.DamageBundle(Physical: 100, Fire: 100);
+        var resist = new Nordicandia.Simulation.ResistanceBundle(Fire: 0.5);
+        Check(Math.Abs(Nordicandia.Simulation.CombatModel.MitigateDamage(bundle, 0, resist) - 150) < 1e-9,
+            "damage: MitigateDamage = physical + fire*(1-resist)");
+        Check(Math.Abs(Nordicandia.Simulation.CombatModel.MitigateDamage(new Nordicandia.Simulation.DamageBundle(Physical: 50), 50, default)
+            - 50 * (1 - 50.0 / 2550.0)) < 1e-9,
+            "damage: MitigateDamage applies armour to the physical part");
     }
 
     private static void ChanceToHitMatchesClient()

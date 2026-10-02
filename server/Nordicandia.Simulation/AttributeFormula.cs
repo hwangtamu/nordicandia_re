@@ -21,12 +21,17 @@ public static class AttributeFormula
 {
     private static readonly Regex MultiplyWith =
         new(@"MultiplyWith:([A-Za-z_][A-Za-z0-9_]*)", RegexOptions.Compiled);
+    private static readonly Regex SubtractWith =
+        new(@"SubtractWith:([A-Za-z_][A-Za-z0-9_]*)", RegexOptions.Compiled);
 
     /// <summary>Evaluate <paramref name="formula"/>, resolving names through <paramref name="resolve"/>.</summary>
     public static double Evaluate(string formula, Func<string, double> resolve)
     {
         if (string.IsNullOrWhiteSpace(formula)) return 0.0;
         var expanded = MultiplyWith.Replace(formula, "*(1+$1)");
+        // SubtractWith:X subtracts X from the whole expression (used by the resistance totals
+        // to remove the world-level resistance penalty).
+        expanded = SubtractWith.Replace(expanded, "-($1)");
         var parser = new Parser(expanded, resolve);
         var value = parser.ParseExpression();
         parser.ExpectEnd();

@@ -117,6 +117,36 @@ return Max(0, rawDamage * (1 - damageReduction))
 `GameCalculator.ConvertWeaponDamage` / `InternalApplyDamageConversion`（把一类伤害按百分比转成
 其他元素），与抗性减免相互独立。
 
+## 1f. 武器伤害与元素结算（ClientVerified）
+
+**平均武器伤害**（`GameCalculator.FillRawMainHandAverageDamage`，`0x02BAA4…`）按伤害类型读取
+`Weapon_<type>_Damage_Min_MainHand_Total`（`0xDA0/E60/EE0/F60/FE0`）与 `..._Delta_MainHand_Total`，
+平均值为：
+```
+avg(type) = Min_MainHand_Total + Delta_MainHand_Total * 0.5
+```
+（`FMUL delta,0.5; FADD min`。物理 + 火/冰/雷/毒五类。）
+
+**单类合成**（属性脚本）例如：
+```
+Weapon_Physical_Damage_Min_MainHand_Total =
+  ((Item_Weapon_Physical_Damage_Min_MainHand + Base_Weapon_Physical_Damage_Min_Bonus)
+   * (1 + Weapon_Physical_Damage_Strength_Coefficient*Strength_Total*0.01)
+   * (...) * Weapon_Physical_Damage_Percent_Total * (...)) MultiplyWith:... 
+```
+火/冰/雷/毒用 `Intelligence_Total` 与 `Weapon_Elemental_Damage_Intelligence_Coefficient`。
+
+**结算**（`Game.Calculator.ApplyDamageReduction` + 元素抗性）：
+```
+MitigateDamage(bundle, armor, resistances)
+  = bundle.Physical * (1 - PhysicalDamageReduction(armor, bundle.Physical))
+  + Σ bundle[element] * (1 - Resistance_<element>_Total_Capped)
+```
+`Resistance_<element>_Total_Capped = Min(Resistance_<element>_Total, Resistance_Max_Total)`，
+`Resistance_Max_Total = Min(0.95, Resistance_Max + Resistance_Max_Bonus)`。
+
+**公式语言补充**：除 `MultiplyWith:X`（`*(1+X)`）外，还有 `SubtractWith:X`（`- (X)`，用于抗性总值的世界惩罚）。
+
 ## 2. 武器伤害合成（ClientVerified，来自属性脚本）
 
 物理武器伤害（每手）：

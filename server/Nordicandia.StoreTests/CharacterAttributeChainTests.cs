@@ -47,6 +47,15 @@ static class CharacterAttributeChainTests
             Check(!double.IsNaN(value) && !double.IsInfinity(value) && value > 0,
                 $"attribute-engine: {name} resolves finite/positive");
         }
+
+        // The sample equips a weapon, so the recovered average weapon damage must be non-zero.
+        var weapon = eval.WeaponDamage;
+        Console.WriteLine($"INFO attribute-engine: weapon total={weapon.Total:F2} physical={weapon.Physical:F2} fire={weapon.Fire:F2} " +
+            $"cold={weapon.Cold:F2} lightning={weapon.Lightning:F2} poison={weapon.Poison:F2}");
+        Check(weapon.Total > 0, "attribute-engine: weapon damage resolves from equipped item attributes");
+        var res = eval.Resistances;
+        Check(res.Fire <= 0.95 + 1e-9 && res.Cold <= 0.95 + 1e-9 && res.Lightning <= 0.95 + 1e-9 && res.Poison <= 0.95 + 1e-9,
+            "attribute-engine: elemental resistances respect Resistance_Max_Total (<=0.95)");
     }
 
     private static string? Find(string fileName, string sub)

@@ -41,7 +41,7 @@ public enum RuleConfidence
 /// </summary>
 public readonly record struct CombatantStats(double Offense, double Defense, double Recovery, int Level,
     double AttackRating = 0, double Armor = 0, double Evasion = 0, double CritChance = 0,
-    double LifeMax = 0, double ManaMax = 0)
+    double LifeMax = 0, double ManaMax = 0, DamageBundle Damage = default, ResistanceBundle Resistances = default)
 {
     public static CombatantStats FromRealtime(double offense, double defense, double recovery, int level)
         => new(Math.Max(0, offense), Math.Max(0, defense), Math.Max(0, recovery), Math.Max(1, level));
@@ -52,6 +52,7 @@ public readonly record struct CombatantStats(double Offense, double Defense, dou
     public double EffectiveArmor => Armor > 0 ? Armor : Defense;
     public double EffectiveEvasion => Evasion > 0 ? Evasion : Defense;
     public double EffectiveLifeMax => LifeMax > 0 ? LifeMax : 150.0 + 50.0 * Math.Max(1, Level);
+    public double EffectiveOffense => Damage.Total > 0 ? Damage.Total : Offense;
 }
 
 /// <summary>One attack's tunable inputs (weapon/skill multiplier, crit).</summary>
@@ -142,6 +143,20 @@ public static class CombatModel
     public static double EffectiveElementalDamage(double rawDamage, double resistance)
         => ApplyDamageReduction(Math.Min(ResistanceCap, Math.Max(0.0, resistance)), rawDamage);
 
+    /// <summary>ClientVerified full damage pipeline: physical damage goes through armour
+    /// (<see cref="PhysicalDamageReduction"/>), each element through its capped resistance
+    /// (<see cref="EffectiveElementalDamage"/>), then the parts are summed.</summary>
+    public static double MitigateDamage(DamageBundle damage, double armor, ResistanceBundle resistances)
+    {
+        var physicalReduction = PhysicalDamageReduction(armor, damage.Physical);
+        var physical = Math.Max(0.0, damage.Physical * (1.0 - physicalReduction));
+        return physical
+            + EffectiveElementalDamage(damage.Fire, resistances.Fire)
+            + EffectiveElementalDamage(damage.Cold, resistances.Cold)
+            + EffectiveElementalDamage(damage.Lightning, resistances.Lightning)
+            + EffectiveElementalDamage(damage.Poison, resistances.Poison);
+    }
+
     /// <summary>Constants from <c>Game.Calculator.CalculateChanceToHit</c>.</summary>
     public const double ChanceToHitMultiplier = 1.05;
     public const double ChanceToHitMin = 0.05;
@@ -166,8 +181,8 @@ public static class CombatModel
     /// <summary>Expected damage before variance, useful for balancing and tests.</summary>
     public static double ExpectedDamage(CombatantStats attacker, CombatantStats defender, AttackProfile profile)
     {
-        var raw = Math.Max(0, attacker.Offense) * Math.Max(0, profile.SkillMultiplier);
-        var mitigated = raw * (1.0 - PhysicalDamageReduction(defender.Defense, raw));
+        var raw = Math.Max(0, attacker.EffectiveOffense) * Math.Max(0, profile.SkillMultiplier);
+        var mitigated = raw * (1.0 - PhysicalDamageReduction(defender.EffectiveArmor, raw));
         var critFactor = 1.0 + profile.CritChance * (Math.Max(1.0, profile.CritMultiplier) - 1.0);
         return Math.Max(1.0, mitigated) * critFactor;
     }
@@ -197,7 +212,7 @@ public static class CombatModel
         var critChance = attacker.CritChance > 0 ? attacker.CritChance : profile.CritChance;
         var critical = RollChance(critChance, rng);
         if (!hit) return new DamageResult(0.0, false, confidence, false);
-        var raw = Math.Max(0, attacker.Offense) * Math.Max(0, profile.SkillMultiplier);
+        var raw = Math.Max(0, attacker.EffectiveOffense) * Math.Max(0, profile.SkillMultiplier);
         var mitigated = raw * (1.0 - PhysicalDamageReduction(defender.EffectiveArmor, raw));
         var variance = 1.0 + (rng.NextDouble() * 2.0 - 1.0) * Math.Max(0, profile.Variance);
         var critFactor = critical ? Math.Max(1.0, profile.CritMultiplier) : 1.0;

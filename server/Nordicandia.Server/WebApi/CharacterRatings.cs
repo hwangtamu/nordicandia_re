@@ -22,6 +22,8 @@ internal static class CharacterRatings
             CritChance = eval.CritChanceMainHand,
             LifeMax = eval.LifeMax,
             ManaMax = eval.ManaMax,
+            Damage = eval.WeaponDamage,
+            Resistances = eval.Resistances,
         };
     }
 }
