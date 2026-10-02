@@ -246,7 +246,7 @@ public sealed class CombatRegistry
                 foreach (var spec in mastery.Specs)
                 {
                     if (string.IsNullOrEmpty(spec.AttributeName)) continue;
-                    var delta = spec.StartValue + spec.Value * rank;
+                    var delta = spec.ContributionForRank(rank);
                     values[spec.AttributeName] = values.TryGetValue(spec.AttributeName, out var cur) ? cur + delta : delta;
                     modified = true;
                 }

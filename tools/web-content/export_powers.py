@@ -366,7 +366,9 @@ def main() -> int:
                 "AttributeName": attr_ids.get(str(aid), f"attr_{aid}"),
                 "Value": spec.get("Value", 0.0),
                 "StartValue": spec.get("StartValue", 0.0),
-                "Operator": spec.get("AttributeOperator", 0)}
+                "Operator": spec.get("AttributeOperator", 0),
+                "ModifierType": spec.get("AttributeModifierType", 0),
+                "ModifierForSpecificLevel": spec.get("ModifierForSpecificLevel", 0)}
 
     masteries_by_name = {}
     for power in powers.values():
@@ -552,7 +554,7 @@ def write_csharp(kits: dict, masteries_by_name: dict) -> None:
         lines.append("        {")
         for m in rows:
             specs = ", ".join(
-                f"new MasterySpec({sp['AttributeId']}, {cs_str(sp['AttributeName'])}, {sp['Value']}D, {sp['StartValue']}D, {sp['Operator']})"
+                f"new MasterySpec({sp['AttributeId']}, {cs_str(sp['AttributeName'])}, {sp['Value']}D, {sp['StartValue']}D, {sp['Operator']}, {sp['ModifierType']}, {sp['ModifierForSpecificLevel']})"
                 for sp in m["Specs"])
             lines.append(f"            new({cs_str(m['Name'])}, {m['IntegerId']}, {m['MaxPoints']}, new MasterySpec[] {{ {specs} }}),")
         lines.append("        },")

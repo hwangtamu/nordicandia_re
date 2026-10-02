@@ -34,9 +34,25 @@ public sealed record PassiveProfile(
 
 public sealed record ClassPowers(string ClassName, IReadOnlyList<SkillProfile> Active, PassiveProfile Passive);
 
-/// <summary>One attribute modifier a mastery rank grants.</summary>
+/// <summary>One attribute modifier a mastery rank grants.
+/// <paramref name="Operator"/>: 0 Add, 1 Subtract, 2 Multiply (client enum).
+/// <paramref name="ModifierType"/>: 0 PerLevel, 1 SpecificLevel.</summary>
 public readonly record struct MasterySpec(
-    int AttributeId, string AttributeName, double Value, double StartValue, int Operator);
+    int AttributeId, string AttributeName, double Value, double StartValue,
+    int Operator, int ModifierType, int ModifierForSpecificLevel)
+{
+    /// <summary>Faithful port of PowerMasteryDefinition.GetAttributeSpecifierValue:
+    /// PerLevel = StartValue + Value*rank; SpecificLevel = rank >= level ? StartValue + Value : 0;
+    /// Subtract negates the result (the client's operators 0 and 2 both return the value).</summary>
+    public double ContributionForRank(int rank)
+    {
+        double contribution = ModifierType == 1
+            ? (rank >= ModifierForSpecificLevel ? StartValue + Value : 0)
+            : StartValue + Value * rank;
+        if (Operator == 1) contribution = -contribution;
+        return contribution;
+    }
+}
 
 /// <summary>A real skill-tree mastery (PowerMasteries.json) with its modifiers.</summary>
 public sealed record MasteryProfile(string Name, int IntegerId, int MaxPoints, IReadOnlyList<MasterySpec> Specs);

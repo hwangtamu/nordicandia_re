@@ -134,6 +134,31 @@ GameAttributeMap.set_Item(AttributeOrigin, GameAttribute, double)
 尾部属性赋值通过**尾调用**（`b` 而非 `bl`）实现；补上尾调用捕获后，多恢复出法力等属性：
 ChainLightning 法力 25、IceNova 法力 20、Might 法力 20、Slam 半径 1.0、ArrowRain 伤害 180% 等。
 
+## 精通公式（已从反汇编还原，权威）
+
+反汇编 `PowerMasteryDefinition.GetAttributeSpecifierValue` 得到精确语义（枚举 `AttributeOperators{Add=0,Subtract=1,Multiply=2}`、`AttributeModifierTypes{PerLevel=0,SpecificLevel=1}`）：
+
+```
+start = StartValue ?? 0
+若 PerLevel(0)     : contribution = start + Value * rank
+若 SpecificLevel(1) : contribution = rank >= ModifierForSpecificLevel ? (start + Value) : 0
+若 Operator == Subtract(1) : contribution = -contribution
+（Operator 0/2 都返回 +contribution；客户端 ApplyMasteryValue 是加和到属性上）
+```
+
+已实现为 `MasterySpec.ContributionForRank(rank)`，`CombatRegistry.EffectivePowers` 用它叠加；新增测试 `MasteryFormulaMatchesClient`（PerLevel/Subtract/SpecificLevel 阈值）。数据分布：Add 211、Subtract 46、Multiply 1；PerLevel 237、SpecificLevel 21（阈值多为 1，少数 50）。
+
+## 旗舰技能执行（ChainLightning）
+
+反汇编 `ChainLightning/Perform/MoveNext` 的调用图：
+
+```
+GetBestMeleeEnemy(TargetList) -> StartCooldown(double) -> GetManaCost()
+  -> PowerContext.ConsumeManaForSkillUse(cost) -> [多次] GameAttributeMap.get_Item(...)
+```
+
+确认：释放时消耗 `GetManaCost()`（= `Base_Mana_Cost` 25）并进入冷却，先选最佳近战目标，再链式弹射到额外目标；链数取 `ChainLightning_Max_Num_Chains_Total`（属性 573 = 143 基础 4 + 572 额外）。
+
 ## 仍然 Provisional 的部分
 
 * **效果归类**已改为以类继承链为准（见上）；但每个技能的具体执行流程（链子弹射、引导次数、随从实体）仍需继续读方法体（已恢复的字段名如 `_DamageReductionPerJump`、`_NumMinions`、`AstralWalk_Movement_Speed_Bonus_Percent` 是起点）。

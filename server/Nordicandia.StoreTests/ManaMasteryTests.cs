@@ -1,6 +1,7 @@
 using Game;
 using Nordicandia.Server.State;
 using Nordicandia.Server.WebApi;
+using Nordicandia.Simulation;
 using SharedNet.Api;
 using SharedNet.Constants.Game;
 
@@ -15,6 +16,22 @@ static class ManaMasteryTests
         ManaConsumesAndRegenerates();
         FrostAppliesStun();
         MasteryChangesSkillAndRespectsBudget();
+        MasteryFormulaMatchesClient();
+    }
+
+    private static void MasteryFormulaMatchesClient()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        // PerLevel Add: StartValue + Value * rank  (rank 3 -> 0 + 0.02*3)
+        var perLevel = new MasterySpec(6, "Strength_Bonus_Percent", 0.02, 0, 0, 0, 0);
+        Check(Math.Abs(perLevel.ContributionForRank(3) - 0.06) < 1e-9, "formula: PerLevel adds Value*rank");
+        // Subtract: negates
+        var subtract = new MasterySpec(79, "Base_Cooldown", 3, 0, 1, 0, 0);
+        Check(Math.Abs(subtract.ContributionForRank(2) + 6) < 1e-9, "formula: Subtract negates");
+        // SpecificLevel at 50: nothing below, StartValue+Value at/above
+        var specific = new MasterySpec(58, "Base_Power_Weapon_Damage_Multiplier", 0.1, 0.15, 0, 1, 50);
+        Check(Math.Abs(specific.ContributionForRank(3)) < 1e-9, "formula: SpecificLevel below threshold is 0");
+        Check(Math.Abs(specific.ContributionForRank(60) - 0.25) < 1e-9, "formula: SpecificLevel at threshold is StartValue+Value");
     }
 
     private static (GameStore store, CombatRegistry registry, Guid owner, Guid characterId, FakeClock clock)
