@@ -413,6 +413,16 @@ static class AcceptanceRegressionTests
             Check(instance.Damage.Total > 0, "weapon: equipped main-hand feeds the weapon-damage bundle");
             Check(instance.Damage.Total > instance.Damage.Physical,
                 "weapon: the bundle carries elemental damage as well as physical");
+
+            // Armour feeds the recovered Armor_Total (the plain Armor attribute on the item).
+            var armorBefore = instance.Armor;
+            var armorItem = LootTable.CreateItem(new LootDrop(3, 5, 10, false, 111));
+            store.GrantItems(owner, characterId, new List<SerializedItem> { armorItem });
+            var v2 = registry.Advance(owner, characterId).Combat.Version;
+            registry.ApplyCommand(owner, characterId, "r8-armor", v2, new WebCommandRequest("equip", ItemId: armorItem.Id));
+            var armorAfter = registry.GetOrCreate(owner, characterId).Armor;
+            Console.WriteLine($"INFO armor: before={armorBefore:F1} after={armorAfter:F1}");
+            Check(armorAfter > armorBefore, "equipment: armour raises the recovered Armor rating");
         }
     }
 

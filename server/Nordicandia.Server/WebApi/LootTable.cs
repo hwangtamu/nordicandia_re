@@ -94,21 +94,34 @@ public static class LootTable
             [AttrRecovery] = Value(recovery),
             [AttrEquipSlot] = Value(drop.Slot),
         };
-        // Main-hand weapons carry the client's Item_Weapon_Physical_Damage_Min/Delta_MainHand
-        // (507/508) so the recovered Weapon_*_MainHand_Total formulas drive the damage. The
-        // magnitudes reuse the provisional offence roll (documented Provisional).
+        // Items carry the client's attribute ids so the recovered synthesis formulas drive the
+        // character's ratings. The magnitudes reuse the provisional offence/defence roll and are
+        // documented Provisional; the ids/formulas are ClientVerified.
         if (drop.Slot == 12)
         {
-            itemAttributes[507] = Value(Math.Round(offense * 0.8));
-            itemAttributes[508] = Value(Math.Round(offense * 0.4));
-            // One random elemental damage type (recovered Item_Weapon_<element>_Damage_Min/Delta).
+            // Main-hand: physical + one random elemental damage, attack speed, weapon crit, range.
+            itemAttributes[507] = Value(Math.Round(offense * 0.8));   // Item_Weapon_Physical_Damage_Min_MainHand
+            itemAttributes[508] = Value(Math.Round(offense * 0.4));   // ..._Delta_MainHand
             var element = new[] { 1407, 1507, 1607, 1707 }[(int)(rng.NextDouble() * 4) & 3];
             itemAttributes[element] = Value(Math.Round(offense * 0.35));
             itemAttributes[element + 1] = Value(Math.Round(offense * 0.2));
+            itemAttributes[454] = Value(Math.Round(1.3 + drop.Rarity * 0.06, 3));  // Item_Attack_Speed_MainHand
+            itemAttributes[701] = Value(Math.Round(0.04 + drop.Rarity * 0.004, 4)); // Item_Crit_Chance_MainHand
+            itemAttributes[217] = Value(2 + Math.Round(drop.Rarity * 0.2, 1));      // Item_Attack_Range_MainHand
         }
-        else if (drop.Slot != 13)
+        else if (drop.Slot == 13)
         {
-            // Armour and accessories carry a small all-resistance (Resistance_All = 1002).
+            // Off-hand (shield): armour + block.
+            itemAttributes[251] = Value(Math.Round(defense * 0.5));   // Armor
+            itemAttributes[455] = Value(Math.Round(1.2 + drop.Rarity * 0.04, 3));  // Item_Attack_Speed_OffHand
+        }
+        else
+        {
+            // Armour: Armor_Total reads the plain Armor attribute; boots/cloaks/wrists also evade.
+            itemAttributes[251] = Value(Math.Round(defense * 0.6));   // Armor
+            if (drop.Slot is 4 or 5 or 9)
+                itemAttributes[256] = Value(Math.Round(defense * 0.35)); // Evasion
+            // Accessories and armour carry a small all-resistance (Resistance_All = 1002).
             itemAttributes[1002] = Value(Math.Round(defense * 0.0006, 4));
         }
         var item = new SerializedItem

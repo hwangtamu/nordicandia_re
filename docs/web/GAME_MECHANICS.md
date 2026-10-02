@@ -117,3 +117,17 @@ scaled = ( OwnerLevelMultiplier * Pow(ownerLevel - OwnerLevelThreshold, OwnerLev
 ```
 
 （依赖 git 忽略的 `tmp/apk-libil2cpp.so`、`tmp/android-metadata.json`、`steam_analysis/dump.cs`、`tmp/allattrs.asm`。）
+
+## 装备系统：物品属性（ClientVerified id，幅度 Provisional）
+
+装备物品携带客户端属性 id，由属性引擎按还原公式结算为角色评级：
+
+| 部位 | 物品属性 | 引擎产出 |
+|---|---|---|
+| 主手 | `Item_Weapon_Physical_Damage_Min/Delta_MainHand`(507/508)、`Item_Weapon_<element>_Damage_*`(1407/1507/1607/1707)、`Item_Attack_Speed_MainHand`(454)、`Item_Crit_Chance_MainHand`(701)、`Item_Attack_Range_MainHand`(217) | `Weapon_Physical_*_Total` → 伤害包；暴击率；攻速 |
+| 副手/盾 | `Armor`(251)、`Item_Attack_Speed_OffHand`(455) | `Armor_Total` |
+| 护甲 | `Armor`(251)；靴/披/腕另加 `Evasion`(256) | `Armor_Total`/`Evasion_Total` |
+| 饰品/护甲 | `Resistance_All`(1002) | `Resistance_*_Total_Capped` |
+
+实测：装等护甲使 `Armor_Total` 251.4→404.2；主手使伤害包 389.4（物理 268.8 + 元素 120.6）。
+id 与公式为 ClientVerified；数值幅度仍为 Provisional（`ItemGenerator` 的基础值生成未逐条还原）。
