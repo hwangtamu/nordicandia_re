@@ -45,6 +45,23 @@ block/dodge/resistance 均有对应的 Total 公式（见 attribute_scripts.json
 ### 掉落
 稀有度权重取自 `Droprates.json`；掉落概率为 Provisional。
 
+## 怪物 / 物品缩放（数据已提取，公式 Inferred）
+
+`gamedata_decrypted/GameBalance.json` 的 `ScalingFunctions`（38 条）定义了等级/世界层级缩放，字段为
+`OwnerLevelMultiplier / OwnerLevelExponent / OwnerLevelThreshold / OwnerTierMultiplier / OwnerTierExponent / FinalMult`。
+物品/怪物属性按 `AttributeSpecifierDefinition.ScalingFunctionId` 引用它。
+
+推断公式（字段结构来自 `dump.cs`，等反汇编确认）：
+
+```
+scaled = ( OwnerLevelMultiplier * Pow(ownerLevel - OwnerLevelThreshold, OwnerLevelExponent)
+         + OwnerTierMultiplier  * Pow(ownerTier, OwnerTierExponent) ) * FinalMult
+```
+
+关键项：`ImplicitFlatLifeScaling`（1.3, 1.26, 0.05）、`ImplicitFlatDamageScaling`（0.005, 0.37, 0.3）、
+`ImplicitFlatArmorScaling`（0.002, 0.37, 2.0）、`WeaponFlatDamageScaling`、`ArmorFlatArmorScaling` 等。
+`MonsterTypes.json`（30 条）给出怪物类型继承与 `Size`。
+
 ## 仍为 Provisional / 需继续反汇编
 
 | 机制 | 现状 | 需做什么 |
