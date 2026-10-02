@@ -67,9 +67,13 @@ public static class LootTable
         var name = definition?.Name ?? fallbackNames[Math.Abs(Hash(drop.Level, drop.Slot)) % fallbackNames.Length];
         var definitionId = definition?.IntegerId ?? 0;
         var baseStats = StatsFor(drop.Slot, drop.Rarity, drop.Level);
-        // Rolls a real implicit value when the definition has one; else the provisional fallback.
+        // Rolls a real implicit value for the item's rarity when the definition has one; else the
+        // provisional fallback.
         double RollImplicit(string attributeName, double fallback)
-            => definition is { } d && d.TryGet(attributeName, out var v) ? v.Min + rng.NextDouble() * (v.Max - v.Min) : fallback;
+        {
+            var range = definition?.Find(attributeName)?.For(drop.Rarity);
+            return range is { } r ? r.Roll(rng) : fallback;
+        }
 
         // Affixes are drawn from the real client affix catalog; counts follow the web rarity curve.
         var affixCount = 1 + (drop.Rarity >= 3 ? 1 : 0) + (drop.Rarity >= 5 ? 1 : 0);

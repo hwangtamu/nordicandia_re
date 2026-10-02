@@ -6,22 +6,41 @@ namespace Nordicandia.Server.WebApi;
 
 /// <summary>
 /// Real item definitions (from gamedata_decrypted/Items.json), extracted with their implicit
-/// base attributes (weapon damage/speed/crit, armour, evasion) to
+/// base attributes (weapon damage/speed/crit, armour, evasion) and their per-rarity ranges to
 /// tools/web-content/generated/item_catalog.json and embedded. Loot picks a definition for the
-/// slot and rolls its implicit ranges, so base item values are calibrated to the client data
-/// rather than to an arbitrary curve.
+/// slot and rolls the implicit range matching the item's rarity, so base values are calibrated
+/// to the client data.
 /// </summary>
 public static class ItemCatalog
 {
-    public readonly record struct Implicit(string Name, double Min, double Max);
+    public readonly record struct Range(double Min, double Max)
+    {
+        public double Roll(CombatRandom rng) => Min + rng.NextDouble() * (Max - Min);
+    }
+
+    public readonly record struct Implicit(string Name, Range? Default, IReadOnlyList<(int Rarity, Range Range)> ByRarity)
+    {
+        /// <summary>The range for <paramref name="itemRarity"/>: the highest rarity threshold at or
+        /// below it, else the lowest available rarity, else the default.</summary>
+        public Range? For(int itemRarity)
+        {
+            Range? best = null;
+            var bestRarity = int.MinValue;
+            foreach (var (rarity, range) in ByRarity)
+                if (rarity <= itemRarity && rarity >= bestRarity) { best = range; bestRarity = rarity; }
+            if (best is null && ByRarity.Count > 0)
+                best = ByRarity.OrderBy(r => r.Rarity).First().Range;
+            return best ?? Default;
+        }
+    }
+
     public readonly record struct Definition(string Name, int IntegerId, string Type, IReadOnlyList<Implicit> Implicits)
     {
-        public bool TryGet(string attributeName, out Implicit value)
+        public Implicit? Find(string attributeName)
         {
             foreach (var implicitValue in Implicits)
-                if (implicitValue.Name == attributeName) { value = implicitValue; return true; }
-            value = default;
-            return false;
+                if (implicitValue.Name == attributeName) return implicitValue;
+            return null;
         }
     }
 
@@ -73,8 +92,12 @@ public static class ItemCatalog
         var raw = JsonSerializer.Deserialize<Dictionary<string, RawDefinition>>(stream,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
         return raw.Select(kv => new Definition(kv.Key, kv.Value.IntegerId, kv.Value.Type,
-            kv.Value.Implicit.Select(i => new Implicit(i.Key, i.Value[0], i.Value[1])).ToList())).ToList();
+            kv.Value.Implicit.Select(i => new Implicit(i.Key,
+                i.Value.Default is { Length: 2 } d ? new Range(d[0], d[1]) : null,
+                i.Value.ByRarity.Select(r => (int.Parse(r.Key), new Range(r.Value[0], r.Value[1]))).ToList()
+            )).ToList())).ToList();
     }
 
-    private sealed record RawDefinition(int IntegerId, string Type, Dictionary<string, double[]> Implicit);
+    private sealed record RawImplicit(double[] Default, Dictionary<string, double[]> ByRarity);
+    private sealed record RawDefinition(int IntegerId, string Type, Dictionary<string, RawImplicit> Implicit);
 }
