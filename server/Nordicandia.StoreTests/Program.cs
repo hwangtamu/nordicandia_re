@@ -55,3 +55,5 @@ LootEquipmentTests.Run();
 ManaMasteryTests.Run();
 
 AcceptanceRegressionTests.Run();
+
+AttributeFormulaTests.Run();
