@@ -212,7 +212,11 @@ GetNumIronCost(sourceItems, essence, targetItem, baseCost, qualitySlider, overhe
 **已实现**：`GameStore.CraftEssenceItem` 消耗 Iron（`GetNumIronCost`）、按 `GetHighestChanceToSucceed` 掷骰、
 成功时把源物品词缀并入目标（简化词缀合并，容量 = `2 + rarity/3`）；`InventoryService.CraftEssenceItem(2)` 已接线。
 
-**仍缺**（因此 `CraftRelicItem`/`SocketItem`/`ItemAddNewSocket`/`TradeWithSetItemMerchant` 仍为空桩）：
+**已实现**：`GameStore.CraftRelicItem`（消耗源遗物 + 祝福目标词缀）；`GameStore.ItemAddNewSocket`
+（`GetRequiredTitansteelReagentsForAddingSockets = 现有槽数+1`）；`GameStore.SocketItem`（把源宝石嵌入空槽，
+`SerializedSocket.SocketedItem`）；`InventoryService` 三个 RPC 已接线。
+
+**仍缺**（因此 `TradeWithSetItemMerchant`/`GenerateSetItemMerchantOffers`/`MergePortals`/`LockItems` 仍为空桩）：
 - 精华制作的成功/失败产出物品与 `ChangedIronInstances`/`Tools` 结构；
 - `getCostFromRarity` 的逐稀有度消耗表；
 - 遗物制作（`CraftRelicItem`）的目标物品来源与产出；

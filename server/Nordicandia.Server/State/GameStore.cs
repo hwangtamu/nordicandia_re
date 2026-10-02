@@ -1490,6 +1490,57 @@ public sealed class GameStore : IDisposable
         return (true, sourceSnapshot, CloneItem(target));
     });
 
+    private const int ItemTitanSteelId = 592;
+
+    private static int StackOf(SerializedItem item)
+        => (int)(GetItemAttribute(item, SharedNet.Constants.Game.AttributeOrigin.Item, ItemStackAttributeId) ?? 1);
+
+    /// <summary>Adds an empty socket to the Blacksmith target item, consuming Titansteel with the
+    /// recovered count (<c>GetRequiredTitansteelReagentsForAddingSockets = numExistingSockets + 1</c>).</summary>
+    public (bool Success, SerializedItems SourceItems, SerializedItem Result) ItemAddNewSocket(Guid owner, Guid characterId) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        data.Items ??= new SerializedItems { Items = new List<SerializedItem>() };
+        data.Items.Items ??= new List<SerializedItem>();
+        var items = data.Items.Items;
+        var target = items.FirstOrDefault(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_TargetItem);
+        if (target == null) return (false, new SerializedItems { Items = new List<SerializedItem>() }, null);
+
+        target.Sockets ??= new List<SerializedSocket>();
+        var existing = target.Sockets.Count(socket => socket != null);
+        var cost = existing + 1;
+        var titan = items.Where(i => i != null && i.DefinitionIntegerId == ItemTitanSteelId).ToList();
+        if (titan.Sum(StackOf) < cost) return (false, new SerializedItems { Items = new List<SerializedItem>() }, CloneItem(target));
+        ConsumeStacks(items, titan, cost);
+        if (target.Sockets.All(socket => socket != null && socket.SocketedItem != null))
+            target.Sockets.Add(new SerializedSocket { SocketIndex = existing });
+        c.Data = Pack(data);
+        return (true, new SerializedItems { Items = new List<SerializedItem>() }, CloneItem(target));
+    });
+
+    /// <summary>Inserts the gem in the Blacksmith source slot into an empty socket on the target
+    /// item (SerializedSocket.SocketedItem).</summary>
+    public (bool Success, SerializedItems SourceItems, SerializedItem Result) SocketItem(Guid owner, Guid characterId) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        data.Items ??= new SerializedItems { Items = new List<SerializedItem>() };
+        data.Items.Items ??= new List<SerializedItem>();
+        var items = data.Items.Items;
+        var target = items.FirstOrDefault(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_TargetItem);
+        var gem = items.FirstOrDefault(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem);
+        if (target == null || gem == null) return (false, new SerializedItems { Items = new List<SerializedItem>() }, null);
+
+        target.Sockets ??= new List<SerializedSocket>();
+        var free = target.Sockets.FirstOrDefault(socket => socket != null && socket.SocketedItem == null);
+        if (free == null) return (false, new SerializedItems { Items = new List<SerializedItem>() }, CloneItem(target));
+        free.SocketedItem = gem;
+        items.Remove(gem);
+        c.Data = Pack(data);
+        return (true, new SerializedItems { Items = new List<SerializedItem> { gem } }, CloneItem(target));
+    });
+
     /// <summary>Highest level among the account's Season / Season-Hardcore characters, used
     /// as the season reward track level.</summary>
     public int SeasonLevel(Guid owner)

@@ -378,6 +378,22 @@ static class AcceptanceRegressionTests
             Check(rResult.Affixes.Count > 0 && rResult.Affixes.All(a =>
                     a.Attributes.Values[AttributeOrigin.Item].ContainsKey(99010)),
                 "relic: blesses the target's affixes");
+
+            // Sockets: add one (consumes Titansteel) then insert a gem.
+            var socketTarget = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 9));
+            socketTarget.Slot = ItemSlotTypes.Blacksmith_TargetItem;
+            var titan = Iron(); titan.DefinitionIntegerId = 592; titan.Name = "TitanSteel";
+            store.GrantItems(owner, characterId, new List<SerializedItem> { socketTarget, titan });
+            var (aOk, _, aResult) = store.ItemAddNewSocket(owner, characterId);
+            Check(aOk, "socket: adds a socket when Titansteel is available");
+            Check(aResult.Sockets.Count(s => s != null) == 1, "socket: the target gains one socket");
+
+            var gem = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 10));
+            gem.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            store.GrantItems(owner, characterId, new List<SerializedItem> { gem });
+            var (sOk, _, sResult) = store.SocketItem(owner, characterId);
+            Check(sOk, "socket: inserts the gem into the free socket");
+            Check(sResult.Sockets[0].SocketedItem != null, "socket: the socket is filled");
         }
     }
 

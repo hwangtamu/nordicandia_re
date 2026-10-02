@@ -49,6 +49,29 @@ public sealed partial class InventoryServiceApiImpl
         });
     }
 
+    /// <summary>Sockets the gem in the Blacksmith source slot into an empty socket on the target.</summary>
+    public UnaryResult<SocketItemResponse> SocketItem(SocketItemRequest req)
+    {
+        if (req == null || req.CharacterId == Guid.Empty)
+            throw new Grpc.Core.RpcException(new Grpc.Core.Status(Grpc.Core.StatusCode.InvalidArgument, "Missing character"));
+        var (success, sourceItems, result) = GameStore.Instance.SocketItem(Owner, req.CharacterId);
+        return UnaryResult.FromResult(new SocketItemResponse { SourceItems = sourceItems, Result = result });
+    }
+
+    /// <summary>Adds an empty socket to the target item, consuming Titansteel with the recovered count.</summary>
+    public UnaryResult<AddSocketItemResponse> ItemAddNewSocket(AddSocketItemRequest req)
+    {
+        if (req == null || req.CharacterId == Guid.Empty)
+            throw new Grpc.Core.RpcException(new Grpc.Core.Status(Grpc.Core.StatusCode.InvalidArgument, "Missing character"));
+        var (success, sourceItems, result) = GameStore.Instance.ItemAddNewSocket(Owner, req.CharacterId);
+        return UnaryResult.FromResult(new AddSocketItemResponse
+        {
+            SourceItems = sourceItems,
+            Result = result,
+            ChangedTitansteelInstances = new List<ReagentStackEntry>(),
+        });
+    }
+
     /// <summary>Relic craft: consumes the Blacksmith source relics and blesses the target item's
     /// affixes (RelicOfBlessing.InternalCraft).</summary>
     public UnaryResult<CraftRelicItemResponse> CraftRelicItem(CraftRelicItemRequest req)
