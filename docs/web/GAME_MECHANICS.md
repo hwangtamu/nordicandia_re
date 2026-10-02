@@ -3,6 +3,11 @@
 本文汇总从数据文件与 IL2CPP 二进制反汇编还原的游戏机制，标注可信度。
 可信度：**ClientVerified**（已从二进制/数据逐字还原）、**Inferred**（由数据/脚本推断）、**Provisional**（占位，待还原）。
 
+> **分层标注**：代码不再把整条伤害管线标成单一 `ClientVerified`。`DamageResult.Confidence` 现为
+> `DamageConfidence`，分 `Formula`（命中/暴击/减伤公式，ClientVerified）、`Inputs`（属性来源，当前 Provisional）、
+> `Execution`（合成/顺序，当前 Inferred）三层，并带 `AssumedReductionCap`/`AssumedVariance`/`AssumedMinDamage`
+> 标记；`Overall` 取最弱一层。属性引擎（226 条公式作为实际来源）尚未实现。
+
 生成物（`tools/web-content/generated/`）：
 
 | 文件 | 内容 |
