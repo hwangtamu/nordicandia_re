@@ -28,6 +28,9 @@
   `OnTradeClicked`（状态机）调用 `NetClient.TradeWithMerchant(CharacterId, CatalogId, CatalogItemId,
   TradePercentage, PlayerOfferValue, ExpectedNumProductStacks)`。
   - `PlayerOfferValue` = 玩家放入物品的价值总和；`TradePercentage` 由滑条/价值比决定。
+- **报价物品槽**：`ItemSlotTypes.YourTrade = 31`、`HisTrade = 32`（`dump.cs:54227`）。玩家放入交易窗的
+  物品存于 `YourTrade` 槽，服务端 `TradeWithMerchant` 应据此读取报价；`PlayerOfferValue` 即这些物品
+  按 `ItemDefinition.TradeValueMultiplier` 折算的价值之和。
 - **分解**：`TabBlacksmithDisassemble.PerformDisassemblyOnline` → `NetClient.DisassembleItems`；
   离线路径 `PerformDisassembleOffline` 用 `CraftingUtils.GetDisassemblableItems`。
 - **熔炼**：`TabBlacksmithSmelting.PerformSmeltingOnline` → `NetClient.SmeltItems`；

@@ -25,7 +25,20 @@ static class AcceptanceRegressionTests
         FreshCharacterClearsBoss();
         SkillSemanticsMatchClientClasses();
         DamageReductionMatchesClient();
+        ResistanceMatchesClient();
         ChanceToHitMatchesClient();
+    }
+
+    private static void ResistanceMatchesClient()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        // Game.Calculator.ApplyDamageReduction: Max(0, raw * (1 - reduction))
+        Check(Math.Abs(Nordicandia.Simulation.CombatModel.ApplyDamageReduction(0.25, 100) - 75) < 1e-9,
+            "resistance: ApplyDamageReduction = raw * (1 - red)");
+        Check(Math.Abs(Nordicandia.Simulation.CombatModel.ApplyDamageReduction(2.0, 100)) < 1e-9,
+            "resistance: reduction above 1 floors at 0");
+        Check(Math.Abs(Nordicandia.Simulation.CombatModel.EffectiveElementalDamage(100, 1.5)) < 1e-9,
+            "resistance: elemental resistance is capped at 1.0");
     }
 
     private static void ChanceToHitMatchesClient()

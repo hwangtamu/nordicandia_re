@@ -114,6 +114,25 @@ public static class CombatModel
     public static double Mitigation(double defense, int attackerLevel)
         => PhysicalDamageReduction(defense, Math.Max(1, attackerLevel));
 
+    /// <summary>ClientVerified port of <c>Game.Calculator.ApplyDamageReduction(damageReduction, rawDamage)</c>
+    /// (0x02BAF34C): <c>Max(0, rawDamage * (1 - damageReduction))</c>. Used for the elemental
+    /// resistance application.</summary>
+    public static double ApplyDamageReduction(double damageReduction, double rawDamage)
+    {
+        var raw = Math.Max(0.0, rawDamage);
+        var reduction = Math.Clamp(damageReduction, 0.0, 1.0);
+        return Math.Max(0.0, raw * (1.0 - reduction));
+    }
+
+    /// <summary>Elemental resistance is capped at 1.0 before application
+    /// (<c>CalculateEffectiveElementalDamagePerSecond</c> uses <c>Math.Min(1, resistance)</c>).</summary>
+    public const double ResistanceCap = 1.0;
+
+    /// <summary>ClientVerified elemental damage after resistance: cap the resistance at 1.0, then
+    /// <see cref="ApplyDamageReduction"/>.</summary>
+    public static double EffectiveElementalDamage(double rawDamage, double resistance)
+        => ApplyDamageReduction(Math.Min(ResistanceCap, Math.Max(0.0, resistance)), rawDamage);
+
     /// <summary>Constants from <c>Game.Calculator.CalculateChanceToHit</c>.</summary>
     public const double ChanceToHitMultiplier = 1.05;
     public const double ChanceToHitMin = 0.05;
