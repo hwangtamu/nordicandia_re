@@ -75,7 +75,8 @@ static class CombatInstanceTests
             var duplicate = registry.ApplyCommand(owner, characterId, "cmd-skill-1", initial.Combat.Version,
                 new WebCommandRequest("skill"));
             Check(first.Applied && first.Reason == "ok", "m1 command: skill applies");
-            Check(duplicate.Reason == "duplicate", "m1 command: retried command id is not reapplied");
+            Check(duplicate.Reason == first.Reason && duplicate.Applied == first.Applied,
+                "m1 command: retried command id replays the original result");
             Check(duplicate.State.Combat.Version == first.State.Combat.Version, "m1 command: duplicate returns same version");
 
             // Advance the fake clock so the lazy simulation actually runs, then poll.

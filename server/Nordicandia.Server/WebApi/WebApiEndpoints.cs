@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Net;
 using Game;
 using Nordicandia.Server.State;
 using SharedNet.Api;
@@ -23,8 +24,23 @@ public static class WebApiEndpoints
     private static bool DevMode =>
         Environment.GetEnvironmentVariable("NORD_WEB_DEV") is "1" or "true";
 
+    /// <summary>Same registration policy as the native LoginService (NORD_ALLOW_REGISTRATION).</summary>
+    public static bool RegistrationAllowed =>
+        Environment.GetEnvironmentVariable("NORD_ALLOW_REGISTRATION") is not ("0" or "false");
+
+    public static bool WebApiEnabled =>
+        Environment.GetEnvironmentVariable("NORD_WEB_API") is not "0";
+
+    private static bool IsLoopback(HttpContext ctx)
+        => ctx.Connection.RemoteIpAddress is { } ip && IPAddress.IsLoopback(ip);
+
     public static void MapWebApi(this WebApplication app)
     {
+        if (!WebApiEnabled)
+        {
+            Console.WriteLine("[WEB] /api/web/v1 disabled by NORD_WEB_API=0");
+            return;
+        }
         var group = app.MapGroup("/api/web/v1");
 
         group.MapGet("/health", () => Results.Ok(new { status = "ok", contentVersion = "m0-1", dev = DevMode }));
@@ -39,8 +55,10 @@ public static class WebApiEndpoints
 
             if (req.CreateAccount && !GameStore.Instance.HasCredential(identity))
             {
-                var user = GameStore.Instance.RegisterCredential(identity, req.Password, req.Identity.Trim());
-                return CreateSessionResponse(ctx, user.UserId, user.DisplayName);
+                if (!RegistrationAllowed)
+                    return Results.Json(new { error = "registration_disabled" }, statusCode: 403);
+                var created = GameStore.Instance.RegisterCredential(identity, req.Password, req.Identity.Trim());
+                return CreateSessionResponse(ctx, created.UserId, created.DisplayName);
             }
 
             var verified = GameStore.Instance.VerifyCredential(identity, req.Password);
@@ -53,7 +71,9 @@ public static class WebApiEndpoints
         // account without a credential. Off unless NORD_WEB_DEV=1.
         group.MapPost("/dev/session", (HttpContext ctx, DevSessionRequest req) =>
         {
-            if (!DevMode) return Results.NotFound();
+            // Dev-only convenience login: requires NORD_WEB_DEV=1 *and* a loopback caller, so
+            // it cannot be reached through a public listener even if one is enabled.
+            if (!DevMode || !IsLoopback(ctx)) return Results.NotFound();
             var name = string.IsNullOrWhiteSpace(req?.Name) ? "web-m0" : req.Name.Trim();
             var user = GameStore.Instance.GetOrCreateUser("device:" + name);
             return CreateSessionResponse(ctx, user.UserId, user.DisplayName);

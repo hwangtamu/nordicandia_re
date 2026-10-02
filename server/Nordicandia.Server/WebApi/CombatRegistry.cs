@@ -21,7 +21,6 @@ public sealed class CombatRegistry
     private static readonly Lazy<CombatRegistry> Default = new(() => new CombatRegistry(GameStore.Instance));
     public static CombatRegistry Instance => Default.Value;
 
-    private const int MaxRememberedCommands = 64;
     private readonly GameStore store;
     private readonly TimeProvider clock;
     private readonly object gate = new();
@@ -61,8 +60,6 @@ public sealed class CombatRegistry
         public int FlushedOpals;
         public int FlushedKills;
         public readonly List<LootDropView> RecentLoot = new();
-        public readonly Dictionary<string, WebCombatState> ProcessedCommands = new();
-        public readonly Queue<string> CommandOrder = new();
     }
 
     public CombatInstance GetOrCreate(Guid owner, Guid characterId)
@@ -119,10 +116,16 @@ public sealed class CombatRegistry
         lock (gate)
         {
             var entry = GetEntry(owner, characterId);
-            if (!string.IsNullOrEmpty(commandId) && entry.ProcessedCommands.TryGetValue(commandId, out var previous))
-                return (true, "duplicate", previous);
+            var (found, oldestExpected) = store.LookupCommand(owner, characterId, commandId);
+            if (found is not null)
+                // R5: replay the original applied/reason, with the current snapshot.
+                return (found.Applied, found.Reason, PeekState(entry));
+            if (expectedVersion > 0 && expectedVersion < oldestExpected)
+                // R4: outside the retained retry window — reject instead of re-executing.
+                // A zero expected version means the caller is not using optimistic concurrency.
+                return (false, "stale_command", PeekState(entry));
             if (expectedVersion > entry.Instance.Version)
-                return (false, "future_version", TakeState(entry));
+                return (false, "future_version", PeekState(entry));
 
             AdvanceLocked(entry);
 
@@ -153,11 +156,19 @@ public sealed class CombatRegistry
                     break;
             }
 
-            entry.Instance.Advance(CombatInstance.StepSeconds);
+            // R2: simulation time comes only from the server clock (AdvanceLocked), never
+            // from the act of sending a command. Commands only change intent.
             CollectLootLocked(owner, characterId, entry);
             FlushLocked(owner, characterId, entry);
             var state = TakeState(entry);
-            RememberCommand(entry, commandId, state);
+            if (!string.IsNullOrEmpty(commandId))
+                store.AppendCommand(owner, characterId, new GameStore.CommandRecord
+                {
+                    CommandId = commandId,
+                    ExpectedVersion = expectedVersion,
+                    Applied = applied,
+                    Reason = reason,
+                });
             return (applied, reason, state);
         }
     }
@@ -338,8 +349,13 @@ public sealed class CombatRegistry
         if (instance.Experience == entry.FlushedExperience && instance.Silver == entry.FlushedSilver
             && instance.Opals == entry.FlushedOpals && killsDelta == 0)
             return;
+        // R1: persist the *base* stats only. Flushing the equipment-inclusive totals and then
+        // re-adding EquipmentBonus on restore double-counted the gear.
         store.SaveRealtimeProgress(owner, characterId, instance.Experience, instance.Silver,
-            instance.Opals, new GameStore.CombatSnapshot(instance.Offense, instance.Defense, instance.Recovery,
+            instance.Opals, new GameStore.CombatSnapshot(
+                instance.Offense - entry.EquipOffense,
+                instance.Defense - entry.EquipDefense,
+                instance.Recovery - entry.EquipRecovery,
                 Math.Max(0, killsDelta), 0));
         entry.FlushedExperience = instance.Experience;
         entry.FlushedSilver = instance.Silver;
@@ -353,6 +369,10 @@ public sealed class CombatRegistry
         entry.RecentLoot.Clear();
         return new WebCombatState(entry.Instance.Snapshot(), loot);
     }
+
+    /// <summary>Snapshot without consuming pending loot, for duplicate/rejected commands.</summary>
+    private static WebCombatState PeekState(Entry entry)
+        => new(entry.Instance.Snapshot(), Array.Empty<LootDropView>());
 
     private static WebItemDetail ToItemDetail(SerializedItem item)
     {
@@ -374,19 +394,6 @@ public sealed class CombatRegistry
         => item.Affixes == null
             ? new List<string>()
             : item.Affixes.Where(a => a != null).Select(a => LootTable.AffixName(a.DefinitionIntegerId)).ToList();
-
-    private static void RememberCommand(Entry entry, string commandId, WebCombatState state)
-    {
-        if (string.IsNullOrEmpty(commandId)) return;
-        if (entry.ProcessedCommands.ContainsKey(commandId)) return;
-        entry.ProcessedCommands[commandId] = state;
-        entry.CommandOrder.Enqueue(commandId);
-        while (entry.CommandOrder.Count > MaxRememberedCommands)
-        {
-            var oldest = entry.CommandOrder.Dequeue();
-            entry.ProcessedCommands.Remove(oldest);
-        }
-    }
 
     /// <summary>Test/ops hook: drop in-memory combat so the next request re-seeds from the store.</summary>
     public void Reset()

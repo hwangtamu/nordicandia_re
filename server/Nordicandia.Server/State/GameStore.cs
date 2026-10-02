@@ -71,6 +71,19 @@ public sealed class GameStore : IDisposable
         public DateTime? Updated { get; set; }
     }
 
+    /// <summary>Durable record of one processed web command, so retries replay the original
+    /// result and commands outside the retained window can be rejected as stale.</summary>
+    public sealed class CommandRecord
+    {
+        public string CommandId { get; set; } = string.Empty;
+        public long ExpectedVersion { get; set; }
+        public bool Applied { get; set; }
+        public string Reason { get; set; } = string.Empty;
+    }
+
+    /// <summary>How many recent commands are retained per character for idempotent replay.</summary>
+    public const int MaxCommandLog = 256;
+
     public sealed class SavedCharacter
     {
         public Guid Owner { get; set; }
@@ -94,6 +107,8 @@ public sealed class GameStore : IDisposable
         public HashSet<string> Achievements { get; set; } = new();
         // Allocated skill-tree mastery ranks, keyed by PowerMasteries IntegerId.
         public Dictionary<int, int> MasteryRanks { get; set; } = new();
+        // Recent processed web commands, oldest first. Bounded by MaxCommandLog.
+        public List<CommandRecord> CommandLog { get; set; } = new();
     }
 
     /// <summary>Read-only projection used by the leaderboard services.</summary>
@@ -746,6 +761,32 @@ public sealed class GameStore : IDisposable
             return c.MasteryRanks?.Values.Sum() ?? 0;
         }
     }
+
+    /// <summary>Looks up a previous web command. <c>OldestExpectedVersion</c> is the expected
+    /// version of the oldest retained command: anything older is outside the retry window.</summary>
+    public (CommandRecord Found, long OldestExpectedVersion) LookupCommand(Guid owner, Guid id, string commandId)
+    {
+        lock (gate)
+        {
+            var c = Owned(state, owner, id);
+            c.CommandLog ??= new List<CommandRecord>();
+            var found = string.IsNullOrEmpty(commandId)
+                ? null
+                : c.CommandLog.FirstOrDefault(r => r.CommandId == commandId);
+            var oldest = c.CommandLog.Count > 0 ? c.CommandLog[0].ExpectedVersion : long.MinValue;
+            return (found, oldest);
+        }
+    }
+
+    /// <summary>Appends a processed command and trims the log to the retained window.</summary>
+    public void AppendCommand(Guid owner, Guid id, CommandRecord record) => Change(s =>
+    {
+        var c = Owned(s, owner, id);
+        c.CommandLog ??= new List<CommandRecord>();
+        c.CommandLog.Add(record);
+        while (c.CommandLog.Count > MaxCommandLog) c.CommandLog.RemoveAt(0);
+        return true;
+    });
 
     public readonly record struct MerchantPurchase(SerializedItems Items, int NewBalance);
 

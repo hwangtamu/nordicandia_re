@@ -171,6 +171,7 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
       if (!result.applied && result.reason === "cooldown") showHudMessage("Skill on cooldown");
       if (!result.applied && result.reason === "no_target") showHudMessage("No target in range");
       if (!result.applied && result.reason === "no_mana") showHudMessage("Not enough mana");
+      if (!result.applied && result.reason === "stale_command") showHudMessage("Resyncing…");
       if (type === "equip" || type === "unequip") await refreshInventory();
     } catch (error) {
       console.warn("command failed", error);
@@ -254,11 +255,13 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
 
 function toggleBag(force?: boolean): void {
   const show = force ?? inventoryEl.classList.contains("hidden");
+  if (show) powersEl.classList.add("hidden");
   inventoryEl.classList.toggle("hidden", !show);
 }
 
 function togglePowers(force?: boolean): void {
   const show = force ?? powersEl.classList.contains("hidden");
+  if (show) inventoryEl.classList.add("hidden");
   powersEl.classList.toggle("hidden", !show);
 }
 

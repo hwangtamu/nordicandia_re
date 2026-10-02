@@ -133,7 +133,8 @@ static class LootEquipmentTests
 
             var duplicate = registry.ApplyCommand(owner, characterId, "eq-1", afterCombat.Combat.Version,
                 new WebCommandRequest("equip", ItemId: equippedCandidate.Id));
-            Check(duplicate.Reason == "duplicate", "m2 equip: retried command is idempotent");
+            Check(duplicate.Reason == equip.Reason && duplicate.Applied == equip.Applied,
+                "m2 equip: retried command replays the original result");
             Check(Math.Abs(registry.Inventory(owner, characterId).Offense - afterEquip.Offense) < 0.001,
                 "m2 equip: duplicate does not double-apply stats");
 
