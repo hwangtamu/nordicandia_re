@@ -12,4 +12,7 @@
     <ProjectReference Include="../Nordicandia.Contracts/Nordicandia.Contracts.csproj" />
     <ProjectReference Include="../Nordicandia.Simulation/Nordicandia.Simulation.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GameData/*.json" />
+  </ItemGroup>
 </Project>

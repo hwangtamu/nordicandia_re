@@ -131,3 +131,10 @@ scaled = ( OwnerLevelMultiplier * Pow(ownerLevel - OwnerLevelThreshold, OwnerLev
 
 实测：装等护甲使 `Armor_Total` 251.4→404.2；主手使伤害包 389.4（物理 268.8 + 元素 120.6）。
 id 与公式为 ClientVerified；数值幅度仍为 Provisional（`ItemGenerator` 的基础值生成未逐条还原）。
+
+**词缀**：`AffixCatalog`（18 个真实词缀，来自 `Affixes.json`）授予客户端属性：
+`Strength/Dexterity/Intelligence/Vitality/Constitution/Agility_Bonus_Percent`(109-130)、
+`Armor_Bonus_Percent`(252)、`Evasion_Bonus_Percent`(257)、`AttackRating_Bonus_Percent`(204)、
+`Crit_Chance_Bonus_Percent`(705)、`Crit_Damage_Bonus_Percent`(713)、`Attack_Speed_Bonus_Percent`(451)、
+`Resistance_Fire/Cold/Lightning/Poison/All`(1000/1011/1012/1013/1002)，数值按稀有度区间掷取。
+`GetAttributeMap` 现在只计入**已装备**物品（含其词缀）的属性。

@@ -761,7 +761,14 @@ public sealed class GameStore : IDisposable
             }
             Add(data?.Attributes);
             if (data?.Items?.Items != null)
-                foreach (var item in data.Items.Items) Add(item?.Attributes);
+                foreach (var item in data.Items.Items)
+                {
+                    // Only equipped items contribute (slots 0..13); bag items must not.
+                    if (item == null || (int)item.Slot is < 0 or > 13) continue;
+                    Add(item.Attributes);
+                    if (item.Affixes != null)
+                        foreach (var affix in item.Affixes) Add(affix?.Attributes);
+                }
             return result;
         }
     }

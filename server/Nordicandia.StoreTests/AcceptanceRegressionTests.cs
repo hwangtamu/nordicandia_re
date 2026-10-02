@@ -24,6 +24,7 @@ static class AcceptanceRegressionTests
         EquippedWeaponFeedsWeaponDamage();
         SmeltAndDisassembleConsumeSources();
         CraftEssenceConsumesIron();
+        RealAffixesCarryClientAttributes();
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
@@ -326,6 +327,16 @@ static class AcceptanceRegressionTests
             Check(tInventory.Items.Any(i => i.DefinitionIntegerId == 606), "trade: grants the product stack");
             Check(store.GetItems(owner, characterId).All(i => i.Slot != ItemSlotTypes.YourTrade), "trade: empties the trade window");
         }
+    }
+
+    private static void RealAffixesCarryClientAttributes()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        Check(LootTable.AffixCatalogSize >= 10, $"affixes: real client affix catalog loaded ({LootTable.AffixCatalogSize})");
+        var item = LootTable.CreateItem(new LootDrop(3, 6, 20, false, 42));
+        Check(item.Affixes.Count > 0, "affixes: a rare item rolls affixes");
+        Check(item.Affixes.All(a => a.DefinitionIntegerId > 0 && a.DefinitionIntegerId < 9000),
+            "affixes: carry client attribute ids (not the provisional web ids)");
     }
 
     private static void CraftEssenceConsumesIron()
