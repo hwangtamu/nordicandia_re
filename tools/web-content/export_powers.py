@@ -260,6 +260,22 @@ def main() -> int:
             "poolSize": {k: len(v) for k, v in pool.items() if v},
         }
 
+    # Real numeric values recovered from the Android libil2cpp.so by
+    # tools/web-content/disasm_powers.py, keyed by implementation class.
+    values_path = ROOT / "tools/web-content/generated/power_values.json"
+    values = json.loads(values_path.read_text()) if values_path.exists() else {}
+
+    def fmt(value: float) -> str:
+        return str(int(value)) if float(value).is_integer() else str(value)
+
+    def fill_description(description: str, placeholders: list, resolved: dict) -> str:
+        def repl(match):
+            index = int(match.group(1))
+            role = next((p["role"] for p in placeholders if p["index"] == index), "value")
+            value = resolved.get(role)
+            return fmt(value) if value is not None else match.group(0)
+        return re.sub(r"\{(\d+)\}", repl, description)
+
     # Two active + passive chosen for the web kit: first N actives, first passive.
     kits: dict[str, dict] = {}
     for key, value in out_classes.items():
@@ -268,11 +284,62 @@ def main() -> int:
         if not active or not passive_pool:
             continue
         passive = passive_pool[0]
+
+        def merged_active(a, slot):
+            v = values.get(a.get("implementedBy") or "", {})
+            effect = derive_effect(a["name"], a["description"], a["tags"])
+            multiplier = v.get("Base_Power_Weapon_Damage_Multiplier")
+            if multiplier is None:
+                multiplier = v.get("Power_Weapon_Damage_Multiplier_2")
+            cooldown = v.get("Base_Cooldown")
+            mana = v.get("Base_Mana_Cost")
+            radius = v.get("Base_Power_Radius")
+            duration = v.get("Buff_Duration") or v.get("Power_Duration") or v.get("Power_Freeze_Duration")
+            effect_kind = "nova" if (radius or 0) > 0 else effect["effect"]
+            verified = multiplier is not None or cooldown is not None or mana is not None
+            resolved = {}
+            if multiplier is not None:
+                resolved["damage"] = multiplier * 100
+            if cooldown is not None:
+                resolved["duration"] = cooldown
+            if mana is not None:
+                resolved["mana"] = mana
+            if radius is not None:
+                resolved["radius"] = radius
+            if v.get("ChainLightning_Max_Num_Chains") is not None:
+                resolved["count"] = v["ChainLightning_Max_Num_Chains"]
+            return dict(a, slot=slot, effect=effect_kind,
+                        multiplier=multiplier if multiplier is not None else effect["multiplier"],
+                        cooldown=cooldown if cooldown is not None else effect["cooldown"],
+                        radius=radius if radius is not None else effect["radius"],
+                        manaCost=mana if mana is not None else 0,
+                        healPercent=effect["healPercent"],
+                        buffBonus=v.get("Strength_Bonus_Percent", effect["buffBonus"]),
+                        buffSeconds=duration if (duration is not None and effect_kind == "rally") else effect["buffSeconds"],
+                        values=v, confidence="client-verified" if verified else "provisional-behaviour",
+                        descriptionFilled=fill_description(a["description"], a["placeholders"], resolved))
+
+        def merged_passive(p):
+            v = values.get(p.get("implementedBy") or "", {})
+            effect = derive_passive(p["name"], p["description"])
+            base = v.get("field_0x120")
+            offense = effect["offenseBonus"]
+            health = effect["healthBonus"]
+            if base is not None:
+                if effect["effect"] in ("might", "haste", "fortune"):
+                    offense = base
+                elif effect["effect"] == "warding":
+                    health = base
+            record = dict(p, **effect, values=v,
+                          confidence="client-verified" if base is not None else "provisional-behaviour")
+            record["offenseBonus"] = offense
+            record["healthBonus"] = health
+            return record
+
         kits[key] = {
             "name": value["name"],
-            "active": [dict(a, **derive_effect(a["name"], a["description"], a["tags"]), slot=i, confidence="provisional-behaviour")
-                       for i, a in enumerate(active)],
-            "passive": dict(passive, **derive_passive(passive["name"], passive["description"]), confidence="provisional-behaviour"),
+            "active": [merged_active(a, i) for i, a in enumerate(active)],
+            "passive": merged_passive(passive),
             "activePoolSize": len(value.get("active", [])),
             "passivePoolSize": len(passive_pool),
             "tacticsPoolSize": len(value.get("tactics", [])),
@@ -341,12 +408,13 @@ def write_csharp(kits: dict) -> None:
                 "            new(" + ", ".join([
                     str(a["slot"]), cs_str(a["name"]), cs_str(a["description"]), cs_str(a["icon"]),
                     cs_str(a["effect"]), f"{a['multiplier']}D", f"{a['cooldown']}D", f"{a['radius']}D",
-                    f"{a['healPercent']}D", f"{a['buffBonus']}D", f"{a['buffSeconds']}D",
+                    f"{a['manaCost']}D", f"{a['healPercent']}D", f"{a['buffBonus']}D", f"{a['buffSeconds']}D",
+                    cs_str(a["confidence"]),
                 ]) + "),")
         p = value["passive"]
         lines.append("        }, new PassiveProfile(" + ", ".join([
             cs_str(p["name"]), cs_str(p["description"]), cs_str(p["icon"]), cs_str(p["effect"]),
-            f"{p['offenseBonus']}D", f"{p['healthBonus']}D",
+            f"{p['offenseBonus']}D", f"{p['healthBonus']}D", cs_str(p["confidence"]),
         ]) + ")),")
     lines += ["    };", "}", ""]
     CS_OUT.write_text("\n".join(lines))

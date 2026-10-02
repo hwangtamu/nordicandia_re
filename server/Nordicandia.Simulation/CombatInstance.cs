@@ -84,11 +84,11 @@ public sealed class CombatInstance
         "Basic",
         new[]
         {
-            new SkillProfile(0, "Strike", "", "", "strike", 2.4, 4.0, 0, 0, 0, 0),
-            new SkillProfile(1, "Nova", "", "", "nova", 1.5, 8.0, 5.5, 0, 0, 0),
-            new SkillProfile(2, "Rally", "", "", "rally", 0, 20.0, 0, 0.30, 0.25, 6.0),
+            new SkillProfile(0, "Strike", "", "", "strike", 2.4, 4.0, 0, 0, 0, 0, 0, "provisional-behaviour"),
+            new SkillProfile(1, "Nova", "", "", "nova", 1.5, 8.0, 5.5, 0, 0, 0, 0, "provisional-behaviour"),
+            new SkillProfile(2, "Rally", "", "", "rally", 0, 20.0, 0, 0, 0.30, 0.25, 6.0, "provisional-behaviour"),
         },
-        new PassiveProfile("Might", "", "", "might", 0.10, 0.10));
+        new PassiveProfile("Might", "", "", "might", 0.10, 0.10, "provisional-behaviour"));
 
     private static readonly int[] DropSlots =
     {
@@ -592,7 +592,7 @@ public sealed class CombatInstance
         return new CombatSnapshot(Version, Math.Round(PlayerX, 3), Math.Round(PlayerZ, 3),
             Math.Round(PlayerHp, 2), Math.Round(PlayerMaxHp, 2), PlayerLevel, Experience, Silver, Opals,
             Kills,
-            skills.Select((s, i) => new SkillStatus(s.Slot, s.Name, s.Effect, Math.Round(skillCooldowns[i], 2), s.Cooldown)).ToList(),
+            skills.Select((s, i) => new SkillStatus(s.Slot, s.Name, s.Effect, Math.Round(skillCooldowns[i], 2), s.Cooldown, s.ManaCost, s.Confidence)).ToList(),
             Math.Round(offenseBuffTimer, 2),
             DungeonsCleared, Math.Max(0, BossKillGoal - dungeonKills), boss is { Alive: true }, rows);
     }

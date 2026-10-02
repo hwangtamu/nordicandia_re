@@ -9,27 +9,27 @@ public static partial class PowerCatalog
     {
         [0] = new ClassPowers("Warrior", new SkillProfile[]
         {
-            new(0, "Slam", "Slam the ground in front of you to deal {0} weapon damage to enemies in a line.", "Slam", "strike", 2.2D, 4.0D, 0.0D, 0.0D, 0.0D, 0.0D),
-            new(1, "Might", "Increases your strength by {0}% for {1} seconds.", "Might", "rally", 0.0D, 16.0D, 0.0D, 0.15D, 0.25D, 6.0D),
-            new(2, "Pounce", "", "Pounce", "strike", 2.2D, 4.0D, 0.0D, 0.0D, 0.0D, 0.0D),
-        }, new PassiveProfile("Overkill", "Your melee overkill damage has {0}% chance to generate a new attack for the remaining damage on another nearby enemy.", "Overkill", "might", 0.12D, 0.0D)),
+            new(0, "Slam", "Slam the ground in front of you to deal {0} weapon damage to enemies in a line.", "Slam", "strike", 5.5D, 15.0D, 0.0D, 35.0D, 0.0D, 0.0D, 0.0D, "client-verified"),
+            new(1, "Might", "Increases your strength by {0}% for {1} seconds.", "Might", "rally", 0.0D, 30.0D, 0.0D, 0D, 0.15D, 0.75D, 10.0D, "client-verified"),
+            new(2, "Pounce", "", "Pounce", "strike", 0.25D, 10.0D, 0.0D, 15.0D, 0.0D, 0.0D, 0.0D, "client-verified"),
+        }, new PassiveProfile("Overkill", "Your melee overkill damage has {0}% chance to generate a new attack for the remaining damage on another nearby enemy.", "Overkill", "might", 1.0D, 0.0D, "client-verified")),
         [4] = new ClassPowers("Hunter", new SkillProfile[]
         {
-            new(0, "RapidFire", "Increases your attack speed by {0}% for {1} second(s).\n{2} second(s) cooldown.", "RapidFire", "rally", 0.0D, 16.0D, 0.0D, 0.15D, 0.25D, 6.0D),
-            new(1, "ArrowRain", "Fire a rain of arrows towards a selected area of {0} units for {1} seconds. Deals {2}% weapon damage per second.\n{3} second(s) cooldown.\nCosts {4} mana.", "ArrowRain", "nova", 1.4D, 8.0D, 5.5D, 0.0D, 0.0D, 0.0D),
-            new(2, "SummonWolf", "Summon a wolf companion with {0}% of your health and {1}% of your damage, which defends you and helps you find {2}% more monsters.", "SummonWolf", "rally", 0.0D, 18.0D, 0.0D, 0.2D, 0.15D, 8.0D),
-        }, new PassiveProfile("Precision", "", "Precision", "might", 0.1D, 0.05D)),
+            new(0, "RapidFire", "Increases your attack speed by {0}% for {1} second(s).\n{2} second(s) cooldown.", "RapidFire", "rally", 0.0D, 25.0D, 0.0D, 30.0D, 0.15D, 0.25D, 6.0D, "client-verified"),
+            new(1, "ArrowRain", "Fire a rain of arrows towards a selected area of {0} units for {1} seconds. Deals {2}% weapon damage per second.\n{3} second(s) cooldown.\nCosts {4} mana.", "ArrowRain", "nova", 1.4D, 25.0D, 3.0D, 20.0D, 0.0D, 0.0D, 0.0D, "client-verified"),
+            new(2, "SummonWolf", "Summon a wolf companion with {0}% of your health and {1}% of your damage, which defends you and helps you find {2}% more monsters.", "SummonWolf", "rally", 0.0D, 45.0D, 0.0D, 45.0D, 0.2D, 0.15D, 8.0D, "client-verified"),
+        }, new PassiveProfile("Precision", "", "Precision", "might", 0.5D, 0.05D, "client-verified")),
         [5] = new ClassPowers("Mage", new SkillProfile[]
         {
-            new(0, "ChainLightning", "Cast a jolt of lightning that deals {0}% weapon damage as Lightning and then jumps to additional nearby enemies. Each jump reduces the damage by {1}%. The lightning will dissipate after {2} jumps.\n{3} second(s) cooldown.\nCosts {4} mana.", "ChainLightning", "nova", 1.4D, 8.0D, 5.5D, 0.0D, 0.0D, 0.0D),
-            new(1, "Teleport", "", "Teleport", "strike", 2.2D, 4.0D, 0.0D, 0.0D, 0.0D, 0.0D),
-            new(2, "IceNova", "Cast an Ice Nova that deals {0}% weapon damage as Cold and hits all enemies within {1} units, freezing them for {2} seconds.\n{3} second(s) cooldown.\nCosts {4} mana.", "IceNova", "nova", 1.4D, 8.0D, 5.5D, 0.0D, 0.0D, 0.0D),
-        }, new PassiveProfile("Hubris", "Increases your total Intelligence by {0}%", "Hubris", "might", 0.12D, 0.0D)),
+            new(0, "ChainLightning", "Cast a jolt of lightning that deals {0}% weapon damage as Lightning and then jumps to additional nearby enemies. Each jump reduces the damage by {1}%. The lightning will dissipate after {2} jumps.\n{3} second(s) cooldown.\nCosts {4} mana.", "ChainLightning", "nova", 2.5D, 20.0D, 5.5D, 0D, 0.0D, 0.0D, 0.0D, "client-verified"),
+            new(1, "Teleport", "", "Teleport", "strike", 2.2D, 12.0D, 0.0D, 20.0D, 0.0D, 0.0D, 0.0D, "client-verified"),
+            new(2, "IceNova", "Cast an Ice Nova that deals {0}% weapon damage as Cold and hits all enemies within {1} units, freezing them for {2} seconds.\n{3} second(s) cooldown.\nCosts {4} mana.", "IceNova", "nova", 0.5D, 30.0D, 6.0D, 0D, 0.0D, 0.0D, 0.0D, "client-verified"),
+        }, new PassiveProfile("Hubris", "Increases your total Intelligence by {0}%", "Hubris", "might", 0.3D, 0.0D, "client-verified")),
         [6] = new ClassPowers("Necromancer", new SkillProfile[]
         {
-            new(0, "SummonSkeleton", "", "SummonSkeleton", "rally", 0.0D, 18.0D, 0.0D, 0.2D, 0.15D, 8.0D),
-            new(1, "AstralWalk", "", "AstralWalk", "strike", 2.2D, 4.0D, 0.0D, 0.0D, 0.0D, 0.0D),
-            new(2, "Shadowbolt", "", "ShadowBolt", "strike", 1.9D, 5.0D, 0.0D, 0.0D, 0.0D, 0.0D),
-        }, new PassiveProfile("Bodyguard", "", "Bodyguard", "might", 0.1D, 0.05D)),
+            new(0, "SummonSkeleton", "", "SummonSkeleton", "rally", 0.0D, 10.0D, 0.0D, 0D, 0.2D, 0.15D, 8.0D, "client-verified"),
+            new(1, "AstralWalk", "", "AstralWalk", "strike", 2.2D, 16.0D, 0.0D, 0D, 0.0D, 0.0D, 0.0D, "client-verified"),
+            new(2, "Shadowbolt", "", "ShadowBolt", "nova", 3.0D, 15.0D, 2.5D, 30.0D, 0.0D, 0.0D, 0.0D, "client-verified"),
+        }, new PassiveProfile("Bodyguard", "", "Bodyguard", "might", 0.1D, 0.05D, "client-verified")),
     };
 }

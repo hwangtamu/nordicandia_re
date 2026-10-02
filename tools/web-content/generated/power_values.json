@@ -1,0 +1,576 @@
+{
+  "MeleeWeaponSwing": {
+    "field_0x138": 1.0
+  },
+  "Might": {
+    "Strength_Bonus_Percent": 0.75,
+    "Buff_Duration": 10.0,
+    "Base_Cooldown": 30.0
+  },
+  "AxeSpecialization": {
+    "field_0x120": 0.1
+  },
+  "MaceSpecialization": {
+    "field_0x120": 1.0
+  },
+  "SpearSpecialization": {
+    "field_0x120": 1.0
+  },
+  "SwordSpecialization": {
+    "field_0x120": 1.0
+  },
+  "IncrementalFortress": {},
+  "WarStomp": {
+    "Base_Mana_Cost": 25.0,
+    "Power_War_Stomp_Stun_Duration": 2.0,
+    "Base_Cooldown": 22.0,
+    "Base_Power_Weapon_Damage_Multiplier": 0.7
+  },
+  "Sprint": {
+    "Buff_Duration": 7.0,
+    "Movement_Speed_Bonus_Percent": 0.4,
+    "Base_Cooldown": 30.0
+  },
+  "CheatDeath": {
+    "field_0x128": 0.005
+  },
+  "BossHunter": {
+    "field_0x120": 0.25
+  },
+  "Overkill": {
+    "field_0x120": 1.0
+  },
+  "ShootRangedProjectile": {
+    "field_0x130": 1.0
+  },
+  "Retaliation": {
+    "Buff_Duration": 12.0,
+    "Base_Power_Weapon_Damage_Multiplier": 0.3,
+    "Base_Mana_Cost": 0.3
+  },
+  "TreasureHunter": {},
+  "Shatter": {
+    "Base_Power_Weapon_Damage_Multiplier": 9.0,
+    "Base_Cooldown": 5.0,
+    "Base_Mana_Cost": 35.0
+  },
+  "Meditation": {
+    "field_0x120": 1.0
+  },
+  "Hunger": {
+    "Base_Cooldown": 20.0,
+    "Base_Mana_Cost": 20.0,
+    "Buff_Duration": 7.0,
+    "Physical_Life_Leech": 7.0,
+    "Fire_Life_Leech": 7.0,
+    "Cold_Life_Leech": 7.0,
+    "Lightning_Life_Leech": 7.0,
+    "Poison_Life_Leech": 7.0
+  },
+  "DefaultAttackProxy": {
+    "field_0x130": 0.5
+  },
+  "PowerShot": {
+    "Power_Power_Shot_Pierce_Chance_Percent": 0.95,
+    "Base_Power_Weapon_Damage_Multiplier": 4.5,
+    "Base_Cooldown": 8.0,
+    "Base_Mana_Cost": 25.0,
+    "Base_Action_Speed": 1.0
+  },
+  "Backflip": {
+    "Base_Cooldown": 16.0,
+    "Base_Mana_Cost": 25.0,
+    "Power_Backflip_Increased_Backflip_Speed_Percent": 5.0,
+    "Power_Backflip_Mirror_Image_Health_Percent": 0.2
+  },
+  "ArrowRain": {
+    "Base_Mana_Cost": 20.0,
+    "Base_Cooldown": 25.0,
+    "Base_Power_Radius": 3.0
+  },
+  "Fade": {
+    "Buff_Duration": 6.0,
+    "Base_Cooldown": 20.0,
+    "Base_Mana_Cost": 30.0,
+    "Evasion_Bonus_Percent": 1.0
+  },
+  "RapidFire": {
+    "Base_Cooldown": 25.0,
+    "Base_Mana_Cost": 30.0
+  },
+  "Multishot": {
+    "Base_Power_Weapon_Damage_Multiplier": 6.5,
+    "Base_Cooldown": 10.0,
+    "Base_Mana_Cost": 20.0
+  },
+  "Precision": {
+    "field_0x120": 0.5
+  },
+  "Sharpshooter": {
+    "field_0x120": 0.2
+  },
+  "DoubleDraw": {
+    "field_0x120": 1.0
+  },
+  "DefaultFireball": {
+    "field_0x130": 1.0
+  },
+  "DefaultIceBolt": {
+    "field_0x130": 1.0
+  },
+  "DefaultLightningBolt": {
+    "field_0x130": 1.0
+  },
+  "DefaultPoisonBolt": {
+    "field_0x130": 1.0
+  },
+  "SummonWolf": {
+    "Base_Cooldown": 45.0,
+    "Base_Mana_Cost": 45.0
+  },
+  "TownPortal": {},
+  "IceNova": {
+    "Base_Power_Radius": 6.0,
+    "Base_Power_Weapon_Damage_Multiplier": 0.5,
+    "Power_Freeze_Duration": 2.0,
+    "Base_Cooldown": 30.0
+  },
+  "IceBlast": {
+    "Base_Power_Weapon_Damage_Multiplier": 3.0,
+    "Power_Weapon_Damage_Multiplier_2": 2.0,
+    "Base_Cooldown": 15.0,
+    "Base_Mana_Cost": 15.0,
+    "Base_Power_Radius": 15.0
+  },
+  "InfernalBlast": {
+    "Base_Power_Weapon_Damage_Multiplier": 7.0,
+    "Power_Weapon_Damage_Multiplier_2": 3.0,
+    "Base_Power_Radius": 3.0,
+    "Base_Cooldown": 22.0,
+    "Base_Mana_Cost": 22.0,
+    "Power_Duration": 4.0
+  },
+  "Blizzard": {
+    "Base_Crit_Chance_Multiplier": 1.0,
+    "Base_Power_Weapon_Damage_Multiplier": 1.0,
+    "Base_Power_Radius": 4.0,
+    "Power_Duration": 4.0,
+    "Base_Cooldown": 25.0
+  },
+  "ChainLightning": {
+    "Base_Power_Weapon_Damage_Multiplier": 2.5,
+    "ChainLightning_Max_Num_Chains": 4.0,
+    "Base_Cooldown": 20.0
+  },
+  "Hubris": {
+    "field_0x120": 0.3
+  },
+  "Thunderstrike": {
+    "Power_Duration": 4.0,
+    "Base_Cooldown": 30.0,
+    "Base_Mana_Cost": 30.0
+  },
+  "ManaShield": {
+    "Mana_Shield_Life_Factor": 0.5,
+    "Mana_Shield_Damage_Absorbtion_Factor": 0.2
+  },
+  "ElementalSeal": {
+    "Base_Power_Weapon_Damage_Multiplier": 0.25,
+    "Power_Elemental_Seal_Weapon_Damage_Multiplier": 0.3,
+    "Power_Duration": 10.0,
+    "Base_Power_Radius": 2.5,
+    "Base_Cooldown": 25.0
+  },
+  "FireArmor": {},
+  "ColdArmor": {},
+  "LightningArmor": {},
+  "WolfKingRoar": {
+    "Base_Cooldown": 12.0
+  },
+  "WolfKingSummonPack": {},
+  "Wander": {},
+  "Frenzy": {
+    "Base_Cooldown": 30.0,
+    "Buff_Duration": 20.0,
+    "Base_Mana_Cost": 30.0,
+    "Attack_Speed_Bonus_Percent": 0.07
+  },
+  "Intimidate": {
+    "Base_Cooldown": 16.0,
+    "Buff_Duration": 10.0,
+    "Base_Power_Radius": 6.0,
+    "Base_Mana_Cost": 30.0
+  },
+  "Pounce": {
+    "Base_Power_Weapon_Damage_Multiplier": 0.25,
+    "Base_Cooldown": 10.0,
+    "Base_Mana_Cost": 15.0
+  },
+  "ImpalingTrap": {
+    "Power_Duration": 5.0,
+    "Base_Power_Weapon_Damage_Multiplier": 7.5,
+    "Base_Cooldown": 30.0
+  },
+  "MarkOfTheChosen": {
+    "Base_Cooldown": 15.0,
+    "Base_Mana_Cost": 25.0,
+    "Power_Mark_Of_The_Chosen_Amplify_Damage_Taken_Percent": 0.1
+  },
+  "Tornado": {
+    "Base_Power_Weapon_Damage_Multiplier": 2.3,
+    "Base_Power_Radius": 2.0,
+    "Power_Duration": 7.0,
+    "Base_Cooldown": 30.0,
+    "Base_Mana_Cost": 30.0,
+    "Power_Projectile_Pierce_Chance": 1.0
+  },
+  "WolfKingCharge": {
+    "Base_Cooldown": 6.0
+  },
+  "DragonFireBreath": {
+    "Base_Cooldown": 8.0,
+    "field_0x138": 8.0
+  },
+  "BolomahlTripleStrike": {
+    "Base_Cooldown": 5.0,
+    "field_0x148": 8.000001899898052
+  },
+  "WarchiefWhirlwind": {
+    "Base_Cooldown": 8.0,
+    "field_0x138": 8.0
+  },
+  "FallenAngelRay": {
+    "Base_Cooldown": 7.0,
+    "field_0x138": 7.0
+  },
+  "BoneDragonSummonSkeleton": {},
+  "Slam": {
+    "Base_Power_Weapon_Damage_Multiplier": 5.5,
+    "Base_Cooldown": 15.0,
+    "Base_Mana_Cost": 35.0,
+    "Slam_Max_Distance": 15.0
+  },
+  "VileDragonNova": {},
+  "DefaultPhysicalBolt": {
+    "field_0x130": 1.0
+  },
+  "ManaArrows": {
+    "Power_Mana_Arrows_Num_Charges": 8.0,
+    "Base_Power_Weapon_Damage_Multiplier": 1.2,
+    "Base_Cooldown": 25.0,
+    "Base_Mana_Cost": 25.0
+  },
+  "PoolOfMana": {
+    "field_0x120": 0.15
+  },
+  "ManaArrowsAbility": {},
+  "BeastTracking": {
+    "field_0x128": 0.5
+  },
+  "Concentrate": {},
+  "Cripple": {
+    "field_0x120": 0.7
+  },
+  "Thorns": {
+    "Base_Cooldown": 24.0,
+    "Base_Mana_Cost": 35.0,
+    "Reflect_Melee_Damage_Percent": 2.0,
+    "Buff_Duration": 10.0
+  },
+  "BeastWithin": {
+    "Base_Mana_Cost": 30.0,
+    "Buff_Duration": 7.0
+  },
+  "FrozenArrow": {
+    "Base_Power_Radius": 4.0,
+    "Base_Power_Weapon_Damage_Multiplier": 1.4,
+    "Base_Cooldown": 25.0,
+    "Base_Mana_Cost": 25.0
+  },
+  "AncientKnowledge": {
+    "field_0x120": 0.05
+  },
+  "BloodCasting": {
+    "field_0x120": 1.0
+  },
+  "EvasiveManeuver": {
+    "field_0x120": 0.1
+  },
+  "ForceField": {
+    "field_0x120": 0.2
+  },
+  "ManaFlow": {
+    "field_0x120": 0.2
+  },
+  "PoisonCloud": {
+    "Power_Slow_Effect_Percent": 0.2,
+    "Base_Power_Radius": 3.0,
+    "Power_Duration": 6.0,
+    "Base_Power_Weapon_Damage_Multiplier": 0.9,
+    "Base_Cooldown": 25.0
+  },
+  "Teleport": {
+    "Base_Cooldown": 12.0,
+    "Base_Mana_Cost": 20.0
+  },
+  "RapidCasting": {
+    "field_0x128": 0.25
+  },
+  "DeadlyPoison": {},
+  "TastyTreats": {
+    "Power_SummonWolf_Base_Life_Regen": 0.0005
+  },
+  "Solitary": {},
+  "Fork": {},
+  "UniqueItemFireNova": {
+    "Base_Power_Radius": 4.0
+  },
+  "HelSummonPack": {},
+  "HelFireNovas": {
+    "Base_Cooldown": 10.0,
+    "field_0x168": 20.0,
+    "field_0x148": 0.6,
+    "field_0x158": 1.1444089977885596e-06
+  },
+  "HelHomingFire": {
+    "Base_Power_Weapon_Damage_Multiplier": 6.0,
+    "Base_Power_Radius": 2.0,
+    "Power_Duration": 10.0,
+    "Base_Cooldown": 10.0
+  },
+  "HelBigFireNova": {
+    "Base_Power_Radius": 20.0,
+    "Base_Cooldown": 6.0
+  },
+  "HelSmallFireNova": {
+    "Base_Power_Radius": 4.0
+  },
+  "RepelMagic": {},
+  "MonsterCurseSlowProjectiles": {
+    "Base_Cooldown": 30.0,
+    "Buff_Duration": 30.0
+  },
+  "Mixology": {
+    "Potion_Effect_Increase_Percent": 0.2,
+    "Buff_Duration": 300.0,
+    "Base_Cooldown": 300.0
+  },
+  "OdrSummonTotem": {},
+  "OdrChargeTotemFire": {
+    "Base_Cooldown": 10.0,
+    "field_0x168": 10.0
+  },
+  "OdrChargeTotemCold": {
+    "Base_Cooldown": 10.0,
+    "field_0x168": 10.0
+  },
+  "OdrChargeTotemLightning": {
+    "Base_Cooldown": 10.0,
+    "field_0x168": 10.0
+  },
+  "OdrTotemFireAttack": {
+    "Base_Cooldown": 1.0,
+    "field_0x138": 1.0
+  },
+  "OdrTotemColdAttack": {
+    "Base_Power_Radius": 6.0,
+    "Base_Power_Weapon_Damage_Multiplier": 4.0,
+    "Power_Freeze_Duration": 3.0
+  },
+  "OdrTotemLightningAttack": {
+    "Base_Cooldown": 1.0
+  },
+  "OdrEnrage": {},
+  "OdrSlam": {
+    "Base_Power_Weapon_Damage_Multiplier": 5.5,
+    "Base_Cooldown": 5.0,
+    "Slam_Max_Distance": 15.0
+  },
+  "MonsterCurseSlow": {
+    "Base_Cooldown": 30.0,
+    "Buff_Duration": 30.0
+  },
+  "MonsterCurseReducedWeaponDamage": {
+    "Base_Cooldown": 30.0,
+    "Buff_Duration": 30.0
+  },
+  "MonsterCurseLowerResistances": {
+    "Base_Cooldown": 30.0,
+    "Buff_Duration": 30.0
+  },
+  "MonsterCurseLivingLeech": {
+    "Base_Cooldown": 30.0,
+    "Buff_Duration": 30.0,
+    "Physical_Life_Leech_Given_On_Hit": 30.0,
+    "Fire_Life_Leech_Given_On_Hit": 30.0,
+    "Cold_Life_Leech_Given_On_Hit": 30.0,
+    "Lightning_Life_Leech_Given_On_Hit": 30.0
+  },
+  "MonsterCurseAmplifyDamageTaken": {
+    "Base_Cooldown": 30.0,
+    "Buff_Duration": 30.0
+  },
+  "UniqueItemFireballOnHit": {},
+  "ShootExplodingFireArrow": {},
+  "Spitfire": {},
+  "Whirl": {},
+  "UniqueItemThrowHammerOnHit": {},
+  "UniqueItemFreezeNova": {
+    "Base_Cooldown": 1.0
+  },
+  "SummonSkeleton": {
+    "Minion_Inheritance_Weapon_Damage_Bonus_Percent": 0.15,
+    "Minion_Inheritance_Attack_Speed_Bonus_Percent": 0.8,
+    "Minion_Inheritance_Movement_Speed_Bonus_Percent": 1.1,
+    "Minion_Inheritance_Life_Bonus_Percent": 0.5,
+    "Minion_Inheritance_Force_Field_Bonus_Percent": 0.3,
+    "Minion_Inheritance_Armor_Evasion_Bonus_Percent": 0.75,
+    "Minion_Inheritance_Resistances_Bonus_Percent": 0.75,
+    "Minion_Inheritance_Crit_Chance_Bonus_Percent": 1.0,
+    "Minion_Inheritance_Crit_Damage_Bonus_Percent": 1.0,
+    "Base_Cooldown": 10.0
+  },
+  "SummonDemon": {
+    "Power_Minion_Duration": 90.0,
+    "Minion_Inheritance_Weapon_Damage_Bonus_Percent": 0.5,
+    "Minion_Inheritance_Attack_Speed_Bonus_Percent": 1.0,
+    "Minion_Inheritance_Movement_Speed_Bonus_Percent": 1.0,
+    "Minion_Inheritance_Life_Bonus_Percent": 0.4,
+    "Minion_Inheritance_Force_Field_Bonus_Percent": 0.2,
+    "Minion_Inheritance_Armor_Evasion_Bonus_Percent": 0.75,
+    "Minion_Inheritance_Resistances_Bonus_Percent": 0.75,
+    "Minion_Inheritance_Crit_Chance_Bonus_Percent": 1.2,
+    "Minion_Inheritance_Crit_Damage_Bonus_Percent": 1.2,
+    "Base_Cooldown": 16.0
+  },
+  "SummonDeath": {
+    "Minion_Inheritance_Attack_Speed_Bonus_Percent": 0.8,
+    "Minion_Inheritance_Movement_Speed_Bonus_Percent": 1.1,
+    "Minion_Inheritance_Life_Bonus_Percent": 1.8,
+    "Minion_Inheritance_Force_Field_Bonus_Percent": 0.5,
+    "Minion_Inheritance_Armor_Evasion_Bonus_Percent": 1.4,
+    "Minion_Inheritance_Resistances_Bonus_Percent": 1.2,
+    "Minion_Inheritance_Crit_Chance_Bonus_Percent": 1.0,
+    "Minion_Inheritance_Crit_Damage_Bonus_Percent": 1.0,
+    "Base_Cooldown": 45.0
+  },
+  "UnholyFocus": {
+    "Buff_Duration": 8.0,
+    "Base_Cooldown": 25.0,
+    "Base_Mana_Cost": 45.0,
+    "Power_Unholy_Focus_Movement_Speed_Bonus_Percent": 0.2,
+    "Power_Unholy_Focus_Attack_Speed_Bonus_Percent": 0.1,
+    "Power_Unholy_Focus_Skeleton_Charge_Cooldown": 5.0,
+    "Power_Unholy_Focus_Demon_Shadowbolt_Weapon_Damage_Multiplier": 0.9
+  },
+  "Shadowbolt": {
+    "Base_Power_Weapon_Damage_Multiplier": 3.0,
+    "Power_Weapon_Damage_Multiplier_2": 0.5,
+    "Base_Power_Radius": 2.5,
+    "Base_Cooldown": 15.0,
+    "Base_Mana_Cost": 30.0
+  },
+  "AstralPlane": {
+    "Base_Cooldown": 45.0,
+    "Base_Mana_Cost": 45.0
+  },
+  "DrainLife": {
+    "Base_Action_Speed": 1.0,
+    "Base_Power_Radius": 1.0,
+    "Power_Duration": 6.0,
+    "Base_Power_Weapon_Damage_Multiplier": 0.7,
+    "Base_Cooldown": 22.0,
+    "Base_Mana_Cost": 30.0,
+    "Power_Drain_Life_Percent_Of_Life_Leech_Leeched_As_Life": 8.0,
+    "Power_Drain_Life_Life_Leech_Bonus_Per_Active_Minion": 4.0,
+    "field_0x158": 1.0
+  },
+  "DemonicPresence": {
+    "Power_Demonic_Presence_Base_Life_Bonus_Percent": 0.3,
+    "Power_Demonic_Presence_Base_ForceField_Bonus_Percent": 0.1,
+    "Life_Regen_Bonus": 0.01,
+    "Power_Duration": 16.0,
+    "Base_Power_Radius": 7.0,
+    "Base_Cooldown": 30.0
+  },
+  "Decay": {
+    "Base_Power_Radius": 5.0,
+    "Power_Duration": 8.0,
+    "Base_Power_Weapon_Damage_Multiplier": 0.25,
+    "Power_Decay_Target_Reduced_Attack_Speed_Percent": 0.2,
+    "Base_Cooldown": 22.0,
+    "Base_Mana_Cost": 22.0
+  },
+  "Sacrifice": {
+    "Base_Cooldown": 25.0,
+    "Base_Mana_Cost": 10.0,
+    "Power_Duration": 5.0,
+    "Mana_Granted_Percent": 0.5,
+    "Power_Life_And_Force_Field_Gained_From_Minion_Percent": 1.0
+  },
+  "BoneLink": {
+    "Buff_Duration": 15.0,
+    "Base_Cooldown": 24.0,
+    "Base_Mana_Cost": 30.0,
+    "Amplify_Damage_Taken_Percent": -0.3
+  },
+  "AstralWalk": {
+    "AstralWalk_Movement_Speed_Bonus_Percent": 10.0,
+    "Base_Cooldown": 16.0
+  },
+  "SkeletonCharge": {
+    "Buff_Duration": 3.0,
+    "Base_Cooldown": 3.0
+  },
+  "DemonShadowbolt": {
+    "Power_Weapon_Damage_Multiplier_2": 0.5,
+    "Base_Power_Radius": 2.0,
+    "Base_Cooldown": 2.0,
+    "Base_Mana_Cost": 2.0
+  },
+  "DeathInstantKill": {},
+  "AccumulatingShadows": {
+    "field_0x120": 0.2
+  },
+  "Bodyguard": {
+    "field_0x120": 0.1
+  },
+  "BoneArmor": {
+    "field_0x120": 0.1
+  },
+  "Pillaging": {},
+  "DarkMagic": {
+    "field_0x120": 2.0
+  },
+  "GiftOfTheVampire": {
+    "field_0x120": 0.1
+  },
+  "MasterSummoner": {},
+  "Reanimator": {
+    "field_0x120": 0.3
+  },
+  "VileTouch": {},
+  "WandMaster": {
+    "field_0x120": 0.2
+  },
+  "Whirlwind": {
+    "Base_Power_Weapon_Damage_Multiplier": 0.4,
+    "Base_Cooldown": 25.0,
+    "Base_Mana_Cost": 30.0,
+    "Base_Power_Radius": 2.0,
+    "Power_Duration": 5.0,
+    "Power_Whirlwind_Damage_Frequency": 0.2
+  },
+  "KibuShockwave": {
+    "Base_Cooldown": 8.0,
+    "Base_Power_Weapon_Damage_Multiplier": 8.0
+  },
+  "KibuShock": {
+    "Base_Cooldown": 7.0
+  },
+  "KibuLightningExplodeSequence": {
+    "Base_Cooldown": 10.0
+  },
+  "KibuSummonElemental": {},
+  "KibuSmallLightningNova": {}
+}

@@ -49,11 +49,16 @@
 
 这些字段名说明每个技能有哪些参数（伤害倍率、持续时间、半径、召唤数量、跳跃衰减等），但**字段初值在方法体里**，dump 只有签名与地址。
 
-## 尚未提取（需要二进制反汇编）
+## 数值层已提取（见 [POWER_VALUES.md](POWER_VALUES.md)）
 
-* **具体数值**：技能的基础伤害倍率、冷却、法力消耗、半径/持续时间等，位于 IL2CPP 各 `Power` 子类的 `InitializePowerParameters` / `InternalInitializePowerParameters` 方法体（dump 中仅有地址区间，如 `Slam` 的 `0x…`）。
-* **每级/每精通数值公式**：`PowerMasteries` 里 124 个精通带有 `AttributeSpecifierDefinitionList`（属性 id + 初值/增量 + 触发等级），这些可读取；但其余精通与技能基础值仍要反汇编。
-* 技能选择/加点规则、法力系统、被动在战斗中的实际结算。
+技能的具体数值（倍率/冷却/法力/半径/持续时间等）不在 JSON 里，而在 IL2CPP 方法体；已用
+`tools/web-content/disasm_powers.py` 反汇编恢复 115 个技能的数值并写入服务端。
+
+## 仍需继续的部分
+
+* 效果语义归类（链式/传送/召唤/持续引导）仍为启发式。
+* `PowerMasteries` 的公式（124 条属性修正已读取）未接入战斗。
+* 法力系统运行、技能加点/等级、被动实际结算。
 
 ## 与当前网页实现的关系
 

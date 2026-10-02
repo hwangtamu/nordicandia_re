@@ -42,7 +42,7 @@ export interface HudState {
   bossAlive: boolean;
   bossKillsRemaining: number;
   autoMove: boolean;
-  skills: { name: string; effect: string; ready: boolean; cooldown: number }[];
+  skills: { name: string; effect: string; ready: boolean; cooldown: number; manaCost: number }[];
   message: string;
 }
 
@@ -477,7 +477,7 @@ export class World {
       bossAlive: state.bossAlive,
       bossKillsRemaining: state.bossKillsRemaining,
       autoMove: this.autoMove,
-      skills: (state.skills ?? []).map((skill) => ({ name: skill.name, effect: skill.effect, ready: skill.cooldown <= 0, cooldown: skill.cooldown })),
+      skills: (state.skills ?? []).map((skill) => ({ name: skill.name, effect: skill.effect, ready: skill.cooldown <= 0, cooldown: skill.cooldown, manaCost: skill.manaCost })),
       message: this.elapsed < this.messageUntil ? this.message : "",
     });
   }

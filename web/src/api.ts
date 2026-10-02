@@ -50,6 +50,8 @@ export interface SkillStatus {
   effect: string;
   cooldown: number;
   maxCooldown: number;
+  manaCost: number;
+  confidence: string;
 }
 
 export interface MonsterState {

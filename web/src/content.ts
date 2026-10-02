@@ -50,9 +50,13 @@ export interface ActivePower {
   multiplier: number;
   cooldown: number;
   radius: number;
+  manaCost: number;
   healPercent: number;
   buffBonus: number;
   buffSeconds: number;
+  confidence: string;
+  descriptionFilled?: string;
+  values?: Record<string, number>;
 }
 
 export interface PassivePower {
@@ -66,6 +70,7 @@ export interface PassivePower {
   effect: string;
   offenseBonus: number;
   healthBonus: number;
+  confidence: string;
 }
 
 export interface ClassPowers {

@@ -14,9 +14,11 @@ public sealed record SkillProfile(
     double Multiplier,
     double Cooldown,
     double Radius,
+    double ManaCost,
     double HealPercent,
     double BuffBonus,
-    double BuffSeconds);
+    double BuffSeconds,
+    string Confidence); // client-verified | provisional-behaviour
 
 /// <summary>A real passive skill; <see cref="Effect"/> is a provisional category.</summary>
 public sealed record PassiveProfile(
@@ -25,9 +27,10 @@ public sealed record PassiveProfile(
     string Icon,
     string Effect,      // might | warding | haste | fortune
     double OffenseBonus,
-    double HealthBonus);
+    double HealthBonus,
+    string Confidence);
 
 public sealed record ClassPowers(string ClassName, IReadOnlyList<SkillProfile> Active, PassiveProfile Passive);
 
 /// <summary>Live per-skill state returned in a combat snapshot so the HUD labels the real skills.</summary>
-public readonly record struct SkillStatus(int Slot, string Name, string Effect, double Cooldown, double MaxCooldown);
+public readonly record struct SkillStatus(int Slot, string Name, string Effect, double Cooldown, double MaxCooldown, double ManaCost, string Confidence);

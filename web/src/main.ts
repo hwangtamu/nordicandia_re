@@ -295,10 +295,11 @@ function renderHud(hudState: HudState): void {
     const skill = hudState.skills[index];
     const ready = skill?.ready ?? true;
     const name = skill?.name ?? `Skill ${index + 1}`;
-    const description = classPowers?.active[index]?.description?.replace(/\{[0-9]+\}/g, "…") ?? "";
+    const description = classPowers?.active[index]?.descriptionFilled ?? classPowers?.active[index]?.description?.replace(/\{[0-9]+\}/g, "…") ?? "";
+    const mana = skill?.manaCost ? `  ${Math.round(skill.manaCost)}m` : "";
     if (description) button.title = description;
     button.classList.toggle("disabled", !ready);
-    button.textContent = ready ? name : `${name} ${Math.ceil(skill.cooldown)}s`;
+    button.textContent = ready ? `${name}${mana}` : `${name} ${Math.ceil(skill.cooldown)}s`;
   });
   const message = document.getElementById("hud-message") as HTMLElement;
   message.textContent = hudState.message;

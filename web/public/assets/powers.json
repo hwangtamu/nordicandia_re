@@ -3659,15 +3659,23 @@
             "__2__current",
             "__l__initialThreadId"
           ],
+          "slot": 0,
           "effect": "strike",
-          "multiplier": 2.2,
-          "cooldown": 4.0,
+          "multiplier": 5.5,
+          "cooldown": 15.0,
           "radius": 0.0,
+          "manaCost": 35.0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
           "buffSeconds": 0.0,
-          "slot": 0,
-          "confidence": "provisional-behaviour"
+          "values": {
+            "Base_Power_Weapon_Damage_Multiplier": 5.5,
+            "Base_Cooldown": 15.0,
+            "Base_Mana_Cost": 35.0,
+            "Slam_Max_Distance": 15.0
+          },
+          "confidence": "client-verified",
+          "descriptionFilled": "Slam the ground in front of you to deal 550 weapon damage to enemies in a line."
         },
         {
           "id": "73428deb-2a35-433d-8e67-39d188aa6395",
@@ -3702,15 +3710,22 @@
             "__2__current",
             "__l__initialThreadId"
           ],
+          "slot": 1,
           "effect": "rally",
           "multiplier": 0.0,
-          "cooldown": 16.0,
+          "cooldown": 30.0,
           "radius": 0.0,
+          "manaCost": 0,
           "healPercent": 0.15,
-          "buffBonus": 0.25,
-          "buffSeconds": 6.0,
-          "slot": 1,
-          "confidence": "provisional-behaviour"
+          "buffBonus": 0.75,
+          "buffSeconds": 10.0,
+          "values": {
+            "Strength_Bonus_Percent": 0.75,
+            "Buff_Duration": 10.0,
+            "Base_Cooldown": 30.0
+          },
+          "confidence": "client-verified",
+          "descriptionFilled": "Increases your strength by {0}% for 30 seconds."
         },
         {
           "id": "1b17cf95-4a7c-4965-8311-0c88ee192976",
@@ -3742,15 +3757,22 @@
             "__l__initialThreadId",
             "_targetPos_5__2"
           ],
+          "slot": 2,
           "effect": "strike",
-          "multiplier": 2.2,
-          "cooldown": 4.0,
+          "multiplier": 0.25,
+          "cooldown": 10.0,
           "radius": 0.0,
+          "manaCost": 15.0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
           "buffSeconds": 0.0,
-          "slot": 2,
-          "confidence": "provisional-behaviour"
+          "values": {
+            "Base_Power_Weapon_Damage_Multiplier": 0.25,
+            "Base_Cooldown": 10.0,
+            "Base_Mana_Cost": 15.0
+          },
+          "confidence": "client-verified",
+          "descriptionFilled": ""
         }
       ],
       "passive": {
@@ -3779,9 +3801,12 @@
           "_IsChaining"
         ],
         "effect": "might",
-        "offenseBonus": 0.12,
+        "offenseBonus": 1.0,
         "healthBonus": 0.0,
-        "confidence": "provisional-behaviour"
+        "values": {
+          "field_0x120": 1.0
+        },
+        "confidence": "client-verified"
       },
       "activePoolSize": 13,
       "passivePoolSize": 11,
@@ -3831,15 +3856,21 @@
             "__2__current",
             "__l__initialThreadId"
           ],
+          "slot": 0,
           "effect": "rally",
           "multiplier": 0.0,
-          "cooldown": 16.0,
+          "cooldown": 25.0,
           "radius": 0.0,
+          "manaCost": 30.0,
           "healPercent": 0.15,
           "buffBonus": 0.25,
           "buffSeconds": 6.0,
-          "slot": 0,
-          "confidence": "provisional-behaviour"
+          "values": {
+            "Base_Cooldown": 25.0,
+            "Base_Mana_Cost": 30.0
+          },
+          "confidence": "client-verified",
+          "descriptionFilled": "Increases your attack speed by {0}% for 25 second(s).\r\n25 second(s) cooldown."
         },
         {
           "id": "41c64b4a-71c4-4ccf-9029-99031eff524c",
@@ -3894,15 +3925,22 @@
             "__2__current",
             "__l__initialThreadId"
           ],
+          "slot": 1,
           "effect": "nova",
           "multiplier": 1.4,
-          "cooldown": 8.0,
-          "radius": 5.5,
+          "cooldown": 25.0,
+          "radius": 3.0,
+          "manaCost": 20.0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
           "buffSeconds": 0.0,
-          "slot": 1,
-          "confidence": "provisional-behaviour"
+          "values": {
+            "Base_Mana_Cost": 20.0,
+            "Base_Cooldown": 25.0,
+            "Base_Power_Radius": 3.0
+          },
+          "confidence": "client-verified",
+          "descriptionFilled": "Fire a rain of arrows towards a selected area of 3 units for 25 seconds. Deals {2}% weapon damage per second.\r\n25 second(s) cooldown.\r\nCosts 20 mana."
         },
         {
           "id": "1c974013-86f3-405f-ac7c-2cfb568dcf35",
@@ -3950,15 +3988,21 @@
             "__2__current",
             "__l__initialThreadId"
           ],
+          "slot": 2,
           "effect": "rally",
           "multiplier": 0.0,
-          "cooldown": 18.0,
+          "cooldown": 45.0,
           "radius": 0.0,
+          "manaCost": 45.0,
           "healPercent": 0.2,
           "buffBonus": 0.15,
           "buffSeconds": 8.0,
-          "slot": 2,
-          "confidence": "provisional-behaviour"
+          "values": {
+            "Base_Cooldown": 45.0,
+            "Base_Mana_Cost": 45.0
+          },
+          "confidence": "client-verified",
+          "descriptionFilled": "Summon a wolf companion with {0}% of your health and {1}% of your damage, which defends you and helps you find {2}% more monsters."
         }
       ],
       "passive": {
@@ -3983,9 +4027,12 @@
           "_ShouldRemove"
         ],
         "effect": "might",
-        "offenseBonus": 0.1,
+        "offenseBonus": 0.5,
         "healthBonus": 0.05,
-        "confidence": "provisional-behaviour"
+        "values": {
+          "field_0x120": 0.5
+        },
+        "confidence": "client-verified"
       },
       "activePoolSize": 14,
       "passivePoolSize": 11,
@@ -4045,15 +4092,22 @@
             "__2__current",
             "__l__initialThreadId"
           ],
+          "slot": 0,
           "effect": "nova",
-          "multiplier": 1.4,
-          "cooldown": 8.0,
+          "multiplier": 2.5,
+          "cooldown": 20.0,
           "radius": 5.5,
+          "manaCost": 0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
           "buffSeconds": 0.0,
-          "slot": 0,
-          "confidence": "provisional-behaviour"
+          "values": {
+            "Base_Power_Weapon_Damage_Multiplier": 2.5,
+            "ChainLightning_Max_Num_Chains": 4.0,
+            "Base_Cooldown": 20.0
+          },
+          "confidence": "client-verified",
+          "descriptionFilled": "Cast a jolt of lightning that deals 250% weapon damage as Lightning and then jumps to additional nearby enemies. Each jump reduces the damage by {1}%. The lightning will dissipate after 4 jumps.\r\n20 second(s) cooldown.\r\nCosts {4} mana."
         },
         {
           "id": "35c1fa86-53ff-4558-a0e6-6cc30bb91892",
@@ -4088,15 +4142,21 @@
             "_targetPos_5__2",
             "_couldUpdatePosition_5__3"
           ],
+          "slot": 1,
           "effect": "strike",
           "multiplier": 2.2,
-          "cooldown": 4.0,
+          "cooldown": 12.0,
           "radius": 0.0,
+          "manaCost": 20.0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
           "buffSeconds": 0.0,
-          "slot": 1,
-          "confidence": "provisional-behaviour"
+          "values": {
+            "Base_Cooldown": 12.0,
+            "Base_Mana_Cost": 20.0
+          },
+          "confidence": "client-verified",
+          "descriptionFilled": ""
         },
         {
           "id": "cb4943e8-5ea1-4956-a757-989a316b1ec7",
@@ -4148,15 +4208,23 @@
             "__2__current",
             "__l__initialThreadId"
           ],
+          "slot": 2,
           "effect": "nova",
-          "multiplier": 1.4,
-          "cooldown": 8.0,
-          "radius": 5.5,
+          "multiplier": 0.5,
+          "cooldown": 30.0,
+          "radius": 6.0,
+          "manaCost": 0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
           "buffSeconds": 0.0,
-          "slot": 2,
-          "confidence": "provisional-behaviour"
+          "values": {
+            "Base_Power_Radius": 6.0,
+            "Base_Power_Weapon_Damage_Multiplier": 0.5,
+            "Power_Freeze_Duration": 2.0,
+            "Base_Cooldown": 30.0
+          },
+          "confidence": "client-verified",
+          "descriptionFilled": "Cast an Ice Nova that deals 50% weapon damage as Cold and hits all enemies within 6 units, freezing them for 30 seconds.\r\n30 second(s) cooldown.\r\nCosts {4} mana."
         }
       ],
       "passive": {
@@ -4184,9 +4252,12 @@
           "_IntelligenceBonus"
         ],
         "effect": "might",
-        "offenseBonus": 0.12,
+        "offenseBonus": 0.3,
         "healthBonus": 0.0,
-        "confidence": "provisional-behaviour"
+        "values": {
+          "field_0x120": 0.3
+        },
+        "confidence": "client-verified"
       },
       "activePoolSize": 12,
       "passivePoolSize": 10,
@@ -4220,15 +4291,29 @@
             "__2__current",
             "__l__initialThreadId"
           ],
+          "slot": 0,
           "effect": "rally",
           "multiplier": 0.0,
-          "cooldown": 18.0,
+          "cooldown": 10.0,
           "radius": 0.0,
+          "manaCost": 0,
           "healPercent": 0.2,
           "buffBonus": 0.15,
           "buffSeconds": 8.0,
-          "slot": 0,
-          "confidence": "provisional-behaviour"
+          "values": {
+            "Minion_Inheritance_Weapon_Damage_Bonus_Percent": 0.15,
+            "Minion_Inheritance_Attack_Speed_Bonus_Percent": 0.8,
+            "Minion_Inheritance_Movement_Speed_Bonus_Percent": 1.1,
+            "Minion_Inheritance_Life_Bonus_Percent": 0.5,
+            "Minion_Inheritance_Force_Field_Bonus_Percent": 0.3,
+            "Minion_Inheritance_Armor_Evasion_Bonus_Percent": 0.75,
+            "Minion_Inheritance_Resistances_Bonus_Percent": 0.75,
+            "Minion_Inheritance_Crit_Chance_Bonus_Percent": 1.0,
+            "Minion_Inheritance_Crit_Damage_Bonus_Percent": 1.0,
+            "Base_Cooldown": 10.0
+          },
+          "confidence": "client-verified",
+          "descriptionFilled": ""
         },
         {
           "id": "763ab376-e1bd-44ab-b4fa-8b03c6d03b16",
@@ -4258,15 +4343,21 @@
             "__l__initialThreadId",
             "_couldUpdatePosition_5__2"
           ],
+          "slot": 1,
           "effect": "strike",
           "multiplier": 2.2,
-          "cooldown": 4.0,
+          "cooldown": 16.0,
           "radius": 0.0,
+          "manaCost": 0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
           "buffSeconds": 0.0,
-          "slot": 1,
-          "confidence": "provisional-behaviour"
+          "values": {
+            "AstralWalk_Movement_Speed_Bonus_Percent": 10.0,
+            "Base_Cooldown": 16.0
+          },
+          "confidence": "client-verified",
+          "descriptionFilled": ""
         },
         {
           "id": "fedd69aa-1a57-4f55-aae2-b6676fb5eea2",
@@ -4296,15 +4387,24 @@
             "__l__initialThreadId",
             "__7__wrap1"
           ],
-          "effect": "strike",
-          "multiplier": 1.9,
-          "cooldown": 5.0,
-          "radius": 0.0,
+          "slot": 2,
+          "effect": "nova",
+          "multiplier": 3.0,
+          "cooldown": 15.0,
+          "radius": 2.5,
+          "manaCost": 30.0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
           "buffSeconds": 0.0,
-          "slot": 2,
-          "confidence": "provisional-behaviour"
+          "values": {
+            "Base_Power_Weapon_Damage_Multiplier": 3.0,
+            "Power_Weapon_Damage_Multiplier_2": 0.5,
+            "Base_Power_Radius": 2.5,
+            "Base_Cooldown": 15.0,
+            "Base_Mana_Cost": 30.0
+          },
+          "confidence": "client-verified",
+          "descriptionFilled": ""
         }
       ],
       "passive": {
@@ -4330,7 +4430,10 @@
         "effect": "might",
         "offenseBonus": 0.1,
         "healthBonus": 0.05,
-        "confidence": "provisional-behaviour"
+        "values": {
+          "field_0x120": 0.1
+        },
+        "confidence": "client-verified"
       },
       "activePoolSize": 12,
       "passivePoolSize": 10,
