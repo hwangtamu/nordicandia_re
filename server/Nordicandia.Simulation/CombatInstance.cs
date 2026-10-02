@@ -154,7 +154,8 @@ public sealed class CombatInstance
         ulong seed,
         int monsterCount = 5,
         IReadOnlyList<MonsterProfile> monsterProfiles = null,
-        ClassPowers classPowers = null)
+        ClassPowers classPowers = null,
+        long initialVersion = 1)
     {
         PlayerLevel = stats.Level;
         Offense = stats.Offense;
@@ -178,7 +179,10 @@ public sealed class CombatInstance
         PlayerMana = PlayerMaxMana;
         rng = new CombatRandom(seed == 0 ? 0x9E3779B97F4A7C15UL : seed);
         SpawnMonsters();
-        Version = 1;
+        // The version is a persistent, monotonically increasing counter. Restoring it from
+        // the store keeps it from regressing to 1 across a server restart, which would make
+        // the retained command log's boundary reject fresh commands (P1).
+        Version = Math.Max(1, initialVersion);
     }
 
     private double EffectiveMaxHealth() => CombatModel.MaxHealth(new CombatantStats(Offense, Defense, Recovery, PlayerLevel))

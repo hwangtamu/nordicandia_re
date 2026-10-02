@@ -43,7 +43,11 @@ static class WebM0Tests
             CombatantStats.FromRealtime(0, 50, 0, 10),
             new AttackProfile(1.0, 0.25, 2.0, 0.10),
             new CombatRandom(1));
-        Console.WriteLine($"INFO combat sample seed=1 damage={pinned.Damage:F6} crit={pinned.Critical} confidence={pinned.Confidence}");
+        Console.WriteLine($"INFO combat sample seed=1 damage={pinned.Damage:F6} crit={pinned.Critical} " +
+            $"formula={pinned.Confidence.Formula} inputs={pinned.Confidence.Inputs} execution={pinned.Confidence.Execution} overall={pinned.Confidence.Overall}");
+        Check(pinned.Confidence.Formula == RuleConfidence.ClientVerified, "confidence: hit/crit/mitigation formulas are ClientVerified");
+        Check(pinned.Confidence.Inputs == RuleConfidence.Provisional, "confidence: attribute inputs are still Provisional");
+        Check(pinned.Confidence.Overall != RuleConfidence.ClientVerified, "confidence: whole pipeline is not over-claimed as ClientVerified");
     }
 
     private static void ExperienceCurveMatchesClient()

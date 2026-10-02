@@ -79,6 +79,10 @@ public sealed class GameStore : IDisposable
         public long ExpectedVersion { get; set; }
         public bool Applied { get; set; }
         public string Reason { get; set; } = string.Empty;
+        // Server-assigned version at which this command was processed. Unlike
+        // <see cref="ExpectedVersion"/> this is controlled by the server and is strictly
+        // non-decreasing, so it is a sound retry-window boundary (R4/P2).
+        public long ProcessedVersion { get; set; }
     }
 
     /// <summary>How many recent commands are retained per character for idempotent replay.</summary>
@@ -109,6 +113,15 @@ public sealed class GameStore : IDisposable
         public Dictionary<int, int> MasteryRanks { get; set; } = new();
         // Recent processed web commands, oldest first. Bounded by MaxCommandLog.
         public List<CommandRecord> CommandLog { get; set; } = new();
+        // Persistent, monotonically increasing combat version. Restored into the in-memory
+        // CombatInstance so the retained command log's boundary cannot regress across a
+        // server restart (P1).
+        public long CombatVersion { get; set; }
+        // Server-controlled stale boundary. Raised only when a command record is evicted, so
+        // a command whose id is gone *and* whose expected version is below the floor is
+        // reliably rejected instead of re-executed (R4/P2), while genuine commands that still
+        // share a recent expected version keep the lenient retry window.
+        public long StaleFloorVersion { get; set; }
     }
 
     /// <summary>Read-only projection used by the leaderboard services.</summary>
@@ -527,11 +540,13 @@ public sealed class GameStore : IDisposable
     }
 
     public RealtimeProgress SaveRealtimeProgress(Guid owner, Guid id, double experience, int silver, int opals,
-        CombatSnapshot? combat = null)
+        CombatSnapshot? combat = null, long combatVersion = 0)
         => Change(s =>
         {
             var c = Owned(s, owner, id);
             c.HasRealtimeProgress = true;
+            // Monotonic: never let a stale flush lower the persisted combat version.
+            if (combatVersion > c.CombatVersion) c.CombatVersion = combatVersion;
             c.Experience = Math.Max(0, experience);
             c.Silver = Math.Max(0, silver);
             c.Opals = Math.Max(0, opals);
@@ -762,9 +777,10 @@ public sealed class GameStore : IDisposable
         }
     }
 
-    /// <summary>Looks up a previous web command. <c>OldestExpectedVersion</c> is the expected
-    /// version of the oldest retained command: anything older is outside the retry window.</summary>
-    public (CommandRecord Found, long OldestExpectedVersion) LookupCommand(Guid owner, Guid id, string commandId)
+    /// <summary>Looks up a previous web command. <c>OldestBoundaryVersion</c> is the persisted
+    /// stale floor: a command whose id is gone and whose expected version is below it is
+    /// outside the retry window and must be rejected rather than re-executed (R4/P2).</summary>
+    public (CommandRecord Found, long OldestBoundaryVersion) LookupCommand(Guid owner, Guid id, string commandId)
     {
         lock (gate)
         {
@@ -773,20 +789,43 @@ public sealed class GameStore : IDisposable
             var found = string.IsNullOrEmpty(commandId)
                 ? null
                 : c.CommandLog.FirstOrDefault(r => r.CommandId == commandId);
-            var oldest = c.CommandLog.Count > 0 ? c.CommandLog[0].ExpectedVersion : long.MinValue;
-            return (found, oldest);
+            return (found, c.StaleFloorVersion);
         }
     }
 
-    /// <summary>Appends a processed command and trims the log to the retained window.</summary>
-    public void AppendCommand(Guid owner, Guid id, CommandRecord record) => Change(s =>
+    // The version to record as stale when a command record is evicted. Legacy records
+    // (written before ProcessedVersion existed) fall back to their expected version.
+    private static long RetireVersionOf(CommandRecord record)
+        => record.ProcessedVersion > 0 ? record.ProcessedVersion : record.ExpectedVersion;
+
+    /// <summary>Appends a processed command, advances the persisted combat version, and trims
+    /// the log to the retained window. Evicted records raise the stale floor (R4/P2).</summary>
+    public void AppendCommand(Guid owner, Guid id, CommandRecord record, long combatVersion = 0) => Change(s =>
     {
         var c = Owned(s, owner, id);
         c.CommandLog ??= new List<CommandRecord>();
+        if (combatVersion > c.CombatVersion) c.CombatVersion = combatVersion;
         c.CommandLog.Add(record);
-        while (c.CommandLog.Count > MaxCommandLog) c.CommandLog.RemoveAt(0);
+        while (c.CommandLog.Count > MaxCommandLog)
+        {
+            var evicted = c.CommandLog[0];
+            var retire = RetireVersionOf(evicted);
+            if (retire > c.StaleFloorVersion) c.StaleFloorVersion = retire;
+            c.CommandLog.RemoveAt(0);
+        }
         return true;
     });
+
+    /// <summary>The persisted, monotonically increasing combat version used to seed a rebuilt
+    /// <c>CombatInstance</c> on restart.</summary>
+    public long GetCombatVersion(Guid owner, Guid id)
+    {
+        lock (gate)
+        {
+            var c = Owned(state, owner, id);
+            return c.CombatVersion;
+        }
+    }
 
     public readonly record struct MerchantPurchase(SerializedItems Items, int NewBalance);
 

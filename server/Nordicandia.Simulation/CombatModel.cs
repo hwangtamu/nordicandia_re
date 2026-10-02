@@ -52,8 +52,28 @@ public readonly record struct AttackProfile(
     double CritMultiplier = 1.5,
     double Variance = 0.10);
 
+/// <summary>
+/// Confidence of one resolved hit, deliberately split so a verified formula is never
+/// presented as if the whole pipeline (input sources, execution order, tuning constants)
+/// were verified too. <c>Formula</c> covers the recovered equations, <c>Inputs</c> the
+/// attribute sources feeding them, and <c>Execution</c> the composition/ordering.
+/// The <c>Assumed*</c> flags name the tuning constants still standing in for client data.
+/// </summary>
+public readonly record struct DamageConfidence(
+    RuleConfidence Formula,
+    RuleConfidence Inputs,
+    RuleConfidence Execution,
+    bool AssumedReductionCap,
+    bool AssumedVariance,
+    bool AssumedMinDamage)
+{
+    /// <summary>Weakest link of the three layers (the enum is ordered best-first, so the
+    /// weakest link is the largest numeric value).</summary>
+    public RuleConfidence Overall => (RuleConfidence)Math.Max((int)Formula, Math.Max((int)Inputs, (int)Execution));
+}
+
 /// <summary>Result of one resolved hit.</summary>
-public readonly record struct DamageResult(double Damage, bool Critical, RuleConfidence Confidence, bool Hit = true);
+public readonly record struct DamageResult(double Damage, bool Critical, DamageConfidence Confidence, bool Hit = true);
 
 /// <summary>
 /// M0 combat sample. The real client's damage pipeline has not been recovered yet, so
@@ -134,16 +154,26 @@ public static class CombatModel
         AttackProfile profile,
         CombatRandom rng)
     {
+        // Formula layer is recovered from the client; the attribute inputs and the
+        // variance/min-damage tuning are not, so they are labelled separately.
+        var confidence = new DamageConfidence(
+            Formula: RuleConfidence.ClientVerified,
+            Inputs: RuleConfidence.Provisional,
+            Execution: RuleConfidence.Inferred,
+            AssumedReductionCap: true,
+            AssumedVariance: profile.Variance > 0,
+            AssumedMinDamage: true);
+
         // ClientVerified order: roll to hit, then crit, then mitigate and apply variance.
         var hit = RollChance(ChanceToHit(attacker.Offense, defender.Defense), rng);
         var critical = RollChance(profile.CritChance, rng);
-        if (!hit) return new DamageResult(0.0, false, RuleConfidence.ClientVerified, false);
+        if (!hit) return new DamageResult(0.0, false, confidence, false);
         var raw = Math.Max(0, attacker.Offense) * Math.Max(0, profile.SkillMultiplier);
         var mitigated = raw * (1.0 - PhysicalDamageReduction(defender.Defense, raw));
         var variance = 1.0 + (rng.NextDouble() * 2.0 - 1.0) * Math.Max(0, profile.Variance);
         var critFactor = critical ? Math.Max(1.0, profile.CritMultiplier) : 1.0;
         var damage = Math.Max(1.0, mitigated * Math.Max(0.05, variance) * critFactor);
-        return new DamageResult(damage, critical, RuleConfidence.ClientVerified, true);
+        return new DamageResult(damage, critical, confidence, true);
     }
 
     /// <summary>Experience granted for a kill at <paramref name="monsterLevel"/>.

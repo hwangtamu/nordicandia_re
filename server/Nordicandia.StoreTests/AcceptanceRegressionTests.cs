@@ -17,6 +17,9 @@ static class AcceptanceRegressionTests
         EquipmentStatsSurviveRestartWithoutDoubleCount();
         CommandsDoNotAdvanceSimulationTime();
         StaleCommandsAreRejected();
+        EqualVersionEvictedCommandIsRejected();
+        MissingCommandIdIsRejected();
+        CombatVersionSurvivesRestart();
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
@@ -193,6 +196,92 @@ static class AcceptanceRegressionTests
             var inventory = registry.Inventory(owner, characterId);
             Check(inventory.Items.First(i => i.Id == b.Id).Equipped && !inventory.Items.First(i => i.Id == a.Id).Equipped,
                 "R4 stale replay does not re-equip the old item");
+        }
+    }
+
+    private static void EqualVersionEvictedCommandIsRejected()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var (store, registry, owner, characterId, _) = Create("r4b", 600);
+        using (store)
+        {
+            var a = LootTable.CreateItem(new LootDrop(3, 3, 10, false, 11));
+            var b = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 22));
+            store.GrantItems(owner, characterId, new List<SerializedItem> { a, b });
+
+            var v0 = registry.Advance(owner, characterId).Combat.Version;
+            registry.ApplyCommand(owner, characterId, "r4b-a", v0, new WebCommandRequest("equip", ItemId: a.Id));
+            registry.ApplyCommand(owner, characterId, "r4b-b", v0, new WebCommandRequest("equip", ItemId: b.Id));
+
+            // The exact recheck repro: every noise command carries the same low expected
+            // version and does not advance the clock. The old client-supplied boundary stayed
+            // flat, so the evicted replay slipped through. The server-assigned boundary must not.
+            for (var i = 0; i < GameStore.MaxCommandLog + 10; i++)
+                registry.ApplyCommand(owner, characterId, $"r4b-noise-{i}", v0, new WebCommandRequest("invalid"));
+
+            var replay = registry.ApplyCommand(owner, characterId, "r4b-a", v0, new WebCommandRequest("equip", ItemId: a.Id));
+            Check(!replay.Applied && replay.Reason == "stale_command", "R4b equal-version evicted command is rejected as stale");
+            var inventory = registry.Inventory(owner, characterId);
+            Check(inventory.Items.First(i => i.Id == b.Id).Equipped && !inventory.Items.First(i => i.Id == a.Id).Equipped,
+                "R4b stale equal-version replay does not re-equip the old item");
+        }
+    }
+
+    private static void MissingCommandIdIsRejected()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var (store, registry, owner, characterId, _) = Create("r4c", 600);
+        using (store)
+        {
+            var v0 = registry.Advance(owner, characterId).Combat.Version;
+            var result = registry.ApplyCommand(owner, characterId, string.Empty, v0, new WebCommandRequest("move", 3, 3));
+            Check(!result.Applied && result.Reason == "missing_command_id", "R4c empty command id is rejected");
+        }
+    }
+
+    private static void CombatVersionSurvivesRestart()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var dir = Path.Combine(Path.GetTempPath(), "nord-acc-r6-" + Guid.NewGuid());
+        Directory.CreateDirectory(dir);
+        var clock = new FakeClock();
+        var owner = Guid.Empty;
+        var characterId = Guid.Empty;
+        long beforeRestart;
+        using (var store = new GameStore(dir))
+        {
+            var registry = new CombatRegistry(store, clock);
+            owner = store.GetOrCreateUser("device:r6").UserId;
+            var data = Defaults.Create<SerializedCharacterData.SerializedData>();
+            data.CombatStats = new SerializedCharacterData.SerializedCombatStats { Offense = 600, Defense = 50, Recovery = 5 };
+            characterId = store.CreateCharacter(owner, new CreateCharacterRequest
+            {
+                DisplayName = "r6",
+                CharacterClass = CharacterClass.Warrior,
+                CharacterRace = CharacterRace.Human,
+                CharacterGameMode = GameMode.Normal,
+                Data = new SerializedCharacterData { Data = data },
+            }).CharacterId;
+
+            var version = 0L;
+            for (var i = 0; i < 60; i++)
+            {
+                clock.Advance(TimeSpan.FromSeconds(1));
+                version = registry.Advance(owner, characterId).Combat.Version;
+            }
+            beforeRestart = version;
+            Check(beforeRestart > 1, "R6 setup: combat version advanced past 1");
+        }
+
+        // Reopen the same directory: the in-memory instance is gone, so the version must be
+        // restored from the store instead of resetting to 1.
+        using (var store = new GameStore(dir))
+        {
+            var registry = new CombatRegistry(store, clock);
+            var snapshot = registry.Advance(owner, characterId).Combat;
+            Check(snapshot.Version >= beforeRestart, "R6 combat version does not regress across restart");
+            var fresh = registry.ApplyCommand(owner, characterId, "r6-fresh", snapshot.Version, new WebCommandRequest("move", 3, 3));
+            Check(fresh.Applied, "R6 fresh command after real reopen is accepted (not stale/future)");
         }
     }
 

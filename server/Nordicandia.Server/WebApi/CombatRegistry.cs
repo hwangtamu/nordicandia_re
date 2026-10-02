@@ -59,6 +59,7 @@ public sealed class CombatRegistry
         public int FlushedSilver;
         public int FlushedOpals;
         public int FlushedKills;
+        public long FlushedVersion;
         public readonly List<LootDropView> RecentLoot = new();
     }
 
@@ -78,9 +79,13 @@ public sealed class CombatRegistry
             var seed = (ulong)(uint)characterId.GetHashCode() << 32 | (uint)characterId.GetHashCode();
             var basePowers = PowerCatalog.ForClass(persisted.Class);
             var ranks = store.GetMasteryRanks(owner, characterId);
+            // P1: seed the instance's version from the persisted counter so it never resets
+            // to 1 across a restart (which would make the command log boundary reject fresh
+            // commands from a client that already saw a higher version).
+            var persistedVersion = store.GetCombatVersion(owner, characterId);
             var instance = new CombatInstance(stats, persisted.Experience, persisted.Silver, persisted.Opals,
                 (int)persisted.MonsterKills, seed, monsterProfiles: MonsterProfiles,
-                classPowers: EffectivePowers(basePowers, ranks));
+                classPowers: EffectivePowers(basePowers, ranks), initialVersion: persistedVersion);
             entries[characterId] = new Entry
             {
                 Instance = instance,
@@ -93,6 +98,7 @@ public sealed class CombatRegistry
                 FlushedSilver = persisted.Silver,
                 FlushedOpals = persisted.Opals,
                 FlushedKills = (int)persisted.MonsterKills,
+                FlushedVersion = instance.Version,
             };
             return instance;
         }
@@ -116,12 +122,18 @@ public sealed class CombatRegistry
         lock (gate)
         {
             var entry = GetEntry(owner, characterId);
-            var (found, oldestExpected) = store.LookupCommand(owner, characterId, commandId);
+            // A command without an id cannot be de-duplicated, so a retry would be
+            // indistinguishable from a fresh command. Reject it rather than risk double-apply.
+            if (string.IsNullOrEmpty(commandId))
+                return (false, "missing_command_id", PeekState(entry));
+            var (found, oldestBoundary) = store.LookupCommand(owner, characterId, commandId);
             if (found is not null)
                 // R5: replay the original applied/reason, with the current snapshot.
                 return (found.Applied, found.Reason, PeekState(entry));
-            if (expectedVersion > 0 && expectedVersion < oldestExpected)
-                // R4: outside the retained retry window — reject instead of re-executing.
+            if (expectedVersion > 0 && expectedVersion < oldestBoundary)
+                // R4/P2: outside the retained retry window — reject instead of re-executing.
+                // The boundary is a server-assigned processed version, so it is not fooled by
+                // a client reusing the same (low) expected version for evicted commands.
                 // A zero expected version means the caller is not using optimistic concurrency.
                 return (false, "stale_command", PeekState(entry));
             if (expectedVersion > entry.Instance.Version)
@@ -161,14 +173,14 @@ public sealed class CombatRegistry
             CollectLootLocked(owner, characterId, entry);
             FlushLocked(owner, characterId, entry);
             var state = TakeState(entry);
-            if (!string.IsNullOrEmpty(commandId))
-                store.AppendCommand(owner, characterId, new GameStore.CommandRecord
-                {
-                    CommandId = commandId,
-                    ExpectedVersion = expectedVersion,
-                    Applied = applied,
-                    Reason = reason,
-                });
+            store.AppendCommand(owner, characterId, new GameStore.CommandRecord
+            {
+                CommandId = commandId,
+                ExpectedVersion = expectedVersion,
+                Applied = applied,
+                Reason = reason,
+                ProcessedVersion = entry.Instance.Version,
+            }, entry.Instance.Version);
             return (applied, reason, state);
         }
     }
@@ -346,21 +358,25 @@ public sealed class CombatRegistry
     {
         var instance = entry.Instance;
         var killsDelta = instance.Kills - entry.FlushedKills;
+        var versionChanged = instance.Version != entry.FlushedVersion;
         if (instance.Experience == entry.FlushedExperience && instance.Silver == entry.FlushedSilver
-            && instance.Opals == entry.FlushedOpals && killsDelta == 0)
+            && instance.Opals == entry.FlushedOpals && killsDelta == 0 && !versionChanged)
             return;
         // R1: persist the *base* stats only. Flushing the equipment-inclusive totals and then
         // re-adding EquipmentBonus on restore double-counted the gear.
+        // P1: also persist the combat version so it survives a restart even when nothing but
+        // the version changed (e.g. a rejected move still bumps it).
         store.SaveRealtimeProgress(owner, characterId, instance.Experience, instance.Silver,
             instance.Opals, new GameStore.CombatSnapshot(
                 instance.Offense - entry.EquipOffense,
                 instance.Defense - entry.EquipDefense,
                 instance.Recovery - entry.EquipRecovery,
-                Math.Max(0, killsDelta), 0));
+                Math.Max(0, killsDelta), 0), instance.Version);
         entry.FlushedExperience = instance.Experience;
         entry.FlushedSilver = instance.Silver;
         entry.FlushedOpals = instance.Opals;
         entry.FlushedKills = instance.Kills;
+        entry.FlushedVersion = instance.Version;
     }
 
     private static WebCombatState TakeState(Entry entry)
