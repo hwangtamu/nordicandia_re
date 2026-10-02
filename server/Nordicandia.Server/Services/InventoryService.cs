@@ -49,6 +49,21 @@ public sealed partial class InventoryServiceApiImpl
         });
     }
 
+    /// <summary>Relic craft: consumes the Blacksmith source relics and blesses the target item's
+    /// affixes (RelicOfBlessing.InternalCraft).</summary>
+    public UnaryResult<CraftRelicItemResponse> CraftRelicItem(CraftRelicItemRequest req)
+    {
+        if (req == null || req.CharacterId == Guid.Empty)
+            throw new Grpc.Core.RpcException(new Grpc.Core.Status(Grpc.Core.StatusCode.InvalidArgument, "Missing character"));
+        var (success, sourceItems, result) = GameStore.Instance.CraftRelicItem(Owner, req.CharacterId);
+        return UnaryResult.FromResult(new CraftRelicItemResponse
+        {
+            Success = success,
+            SourceItems = sourceItems,
+            Result = result,
+        });
+    }
+
     /// <summary>Essence craft. Consumes Iron with the recovered cost formula and rolls the recovered
     /// success chance, merging the source items' affixes onto the Blacksmith target on success.</summary>
     public UnaryResult<CraftEssenceItemResponse> CraftEssenceItem(CraftEssenceItemRequest req)

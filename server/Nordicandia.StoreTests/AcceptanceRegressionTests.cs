@@ -364,6 +364,20 @@ static class AcceptanceRegressionTests
             Check(ironConsumed > 0, "essence: consumes the recovered iron cost");
             var remainingIron = store.GetItems(owner, characterId).Count(i => i.DefinitionIntegerId == 63);
             Check(remainingIron < 6, "essence: the iron stacks are actually deducted");
+
+            // Relic craft: consume a source relic and bless the target's affixes.
+            var relicTarget = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 7));
+            relicTarget.Slot = ItemSlotTypes.Blacksmith_TargetItem;
+            var relicSource = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 8));
+            relicSource.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            store.GrantItems(owner, characterId, new List<SerializedItem> { relicTarget, relicSource });
+            var (rOk, _, rResult) = store.CraftRelicItem(owner, characterId);
+            Check(rOk, "relic: succeeds with a target and a source relic");
+            Check(store.GetItems(owner, characterId).All(i => i.Slot != ItemSlotTypes.Blacksmith_SourceItem),
+                "relic: consumes the source relic");
+            Check(rResult.Affixes.Count > 0 && rResult.Affixes.All(a =>
+                    a.Attributes.Values[AttributeOrigin.Item].ContainsKey(99010)),
+                "relic: blesses the target's affixes");
         }
     }
 

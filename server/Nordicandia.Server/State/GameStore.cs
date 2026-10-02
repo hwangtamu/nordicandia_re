@@ -1455,6 +1455,41 @@ public sealed class GameStore : IDisposable
         return (true, success, CloneItem(target), sourceSnapshot, ironCost);
     });
 
+    /// <summary>Server attribute id marking a blessed affix (the client stores the bless flag on
+    /// the Affix; this reuses the affix's attribute map under a web-only id).</summary>
+    private const int AffixBlessedAttributeId = 99010;
+
+    /// <summary>Relic craft (Game.Items.Implementations.RelicOfBlessing): consumes the Blacksmith
+    /// source items (relics) and blesses the target item's affixes. The client's InternalCraft calls
+    /// <c>Affix.Bless</c> for each affix <c>ShouldBless</c> accepts; here every target affix is blessed
+    /// (ShouldBless's fine-grained filter is not yet recovered).</summary>
+    public (bool Success, SerializedItems SourceItems, SerializedItem Result) CraftRelicItem(Guid owner, Guid characterId) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        data.Items ??= new SerializedItems { Items = new List<SerializedItem>() };
+        data.Items.Items ??= new List<SerializedItem>();
+        var items = data.Items.Items;
+        var target = items.FirstOrDefault(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_TargetItem);
+        var sources = items.Where(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem).ToList();
+        var sourceSnapshot = new SerializedItems { Items = sources.Select(CloneItem).ToList() };
+        if (target == null || sources.Count == 0) return (false, sourceSnapshot, null);
+
+        items.RemoveAll(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem);
+        target.Affixes ??= new List<SerializedAffix>();
+        foreach (var affix in target.Affixes)
+        {
+            if (affix == null) continue;
+            affix.Attributes ??= new SerializedAttributes { Values = new(), MultiplicativeValues = new() };
+            affix.Attributes.Values ??= new();
+            if (!affix.Attributes.Values.TryGetValue(SharedNet.Constants.Game.AttributeOrigin.Item, out var map) || map == null)
+                affix.Attributes.Values[SharedNet.Constants.Game.AttributeOrigin.Item] = map = new Dictionary<int, GameAttributeValue>();
+            map[AffixBlessedAttributeId] = new GameAttributeValue { Value = 1, ValueD = 1 };
+        }
+        c.Data = Pack(data);
+        return (true, sourceSnapshot, CloneItem(target));
+    });
+
     /// <summary>Highest level among the account's Season / Season-Hardcore characters, used
     /// as the season reward track level.</summary>
     public int SeasonLevel(Guid owner)
