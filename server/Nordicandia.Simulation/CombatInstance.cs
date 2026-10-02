@@ -601,6 +601,7 @@ public sealed class CombatInstance
             case "summon":
             case "mobility":
             case "shield":
+            case "aura":
             case "rally":
             {
                 BeginCast(skillId, skill);
@@ -624,6 +625,28 @@ public sealed class CombatInstance
                 }
                 Version++;
                 return new SkillOutcome(true, 0, -1, "ok");
+            }
+            case "projectile":
+            {
+                // Ranged single-target shot; pierce modifiers add nearby targets.
+                var target = NearestAliveMonster(14);
+                if (target is null) return new SkillOutcome(false, 0, -1, "no_target");
+                BeginCast(skillId, skill);
+                var hit = ResolveSkill(target, skill.Multiplier);
+                DamageMonster(target, hit.Damage);
+                var total = hit.Damage;
+                if (skill.Values.ContainsKey("Power_Projectile_Pierce_Chance") ||
+                    skill.Values.ContainsKey("Power_Power_Shot_Pierce_Chance_Percent"))
+                {
+                    foreach (var extra in AliveMonstersInRadius(6).Where(m => m.Index != target.Index).Take(2))
+                    {
+                        var pierce = ResolveSkill(extra, skill.Multiplier * 0.5);
+                        total += pierce.Damage;
+                        DamageMonster(extra, pierce.Damage);
+                    }
+                }
+                Version++;
+                return new SkillOutcome(true, total, target.Index, "ok");
             }
             default:
             {

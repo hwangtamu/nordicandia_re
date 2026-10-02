@@ -71,9 +71,9 @@ static class CombatInstanceTests
             Check(initial.Combat.Version > 0, "m1 command: state seeds a versioned instance");
 
             var first = registry.ApplyCommand(owner, characterId, "cmd-skill-1", initial.Combat.Version,
-                new WebCommandRequest("skill"));
+                new WebCommandRequest("skill", SkillId: 1));
             var duplicate = registry.ApplyCommand(owner, characterId, "cmd-skill-1", initial.Combat.Version,
-                new WebCommandRequest("skill"));
+                new WebCommandRequest("skill", SkillId: 1));
             Check(first.Applied && first.Reason == "ok", "m1 command: skill applies");
             Check(duplicate.Reason == first.Reason && duplicate.Applied == first.Applied,
                 "m1 command: retried command id replays the original result");

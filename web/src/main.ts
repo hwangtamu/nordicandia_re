@@ -370,6 +370,7 @@ function renderHud(hudState: HudState): void {
     const description = [power?.descriptionFilled ?? power?.description?.replace(/\{[0-9]+\}/g, "…") ?? "",
       power?.special ? `Special: ${power.special}` : "",
       power?.chains ? `Chains: ${power.chains}` : "",
+      power?.baseChain?.length ? `Class: ${power.baseChain.slice(0, 3).join(" < ")}` : "",
       power?.masteries?.length ? `Masteries: ${power.masteries.length}` : "",
       power?.confidence ? `[${power.confidence}]` : ""].filter(Boolean).join("\n");
     const mana = skill?.manaCost ? `  ${Math.round(skill.manaCost)}m` : "";

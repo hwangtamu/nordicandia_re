@@ -20,6 +20,18 @@ static class AcceptanceRegressionTests
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
+        SkillSemanticsMatchClientClasses();
+    }
+
+    private static void SkillSemanticsMatchClientClasses()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var mage = Nordicandia.Server.WebApi.PowerCatalog.ForClass(5);
+        var necro = Nordicandia.Server.WebApi.PowerCatalog.ForClass(6);
+        Check(mage.Active.First(a => a.Name == "IceNova").Effect == "nova", "semantics: IceNova < Nova -> nova");
+        Check(mage.Active.First(a => a.Name == "ChainLightning").Effect == "chain", "semantics: ChainLightning -> chain");
+        Check(necro.Active.First(a => a.Name == "SummonSkeleton").Effect == "summon", "semantics: SummonSkeleton < PowerScript -> summon");
+        Check(necro.Active.First(a => a.Name == "Shadowbolt").Effect == "projectile", "semantics: Shadowbolt < ProjectileSkill -> projectile");
     }
 
     private static void FreshCharacterClearsBoss()

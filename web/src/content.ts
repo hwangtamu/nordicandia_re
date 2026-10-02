@@ -57,6 +57,8 @@ export interface ActivePower {
   confidence: string;
   special?: string;
   chains?: number;
+  baseChain?: string[];
+  methods?: string[];
   masteries?: { name: string; treeRow: number | null; maxPoints: number | null; specs: unknown[] }[];
   descriptionFilled?: string;
   values?: Record<string, number>;

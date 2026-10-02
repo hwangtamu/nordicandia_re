@@ -97,6 +97,43 @@ def parse_dump(path: pathlib.Path) -> tuple[dict, dict]:
     return handled_power, handled_mastery
 
 
+# ---------------------------------------------------------------- class graph
+
+def parse_class_graph(path: pathlib.Path):
+    """class -> (base chain, method names) from dump.cs."""
+    bases: dict[str, str] = {}
+    methods: dict[str, list[str]] = {}
+    if not path.exists():
+        return bases, methods
+    current = None
+    for line in path.read_text(errors="ignore").splitlines():
+        m = re.match(r"\t(?:public|internal|private|protected)?\s*(?:sealed\s+|abstract\s+|static\s+)?class\s+([\w<>]+)\s*:\s*([\w<>,\. ]+?)\s*(?://|$)", line)
+        if m:
+            current = m.group(1)
+            bases[current] = m.group(2).split(",")[0].strip()
+            methods.setdefault(current, [])
+            continue
+        if re.match(r"\t(?:public|internal|private|protected)?\s*(?:sealed\s+|abstract\s+|static\s+)?class\s+([\w<>]+)\b", line):
+            current = re.match(r"\t(?:public|internal|private|protected)?\s*(?:sealed\s+|abstract\s+|static\s+)?class\s+([\w<>]+)\b", line).group(1)
+            methods.setdefault(current, [])
+            continue
+        if current and re.search(r"\b(public|private|protected|internal)\b.*\b(\w+)\s*\(", line):
+            mm = re.search(r"\b(public|private|protected|internal)\b[\w<>\[\],\. ]*?\s+(\w+)\s*\(", line)
+            if mm and not line.strip().startswith("//"):
+                methods[current].append(mm.group(2))
+    return bases, methods
+
+
+def class_chain(bases: dict, name: str) -> list:
+    out = []
+    seen = set()
+    while name and name not in seen:
+        seen.add(name)
+        out.append(name)
+        name = bases.get(name)
+    return out
+
+
 # ---------------------------------------------------------------- placeholders
 
 ROLE_PATTERNS = [
@@ -161,14 +198,25 @@ def derive_effect(name: str, description: str, tags: list[str]) -> dict:
             "healPercent": 0.0, "buffBonus": 0.0, "buffSeconds": 0.0}
 
 
-def classify_effect(name: str, description: str, tags: list[str], values: dict) -> str:
-    """Data-driven effect classification from the recovered attribute set."""
+def classify_effect(name: str, description: str, tags: list[str], values: dict, chain: list | None = None) -> str:
+    """Effect classification. The class inheritance chain (recovered from the IL2CPP
+    type dump) is authoritative; attributes and wording only disambiguate."""
+    chain = chain or []
+    joined = " ".join(chain)
     keys = list(values.keys())
     text = f"{name} {description}".lower()
-    if any("Num_Chains" in k for k in keys):
-        return "chain"
+    if "Nova" in chain:
+        return "nova"
+    if "Projectile" in joined or "Projectile" in chain:
+        return "projectile"
+    if "Aura" in joined:
+        return "aura"
     if any(k.startswith("Minion_Inheritance") or "Minion_Duration" in k for k in keys):
         return "summon"
+    if any(part in ("PowerScript", "Minion") for part in chain) and "ActionTimedSkill" not in chain:
+        return "summon"
+    if any("Num_Chains" in k for k in keys):
+        return "chain"
     if any("Mana_Shield" in k for k in keys):
         return "shield"
     if any("Life_Leech" in k for k in keys):
@@ -227,6 +275,7 @@ def main() -> int:
     masteries = load("PowerMasteries")
     classes = load("CharacterClasses")
     handled_power, handled_mastery = parse_dump(DUMP)
+    class_bases, class_methods = parse_class_graph(DUMP)
 
     def tag_names(power) -> list[str]:
         return [tags[t] for t in (power.get("SerializedData", {}).get("TagIds") or []) if t in tags]
@@ -256,6 +305,8 @@ def main() -> int:
             "placeholders": placeholder_roles(desc),
             "implementedBy": impl.get("class"),
             "parameterFields": impl.get("fields", []),
+            "baseChain": class_chain(class_bases, impl.get("class") or name),
+            "methods": class_methods.get(impl.get("class") or "", []),
         }
 
     def mastery_record(mastery) -> dict:
@@ -361,7 +412,8 @@ def main() -> int:
             mana = v.get("Base_Mana_Cost")
             radius = v.get("Base_Power_Radius")
             duration = v.get("Buff_Duration") or v.get("Power_Duration") or v.get("Power_Freeze_Duration")
-            effect_kind = classify_effect(a["name"], a["description"], a["tags"], v)
+            chain = class_chain(class_bases, a.get("implementedBy") or a["name"])
+            effect_kind = classify_effect(a["name"], a["description"], a["tags"], v, chain)
             chains = int(v.get("ChainLightning_Max_Num_Chains", 0) or 0)
             verified = multiplier is not None or cooldown is not None or mana is not None
             resolved = {}
@@ -375,7 +427,7 @@ def main() -> int:
                 resolved["radius"] = radius
             if v.get("ChainLightning_Max_Num_Chains") is not None:
                 resolved["count"] = v["ChainLightning_Max_Num_Chains"]
-            return dict(a, slot=slot, effect=effect_kind, special=special_of(v), chains=chains,
+            return dict(a, slot=slot, effect=effect_kind, special=special_of(v), chains=chains, baseChain=chain,
                         multiplier=multiplier if multiplier is not None else effect["multiplier"],
                         cooldown=cooldown if cooldown is not None else effect["cooldown"],
                         radius=radius if radius is not None else effect["radius"],

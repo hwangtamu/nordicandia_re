@@ -51,6 +51,33 @@
         "__2__current",
         "__l__initialThreadId",
         "__7__wrap1"
+      ],
+      "baseChain": [
+        "MeleeWeaponSwing",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__24",
+        "MoveNext",
+        "__m__Finally1",
+        "__m__Finally2",
+        "MeleeWeaponSwing",
+        "GetHitEffectGroupHash",
+        "GetHitEffectHash",
+        "GetHalfContactEffectGroupHash",
+        "InternalGetTranslatedDescription",
+        "GetHighestDamageType",
+        "Reset",
+        "InternalInitializePowerParameters",
+        "Perform",
+        "ProcessDualStrike",
+        "Destroy",
+        "_Perform_b__24_0"
       ]
     },
     "Might": {
@@ -85,6 +112,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Might",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "MightBuff",
+        "Apply",
+        "Remove",
+        "_Perform_d__7",
+        "MoveNext",
+        "Might",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "AxeSpecialization": {
@@ -110,6 +157,23 @@
       "implementedBy": "AxeSpecialization",
       "parameterFields": [
         "_DeadlyChance"
+      ],
+      "baseChain": [
+        "AxeSpecialization",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "AxeSpecializationBuff",
+        "AxeSpecialization",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "DaggerSpecialization": {
@@ -128,7 +192,11 @@
       "isHidden": false,
       "placeholders": [],
       "implementedBy": null,
-      "parameterFields": []
+      "parameterFields": [],
+      "baseChain": [
+        "DaggerSpecialization"
+      ],
+      "methods": []
     },
     "MaceSpecialization": {
       "id": "0ddd78a9-9116-4ce5-991a-acd9c1041d10",
@@ -158,6 +226,29 @@
       "parameterFields": [
         "_ThrowMaceChance",
         "_ThrowRadius"
+      ],
+      "baseChain": [
+        "MaceSpecialization",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_OnMeleeSwingHit_b__2_1",
+        "__c__DisplayClass2_0",
+        "_OnMeleeSwingHit_b__0",
+        "MaceSpecializationBuff",
+        "OnPayload",
+        "OnMeleeSwingHit",
+        "MaceSpecialization",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "SpearSpecialization": {
@@ -183,6 +274,23 @@
       "implementedBy": "SpearSpecialization",
       "parameterFields": [
         "_ArmorPiercing"
+      ],
+      "baseChain": [
+        "SpearSpecialization",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "SpearSpecializationBuff",
+        "SpearSpecialization",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "SwordSpecialization": {
@@ -209,6 +317,23 @@
       "parameterFields": [
         "_ExtraSwingChance",
         "_MaxAdditionalSwings"
+      ],
+      "baseChain": [
+        "SwordSpecialization",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "SwordSpecializationBuff",
+        "SwordSpecialization",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "RunAwayTactic": {
@@ -227,7 +352,11 @@
       "isHidden": false,
       "placeholders": [],
       "implementedBy": null,
-      "parameterFields": []
+      "parameterFields": [],
+      "baseChain": [
+        "RunAwayTactic"
+      ],
+      "methods": []
     },
     "AggressiveTactic": {
       "id": "c8b3e697-51ca-4348-9967-8d3bb301b4ee",
@@ -245,7 +374,11 @@
       "isHidden": false,
       "placeholders": [],
       "implementedBy": null,
-      "parameterFields": []
+      "parameterFields": [],
+      "baseChain": [
+        "AggressiveTactic"
+      ],
+      "methods": []
     },
     "DefensiveTactic": {
       "id": "d0377f9b-c2d5-4063-9e5d-0e0a3a9bb6c2",
@@ -263,7 +396,11 @@
       "isHidden": false,
       "placeholders": [],
       "implementedBy": null,
-      "parameterFields": []
+      "parameterFields": [],
+      "baseChain": [
+        "DefensiveTactic"
+      ],
+      "methods": []
     },
     "IncrementalFortress": {
       "id": "eebded67-cabd-40b9-b74c-c90211428705",
@@ -295,6 +432,35 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "IncrementalFortress",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_Update_b__16_0",
+        "IncrementalFortressBuff",
+        "Init",
+        "Apply",
+        "_AddStack",
+        "Destroy",
+        "Remove",
+        "HasChanged",
+        "Update",
+        "OnPayload",
+        "Stack",
+        "_Perform_d__9",
+        "MoveNext",
+        "IncrementalFortress",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "WarStomp": {
@@ -333,6 +499,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "WarStomp",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__8",
+        "MoveNext",
+        "WarStomp",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetActionSpeed",
+        "Perform",
+        "_Perform_b__8_0",
+        "_Perform_b__8_1"
       ]
     },
     "Sprint": {
@@ -373,6 +559,27 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Sprint",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "SprintBuff",
+        "Update",
+        "Apply",
+        "Remove",
+        "_Perform_d__7",
+        "MoveNext",
+        "Sprint",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "CheatDeath": {
@@ -395,6 +602,26 @@
         "_CooldownTime",
         "_FatalDamageNewLifePercent",
         "_VitalityBonusPercent"
+      ],
+      "baseChain": [
+        "CheatDeath",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "CheatDeathBuff",
+        "OnPayload",
+        "_OnPayload_b__1_0",
+        "CheatDeathCooldownBuff",
+        "CheatDeath",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "BossHunter": {
@@ -420,6 +647,23 @@
       "implementedBy": "BossHunter",
       "parameterFields": [
         "_SpawnIncrease"
+      ],
+      "baseChain": [
+        "BossHunter",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "BossHunterBuff",
+        "BossHunter",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "Overkill": {
@@ -446,6 +690,26 @@
       "parameterFields": [
         "_OverkillChance",
         "_IsChaining"
+      ],
+      "baseChain": [
+        "Overkill",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass2_0",
+        "_OnPayload_b__0",
+        "OverkillBuff",
+        "OnPayload",
+        "Overkill",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "ShootRangedProjectile": {
@@ -478,6 +742,32 @@
       "implementedBy": "ShootRangedProjectile",
       "parameterFields": [
         "_WeaponDamageMult"
+      ],
+      "baseChain": [
+        "ShootRangedProjectile",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass33_0",
+        "_CreateProjectile_b__0",
+        "ShootRangedProjectile",
+        "GetHitEffectGroupHash",
+        "GetHitEffectHash",
+        "GetCastEffectGroupHash",
+        "GetContactEffectGroupHash",
+        "GetHalfContactEffectGroupHash",
+        "InternalGetTranslatedDescription",
+        "GetHighestDamageType",
+        "InternalInitializePowerParameters",
+        "LaunchProjectile",
+        "CreateProjectile",
+        "HandleForkAndChain"
       ]
     },
     "Retaliation": {
@@ -509,6 +799,29 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Retaliation",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_OnPayload_b__9_0",
+        "RetaliationBuff",
+        "Apply",
+        "Remove",
+        "OnPayload",
+        "_Perform_d__7",
+        "MoveNext",
+        "Retaliation",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "TreasureHunter": {
@@ -539,6 +852,23 @@
       "parameterFields": [
         "_MagicFindIncrease",
         "_ItemQuantityIncrease"
+      ],
+      "baseChain": [
+        "TreasureHunter",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "TreasureHunterBuff",
+        "TreasureHunter",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "Shatter": {
@@ -576,6 +906,27 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Shatter",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__13",
+        "MoveNext",
+        "Shatter",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform",
+        "_Perform_b__13_0",
+        "_Perform_b__13_1"
       ]
     },
     "Meditation": {
@@ -606,6 +957,26 @@
       "parameterFields": [
         "_CooldownReduction",
         "_CooldownResetChance"
+      ],
+      "baseChain": [
+        "Meditation",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "MeditationBuff",
+        "Apply",
+        "Brain_OnSkillStarted",
+        "Remove",
+        "Meditation",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "KillTarget": {
@@ -628,6 +999,20 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "KillTarget",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__13",
+        "MoveNext",
+        "KillTarget",
+        "Perform"
       ]
     },
     "DamageTargetPercentually": {
@@ -651,6 +1036,20 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "DamageTargetPercentually",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__13",
+        "MoveNext",
+        "DamageTargetPercentually",
+        "Perform"
       ]
     },
     "Hunger": {
@@ -688,6 +1087,24 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Hunger",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "HungerBuff",
+        "_Perform_d__7",
+        "MoveNext",
+        "Hunger",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "ManualTactic": {
@@ -706,7 +1123,11 @@
       "isHidden": true,
       "placeholders": [],
       "implementedBy": null,
-      "parameterFields": []
+      "parameterFields": [],
+      "baseChain": [
+        "ManualTactic"
+      ],
+      "methods": []
     },
     "Flee": {
       "id": "e542211a-420c-4415-8802-58ebc9cb4ce9",
@@ -736,6 +1157,21 @@
         "_targetDistance_5__3",
         "_timeFleeing_5__4",
         "_isStuck_5__5"
+      ],
+      "baseChain": [
+        "Flee",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__10",
+        "MoveNext",
+        "Flee",
+        "Perform",
+        "GetAttackRadius"
       ]
     },
     "DefaultAttackProxy": {
@@ -766,6 +1202,24 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "DefaultAttackProxy",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__12",
+        "MoveNext",
+        "DefaultAttackProxy",
+        "InternalGetTranslatedDescription",
+        "GetHighestDamageType",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "PowerShot": {
@@ -802,6 +1256,34 @@
         "__2__current",
         "__l__initialThreadId",
         "__7__wrap1"
+      ],
+      "baseChain": [
+        "PowerShot",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass14_0",
+        "_CreateProjectile_b__0",
+        "_Perform_d__12",
+        "MoveNext",
+        "__m__Finally1",
+        "PowerShot",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Run",
+        "Perform",
+        "LaunchProjectile",
+        "CreateProjectile",
+        "HandleForkAndChain",
+        "__n__0"
       ]
     },
     "Backflip": {
@@ -845,6 +1327,32 @@
         "__2__current",
         "__l__initialThreadId",
         "_couldUpdatePosition_5__2"
+      ],
+      "baseChain": [
+        "Backflip",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_Perform_b__19_0",
+        "__c__DisplayClass19_0",
+        "_Perform_b__1",
+        "_Perform_d__19",
+        "MoveNext",
+        "Backflip",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Reset",
+        "DoReset",
+        "Cancel",
+        "CanRun",
+        "Perform",
+        "GetAttackRadius"
       ]
     },
     "ArrowRain": {
@@ -899,6 +1407,30 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "ArrowRain",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass23_0",
+        "_CreateArrowPool_b__0",
+        "_CreateArrowPool_b__1",
+        "_CreateArrowPool_b__2",
+        "_Perform_d__22",
+        "MoveNext",
+        "ArrowRain",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform",
+        "CreateArrowPool",
+        "_Perform_b__22_0"
       ]
     },
     "Fade": {
@@ -932,6 +1464,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Fade",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "FadeBuff",
+        "Apply",
+        "Remove",
+        "_Perform_d__7",
+        "MoveNext",
+        "Fade",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "RapidFire": {
@@ -974,6 +1526,25 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "RapidFire",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "RapidFireBuff",
+        "Apply",
+        "_Perform_d__9",
+        "MoveNext",
+        "RapidFire",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "Multishot": {
@@ -1014,6 +1585,34 @@
         "__2__current",
         "__l__initialThreadId",
         "__7__wrap1"
+      ],
+      "baseChain": [
+        "Multishot",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass17_0",
+        "_CreateProjectile_b__0",
+        "_Perform_d__15",
+        "MoveNext",
+        "__m__Finally1",
+        "Multishot",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Reset",
+        "Perform",
+        "LaunchProjectile",
+        "CreateProjectile",
+        "HandleForkAndChain",
+        "__n__0"
       ]
     },
     "Precision": {
@@ -1036,6 +1635,32 @@
         "_AttackRatingBonus",
         "_MaxStacks",
         "_ShouldRemove"
+      ],
+      "baseChain": [
+        "Precision",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "PrecisionBuff",
+        "OnPayload",
+        "PrecisionBuffStack",
+        "Init",
+        "Update",
+        "Apply",
+        "_AddStack",
+        "Remove",
+        "OnPayload",
+        "Stack",
+        "Precision",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "Sharpshooter": {
@@ -1064,6 +1689,23 @@
       "implementedBy": "Sharpshooter",
       "parameterFields": [
         "_RangeIncrease"
+      ],
+      "baseChain": [
+        "Sharpshooter",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "SharpshooterBuff",
+        "Sharpshooter",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "ArrowOfRestoration": {
@@ -1098,7 +1740,11 @@
         }
       ],
       "implementedBy": null,
-      "parameterFields": []
+      "parameterFields": [],
+      "baseChain": [
+        "ArrowOfRestoration"
+      ],
+      "methods": []
     },
     "DoubleDraw": {
       "id": "9eb75ec8-6b44-45e3-b1e4-33eec83f7144",
@@ -1123,6 +1769,23 @@
       "implementedBy": "DoubleDraw",
       "parameterFields": [
         "_ExtraProjectileChance"
+      ],
+      "baseChain": [
+        "DoubleDraw",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "DoubleDrawBuff",
+        "DoubleDraw",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "DefaultFireball": {
@@ -1158,6 +1821,29 @@
       "implementedBy": "DefaultFireball",
       "parameterFields": [
         "_WeaponDamageMult"
+      ],
+      "baseChain": [
+        "DefaultFireball",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass26_0",
+        "_CreateProjectile_b__0",
+        "DefaultFireball",
+        "GetHitEffectGroupHash",
+        "GetContactEffectGroupHash",
+        "InternalGetTranslatedDescription",
+        "GetHighestDamageType",
+        "InternalInitializePowerParameters",
+        "LaunchProjectile",
+        "CreateProjectile",
+        "HandleForkAndChain"
       ]
     },
     "DefaultIceBolt": {
@@ -1191,6 +1877,29 @@
       "implementedBy": "DefaultIceBolt",
       "parameterFields": [
         "_WeaponDamageMult"
+      ],
+      "baseChain": [
+        "DefaultIceBolt",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass26_0",
+        "_CreateProjectile_b__0",
+        "DefaultIceBolt",
+        "GetHitEffectGroupHash",
+        "GetContactEffectGroupHash",
+        "InternalGetTranslatedDescription",
+        "GetHighestDamageType",
+        "InternalInitializePowerParameters",
+        "LaunchProjectile",
+        "CreateProjectile",
+        "HandleForkAndChain"
       ]
     },
     "DefaultLightningBolt": {
@@ -1224,6 +1933,29 @@
       "implementedBy": "DefaultLightningBolt",
       "parameterFields": [
         "_WeaponDamageMult"
+      ],
+      "baseChain": [
+        "DefaultLightningBolt",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass26_0",
+        "_CreateProjectile_b__0",
+        "DefaultLightningBolt",
+        "GetHitEffectGroupHash",
+        "GetContactEffectGroupHash",
+        "InternalGetTranslatedDescription",
+        "GetHighestDamageType",
+        "InternalInitializePowerParameters",
+        "LaunchProjectile",
+        "CreateProjectile",
+        "HandleorkAndChain"
       ]
     },
     "DefaultPoisonBolt": {
@@ -1257,6 +1989,29 @@
       "implementedBy": "DefaultPoisonBolt",
       "parameterFields": [
         "_WeaponDamageMult"
+      ],
+      "baseChain": [
+        "DefaultPoisonBolt",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass26_0",
+        "_CreateProjectile_b__0",
+        "DefaultPoisonBolt",
+        "GetHitEffectGroupHash",
+        "GetContactEffectGroupHash",
+        "InternalGetTranslatedDescription",
+        "GetHighestDamageType",
+        "InternalInitializePowerParameters",
+        "LaunchProjectile",
+        "CreateProjectile",
+        "HandleForkAndChain"
       ]
     },
     "SummonWolf": {
@@ -1304,6 +2059,33 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "SummonWolf",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass9_0",
+        "_Apply_b__0",
+        "_Apply_b__1",
+        "SummonWolfBuff",
+        "Apply",
+        "RecalculateDynamicStats",
+        "Target_OnLeaveWorld",
+        "Target_OnEnterWorld",
+        "Remove",
+        "CalculateWolfDamage",
+        "_Perform_d__13",
+        "MoveNext",
+        "SummonWolf",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform",
+        "GetAttackRadius"
       ]
     },
     "MinionReturnToMaster": {
@@ -1334,6 +2116,28 @@
         "_targetDistance_5__2",
         "_timeRunning_5__3",
         "_frameTimeRunning_5__4"
+      ],
+      "baseChain": [
+        "MinionReturnToMaster",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_Perform_b__11_1",
+        "_Perform_b__11_3",
+        "_Perform_d__11",
+        "MoveNext",
+        "MinionReturnToMaster",
+        "OnUserChanged",
+        "Perform",
+        "GetAttackRadius",
+        "Destroy",
+        "_Perform_b__11_0",
+        "_Perform_b__11_2"
       ]
     },
     "TownPortal": {
@@ -1363,6 +2167,29 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "TownPortal",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "MoveNext",
+        "SetStateMachine",
+        "__c",
+        "_Tp_OnLeaveWorld_b__20_0",
+        "_Perform_d__19",
+        "MoveNext",
+        "TownPortal",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "CanRun",
+        "Perform",
+        "Tp_OnLeaveWorld"
       ]
     },
     "RunOutOfCombat": {
@@ -1390,6 +2217,21 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "RunOutOfCombat",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__10",
+        "MoveNext",
+        "RunOutOfCombat",
+        "Perform",
+        "GetAttackRadius"
       ]
     },
     "IceNova": {
@@ -1441,6 +2283,27 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "IceNova",
+        "Nova",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass10_0",
+        "_Perform_b__0",
+        "_Perform_d__10",
+        "MoveNext",
+        "IceNova",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "IceBlast": {
@@ -1493,6 +2356,31 @@
         "__2__current",
         "__l__initialThreadId",
         "__7__wrap1"
+      ],
+      "baseChain": [
+        "IceBlast",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass19_0",
+        "_LaunchProjectile_b__0",
+        "_Perform_d__18",
+        "MoveNext",
+        "__m__Finally1",
+        "IceBlast",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Reset",
+        "Perform",
+        "LaunchProjectile",
+        "__n__0"
       ]
     },
     "InfernalBlast": {
@@ -1544,6 +2432,35 @@
         "__2__current",
         "__l__initialThreadId",
         "__7__wrap1"
+      ],
+      "baseChain": [
+        "InfernalBlast",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass13_0",
+        "_LaunchProjectile_b__0",
+        "_LaunchProjectile_b__4",
+        "__c__DisplayClass13_1",
+        "_LaunchProjectile_g__explode_1",
+        "_LaunchProjectile_b__2",
+        "_LaunchProjectile_b__3",
+        "_Perform_d__12",
+        "MoveNext",
+        "__m__Finally1",
+        "InfernalBlast",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform",
+        "LaunchProjectile",
+        "__n__0"
       ]
     },
     "Blizzard": {
@@ -1595,6 +2512,31 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Blizzard",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass16_0",
+        "_Perform_b__0",
+        "__c__DisplayClass17_0",
+        "_CreateShardPool_b__0",
+        "_CreateShardPool_b__1",
+        "_CreateShardPool_b__2",
+        "_Perform_d__16",
+        "MoveNext",
+        "Blizzard",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform",
+        "CreateShardPool"
       ]
     },
     "ChainLightning": {
@@ -1647,6 +2589,32 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "ChainLightning",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_Perform_b__13_3",
+        "__c__DisplayClass13_0",
+        "_Perform_g__spawnLightning_0",
+        "_Perform_b__1",
+        "__c__DisplayClass13_1",
+        "_Perform_b__2",
+        "_Perform_d__13",
+        "MoveNext",
+        "ChainLightning",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform"
       ]
     },
     "Hubris": {
@@ -1672,6 +2640,23 @@
       "implementedBy": "Hubris",
       "parameterFields": [
         "_IntelligenceBonus"
+      ],
+      "baseChain": [
+        "Hubris",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "HubrisBuff",
+        "Hubris",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "Thunderstrike": {
@@ -1720,6 +2705,33 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Thunderstrike",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_Perform_b__13_5",
+        "__c__DisplayClass13_0",
+        "_Perform_g__cast_0",
+        "_Perform_b__3",
+        "_Perform_b__1",
+        "__c__DisplayClass13_1",
+        "_Perform_b__2",
+        "_Perform_b__4",
+        "_Perform_d__13",
+        "MoveNext",
+        "Thunderstrike",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "ManaShield": {
@@ -1759,6 +2771,29 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "ManaShield",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "ManaShieldBuff",
+        "Apply",
+        "Update",
+        "Remove",
+        "GetMaxManaShield",
+        "OnPayload",
+        "_Perform_d__9",
+        "MoveNext",
+        "ManaShield",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "ElementalSeal": {
@@ -1810,6 +2845,24 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "ElementalSeal",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__10",
+        "MoveNext",
+        "ElementalSeal",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "FireArmor": {
@@ -1838,6 +2891,23 @@
       "parameterFields": [
         "_ResistanceBonus",
         "_DamageTakenAsElement"
+      ],
+      "baseChain": [
+        "FireArmor",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "FireArmorBuff",
+        "FireArmor",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "ColdArmor": {
@@ -1866,6 +2936,23 @@
       "parameterFields": [
         "_ResistanceBonus",
         "_DamageTakenAsElement"
+      ],
+      "baseChain": [
+        "ColdArmor",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "ColdArmorBuff",
+        "ColdArmor",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "LightningArmor": {
@@ -1894,6 +2981,23 @@
       "parameterFields": [
         "_ResistanceBonus",
         "_DamageTakenAsElement"
+      ],
+      "baseChain": [
+        "LightningArmor",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "LightningArmorBuff",
+        "LightningArmor",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "WolfKingRoar": {
@@ -1922,6 +3026,22 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "WolfKingRoar",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "WolfKingRoarBuff",
+        "_Perform_d__12",
+        "MoveNext",
+        "WolfKingRoar",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "WolfKingSummonPack": {
@@ -1951,6 +3071,25 @@
         "__l__initialThreadId",
         "_minionDefinition_5__2",
         "_i_5__3"
+      ],
+      "baseChain": [
+        "WolfKingSummonPack",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_Perform_b__9_0",
+        "_Perform_d__9",
+        "MoveNext",
+        "WolfKingSummonPack",
+        "InternalInitializePowerParameters",
+        "Perform",
+        "CalculateWolfDamage",
+        "GetAttackRadius"
       ]
     },
     "Interact": {
@@ -1976,6 +3115,22 @@
         "__2__current",
         "__l__initialThreadId",
         "_awaiter_5__2"
+      ],
+      "baseChain": [
+        "Interact",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__6",
+        "MoveNext",
+        "Interact",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "Wander": {
@@ -2003,6 +3158,22 @@
         "__l__initialThreadId",
         "_destinationUnity_5__2",
         "_timeWandering_5__3"
+      ],
+      "baseChain": [
+        "Wander",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__12",
+        "MoveNext",
+        "Wander",
+        "InternalInitializePowerParameters",
+        "Perform",
+        "GetAttackRadius"
       ]
     },
     "PetLoot": {
@@ -2036,6 +3207,29 @@
         "_pet_5__3",
         "_targetDistance_5__4",
         "_timeRunning_5__5"
+      ],
+      "baseChain": [
+        "PetLoot",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_Perform_b__11_1",
+        "MoveNext",
+        "SetStateMachine",
+        "__c__DisplayClass11_0",
+        "_Perform_b__0",
+        "_Perform_b__2",
+        "_Perform_d__11",
+        "MoveNext",
+        "PetLoot",
+        "OnUserChanged",
+        "Perform",
+        "GetAttackRadius"
       ]
     },
     "Frenzy": {
@@ -2069,6 +3263,37 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Frenzy",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_Update_b__16_0",
+        "FrenzyBuff",
+        "Init",
+        "Apply",
+        "OnPayload",
+        "_AddStack",
+        "Destroy",
+        "Remove",
+        "Update",
+        "RemoveStacks",
+        "HasChanged",
+        "_Apply_b__11_0",
+        "_Apply_b__11_1",
+        "_Perform_d__8",
+        "MoveNext",
+        "Frenzy",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "Intimidate": {
@@ -2093,6 +3318,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Intimidate",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "IntimidatedDebuff",
+        "Apply",
+        "Remove",
+        "_Perform_d__7",
+        "MoveNext",
+        "Intimidate",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "Pounce": {
@@ -2124,6 +3369,30 @@
         "__2__current",
         "__l__initialThreadId",
         "_targetPos_5__2"
+      ],
+      "baseChain": [
+        "Pounce",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass21_0",
+        "_Perform_b__1",
+        "_Perform_d__21",
+        "MoveNext",
+        "Pounce",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "CanRun",
+        "GetAttackRadius",
+        "Reset",
+        "DoReset",
+        "Perform",
+        "_Perform_b__21_0"
       ]
     },
     "ImpalingTrap": {
@@ -2157,6 +3426,27 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "ImpalingTrap",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass20_0",
+        "_Perform_b__0",
+        "_Perform_b__1",
+        "_Perform_d__20",
+        "MoveNext",
+        "ImpalingTrap",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "MarkOfTheChosen": {
@@ -2184,6 +3474,28 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "MarkOfTheChosen",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "MarkOfTheChosenDebuff",
+        "Apply",
+        "OnPayload",
+        "Remove",
+        "_Perform_d__11",
+        "MoveNext",
+        "MarkOfTheChosen",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "Tornado": {
@@ -2216,6 +3528,32 @@
         "__2__current",
         "__l__initialThreadId",
         "__7__wrap1"
+      ],
+      "baseChain": [
+        "Tornado",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass17_0",
+        "_LaunchProjectile_b__1",
+        "_LaunchProjectile_b__0",
+        "_Perform_d__16",
+        "MoveNext",
+        "__m__Finally1",
+        "Tornado",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform",
+        "LaunchProjectile",
+        "Proj_OnLeaveWorld",
+        "__n__0"
       ]
     },
     "WolfKingCharge": {
@@ -2249,6 +3587,30 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "WolfKingCharge",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "WolfKingChargeMoverBuff",
+        "Apply",
+        "Update",
+        "_Update_b__10_0",
+        "_Update_b__10_1",
+        "_Perform_d__10",
+        "MoveNext",
+        "WolfKingCharge",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform"
       ]
     },
     "DragonFireBreath": {
@@ -2277,6 +3639,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "DragonFireBreath",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__18",
+        "MoveNext",
+        "DragonFireBreath",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform",
+        "Cancel"
       ]
     },
     "BolomahlTripleStrike": {
@@ -2312,6 +3694,29 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "BolomahlTripleStrike",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__22",
+        "MoveNext",
+        "BolomahlTripleStrike",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform",
+        "SpawnDamageCircle",
+        "Cancel",
+        "_PreparePowerExecution_b__19_0",
+        "_PreparePowerExecution_b__19_1"
       ]
     },
     "WarchiefWhirlwind": {
@@ -2342,6 +3747,26 @@
         "__2__current",
         "__l__initialThreadId",
         "_radius_5__2"
+      ],
+      "baseChain": [
+        "WarchiefWhirlwind",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__18",
+        "MoveNext",
+        "WarchiefWhirlwind",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform",
+        "Cancel"
       ]
     },
     "FallenAngelRay": {
@@ -2377,6 +3802,28 @@
         "__2__current",
         "__l__initialThreadId",
         "_damage_5__2"
+      ],
+      "baseChain": [
+        "FallenAngelRay",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__24",
+        "MoveNext",
+        "FallenAngelRay",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "calcBeamEnd",
+        "Perform",
+        "Cancel",
+        "_Perform_b__24_0"
       ]
     },
     "BoneDragonSummonSkeleton": {
@@ -2408,6 +3855,33 @@
         "__l__initialThreadId",
         "_minionDefinition_5__2",
         "_i_5__3"
+      ],
+      "baseChain": [
+        "BoneDragonSummonSkeleton",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "BoneDragonSkeletonBuff",
+        "Apply",
+        "Remove",
+        "User_OnDied",
+        "Update",
+        "CheckNearbyActors",
+        "_Apply_b__2_0",
+        "_CheckNearbyActors_b__6_0",
+        "__c",
+        "_Perform_b__10_0",
+        "_Perform_d__10",
+        "MoveNext",
+        "BoneDragonSummonSkeleton",
+        "InternalInitializePowerParameters",
+        "Perform",
+        "CalculateDamage",
+        "GetAttackRadius"
       ]
     },
     "Slam": {
@@ -2447,6 +3921,29 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Slam",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass17_0",
+        "_Perform_b__0",
+        "_Perform_d__17",
+        "MoveNext",
+        "Slam",
+        "InternalGetTranslatedDescription",
+        "Destroy",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "PreparePowerExecution",
+        "GetActionSpeed",
+        "Perform"
       ]
     },
     "VileDragonNova": {
@@ -2480,6 +3977,24 @@
         "_numTicks_5__3",
         "_novaRadius_5__4",
         "_i_5__5"
+      ],
+      "baseChain": [
+        "VileDragonNova",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__19",
+        "MoveNext",
+        "VileDragonNova",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform",
+        "_Perform_b__19_0"
       ]
     },
     "DefaultPhysicalBolt": {
@@ -2512,6 +4027,29 @@
       "implementedBy": "DefaultPhysicalBolt",
       "parameterFields": [
         "_WeaponDamageMult"
+      ],
+      "baseChain": [
+        "DefaultPhysicalBolt",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass26_0",
+        "_CreateProjectile_b__0",
+        "DefaultPhysicalBolt",
+        "GetHitEffectGroupHash",
+        "GetContactEffectGroupHash",
+        "InternalGetTranslatedDescription",
+        "GetHighestDamageType",
+        "InternalInitializePowerParameters",
+        "LaunchProjectile",
+        "CreateProjectile",
+        "HandleForkAndChain"
       ]
     },
     "ManaArrows": {
@@ -2554,6 +4092,23 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "ManaArrows",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__9",
+        "MoveNext",
+        "ManaArrows",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "PoolOfMana": {
@@ -2574,6 +4129,23 @@
       "implementedBy": "PoolOfMana",
       "parameterFields": [
         "_ManaBonus"
+      ],
+      "baseChain": [
+        "PoolOfMana",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "PoolOfManaBuff",
+        "PoolOfMana",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "ManaArrowsAbility": {
@@ -2605,6 +4177,29 @@
         "_CurrentNumArrowCharges",
         "_ManaGainPerHit",
         "_ManaGainedOnKill"
+      ],
+      "baseChain": [
+        "ManaArrowsAbility",
+        "ShootRangedProjectile",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass16_0",
+        "_CreateProjectile_b__0",
+        "_CreateProjectile_b__1",
+        "_CreateProjectile_b__2",
+        "ManaArrowsAbility",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "LaunchProjectile",
+        "CreateProjectile"
       ]
     },
     "BeastTracking": {
@@ -2626,6 +4221,23 @@
       "parameterFields": [
         "_MoreBeastDamage",
         "_MoreChampionMonsters"
+      ],
+      "baseChain": [
+        "BeastTracking",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "BeastTrackingBuff",
+        "BeastTracking",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "Concentrate": {
@@ -2644,7 +4256,24 @@
       "isHidden": false,
       "placeholders": [],
       "implementedBy": "Concentrate",
-      "parameterFields": []
+      "parameterFields": [],
+      "baseChain": [
+        "Concentrate",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "ConcentrateBuff",
+        "Concentrate",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
+      ]
     },
     "Cripple": {
       "id": "56743654-4e62-4c9a-ab1a-cc886887fe3c",
@@ -2666,6 +4295,24 @@
         "_MinimumAttackRangePercent",
         "_SlowPercent",
         "_SlowDuration"
+      ],
+      "baseChain": [
+        "Cripple",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "CrippleBuff",
+        "OnPayload",
+        "Cripple",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "Thorns": {
@@ -2701,6 +4348,27 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Thorns",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "ThornsBuff",
+        "Apply",
+        "Remove",
+        "OnPayload",
+        "_Perform_d__7",
+        "MoveNext",
+        "Thorns",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "BeastWithin": {
@@ -2726,6 +4394,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "BeastWithin",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "BeastWithinBuff",
+        "Apply",
+        "Remove",
+        "_Perform_d__7",
+        "MoveNext",
+        "BeastWithin",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "FrozenArrow": {
@@ -2763,6 +4451,37 @@
         "__2__current",
         "__l__initialThreadId",
         "__7__wrap1"
+      ],
+      "baseChain": [
+        "FrozenArrow",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass20_0",
+        "_SpawnNova_b__0",
+        "_SpawnNova_b__1",
+        "__c__DisplayClass20_1",
+        "_SpawnNova_b__2",
+        "_Perform_d__18",
+        "MoveNext",
+        "__m__Finally1",
+        "FrozenArrow",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Reset",
+        "Perform",
+        "LaunchProjectile",
+        "SpawnNova",
+        "__n__0",
+        "_LaunchProjectile_b__19_0"
       ]
     },
     "AncientKnowledge": {
@@ -2783,6 +4502,23 @@
       "implementedBy": "AncientKnowledge",
       "parameterFields": [
         "_ExperienceBonus"
+      ],
+      "baseChain": [
+        "AncientKnowledge",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "AncientKnowledgeBuff",
+        "AncientKnowledge",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "BloodCasting": {
@@ -2803,6 +4539,23 @@
       "implementedBy": "BloodCasting",
       "parameterFields": [
         "_PercentOfManaCostTakenAsLife"
+      ],
+      "baseChain": [
+        "BloodCasting",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "BloodCastingBuff",
+        "BloodCasting",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "EvasiveManeuver": {
@@ -2829,6 +4582,24 @@
         "_TeleportCooldownReductionTime",
         "_TeleportCooldownReductionProcCooldown",
         "_LastCooldownProcTick"
+      ],
+      "baseChain": [
+        "EvasiveManeuver",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "EvasiveManeuverBuff",
+        "OnPayload",
+        "EvasiveManeuver",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "ForceField": {
@@ -2851,6 +4622,23 @@
       "implementedBy": "ForceField",
       "parameterFields": [
         "_MoreForceField"
+      ],
+      "baseChain": [
+        "ForceField",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "ForceFieldBuff",
+        "ForceField",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "ManaFlow": {
@@ -2872,6 +4660,23 @@
       "parameterFields": [
         "_IncreasedMaximumManaPercent",
         "_IncreasedManaRegeneration"
+      ],
+      "baseChain": [
+        "ManaFlow",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "ManaFlowBuff",
+        "ManaFlow",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "PoisonCloud": {
@@ -2903,6 +4708,24 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "PoisonCloud",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__12",
+        "MoveNext",
+        "PoisonCloud",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "Teleport": {
@@ -2937,6 +4760,30 @@
         "__l__initialThreadId",
         "_targetPos_5__2",
         "_couldUpdatePosition_5__3"
+      ],
+      "baseChain": [
+        "Teleport",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__24",
+        "MoveNext",
+        "Teleport",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetActionSpeed",
+        "CanRun",
+        "GetAttackRadius",
+        "Reset",
+        "DoReset",
+        "Cancel",
+        "Perform"
       ]
     },
     "RapidCasting": {
@@ -2958,6 +4805,23 @@
       "parameterFields": [
         "_MoreAttackSpeedPercent",
         "_MoreSkillManaCostPercent"
+      ],
+      "baseChain": [
+        "RapidCasting",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "RapidCastingBuff",
+        "RapidCasting",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "DeadlyPoison": {
@@ -2976,7 +4840,25 @@
       "isHidden": false,
       "placeholders": [],
       "implementedBy": "DeadlyPoison",
-      "parameterFields": []
+      "parameterFields": [],
+      "baseChain": [
+        "DeadlyPoison",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "DeadlyPoisonBuff",
+        "OnPayload",
+        "DeadlyPoison",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
+      ]
     },
     "TastyTreats": {
       "id": "ee4b0d46-5799-4799-942f-6cb4eb9c039e",
@@ -2994,7 +4876,27 @@
       "isHidden": false,
       "placeholders": [],
       "implementedBy": "TastyTreats",
-      "parameterFields": []
+      "parameterFields": [],
+      "baseChain": [
+        "TastyTreats",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "TastyTreatsBuff",
+        "BuffManager_OnBuffAdded",
+        "Apply",
+        "Remove",
+        "TastyTreats",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
+      ]
     },
     "Solitary": {
       "id": "0c0eec2e-1536-491b-9f68-b4c924405c1a",
@@ -3014,6 +4916,32 @@
       "implementedBy": "Solitary",
       "parameterFields": [
         "_ListeningWorld"
+      ],
+      "baseChain": [
+        "Solitary",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "SolitaryTriggerBuff",
+        "Apply",
+        "Target_OnEnterWorld",
+        "BuffManager_OnBuffAdded",
+        "BuffManager_OnBuffRemoved",
+        "AddSolitarybuff",
+        "Remove",
+        "SolitaryBuff",
+        "Apply",
+        "Remove",
+        "Solitary",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "Fork": {
@@ -3035,7 +4963,24 @@
       "isHidden": false,
       "placeholders": [],
       "implementedBy": "Fork",
-      "parameterFields": []
+      "parameterFields": [],
+      "baseChain": [
+        "Fork",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "ForkBuff",
+        "Fork",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
+      ]
     },
     "UniqueItemFireNova": {
       "id": "d50aa826-319e-42f4-9d57-b9bdb0cd3514",
@@ -3059,6 +5004,25 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "UniqueItemFireNova",
+        "Nova",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__10",
+        "MoveNext",
+        "UniqueItemFireNova",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "HelSummonPack": {
@@ -3088,6 +5052,25 @@
         "__l__initialThreadId",
         "_minionDefinition_5__2",
         "_i_5__3"
+      ],
+      "baseChain": [
+        "HelSummonPack",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_Perform_b__11_0",
+        "_Perform_d__11",
+        "MoveNext",
+        "HelSummonPack",
+        "InternalInitializePowerParameters",
+        "Perform",
+        "CalculateMinionDamage",
+        "GetAttackRadius"
       ]
     },
     "HelFireNovas": {
@@ -3131,6 +5114,29 @@
         "_totalNovaDelay_5__5",
         "_i_5__6",
         "_sequence_5__7"
+      ],
+      "baseChain": [
+        "HelFireNovas",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "NovaData",
+        "NovaSequence",
+        "_Perform_d__29",
+        "MoveNext",
+        "HelFireNovas",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform",
+        "SpawnDamageCircle",
+        "Cancel"
       ]
     },
     "HelHomingFire": {
@@ -3156,6 +5162,30 @@
         "__2__current",
         "__l__initialThreadId",
         "__7__wrap1"
+      ],
+      "baseChain": [
+        "HelHomingFire",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass12_0",
+        "_LaunchProjectile_b__1",
+        "_LaunchProjectile_b__0",
+        "_Perform_d__11",
+        "MoveNext",
+        "__m__Finally1",
+        "HelHomingFire",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform",
+        "LaunchProjectile",
+        "__n__0"
       ]
     },
     "HelBigFireNova": {
@@ -3180,6 +5210,25 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "HelBigFireNova",
+        "Nova",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__10",
+        "MoveNext",
+        "HelBigFireNova",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "HelSmallFireNova": {
@@ -3204,6 +5253,25 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "HelSmallFireNova",
+        "Nova",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__10",
+        "MoveNext",
+        "HelSmallFireNova",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "RepelMagic": {
@@ -3225,6 +5293,23 @@
       "parameterFields": [
         "_IncreasedMaximumResistances",
         "_IncreasedMaximumPhysReduction"
+      ],
+      "baseChain": [
+        "RepelMagic",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "RepelMagicBuff",
+        "RepelMagic",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "MonsterCurseSlowProjectiles": {
@@ -3249,6 +5334,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "MonsterCurseSlowProjectiles",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "CurseSlowProjectiles",
+        "Apply",
+        "Remove",
+        "IsStrongerThan",
+        "_Perform_d__10",
+        "MoveNext",
+        "MonsterCurseSlowProjectiles",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "Mixology": {
@@ -3274,6 +5379,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Mixology",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "MixologyBuff",
+        "Apply",
+        "Remove",
+        "_Perform_d__7",
+        "MoveNext",
+        "Mixology",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "OdrSummonTotem": {
@@ -3299,6 +5424,27 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "OdrSummonTotem",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_Perform_b__13_0",
+        "_Perform_d__13",
+        "MoveNext",
+        "OdrSummonTotem",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetActionSpeed",
+        "Perform",
+        "CalculateMinionDamage",
+        "GetAttackRadius"
       ]
     },
     "OdrChargeTotemFire": {
@@ -3333,6 +5479,31 @@
         "__2__current",
         "__l__initialThreadId",
         "__8__1"
+      ],
+      "baseChain": [
+        "OdrChargeTotemFire",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_PreparePowerExecution_b__19_0",
+        "__c__DisplayClass23_0",
+        "_Perform_b__0",
+        "_Perform_d__23",
+        "MoveNext",
+        "OdrChargeTotemFire",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "calcBeamEnd",
+        "Perform",
+        "Cancel"
       ]
     },
     "OdrChargeTotemCold": {
@@ -3367,6 +5538,30 @@
         "__2__current",
         "__l__initialThreadId",
         "_tickDamagePerSecond_5__2"
+      ],
+      "baseChain": [
+        "OdrChargeTotemCold",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_PreparePowerExecution_b__19_0",
+        "_Perform_d__23",
+        "MoveNext",
+        "OdrChargeTotemCold",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "calcBeamEnd",
+        "Perform",
+        "Cancel",
+        "_Perform_b__23_0"
       ]
     },
     "OdrChargeTotemLightning": {
@@ -3401,6 +5596,30 @@
         "__2__current",
         "__l__initialThreadId",
         "_tickDamagePerSecond_5__2"
+      ],
+      "baseChain": [
+        "OdrChargeTotemLightning",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_PreparePowerExecution_b__19_0",
+        "_Perform_d__23",
+        "MoveNext",
+        "OdrChargeTotemLightning",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "calcBeamEnd",
+        "Perform",
+        "Cancel",
+        "_Perform_b__23_0"
       ]
     },
     "OdrTotemFireAttack": {
@@ -3433,6 +5652,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "OdrTotemFireAttack",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__24",
+        "MoveNext",
+        "OdrTotemFireAttack",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform",
+        "Cancel"
       ]
     },
     "OdrTotemColdAttack": {
@@ -3458,6 +5697,27 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "OdrTotemColdAttack",
+        "Nova",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass12_0",
+        "_Perform_b__0",
+        "_Perform_d__12",
+        "MoveNext",
+        "OdrTotemColdAttack",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetActionSpeed",
+        "Perform"
       ]
     },
     "OdrTotemLightningAttack": {
@@ -3488,6 +5748,29 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "OdrTotemLightningAttack",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__22",
+        "MoveNext",
+        "OdrTotemLightningAttack",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform",
+        "Cancel",
+        "Destroy",
+        "_Perform_b__22_0",
+        "_Perform_b__22_1"
       ]
     },
     "OdrEnrage": {
@@ -3510,6 +5793,21 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "OdrEnrage",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__6",
+        "MoveNext",
+        "OdrEnrage",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "OdrSlam": {
@@ -3541,6 +5839,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "OdrSlam",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__17",
+        "MoveNext",
+        "OdrSlam",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "PreparePowerExecution",
+        "GetActionSpeed",
+        "Perform",
+        "Destroy"
       ]
     },
     "MonsterCurseSlow": {
@@ -3565,6 +5883,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "MonsterCurseSlow",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "CurseSlow",
+        "Apply",
+        "Remove",
+        "IsStrongerThan",
+        "_Perform_d__10",
+        "MoveNext",
+        "MonsterCurseSlow",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "MonsterCurseReducedWeaponDamage": {
@@ -3589,6 +5927,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "MonsterCurseReducedWeaponDamage",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "CurseReducedWeaponDamage",
+        "Apply",
+        "Remove",
+        "IsStrongerThan",
+        "_Perform_d__10",
+        "MoveNext",
+        "MonsterCurseReducedWeaponDamage",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "MonsterCurseLowerResistances": {
@@ -3613,6 +5971,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "MonsterCurseLowerResistances",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "CurseLowerResistances",
+        "Apply",
+        "Remove",
+        "IsStrongerThan",
+        "_Perform_d__10",
+        "MoveNext",
+        "MonsterCurseLowerResistances",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "MonsterCurseLivingLeech": {
@@ -3637,6 +6015,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "MonsterCurseLivingLeech",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "CurseLivingLeech",
+        "Apply",
+        "Remove",
+        "IsStrongerThan",
+        "_Perform_d__10",
+        "MoveNext",
+        "MonsterCurseLivingLeech",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "MonsterCurseAmplifyDamageTaken": {
@@ -3661,6 +6059,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "MonsterCurseAmplifyDamageTaken",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "CurseAmplifyDamageTaken",
+        "Apply",
+        "Remove",
+        "IsStrongerThan",
+        "_Perform_d__10",
+        "MoveNext",
+        "MonsterCurseAmplifyDamageTaken",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "UniqueItemFireballOnHit": {
@@ -3679,7 +6097,27 @@
       "isHidden": true,
       "placeholders": [],
       "implementedBy": "UniqueItemFireballOnHit",
-      "parameterFields": []
+      "parameterFields": [],
+      "baseChain": [
+        "UniqueItemFireballOnHit",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass23_0",
+        "_LaunchProjectile_b__0",
+        "UniqueItemFireballOnHit",
+        "GetHitEffectGroupHash",
+        "GetContactEffectGroupHash",
+        "GetHighestDamageType",
+        "InternalInitializePowerParameters",
+        "LaunchProjectile"
+      ]
     },
     "UniqueItemHuginnPull": {
       "id": "52dea45b-ff03-484b-96a1-3f93f559b48b",
@@ -3702,6 +6140,27 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "UniqueItemHuginnPull",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_GetNewTarget_b__12_0",
+        "_Perform_d__11",
+        "MoveNext",
+        "UniqueItemHuginnPull",
+        "GetContactDelay",
+        "Destroy",
+        "GetActionSpeed",
+        "Perform",
+        "GetNewTarget",
+        "_GetNewTarget_b__12_1"
       ]
     },
     "ShootExplodingFireArrow": {
@@ -3734,6 +6193,32 @@
       "implementedBy": "ShootExplodingFireArrow",
       "parameterFields": [
         "_WeaponDamageMult"
+      ],
+      "baseChain": [
+        "ShootExplodingFireArrow",
+        "ShootRangedProjectile",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass21_0",
+        "_CreateProjectile_b__0",
+        "ShootExplodingFireArrow",
+        "GetHitEffectGroupHash",
+        "GetHitEffectHash",
+        "GetCastEffectGroupHash",
+        "GetContactEffectGroupHash",
+        "GetHalfContactEffectGroupHash",
+        "InternalGetTranslatedDescription",
+        "GetHighestDamageType",
+        "InternalInitializePowerParameters",
+        "LaunchProjectile",
+        "CreateProjectile"
       ]
     },
     "Spitfire": {
@@ -3769,6 +6254,30 @@
         "__2__current",
         "__l__initialThreadId",
         "_dpsMult_5__2"
+      ],
+      "baseChain": [
+        "Spitfire",
+        "ChanneledSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass14_0",
+        "_OnChannelClose_b__0",
+        "_InternalPerform_d__16",
+        "MoveNext",
+        "Spitfire",
+        "InternalGetTranslatedDescription",
+        "GetHighestDamageType",
+        "InternalInitializePowerParameters",
+        "OnChannelOpen",
+        "OnChannelClose",
+        "OnChannelUpdated",
+        "InternalPerform",
+        "_InternalPerform_b__16_0"
       ]
     },
     "Whirl": {
@@ -3800,6 +6309,24 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Whirl",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__8",
+        "MoveNext",
+        "Whirl",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetActionSpeed",
+        "Perform"
       ]
     },
     "UniqueItemThrowHammerOnHit": {
@@ -3818,7 +6345,27 @@
       "isHidden": true,
       "placeholders": [],
       "implementedBy": "UniqueItemThrowHammerOnHit",
-      "parameterFields": []
+      "parameterFields": [],
+      "baseChain": [
+        "UniqueItemThrowHammerOnHit",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass23_0",
+        "_LaunchProjectile_b__0",
+        "UniqueItemThrowHammerOnHit",
+        "GetHitEffectGroupHash",
+        "GetContactEffectGroupHash",
+        "GetHighestDamageType",
+        "InternalInitializePowerParameters",
+        "LaunchProjectile"
+      ]
     },
     "UniqueItemFreezeNova": {
       "id": "9a4bebfe-27ab-4022-9206-84bd20c02285",
@@ -3840,6 +6387,25 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "UniqueItemFreezeNova",
+        "Nova",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__10",
+        "MoveNext",
+        "UniqueItemFreezeNova",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "SummonSkeleton": {
@@ -3866,6 +6432,33 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "SummonSkeleton",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_OnMinionAdded_b__3_1",
+        "__c__DisplayClass3_0",
+        "_OnMinionAdded_b__0",
+        "SummonSkeletonBuff",
+        "CreateMinion",
+        "CalculateMaxNumMinions",
+        "OnMinionAdded",
+        "_Perform_d__9",
+        "MoveNext",
+        "SummonSkeleton",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform",
+        "GetAttackRadius",
+        "GetBaseCooldownTime",
+        "GetBaseManaCost"
       ]
     },
     "SummonDemon": {
@@ -3892,6 +6485,28 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "SummonDemon",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "SummonDemonBuff",
+        "CreateMinion",
+        "CalculateMaxNumMinions",
+        "_Perform_d__9",
+        "MoveNext",
+        "SummonDemon",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform",
+        "GetAttackRadius",
+        "GetBaseCooldownTime",
+        "GetBaseManaCost"
       ]
     },
     "SummonDeath": {
@@ -3918,6 +6533,29 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "SummonDeath",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "SummonDeathBuff",
+        "CreateMinion",
+        "CalculateMaxNumMinions",
+        "OnMinionAdded",
+        "_Perform_d__9",
+        "MoveNext",
+        "SummonDeath",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform",
+        "GetAttackRadius",
+        "GetBaseCooldownTime",
+        "GetBaseManaCost"
       ]
     },
     "UnholyFocus": {
@@ -3943,6 +6581,29 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "UnholyFocus",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "UnholyFocusBuff",
+        "Apply",
+        "Remove",
+        "__c",
+        "_CanRun_b__7_0",
+        "_Perform_d__8",
+        "MoveNext",
+        "UnholyFocus",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "CanRun",
+        "Perform"
       ]
     },
     "Shadowbolt": {
@@ -3972,6 +6633,32 @@
         "__2__current",
         "__l__initialThreadId",
         "__7__wrap1"
+      ],
+      "baseChain": [
+        "Shadowbolt",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass14_0",
+        "_CreateProjectile_b__0",
+        "_Perform_d__12",
+        "MoveNext",
+        "__m__Finally1",
+        "Shadowbolt",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform",
+        "LaunchProjectile",
+        "CreateProjectile",
+        "HandleForkAndChain",
+        "__n__0"
       ]
     },
     "AstralPlane": {
@@ -4005,6 +6692,33 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "AstralPlane",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass9_0",
+        "_Apply_b__0",
+        "_Apply_b__1",
+        "SummonWolfBuff",
+        "Apply",
+        "RecalculateDynamicStats",
+        "Target_OnLeaveWorld",
+        "Target_OnEnterWorld",
+        "Remove",
+        "CalculateWolfDamage",
+        "_Perform_d__13",
+        "MoveNext",
+        "AstralPlane",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Perform",
+        "GetAttackRadius"
       ]
     },
     "DrainLife": {
@@ -4047,6 +6761,27 @@
         "_damagePerTenthSecond_5__4",
         "_timePassed_5__5",
         "_percentOfLifeGivenToMinionsOnKill_5__6"
+      ],
+      "baseChain": [
+        "DrainLife",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__18",
+        "MoveNext",
+        "DrainLife",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform",
+        "OnDrainLifeKill",
+        "Cancel"
       ]
     },
     "DemonicPresence": {
@@ -4074,6 +6809,23 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "DemonicPresence",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__10",
+        "MoveNext",
+        "DemonicPresence",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "Decay": {
@@ -4103,6 +6855,24 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Decay",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__12",
+        "MoveNext",
+        "Decay",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "Sacrifice": {
@@ -4132,6 +6902,34 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Sacrifice",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "SacrificeBuff",
+        "Init",
+        "Apply",
+        "Brain_OnSkillStarted",
+        "Remove",
+        "Update",
+        "__c",
+        "_CanRun_b__9_1",
+        "_Perform_b__10_1",
+        "_Perform_d__10",
+        "MoveNext",
+        "Sacrifice",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "CanRun",
+        "Perform",
+        "_CanRun_b__9_0",
+        "_Perform_b__10_0"
       ]
     },
     "BoneLink": {
@@ -4161,6 +6959,46 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "BoneLink",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_Target_OnOwnedMinionAdded_b__7_0",
+        "__c__DisplayClass7_0",
+        "_Target_OnOwnedMinionAdded_b__1",
+        "BoneLinkSummonBuff",
+        "Apply",
+        "Remove",
+        "Target_OnOwnedMinionAdded",
+        "BoneLinkBuff",
+        "Init",
+        "Apply",
+        "BuffManager_OnBuffRemoved",
+        "BuffManager_OnBuffAdded",
+        "OnPayload",
+        "OnRawPayload",
+        "CreateLinkToTargetEffect",
+        "DestroyLinkToTargetEffect",
+        "Remove",
+        "__c",
+        "_CanRun_b__8_0",
+        "_Perform_b__10_0",
+        "_Perform_d__10",
+        "MoveNext",
+        "BoneLink",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "CanRun",
+        "GetActionSpeed",
+        "Perform"
       ]
     },
     "AstralWalk": {
@@ -4190,6 +7028,30 @@
         "__2__current",
         "__l__initialThreadId",
         "_couldUpdatePosition_5__2"
+      ],
+      "baseChain": [
+        "AstralWalk",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__23",
+        "MoveNext",
+        "AstralWalk",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetActionSpeed",
+        "CanRun",
+        "GetAttackRadius",
+        "Reset",
+        "DoReset",
+        "Cancel",
+        "Perform"
       ]
     },
     "SkeletonCharge": {
@@ -4219,6 +7081,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "SkeletonCharge",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "SkeletonChargeBuff",
+        "Update",
+        "Apply",
+        "Remove",
+        "_Perform_d__6",
+        "MoveNext",
+        "SkeletonCharge",
+        "InternalInitializePowerParameters",
+        "Perform"
       ]
     },
     "DemonShadowbolt": {
@@ -4246,6 +7128,30 @@
         "__2__current",
         "__l__initialThreadId",
         "__7__wrap1"
+      ],
+      "baseChain": [
+        "DemonShadowbolt",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass11_0",
+        "_LaunchProjectile_b__0",
+        "_Perform_d__10",
+        "MoveNext",
+        "__m__Finally1",
+        "DemonShadowbolt",
+        "InternalInitializePowerParameters",
+        "GetShadowBoltCooldown",
+        "GetAttackRadius",
+        "Perform",
+        "LaunchProjectile",
+        "__n__0"
       ]
     },
     "DeathInstantKill": {
@@ -4270,6 +7176,24 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "DeathInstantKill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__8",
+        "MoveNext",
+        "DeathInstantKill",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform"
       ]
     },
     "AccumulatingShadows": {
@@ -4292,6 +7216,30 @@
         "_MaxStacks",
         "_ShadowBoltDamageIncrease",
         "_ShadowBoltTimeWindow"
+      ],
+      "baseChain": [
+        "AccumulatingShadows",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "AccumulatingShadowsBuff",
+        "OnPayload",
+        "AccumulatingShadowsInstanceBuff",
+        "Init",
+        "Apply",
+        "_AddStack",
+        "Remove",
+        "Stack",
+        "AccumulatingShadows",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "Bodyguard": {
@@ -4313,6 +7261,24 @@
       "parameterFields": [
         "_ReducedCritDamageTaken",
         "_NearbyActors"
+      ],
+      "baseChain": [
+        "Bodyguard",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "BodyguardBuff",
+        "OnPayload",
+        "Bodyguard",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "BoneArmor": {
@@ -4334,6 +7300,23 @@
       "parameterFields": [
         "_PhysicalDamageReductionBonus",
         "_DamageTakenAsPhysical"
+      ],
+      "baseChain": [
+        "BoneArmor",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "BoneArmorBuff",
+        "BoneArmor",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "Pillaging": {
@@ -4355,6 +7338,23 @@
       "parameterFields": [
         "_MinionMagicFindIncrease",
         "_AdditionalIronDropChance"
+      ],
+      "baseChain": [
+        "Pillaging",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "PillagingBuff",
+        "Pillaging",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "DarkMagic": {
@@ -4376,6 +7376,23 @@
       "parameterFields": [
         "_ManaGainedOnKill",
         "_ManaCostReduction"
+      ],
+      "baseChain": [
+        "DarkMagic",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "DarkMagicBuff",
+        "DarkMagic",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "GiftOfTheVampire": {
@@ -4397,6 +7414,23 @@
       "parameterFields": [
         "_MinionLeechGainPercent",
         "_LifeLeechBonus"
+      ],
+      "baseChain": [
+        "GiftOfTheVampire",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "GiftOfTheVampireBuff",
+        "GiftOfTheVampire",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "MasterSummoner": {
@@ -4418,6 +7452,23 @@
       "parameterFields": [
         "_MinionLifeBonus",
         "_MinionDamageBonus"
+      ],
+      "baseChain": [
+        "MasterSummoner",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "MasterSummonerBuff",
+        "MasterSummoner",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "Reanimator": {
@@ -4439,6 +7490,26 @@
       "parameterFields": [
         "_ChanceToReanimateFallenMinion",
         "_ReanimatedMinionLifePercent"
+      ],
+      "baseChain": [
+        "Reanimator",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c__DisplayClass1_0",
+        "_OnPayload_b__0",
+        "ReanimatorBuff",
+        "OnPayload",
+        "Reanimator",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "VileTouch": {
@@ -4460,6 +7531,23 @@
       "parameterFields": [
         "_MorePoisonDamage",
         "_PoisonChanceOnHit"
+      ],
+      "baseChain": [
+        "VileTouch",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "VileTouchBuff",
+        "VileTouch",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "WandMaster": {
@@ -4480,6 +7568,23 @@
       "implementedBy": "WandMaster",
       "parameterFields": [
         "_MoreDamageWithWands"
+      ],
+      "baseChain": [
+        "WandMaster",
+        "PassiveSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "WandMasterBuff",
+        "WandMaster",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "Apply",
+        "Remove"
       ]
     },
     "Whirlwind": {
@@ -4515,6 +7620,26 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "Whirlwind",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__10",
+        "MoveNext",
+        "Whirlwind",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "CanRun",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform"
       ]
     },
     "KibuShockwave": {
@@ -4542,6 +7667,32 @@
         "__l__initialThreadId",
         "_i_5__2",
         "__7__wrap2"
+      ],
+      "baseChain": [
+        "KibuShockwave",
+        "ProjectileSkill",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__24",
+        "MoveNext",
+        "__m__Finally1",
+        "KibuShockwave",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform",
+        "LaunchProjectile",
+        "CreateProjectile",
+        "Cancel",
+        "__n__0",
+        "_CreateProjectile_b__26_0"
       ]
     },
     "KibuShock": {
@@ -4568,6 +7719,23 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "KibuShock",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__15",
+        "MoveNext",
+        "KibuShock",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     },
     "KibuLightningExplodeSequence": {
@@ -4599,6 +7767,27 @@
         "_weaponDamageDelta_5__3",
         "_i_5__4",
         "_delay_5__7"
+      ],
+      "baseChain": [
+        "KibuLightningExplodeSequence",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__17",
+        "MoveNext",
+        "KibuLightningExplodeSequence",
+        "InternalInitializePowerParameters",
+        "PreparePowerExecution",
+        "GetAttackRadius",
+        "GetActionSpeed",
+        "Perform",
+        "SpawnDamageCircle",
+        "Cancel"
       ]
     },
     "KibuSummonElemental": {
@@ -4628,6 +7817,25 @@
         "__l__initialThreadId",
         "_minionDefinition_5__2",
         "_i_5__3"
+      ],
+      "baseChain": [
+        "KibuSummonElemental",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "__c",
+        "_Perform_b__11_0",
+        "_Perform_d__11",
+        "MoveNext",
+        "KibuSummonElemental",
+        "InternalInitializePowerParameters",
+        "Perform",
+        "CalculateMinionDamage",
+        "GetAttackRadius"
       ]
     },
     "KibuSmallLightningNova": {
@@ -4652,6 +7860,25 @@
         "__1__state",
         "__2__current",
         "__l__initialThreadId"
+      ],
+      "baseChain": [
+        "KibuSmallLightningNova",
+        "Nova",
+        "ActionTimedSkill",
+        "Skill",
+        "PowerScript",
+        "Power",
+        "PowerContext",
+        "IGameContext"
+      ],
+      "methods": [
+        "_Perform_d__8",
+        "MoveNext",
+        "KibuSmallLightningNova",
+        "InternalGetTranslatedDescription",
+        "InternalInitializePowerParameters",
+        "GetAttackRadius",
+        "Perform"
       ]
     }
   },

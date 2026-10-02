@@ -188,7 +188,9 @@ def recover(data, segs, start, limit, set_item_addr):
                 elif last_loaded is not None:
                     # Rank-1 base of a (rank-1)*perRank + base formula.
                     direct[disp] = last_loaded
-        elif m == "bl" and ops.startswith("#"):
+        elif m in ("bl", "b") and ops.startswith("#"):
+            # `bl` is a normal call; `b` is a tail call (frame already restored) that the
+            # client uses for the final attribute assignment.
             target = int(ops[1:], 16)
             if target == set_item_addr and pending_attr is not None and "d0" in dvals:
                 records.append((origin, pending_attr, dvals["d0"]))

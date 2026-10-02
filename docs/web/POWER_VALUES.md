@@ -30,7 +30,7 @@ GameAttributeMap.set_Item(AttributeOrigin, GameAttribute, double)
 
 ## 覆盖
 
-145 个技能方法中 **115 个**可恢复至少一个数值；分布：
+145 个技能方法中 **126 个**可恢复至少一个数值；分布：
 
 | 属性 | 数量 |
 |---|---:|
@@ -64,7 +64,23 @@ GameAttributeMap.set_Item(AttributeOrigin, GameAttribute, double)
 
 这些数值已写入 `Powers.generated.cs`，服务端冷却/倍率/半径/法力均使用真实值；客户端按钮显示真实技能名与法力。
 
-## 效果语义（本次完善）
+## 效果语义（类继承链为准，权威）
+
+从 `dump.cs` 提取每个技能实现类的**继承链**，比属性启发式更可靠：
+
+| 继承链 | 语义 | 例 |
+|---|---|---|
+| `< Nova` | `nova`（范围） | IceNova |
+| `< ProjectileSkill` | `projectile`（远程单体/穿透） | Shadowbolt |
+| `< Skill < PowerScript`（非 ActionTimedSkill） | `summon` | SummonSkeleton / SummonWolf |
+| `< Aura...` | `aura` | — |
+| 恢复出 `Max_Num_Chains` | `chain` | ChainLightning |
+| `Mana_Shield` / `Life_Leech` / `Movement_Speed` | `shield`/`leech`/`mobility` | |
+| 其余 ActionTimedSkill | `strike`/`nova`/`rally` 按半径与伤害 | Slam/Pounce/Might |
+
+服务端已实现 `projectile`（远程 + 穿透）、`chain`、`nova`、`rally`、`summon`、`mobility`、`shield`。
+
+## 效果语义（旧启发式说明，已由继承链取代）
 
 不再用文案启发式，而是**根据恢复出的属性集**判定语义：
 
@@ -115,9 +131,12 @@ GameAttributeMap.set_Item(AttributeOrigin, GameAttribute, double)
 * 精通等级持久化在 `SavedCharacter.MasteryRanks`，重登/重启后重新叠加并生效（测试验证 4→7 链）。
 * 网页 API：`GET /characters/{id}/powers`；命令 `mastery`（携带 `masteryId`，幂等）。客户端 `P` 打开技能面板，可加点并实时看到属性修正。
 
+尾部属性赋值通过**尾调用**（`b` 而非 `bl`）实现；补上尾调用捕获后，多恢复出法力等属性：
+ChainLightning 法力 25、IceNova 法力 20、Might 法力 20、Slam 半径 1.0、ArrowRain 伤害 180% 等。
+
 ## 仍然 Provisional 的部分
 
-* **效果归类**：把每个技能映射到 `strike/nova/rally` 是启发式；真实语义（链式、传送、召唤、持续引导）需要继续读方法体（已恢复的字段名如 `_DamageReductionPerJump`、`_NumMinions`、`AstralWalk_Movement_Speed_Bonus_Percent` 是起点）。
+* **效果归类**已改为以类继承链为准（见上）；但每个技能的具体执行流程（链子弹射、引导次数、随从实体）仍需继续读方法体（已恢复的字段名如 `_DamageReductionPerJump`、`_NumMinions`、`AstralWalk_Movement_Speed_Bonus_Percent` 是起点）。
 * 描述占位符的角色推断偶尔把「冻结持续」与「冷却」都归为 duration（例如 IceNova 的 `{2}/{3}`）。
 * 未恢复：技能等级/精通数值（`PowerMasteries` 的 124 条属性修正已提取，公式未接）、法力系统运行、技能加点。
 
