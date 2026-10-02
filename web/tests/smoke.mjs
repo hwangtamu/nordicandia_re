@@ -78,6 +78,14 @@ try {
   const equippedRows = await page.$$eval(".inv-row.equipped", (rows) => rows.length);
   const lootRows = await page.$$eval(".loot-item", (rows) => rows.length);
 
+  // M3: open the skill tree and spend a mastery point.
+  await page.click("#hud-powers");
+  await page.waitForSelector(".power-row", { timeout: 10000 });
+  const beforeRank = await page.textContent("#powers-points");
+  await page.click(".power-row .inv-btn:not([disabled])");
+  await page.waitForTimeout(1200);
+  const afterRank = await page.textContent("#powers-points");
+
   const status = await page.textContent("#boot-status").catch(() => "");
   const level = await page.textContent("#hud-level").catch(() => "");
   const monsters = await page.textContent("#hud-alive").catch(() => "");
@@ -93,9 +101,11 @@ try {
   console.log(`xp: ${xp}`);
   console.log(`stats: ${stats}`);
   console.log(`equipped rows: ${equippedRows}  loot feed: ${lootRows}`);
+  console.log(`mastery rank: ${beforeRank} -> ${afterRank}`);
   console.log(`screenshot: ${out}`);
   if (!level || monsters === "0") throw new Error("HUD did not report a populated world");
   if (equippedRows < 1) throw new Error("M2 equip did not mark an item equipped");
+  if (beforeRank === afterRank) throw new Error("M3 mastery allocation did not change the rank");
   if (realErrors.length) throw new Error("browser errors:\n" + realErrors.join("\n"));
   console.log("PASS m2 smoke");
 } finally {

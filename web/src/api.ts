@@ -52,6 +52,8 @@ export interface SkillStatus {
   maxCooldown: number;
   manaCost: number;
   confidence: string;
+  chains: number;
+  special: string;
 }
 
 export interface MonsterState {
@@ -64,6 +66,7 @@ export interface MonsterState {
   hp: number;
   maxHp: number;
   alive: boolean;
+  stunTimer: number;
 }
 
 export interface CombatSnapshot {
@@ -72,6 +75,9 @@ export interface CombatSnapshot {
   playerZ: number;
   playerHp: number;
   playerMaxHp: number;
+  playerMana: number;
+  playerMaxMana: number;
+  playerShield: number;
   playerLevel: number;
   experience: number;
   silver: number;
@@ -120,6 +126,30 @@ export interface WebInventory {
   offense: number;
   defense: number;
   recovery: number;
+}
+
+export interface MasterySpec {
+  attributeId: number;
+  attributeName: string;
+  value: number;
+  startValue: number;
+  operator: number;
+}
+
+export interface MasteryView {
+  name: string;
+  integerId: number;
+  rank: number;
+  maxPoints: number;
+  specs: MasterySpec[];
+}
+
+export interface SkillMasteryView {
+  skillName: string;
+  slot: number;
+  rank: number;
+  maxPoints: number;
+  masteries: MasteryView[];
 }
 
 let commandCounter = 0;
@@ -188,8 +218,8 @@ export const api = {
     characterId: string,
     commandId: string,
     expectedVersion: number,
-    type: "move" | "skill" | "equip" | "unequip",
-    options: { x?: number; z?: number; itemId?: string; skillId?: number } = {},
+    type: "move" | "skill" | "equip" | "unequip" | "mastery",
+    options: { x?: number; z?: number; itemId?: string; skillId?: number; masteryId?: number } = {},
   ) =>
     request<{ applied: boolean; reason: string; state: CombatEnvelope }>(`/characters/${characterId}/commands`, {
       method: "POST",
@@ -202,6 +232,9 @@ export const api = {
         z: options.z ?? 0,
         itemId: options.itemId ?? "00000000-0000-0000-0000-000000000000",
         skillId: options.skillId ?? 0,
+        masteryId: options.masteryId ?? 0,
       }),
     }),
+
+  powers: (characterId: string) => request<SkillMasteryView[]>(`/characters/${characterId}/powers`),
 };

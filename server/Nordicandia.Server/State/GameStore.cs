@@ -92,6 +92,8 @@ public sealed class GameStore : IDisposable
         public Dictionary<int, DateTime> Blessings { get; set; } = new();
         // Unlocked achievement names (UnlockAchievement RPC). HashSet for idempotency.
         public HashSet<string> Achievements { get; set; } = new();
+        // Allocated skill-tree mastery ranks, keyed by PowerMasteries IntegerId.
+        public Dictionary<int, int> MasteryRanks { get; set; } = new();
     }
 
     /// <summary>Read-only projection used by the leaderboard services.</summary>
@@ -712,6 +714,36 @@ public sealed class GameStore : IDisposable
         {
             var c = Owned(state, owner, id);
             return Unpack<SerializedCharacterData.SerializedData>(c.Data)?.Items?.Items ?? new List<SerializedItem>();
+        }
+    }
+
+    /// <summary>Allocated mastery ranks for a character (mastery integerId -> rank).</summary>
+    public Dictionary<int, int> GetMasteryRanks(Guid owner, Guid id)
+    {
+        lock (gate)
+        {
+            var c = Owned(state, owner, id);
+            return c.MasteryRanks == null ? new Dictionary<int, int>() : new Dictionary<int, int>(c.MasteryRanks);
+        }
+    }
+
+    /// <summary>Sets a mastery rank (0 removes it). Returns the stored rank.</summary>
+    public int SetMasteryRank(Guid owner, Guid id, int masteryId, int rank) => Change(s =>
+    {
+        var c = Owned(s, owner, id);
+        c.MasteryRanks ??= new Dictionary<int, int>();
+        if (rank <= 0) c.MasteryRanks.Remove(masteryId);
+        else c.MasteryRanks[masteryId] = rank;
+        return Math.Max(0, rank);
+    });
+
+    /// <summary>Total mastery points currently spent by a character.</summary>
+    public int MasteryPointsSpent(Guid owner, Guid id)
+    {
+        lock (gate)
+        {
+            var c = Owned(state, owner, id);
+            return c.MasteryRanks?.Values.Sum() ?? 0;
         }
     }
 

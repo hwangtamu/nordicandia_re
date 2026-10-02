@@ -1,5 +1,5 @@
 import "./style.css";
-import { api, CharacterSummary, CombatEnvelope, LootDrop, newCommandId, Snapshot, WebInventory } from "./api";
+import { api, CharacterSummary, CombatEnvelope, LootDrop, newCommandId, SkillMasteryView, Snapshot, WebInventory } from "./api";
 import { loadContent, loadPowers, ContentManifest, ClassPowers, className } from "./content";
 import { HudState, World } from "./game";
 
@@ -25,6 +25,7 @@ app.innerHTML = `
     <div class="hud-top-left">
       <div class="name-row"><span id="hud-name">—</span><span id="hud-class"></span></div>
       <div class="bar hp"><div id="hud-hp-fill"></div><span id="hud-hp-text"></span></div>
+      <div class="bar mana"><div id="hud-mana-fill"></div><span id="hud-mana-text"></span></div>
       <div class="bar xp"><div id="hud-xp-fill"></div><span id="hud-xp-text"></span></div>
       <div class="passive" id="hud-passive"></div>
       <div class="stats"><span id="hud-stats">OFF 0 · DEF 0 · REC 0</span></div>
@@ -44,12 +45,20 @@ app.innerHTML = `
       </div>
       <div id="inv-items" class="inv-items"></div>
     </div>
+    <div id="powers" class="inventory hidden">
+      <div class="inv-head">
+        <span>Skills <small id="powers-points"></small></span>
+        <button id="powers-close" class="icon-btn">×</button>
+      </div>
+      <div id="powers-items" class="inv-items"></div>
+    </div>
     <div class="hud-bottom">
       <button id="hud-skill" class="skill">Skill 1 <small>1</small></button>
       <button id="hud-skill-2" class="skill">Skill 2 <small>2</small></button>
       <button id="hud-skill-3" class="skill">Skill 3 <small>3</small></button>
       <button id="hud-auto" class="skill alt">Auto-move: ON <small>Tab</small></button>
       <button id="hud-bag" class="skill alt">Bag <small>B</small></button>
+      <button id="hud-powers" class="skill alt">Skills <small>P</small></button>
     </div>
     <div id="hud-message" class="toast"></div>
   </div>
@@ -63,6 +72,9 @@ const statusEl = document.getElementById("boot-status") as HTMLDivElement;
 const contentEl = document.getElementById("hud-content") as HTMLElement;
 const inventoryEl = document.getElementById("inventory") as HTMLDivElement;
 const invItemsEl = document.getElementById("inv-items") as HTMLDivElement;
+const powersEl = document.getElementById("powers") as HTMLDivElement;
+const powersItemsEl = document.getElementById("powers-items") as HTMLDivElement;
+const powersPointsEl = document.getElementById("powers-points") as HTMLElement;
 const lootFeedEl = document.getElementById("loot-feed") as HTMLDivElement;
 
 let content: ContentManifest;
@@ -149,8 +161,8 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
     ? `Passive · ${classPowers.passive.name}`
     : "";
   const sendCommand = async (
-    type: "move" | "skill" | "equip" | "unequip",
-    options: { x?: number; z?: number; itemId?: string; skillId?: number } = {},
+    type: "move" | "skill" | "equip" | "unequip" | "mastery",
+    options: { x?: number; z?: number; itemId?: string; skillId?: number; masteryId?: number } = {},
   ): Promise<void> => {
     const expectedVersion = world?.currentVersion() ?? 0;
     try {
@@ -158,6 +170,7 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
       world?.pushState(result.state);
       if (!result.applied && result.reason === "cooldown") showHudMessage("Skill on cooldown");
       if (!result.applied && result.reason === "no_target") showHudMessage("No target in range");
+      if (!result.applied && result.reason === "no_mana") showHudMessage("Not enough mana");
       if (type === "equip" || type === "unequip") await refreshInventory();
     } catch (error) {
       console.warn("command failed", error);
@@ -171,6 +184,14 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
       renderInventory(inventory, (itemId, equipped) => void sendCommand(equipped ? "unequip" : "equip", { itemId }));
     } catch (error) {
       console.warn("inventory failed", error);
+    }
+  };
+  const refreshPowers = async (): Promise<void> => {
+    try {
+      const rows = await api.powers(characterId);
+      renderPowers(rows, (masteryId) => void sendCommand("mastery", { masteryId }).then(() => refreshPowers()));
+    } catch (error) {
+      console.warn("powers failed", error);
     }
   };
   world = new World(canvas, overlay, content, snapshot.race, {
@@ -191,6 +212,7 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
   });
   await world.start(initial);
   await refreshInventory();
+  await refreshPowers();
 
   const skillButtons: [string, number][] = [
     ["hud-skill", 0],
@@ -206,6 +228,8 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
   });
   document.getElementById("hud-bag")!.addEventListener("click", () => toggleBag());
   document.getElementById("inv-close")!.addEventListener("click", () => toggleBag(false));
+  document.getElementById("hud-powers")!.addEventListener("click", () => togglePowers());
+  document.getElementById("powers-close")!.addEventListener("click", () => togglePowers(false));
   const keyToSkill: Record<string, number> = { Digit1: 0, Digit2: 1, Digit3: 2, Numpad1: 0, Numpad2: 1, Numpad3: 2 };
   window.addEventListener("keydown", (event) => {
     if (event.code === "Space") {
@@ -221,6 +245,9 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
     } else if (event.code === "KeyB") {
       event.preventDefault();
       toggleBag();
+    } else if (event.code === "KeyP") {
+      event.preventDefault();
+      togglePowers();
     }
   });
 }
@@ -228,6 +255,44 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
 function toggleBag(force?: boolean): void {
   const show = force ?? inventoryEl.classList.contains("hidden");
   inventoryEl.classList.toggle("hidden", !show);
+}
+
+function togglePowers(force?: boolean): void {
+  const show = force ?? powersEl.classList.contains("hidden");
+  powersEl.classList.toggle("hidden", !show);
+}
+
+function renderPowers(rows: SkillMasteryView[], onAllocate: (masteryId: number) => void): void {
+  const spent = rows.reduce((sum, r) => sum + r.rank, 0);
+  const total = rows.reduce((sum, r) => sum + r.maxPoints, 0);
+  powersPointsEl.textContent = `${spent} / ${total} points`;
+  powersItemsEl.innerHTML = "";
+  for (const skill of rows) {
+    const header = document.createElement("div");
+    header.className = "power-skill";
+    header.textContent = `${skill.skillName}  (${skill.rank}/${skill.maxPoints})`;
+    powersItemsEl.appendChild(header);
+    for (const mastery of skill.masteries) {
+      const row = document.createElement("div");
+      row.className = "inv-row power-row";
+      const specs = mastery.specs.map((s) => `${s.attributeName} ${s.value >= 0 ? "+" : ""}${s.value}`).join(", ");
+      row.innerHTML = `
+        <span class="power-rank">${mastery.rank}/${mastery.maxPoints}</span>
+        <span class="inv-name">${escapeHtml(prettyMastery(mastery.name))}<span class="inv-affixes">${escapeHtml(specs)}</span></span>
+      `;
+      const button = document.createElement("button");
+      button.className = "inv-btn";
+      button.textContent = "+";
+      button.disabled = mastery.rank >= mastery.maxPoints;
+      button.addEventListener("click", () => onAllocate(mastery.integerId));
+      row.appendChild(button);
+      powersItemsEl.appendChild(row);
+    }
+  }
+}
+
+function prettyMastery(name: string): string {
+  return name.replace(/^Mastery/, "").replace(/([a-z])([A-Z])/g, "$1 $2");
 }
 
 function renderInventory(inventory: WebInventory, onToggle: (itemId: string, equipped: boolean) => void): void {
@@ -274,7 +339,10 @@ function showLoot(loot: LootDrop[]): void {
 function renderHud(hudState: HudState): void {
   const hpPercent = Math.max(0, Math.min(100, (hudState.health / hudState.maxHealth) * 100));
   (document.getElementById("hud-hp-fill") as HTMLElement).style.width = `${hpPercent}%`;
-  (document.getElementById("hud-hp-text") as HTMLElement).textContent = `${hudState.health} / ${hudState.maxHealth}`;
+  (document.getElementById("hud-hp-text") as HTMLElement).textContent = `${hudState.health} / ${hudState.maxHealth}${hudState.shield > 0 ? ` (+${hudState.shield} shield)` : ""}`;
+  const manaPercent = Math.max(0, Math.min(100, (hudState.mana / Math.max(1, hudState.maxMana)) * 100));
+  (document.getElementById("hud-mana-fill") as HTMLElement).style.width = `${manaPercent}%`;
+  (document.getElementById("hud-mana-text") as HTMLElement).textContent = `${hudState.mana} / ${hudState.maxMana}`;
   const span = Math.max(1, hudState.experienceForNextLevel - hudState.experienceForLevel);
   const xpPercent = Math.max(0, Math.min(100, ((hudState.experience - hudState.experienceForLevel) / span) * 100));
   (document.getElementById("hud-xp-fill") as HTMLElement).style.width = `${xpPercent}%`;

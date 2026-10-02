@@ -90,6 +90,31 @@ GameAttributeMap.set_Item(AttributeOrigin, GameAttribute, double)
 * `powers.json` 里每个选定技能附带其精通列表（名称/树行/上限/属性修正），客户端 tooltip 显示精通条数。
 * **尚未接入战斗**：真正生效需要技能树/加点系统与每点属性修正计算，属于后续里程碑。
 
+## 法力系统（本次实现）
+
+* `CombatInstance` 增加法力池：`MaxMana = 40 + 10*等级`（Provisional），每秒回复 `4+等级`。
+* 释放技能先检查 `Mana >= ManaCost`，不足返回 `no_mana`；成功释放扣除法力（真实法力消耗来自反汇编）。
+* 快照返回 `playerMana/maxMana`，客户端 HUD 显示蓝色法力条；法力不足提示“Not enough mana”。
+
+## 更细语义（本次实现）
+
+* **chain**：按距离取最近 `Max_Num_Chains`(4) 个目标，逐跳衰减 15%。
+* **freeze / stun**：IceNova / WarStomp 等命中后给怪物 `StunTimer`（真实 `Power_Freeze_Duration=2s` / `Power_War_Stomp_Stun_Duration`），怪物在眩晕期间不移动不攻击。
+* **shield**：ManaShield 按 `Mana_Shield_Life_Factor` 产生护盾，怪物伤害先扣护盾再扣血；HUD 显示 `(+护盾)`。
+* **mobility / summon**：移速 Buff / 攻击 Buff（计时器）。
+
+## 精通系统（本次实现）
+
+属性 id 映射由 `tools/web-content/extract_attribute_ids.py` 从 `allattrs.asm` 恢复（927 个），例如：
+`58=Base_Power_Weapon_Damage_Multiplier`、`79=Base_Cooldown`、`80=Base_Mana_Cost`、`143=ChainLightning_Max_Num_Chains`、`166=Buff_Duration`、`193=Base_Power_Radius`、`205=Power_Freeze_Duration`。
+
+* 生成物 `Powers.generated.cs` 增加 `MasteriesByPower`（技能 → 精通 → 属性修正）。
+* **公式（Provisional）**：某精通第 `r` 点贡献 `StartValue + Value * r` 到对应属性；基础值加总后重算倍率/冷却/法力/半径/链数。
+  例：`MasteryChainLightningChains` 每点 `ChainLightning_Max_Num_Chains +1`；`MasterySlamWideSlam` 每点 `Base_Power_Radius +0.1`。
+* **点数预算（Provisional）**：`3 + (等级-1)`，已花 = 各精通等级之和。
+* 精通等级持久化在 `SavedCharacter.MasteryRanks`，重登/重启后重新叠加并生效（测试验证 4→7 链）。
+* 网页 API：`GET /characters/{id}/powers`；命令 `mastery`（携带 `masteryId`，幂等）。客户端 `P` 打开技能面板，可加点并实时看到属性修正。
+
 ## 仍然 Provisional 的部分
 
 * **效果归类**：把每个技能映射到 `strike/nova/rally` 是启发式；真实语义（链式、传送、召唤、持续引导）需要继续读方法体（已恢复的字段名如 `_DamageReductionPerJump`、`_NumMinions`、`AstralWalk_Movement_Speed_Bonus_Percent` 是起点）。

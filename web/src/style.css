@@ -102,6 +102,7 @@ html, body, #app {
   font-size: 11px; text-shadow: 0 1px 2px #000;
 }
 .bar.hp > div { background: linear-gradient(#b3402f, #6f1d14); }
+.bar.mana > div { background: linear-gradient(#3f5fbf, #1d2f6f); }
 .bar.xp > div { background: linear-gradient(#3f7fbf, #1d3f6f); }
 
 .hud-top-right {
@@ -175,6 +176,12 @@ html, body, #app {
   color: #eaf5dc; font-size: 12px; padding: 4px 10px; cursor: pointer;
 }
 .inv-row.equipped .inv-btn { background: linear-gradient(#5a3a24, #40240f); border-color: #9a6f3f; }
+.power-skill {
+  padding: 8px 10px 4px; font-weight: 700; color: var(--gold); font-size: 13px;
+  border-bottom: 1px solid rgba(201, 162, 74, 0.2);
+}
+.power-row { grid-template-columns: 42px 1fr auto; }
+.power-rank { font-size: 12px; color: #9fb2b6; }
 
 .toast {
   position: absolute; bottom: 82px; left: 50%; transform: translateX(-50%);

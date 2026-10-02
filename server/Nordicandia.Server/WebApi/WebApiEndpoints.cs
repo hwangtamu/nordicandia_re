@@ -156,7 +156,7 @@ public static class WebApiEndpoints
             if (envelope is null)
                 return Results.BadRequest(new { error = "invalid_command" });
 
-            var command = new WebCommandRequest(envelope.Type, envelope.X, envelope.Z, envelope.ItemId, envelope.SkillId);
+            var command = new WebCommandRequest(envelope.Type, envelope.X, envelope.Z, envelope.ItemId, envelope.SkillId, envelope.MasteryId);
             var (applied, reason, state) = CombatRegistry.Instance.ApplyCommand(
                 user.UserId, id, envelope.CommandId, envelope.ExpectedVersion, command);
             return Results.Ok(new { applied, reason, state });
@@ -169,6 +169,15 @@ public static class WebApiEndpoints
             if (user is null) return Results.Unauthorized();
             if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
             return Results.Ok(CombatRegistry.Instance.Inventory(user.UserId, id));
+        });
+
+        // Skill tree: the class's three actives with their masteries, ranks and points.
+        group.MapGet("/characters/{id:guid}/powers", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(CombatRegistry.Instance.MasteryView(user.UserId, id));
         });
     }
 
@@ -227,4 +236,4 @@ public sealed record DevSessionRequest(string Name);
 public sealed record WebCreateCharacterRequest(string DisplayName, int Class, int Race, int GameMode);
 
 public sealed record WebCommandEnvelope(
-    string CommandId, long ExpectedVersion, string Type, double X = 0, double Z = 0, Guid ItemId = default, int SkillId = 0);
+    string CommandId, long ExpectedVersion, string Type, double X = 0, double Z = 0, Guid ItemId = default, int SkillId = 0, int MasteryId = 0);

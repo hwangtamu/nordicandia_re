@@ -20,6 +20,7 @@ public sealed class CombatMonster
     public double Speed { get; set; } = 2.4;
     public double AttackInterval { get; set; } = 1.6;
     public double AttackCooldown { get; set; }
+    public double StunTimer { get; set; }
     public bool Alive { get; set; } = true;
     public double RespawnTimer { get; set; }
     public double WanderTimer { get; set; }
@@ -33,7 +34,7 @@ public readonly record struct LootDrop(int Slot, int Rarity, int Level, bool Bos
 
 /// <summary>Read-only projection of an <see cref="CombatInstance"/> handed to callers/tests.</summary>
 public readonly record struct MonsterSnapshot(
-    int Index, string Name, int Level, bool IsBoss, double X, double Z, double Hp, double MaxHp, bool Alive);
+    int Index, string Name, int Level, bool IsBoss, double X, double Z, double Hp, double MaxHp, bool Alive, double StunTimer);
 
 public readonly record struct CombatSnapshot(
     long Version,
@@ -41,6 +42,9 @@ public readonly record struct CombatSnapshot(
     double PlayerZ,
     double PlayerHp,
     double PlayerMaxHp,
+    double PlayerMana,
+    double PlayerMaxMana,
+    double PlayerShield,
     int PlayerLevel,
     double Experience,
     int Silver,
@@ -103,8 +107,8 @@ public sealed class CombatInstance
     private readonly double playerSpeed = 6.5;
     private readonly int monsterCount;
     private readonly MonsterProfile[] profiles;
-    private readonly SkillProfile[] skills;
-    private readonly PassiveProfile passive;
+    private SkillProfile[] skills;
+    private PassiveProfile passive;
 
     private double targetX;
     private double targetZ;
@@ -124,6 +128,9 @@ public sealed class CombatInstance
     public double PlayerZ { get; private set; }
     public double PlayerHp { get; private set; }
     public double PlayerMaxHp { get; private set; }
+    public double PlayerMana { get; private set; }
+    public double PlayerMaxMana { get; private set; }
+    public double PlayerShield { get; private set; }
     public double Offense { get; private set; }
     public double Defense { get; private set; }
     public double Recovery { get; private set; }
@@ -167,6 +174,8 @@ public sealed class CombatInstance
         skillCooldowns = new double[skills.Length];
         PlayerMaxHp = EffectiveMaxHealth();
         PlayerHp = PlayerMaxHp;
+        PlayerMaxMana = EffectiveMaxMana();
+        PlayerMana = PlayerMaxMana;
         rng = new CombatRandom(seed == 0 ? 0x9E3779B97F4A7C15UL : seed);
         SpawnMonsters();
         Version = 1;
@@ -175,7 +184,20 @@ public sealed class CombatInstance
     private double EffectiveMaxHealth() => CombatModel.MaxHealth(new CombatantStats(Offense, Defense, Recovery, PlayerLevel))
         * (1 + passive.HealthBonus);
 
+    /// <summary>Provisional mana pool: 40 + 10/level, unaffected by the client's mana attributes yet.</summary>
+    private double EffectiveMaxMana() => 40 + 10 * Math.Max(1, PlayerLevel);
+
     private double EffectiveOffense() => Offense * (1 + passive.OffenseBonus + (offenseBuffTimer > 0 ? offenseBuffBonus : 0));
+
+    /// <summary>Replace the class kit (e.g. after a mastery point is allocated).</summary>
+    public void UpdatePowers(ClassPowers powers)
+    {
+        skills = powers.Active.Take(3).ToArray();
+        passive = powers.Passive;
+        PlayerMaxHp = EffectiveMaxHealth();
+        PlayerHp = Math.Min(PlayerHp, PlayerMaxHp);
+        Version++;
+    }
 
     /// <summary>Replace the player's combat stats (e.g. after equipping an item). Level stays
     /// experience-derived and is not changed here.</summary>
@@ -186,6 +208,8 @@ public sealed class CombatInstance
         Recovery = stats.Recovery;
         PlayerMaxHp = EffectiveMaxHealth();
         PlayerHp = Math.Min(PlayerHp, PlayerMaxHp);
+        PlayerMaxMana = EffectiveMaxMana();
+        PlayerMana = Math.Min(PlayerMana, PlayerMaxMana);
         Version++;
     }
 
@@ -293,6 +317,8 @@ public sealed class CombatInstance
         for (var i = 0; i < skillCooldowns.Length; i++) skillCooldowns[i] = Math.Max(0, skillCooldowns[i] - dt);
         offenseBuffTimer = Math.Max(0, offenseBuffTimer - dt);
         moveSpeedBuffTimer = Math.Max(0, moveSpeedBuffTimer - dt);
+        if (PlayerHp > 0)
+            PlayerMana = Math.Min(PlayerMaxMana, PlayerMana + (4 + PlayerLevel) * dt);
         if (Recovery > 0 && PlayerHp > 0)
             PlayerHp = Math.Min(PlayerMaxHp, PlayerHp + Recovery * dt);
 
@@ -350,6 +376,11 @@ public sealed class CombatInstance
 
     private void ChaseAndAttack(CombatMonster monster, double dt)
     {
+        if (monster.StunTimer > 0)
+        {
+            monster.StunTimer = Math.Max(0, monster.StunTimer - dt);
+            return;
+        }
         monster.AttackCooldown -= dt;
         var dx = PlayerX - monster.X;
         var dz = PlayerZ - monster.Z;
@@ -365,7 +396,14 @@ public sealed class CombatInstance
                     new CombatantStats(Offense, Defense, Recovery, PlayerLevel),
                     new AttackProfile(1.0, 0.03, 1.5, 0.12),
                     rng);
-                PlayerHp = Math.Max(0, PlayerHp - hit.Damage);
+                var incoming = hit.Damage;
+                if (PlayerShield > 0)
+                {
+                    var absorbed = Math.Min(PlayerShield, incoming);
+                    PlayerShield -= absorbed;
+                    incoming -= absorbed;
+                }
+                PlayerHp = Math.Max(0, PlayerHp - incoming);
                 if (PlayerHp <= 0)
                 {
                     playerRespawnTimer = PlayerRespawnSeconds;
@@ -515,6 +553,7 @@ public sealed class CombatInstance
         if (skillId < 0 || skillId >= skills.Length) return new SkillOutcome(false, 0, -1, "unknown_skill");
         if (skillCooldowns[skillId] > 0) return new SkillOutcome(false, 0, -1, "cooldown");
         var skill = skills[skillId];
+        if (PlayerMana < skill.ManaCost) return new SkillOutcome(false, 0, -1, "no_mana");
 
         switch (skill.Effect)
         {
@@ -522,14 +561,16 @@ public sealed class CombatInstance
             {
                 var inRange = AliveMonstersInRadius(skill.Radius);
                 if (inRange.Count == 0) return new SkillOutcome(false, 0, -1, "no_target");
-                skillCooldowns[skillId] = skill.Cooldown;
+                BeginCast(skillId, skill);
                 double total = 0;
                 var first = inRange[0].Index;
+                var stun = StunSecondsOf(skill);
                 foreach (var monster in inRange)
                 {
                     var hit = ResolveSkill(monster, skill.Multiplier);
                     total += hit.Damage;
                     DamageMonster(monster, hit.Damage);
+                    if (stun > 0) monster.StunTimer = Math.Max(monster.StunTimer, stun);
                 }
                 Version++;
                 return new SkillOutcome(true, total, first, "ok");
@@ -538,12 +579,12 @@ public sealed class CombatInstance
             {
                 var candidates = AliveMonstersInRadius(Math.Max(skill.Radius, 8));
                 if (candidates.Count == 0) return new SkillOutcome(false, 0, -1, "no_target");
-                skillCooldowns[skillId] = skill.Cooldown;
+                BeginCast(skillId, skill);
                 candidates.Sort((a, b) => Distance(a).CompareTo(Distance(b)));
                 var maxTargets = Math.Max(1, ChainsOf(skill));
                 var decay = skill.Values.TryGetValue("Power_Chain_Lightning_Damage_Reduction_Percent", out var d)
                     ? Math.Clamp(1 - d, 0.1, 1.0)
-                    : Math.Clamp(1 - 0.15, 0.1, 1.0);
+                    : 0.85;
                 double total = 0;
                 var first = candidates[0].Index;
                 var currentMultiplier = skill.Multiplier;
@@ -562,9 +603,11 @@ public sealed class CombatInstance
             case "shield":
             case "rally":
             {
-                skillCooldowns[skillId] = skill.Cooldown;
+                BeginCast(skillId, skill);
                 if (skill.HealPercent > 0)
                     PlayerHp = Math.Min(PlayerMaxHp, PlayerHp + PlayerMaxHp * skill.HealPercent);
+                if (skill.Effect == "shield" && skill.Values.TryGetValue("Mana_Shield_Life_Factor", out var lifeFactor))
+                    PlayerShield += PlayerMaxHp * lifeFactor;
                 var bonus = skill.BuffBonus;
                 if (bonus <= 0 && skill.Effect == "summon")
                     bonus = skill.Values.TryGetValue("Minion_Inheritance_Weapon_Damage_Bonus_Percent", out var b) ? b : 0.15;
@@ -575,9 +618,7 @@ public sealed class CombatInstance
                 }
                 if (skill.Effect == "mobility")
                 {
-                    var speed = skill.Values.TryGetValue("Movement_Speed_Bonus_Percent", out var s)
-                        ? s / 100.0
-                        : 0.25;
+                    var speed = skill.Values.TryGetValue("Movement_Speed_Bonus_Percent", out var s) ? s / 100.0 : 0.25;
                     moveSpeedBuffTimer = Math.Max(moveSpeedBuffTimer, skill.BuffSeconds);
                     moveSpeedBuffBonus = speed;
                 }
@@ -588,13 +629,28 @@ public sealed class CombatInstance
             {
                 var target = NearestAliveMonster(8);
                 if (target is null) return new SkillOutcome(false, 0, -1, "no_target");
-                skillCooldowns[skillId] = skill.Cooldown;
+                BeginCast(skillId, skill);
                 var hit = ResolveSkill(target, skill.Multiplier);
                 DamageMonster(target, hit.Damage);
+                var stun = StunSecondsOf(skill);
+                if (stun > 0) target.StunTimer = Math.Max(target.StunTimer, stun);
                 Version++;
                 return new SkillOutcome(true, hit.Damage, target.Index, "ok");
             }
         }
+    }
+
+    private void BeginCast(int skillId, SkillProfile skill)
+    {
+        skillCooldowns[skillId] = skill.Cooldown;
+        PlayerMana = Math.Max(0, PlayerMana - skill.ManaCost);
+    }
+
+    private static double StunSecondsOf(SkillProfile skill)
+    {
+        if (skill.Values.TryGetValue("Power_Freeze_Duration", out var freeze)) return freeze;
+        if (skill.Values.TryGetValue("Power_War_Stomp_Stun_Duration", out var stun)) return stun;
+        return 0;
     }
 
     private DamageResult ResolveSkill(CombatMonster target, double multiplier)
@@ -647,13 +703,15 @@ public sealed class CombatInstance
         var rows = new List<MonsterSnapshot>(monsters.Count + 1);
         foreach (var monster in monsters)
             rows.Add(new MonsterSnapshot(monster.Index, monster.Name, monster.Level, false,
-                Math.Round(monster.X, 3), Math.Round(monster.Z, 3), Math.Round(monster.Hp, 2), Math.Round(monster.MaxHp, 2), monster.Alive));
+                Math.Round(monster.X, 3), Math.Round(monster.Z, 3), Math.Round(monster.Hp, 2), Math.Round(monster.MaxHp, 2), monster.Alive, Math.Round(monster.StunTimer, 2)));
         if (boss is { Alive: true })
             rows.Add(new MonsterSnapshot(boss.Index, boss.Name, boss.Level, true,
-                Math.Round(boss.X, 3), Math.Round(boss.Z, 3), Math.Round(boss.Hp, 2), Math.Round(boss.MaxHp, 2), true));
+                Math.Round(boss.X, 3), Math.Round(boss.Z, 3), Math.Round(boss.Hp, 2), Math.Round(boss.MaxHp, 2), true, Math.Round(boss.StunTimer, 2)));
 
         return new CombatSnapshot(Version, Math.Round(PlayerX, 3), Math.Round(PlayerZ, 3),
-            Math.Round(PlayerHp, 2), Math.Round(PlayerMaxHp, 2), PlayerLevel, Experience, Silver, Opals,
+            Math.Round(PlayerHp, 2), Math.Round(PlayerMaxHp, 2),
+            Math.Round(PlayerMana, 2), Math.Round(PlayerMaxMana, 2), Math.Round(PlayerShield, 2),
+            PlayerLevel, Experience, Silver, Opals,
             Kills,
             skills.Select((s, i) => new SkillStatus(s.Slot, s.Name, s.Effect, Math.Round(skillCooldowns[i], 2), s.Cooldown, s.ManaCost, s.Confidence, ChainsOf(s), SpecialOf(s))).ToList(),
             Math.Round(offenseBuffTimer, 2),

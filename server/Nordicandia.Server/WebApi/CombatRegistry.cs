@@ -49,6 +49,7 @@ public sealed class CombatRegistry
     private sealed class Entry
     {
         public CombatInstance Instance = null!;
+        public ClassPowers BasePowers = null!;
         public DateTime LastAdvanceUtc;
         // Equipment bonus currently folded into the instance, so a recompute can swap it
         // out without discarding the level-up growth that lives only in the instance.
@@ -78,12 +79,15 @@ public sealed class CombatRegistry
                 persisted.Recovery + equipRecovery,
                 (int)persisted.Level);
             var seed = (ulong)(uint)characterId.GetHashCode() << 32 | (uint)characterId.GetHashCode();
+            var basePowers = PowerCatalog.ForClass(persisted.Class);
+            var ranks = store.GetMasteryRanks(owner, characterId);
             var instance = new CombatInstance(stats, persisted.Experience, persisted.Silver, persisted.Opals,
                 (int)persisted.MonsterKills, seed, monsterProfiles: MonsterProfiles,
-                classPowers: PowerCatalog.ForClass(persisted.Class));
+                classPowers: EffectivePowers(basePowers, ranks));
             entries[characterId] = new Entry
             {
                 Instance = instance,
+                BasePowers = basePowers,
                 LastAdvanceUtc = Now,
                 EquipOffense = equipOffense,
                 EquipDefense = equipDefense,
@@ -140,6 +144,9 @@ public sealed class CombatRegistry
                 case "unequip":
                     (applied, reason) = Equip(owner, characterId, entry, command.ItemId, equip: false);
                     break;
+                case "mastery":
+                    (applied, reason) = AllocateMastery(owner, characterId, entry, command.MasteryId);
+                    break;
                 default:
                     applied = false;
                     reason = "unknown_type";
@@ -165,6 +172,90 @@ public sealed class CombatRegistry
             var rows = items.Where(i => i != null).Select(ToItemDetail).ToList();
             return new WebInventory(rows, entry.Instance.Offense, entry.Instance.Defense, entry.Instance.Recovery);
         }
+    }
+
+    /// <summary>Mastery tree view for the class's three active skills.</summary>
+    public IReadOnlyList<SkillMasteryView> MasteryView(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            var ranks = store.GetMasteryRanks(owner, characterId);
+            return BuildMasteryView(entry, ranks);
+        }
+    }
+
+    private (bool, string) AllocateMastery(Guid owner, Guid characterId, Entry entry, int masteryId)
+    {
+        var ranks = store.GetMasteryRanks(owner, characterId);
+        MasteryProfile found = null;
+        foreach (var skill in entry.BasePowers.Active.Take(3))
+        {
+            found = PowerCatalog.MasteriesFor(skill.Name).FirstOrDefault(m => m.IntegerId == masteryId);
+            if (found is not null) break;
+        }
+        if (found is null) return (false, "unknown_mastery");
+        var current = ranks.TryGetValue(masteryId, out var r) ? r : 0;
+        if (current >= found.MaxPoints) return (false, "mastery_maxed");
+        if (ranks.Values.Sum() >= MasteryBudget(entry)) return (false, "no_mastery_points");
+
+        store.SetMasteryRank(owner, characterId, masteryId, current + 1);
+        ranks[masteryId] = current + 1;
+        entry.Instance.UpdatePowers(EffectivePowers(entry.BasePowers, ranks));
+        return (true, "ok");
+    }
+
+    private List<SkillMasteryView> BuildMasteryView(Entry entry, Dictionary<int, int> ranks)
+    {
+        var rows = new List<SkillMasteryView>();
+        var slot = 0;
+        foreach (var skill in entry.BasePowers.Active.Take(3))
+        {
+            var masteries = PowerCatalog.MasteriesFor(skill.Name)
+                .Select(m => new MasteryView(m.Name, m.IntegerId, ranks.TryGetValue(m.IntegerId, out var rank) ? rank : 0, m.MaxPoints, m.Specs))
+                .ToList();
+            rows.Add(new SkillMasteryView(skill.Name, slot++, masteries.Sum(m => m.Rank), masteries.Sum(m => m.MaxPoints), masteries));
+        }
+        return rows;
+    }
+
+    private static int MasteryBudget(Entry entry) => Math.Max(0, 3 + entry.Instance.PlayerLevel - 1);
+
+    /// <summary>Apply allocated mastery specs to the class kit's base values.</summary>
+    private static ClassPowers EffectivePowers(ClassPowers basePowers, Dictionary<int, int> ranks)
+    {
+        var active = new List<SkillProfile>();
+        foreach (var skill in basePowers.Active)
+        {
+            var values = new Dictionary<string, double>(skill.Values);
+            var modified = false;
+            foreach (var mastery in PowerCatalog.MasteriesFor(skill.Name))
+            {
+                if (!ranks.TryGetValue(mastery.IntegerId, out var rank) || rank <= 0) continue;
+                foreach (var spec in mastery.Specs)
+                {
+                    if (string.IsNullOrEmpty(spec.AttributeName)) continue;
+                    var delta = spec.StartValue + spec.Value * rank;
+                    values[spec.AttributeName] = values.TryGetValue(spec.AttributeName, out var cur) ? cur + delta : delta;
+                    modified = true;
+                }
+            }
+            if (!modified)
+            {
+                active.Add(skill);
+                continue;
+            }
+            active.Add(skill with
+            {
+                Multiplier = values.TryGetValue("Base_Power_Weapon_Damage_Multiplier", out var m) ? m : skill.Multiplier,
+                Cooldown = Math.Max(1, values.TryGetValue("Base_Cooldown", out var cd) ? cd : skill.Cooldown),
+                Radius = values.TryGetValue("Base_Power_Radius", out var r) ? r : skill.Radius,
+                ManaCost = Math.Max(0, values.TryGetValue("Base_Mana_Cost", out var mc) ? mc : skill.ManaCost),
+                Values = values,
+                Confidence = "mastery-modified",
+            });
+        }
+        return basePowers with { Active = active };
     }
 
     private (bool, string) Equip(Guid owner, Guid characterId, Entry entry, Guid itemId, bool equip)
@@ -304,4 +395,4 @@ public sealed class CombatRegistry
     }
 }
 
-public sealed record WebCommandRequest(string Type, double X = 0, double Z = 0, Guid ItemId = default, int SkillId = 0);
+public sealed record WebCommandRequest(string Type, double X = 0, double Z = 0, Guid ItemId = default, int SkillId = 0, int MasteryId = 0);

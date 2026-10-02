@@ -30,6 +30,9 @@ import { ContentManifest, monsterIcon, raceIcon } from "./content";
 export interface HudState {
   health: number;
   maxHealth: number;
+  mana: number;
+  maxMana: number;
+  shield: number;
   level: number;
   experience: number;
   experienceForLevel: number;
@@ -465,6 +468,9 @@ export class World {
     this.hooks.onHud({
       health: Math.round(state.playerHp),
       maxHealth: Math.round(state.playerMaxHp),
+      mana: Math.round(state.playerMana),
+      maxMana: Math.round(state.playerMaxMana),
+      shield: Math.round(state.playerShield),
       level: state.playerLevel,
       experience: state.experience,
       experienceForLevel: experienceForLevel(Math.floor(state.playerLevel)),

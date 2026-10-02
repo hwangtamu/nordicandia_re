@@ -1,3 +1,5 @@
+using Nordicandia.Simulation;
+
 namespace Nordicandia.Server.WebApi;
 
 /// <summary>
@@ -8,6 +10,10 @@ namespace Nordicandia.Server.WebApi;
 public static partial class PowerCatalog
 {
     /// <summary>Powers for a class, falling back to Warrior for classes without a web kit.</summary>
-    public static Nordicandia.Simulation.ClassPowers ForClass(int classId)
+    public static ClassPowers ForClass(int classId)
         => ByClass.TryGetValue(classId, out var powers) ? powers : ByClass[0];
+
+    /// <summary>Masteries for a power name, or empty when it has none.</summary>
+    public static IReadOnlyList<MasteryProfile> MasteriesFor(string skillName)
+        => MasteriesByPower.TryGetValue(skillName, out var rows) ? rows : Array.Empty<MasteryProfile>();
 }

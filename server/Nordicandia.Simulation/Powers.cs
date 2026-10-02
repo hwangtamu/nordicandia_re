@@ -34,5 +34,17 @@ public sealed record PassiveProfile(
 
 public sealed record ClassPowers(string ClassName, IReadOnlyList<SkillProfile> Active, PassiveProfile Passive);
 
+/// <summary>One attribute modifier a mastery rank grants.</summary>
+public readonly record struct MasterySpec(
+    int AttributeId, string AttributeName, double Value, double StartValue, int Operator);
+
+/// <summary>A real skill-tree mastery (PowerMasteries.json) with its modifiers.</summary>
+public sealed record MasteryProfile(string Name, int IntegerId, int MaxPoints, IReadOnlyList<MasterySpec> Specs);
+
 /// <summary>Live per-skill state returned in a combat snapshot so the HUD labels the real skills.</summary>
 public readonly record struct SkillStatus(int Slot, string Name, string Effect, double Cooldown, double MaxCooldown, double ManaCost, string Confidence, int Chains, string Special);
+
+/// <summary>Per-skill mastery view for the web client.</summary>
+public sealed record SkillMasteryView(string SkillName, int Slot, int Rank, int MaxPoints, IReadOnlyList<MasteryView> Masteries);
+
+public sealed record MasteryView(string Name, int IntegerId, int Rank, int MaxPoints, IReadOnlyList<MasterySpec> Specs);
