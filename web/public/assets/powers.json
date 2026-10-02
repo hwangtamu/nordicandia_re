@@ -1,11 +1,244 @@
 {
   "contentVersion": "m0-1",
+  "slotTypes": {
+    "-1": "Void",
+    "0": "Ability",
+    "1": "ActiveSkill",
+    "2": "PassiveSkill",
+    "3": "Tactics",
+    "4": "SkillTraining",
+    "5": "SpecialSkill"
+  },
+  "tags": {
+    "bf721b3a-f2b7-455a-be2c-a06d81e24377": "Physical",
+    "6e40c5a7-d77d-4d9f-a7e4-1c8bbc6b2b56": "Fire",
+    "0bd05cfb-67c0-4d9e-98f8-ca66b47c8886": "Cold",
+    "b5978c56-c6e1-466b-b8a6-a251d66f51f2": "Lightning",
+    "8629e287-35d7-481f-9aa8-e16351bac537": "Poison",
+    "e7c4cfa4-2fca-4a89-8da3-a166e5406c7c": "Spell",
+    "309438c2-b203-49fd-8977-0628c80689ae": "Projectile",
+    "f4e714fa-a5e8-4b8e-90ca-c4546e931258": "Bow",
+    "0a831b6c-a64d-402a-941a-f3a4df74d98b": "Melee",
+    "e723b297-e4d0-4127-8179-e0dc7cb0fda9": "Minion",
+    "72576e93-c545-40a4-9bf4-5a237dd042b7": "Aura",
+    "9fc1e052-9419-4f09-888d-2bcade616208": "Attack",
+    "333e7e17-31df-46c5-b815-35f0bd2016bb": "AoE",
+    "ac9d1484-4aba-4525-93c0-7250e8c3e60d": "Duration",
+    "c91d2bed-a335-472f-95fe-a997e396e834": "Movement",
+    "32aa376d-f16d-4605-bf25-983342e68dea": "Offensive",
+    "3fb41d1a-2636-40d6-aeb4-55d594e6aaed": "Defensive",
+    "e14c0860-1a91-46dd-b332-a595fa3da3c1": "AllowOutsideCombat",
+    "3565a012-bf5e-440e-b5ac-4220151087c2": "AllowInTown"
+  },
+  "types": {
+    "9d3b7a64-3f37-464d-9b18-ba110cea31dc": {
+      "name": "BaseType",
+      "parentId": null,
+      "eligibleSlots": null
+    },
+    "d14acc35-6d0d-4354-908a-ce2aff182c50": {
+      "name": "Ability",
+      "parentId": "9d3b7a64-3f37-464d-9b18-ba110cea31dc",
+      "eligibleSlots": [
+        0,
+        4
+      ]
+    },
+    "85275007-41f1-499f-a194-842bdfe8f16c": {
+      "name": "GeneralAbility",
+      "parentId": "d14acc35-6d0d-4354-908a-ce2aff182c50",
+      "eligibleSlots": null
+    },
+    "4764731a-8466-4415-8882-3ea1c2c7d4cb": {
+      "name": "ActiveSkill",
+      "parentId": "9d3b7a64-3f37-464d-9b18-ba110cea31dc",
+      "eligibleSlots": [
+        1,
+        4
+      ]
+    },
+    "5c5102af-b391-45de-a7dd-42c60cd583e7": {
+      "name": "ActiveGeneralSkill",
+      "parentId": "4764731a-8466-4415-8882-3ea1c2c7d4cb",
+      "eligibleSlots": null
+    },
+    "79846477-f472-481c-a12d-df5b04adff37": {
+      "name": "ActiveWarriorSkill",
+      "parentId": "4764731a-8466-4415-8882-3ea1c2c7d4cb",
+      "eligibleSlots": null
+    },
+    "b89fadf8-b3dc-41ee-bbe6-68b6602dfd5b": {
+      "name": "PassiveSkill",
+      "parentId": "9d3b7a64-3f37-464d-9b18-ba110cea31dc",
+      "eligibleSlots": [
+        2,
+        4
+      ]
+    },
+    "dc97015b-8dc6-48bd-b896-22d952224ab1": {
+      "name": "PassiveWarriorSkill",
+      "parentId": "b89fadf8-b3dc-41ee-bbe6-68b6602dfd5b",
+      "eligibleSlots": null
+    },
+    "48fcae4f-fc3e-42b9-b0c0-b3a3c6652522": {
+      "name": "Tactics",
+      "parentId": "9d3b7a64-3f37-464d-9b18-ba110cea31dc",
+      "eligibleSlots": [
+        3
+      ]
+    },
+    "68fb1176-147f-48f9-bce0-614759e29337": {
+      "name": "WarriorTactics",
+      "parentId": "48fcae4f-fc3e-42b9-b0c0-b3a3c6652522",
+      "eligibleSlots": null
+    },
+    "79074f87-96ab-4f3c-9e6a-a48a6d5ee214": {
+      "name": "MonsterAbility",
+      "parentId": "d14acc35-6d0d-4354-908a-ce2aff182c50",
+      "eligibleSlots": null
+    },
+    "5c212f63-c035-4f28-b33a-9167f19c4410": {
+      "name": "Other",
+      "parentId": "9d3b7a64-3f37-464d-9b18-ba110cea31dc",
+      "eligibleSlots": null
+    },
+    "db82bb77-100a-43c1-b645-9a7508fdcdce": {
+      "name": "WarriorAbility",
+      "parentId": "d14acc35-6d0d-4354-908a-ce2aff182c50",
+      "eligibleSlots": null
+    },
+    "8ed3b37f-7653-4715-b4a0-09931b116aca": {
+      "name": "ActiveHunterSkill",
+      "parentId": "4764731a-8466-4415-8882-3ea1c2c7d4cb",
+      "eligibleSlots": null
+    },
+    "f8f10f01-711c-4a5a-93f4-316d91cc2512": {
+      "name": "PassiveHunterSkill",
+      "parentId": "b89fadf8-b3dc-41ee-bbe6-68b6602dfd5b",
+      "eligibleSlots": null
+    },
+    "b5c49b98-0194-4ae4-accf-b438255f6a12": {
+      "name": "HunterTactics",
+      "parentId": "48fcae4f-fc3e-42b9-b0c0-b3a3c6652522",
+      "eligibleSlots": null
+    },
+    "4b481be2-ec48-4d7a-acfb-9e2774f1aa5c": {
+      "name": "HunterAbility",
+      "parentId": "d14acc35-6d0d-4354-908a-ce2aff182c50",
+      "eligibleSlots": null
+    },
+    "58a9e681-1258-40cf-8ed2-103ceeaefd23": {
+      "name": "Minion",
+      "parentId": "9d3b7a64-3f37-464d-9b18-ba110cea31dc",
+      "eligibleSlots": null
+    },
+    "a07d9061-1627-4f4e-b8c3-50803f04ede1": {
+      "name": "ActiveMageSkill",
+      "parentId": "4764731a-8466-4415-8882-3ea1c2c7d4cb",
+      "eligibleSlots": null
+    },
+    "552f9ebf-1246-4bb9-8390-b208b4047ff0": {
+      "name": "PassiveMageSkill",
+      "parentId": "b89fadf8-b3dc-41ee-bbe6-68b6602dfd5b",
+      "eligibleSlots": null
+    },
+    "02f75467-0777-4f91-a264-c80b7d65af40": {
+      "name": "MageAbility",
+      "parentId": "d14acc35-6d0d-4354-908a-ce2aff182c50",
+      "eligibleSlots": null
+    },
+    "94b88dd1-5084-4dd6-8ca1-16971d3eaa4e": {
+      "name": "SpecialSkill",
+      "parentId": "9d3b7a64-3f37-464d-9b18-ba110cea31dc",
+      "eligibleSlots": [
+        5
+      ]
+    },
+    "f75f5a01-8da2-47ae-a38d-715091a556a0": {
+      "name": "MonsterSkill",
+      "parentId": "4764731a-8466-4415-8882-3ea1c2c7d4cb",
+      "eligibleSlots": null
+    },
+    "1a17f595-3a51-4475-86f7-507191449367": {
+      "name": "ActiveNecromancerSkill",
+      "parentId": "4764731a-8466-4415-8882-3ea1c2c7d4cb",
+      "eligibleSlots": null
+    },
+    "cfaee0e2-87ae-4f1b-b97f-08785e07c3e5": {
+      "name": "PassiveNecromancerSkill",
+      "parentId": "b89fadf8-b3dc-41ee-bbe6-68b6602dfd5b",
+      "eligibleSlots": null
+    },
+    "1f7dc975-b790-4a7b-b4cf-56128ae3c40c": {
+      "name": "NecromancerAbility",
+      "parentId": "d14acc35-6d0d-4354-908a-ce2aff182c50",
+      "eligibleSlots": null
+    }
+  },
   "classes": {
     "0": {
       "name": "Warrior",
+      "hidden": false,
+      "image": "Badge_warrior",
+      "abilities": [
+        {
+          "id": "e5583b4d-1048-4185-895e-9044f40c8e98",
+          "integerId": 26,
+          "name": "DefaultAttackProxy",
+          "nameKey": "PowerDefaultAttackProxy",
+          "description": "Attack your target for {0}% weapon damage",
+          "descriptionKey": "PowerDefaultAttackProxyDesc",
+          "icon": "MeleeWeaponSwing",
+          "type": "GeneralAbility",
+          "typeId": "85275007-41f1-499f-a194-842bdfe8f16c",
+          "tags": [
+            "Attack"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            }
+          ],
+          "implementedBy": "DefaultAttackProxy",
+          "parameterFields": [
+            "_WeaponDamageMult_k__BackingField",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "41915df7-92e3-4bc8-8029-980ad6f47a87",
+          "integerId": 60,
+          "name": "Interact",
+          "nameKey": null,
+          "description": "",
+          "descriptionKey": null,
+          "icon": "1",
+          "type": "GeneralAbility",
+          "typeId": "85275007-41f1-499f-a194-842bdfe8f16c",
+          "tags": [
+            "AllowOutsideCombat"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": true,
+          "placeholders": [],
+          "implementedBy": "Interact",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_awaiter_5__2"
+          ]
+        }
+      ],
       "active": [
         {
-          "slot": 0,
           "id": "b023f390-a08f-43cf-bd00-52f8b84e6697",
           "integerId": 94,
           "name": "Slam",
@@ -14,22 +247,37 @@
           "descriptionKey": "PowerSlamDesc",
           "icon": "Slam",
           "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
           "tags": [
             "Offensive",
             "Attack",
             "Melee"
           ],
-          "confidence": "provisional-behaviour",
-          "effect": "strike",
-          "multiplier": 2.2,
-          "cooldown": 4.0,
-          "radius": 0.0,
-          "healPercent": 0.0,
-          "buffBonus": 0.0,
-          "buffSeconds": 0.0
+          "requiredWeapons": [
+            "50a6a6b8-d1df-4dac-b485-73d47c2fc7b9",
+            "6c7b4db0-f658-4d60-83f6-528d181c51ac",
+            "82fe9274-2cac-4d5b-a6ee-1fd4027047c8",
+            "783e1ec4-56f2-4a76-8ff6-649381a9a4df",
+            "a5944f8e-fb64-400c-bb64-9896bd344ac6"
+          ],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            }
+          ],
+          "implementedBy": "Slam",
+          "parameterFields": [
+            "_TargetPositions",
+            "_JointTargetList",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
         },
         {
-          "slot": 1,
           "id": "73428deb-2a35-433d-8e67-39d188aa6395",
           "integerId": 1,
           "name": "Might",
@@ -38,20 +286,32 @@
           "descriptionKey": "PowerMightDesc",
           "icon": "Might",
           "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
           "tags": [
             "Spell"
           ],
-          "confidence": "provisional-behaviour",
-          "effect": "rally",
-          "multiplier": 0.0,
-          "cooldown": 16.0,
-          "radius": 0.0,
-          "healPercent": 0.15,
-          "buffBonus": 0.25,
-          "buffSeconds": 6.0
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "duration"
+            }
+          ],
+          "implementedBy": "Might",
+          "parameterFields": [
+            "_Effect",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
         },
         {
-          "slot": 2,
           "id": "1b17cf95-4a7c-4965-8311-0c88ee192976",
           "integerId": 71,
           "name": "Pounce",
@@ -60,19 +320,3437 @@
           "descriptionKey": "PowerPounceDesc",
           "icon": "Pounce",
           "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
           "tags": [
             "Movement",
             "Offensive",
             "Spell"
           ],
-          "confidence": "provisional-behaviour",
+          "requiredWeapons": [],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Pounce",
+          "parameterFields": [
+            "_Mover",
+            "_HasStarted",
+            "_IsWaitingForCooldown",
+            "OnLanded",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_targetPos_5__2"
+          ]
+        },
+        {
+          "id": "525e391e-23a3-4eec-a053-cee067de03c0",
+          "integerId": 11,
+          "name": "WarStomp",
+          "nameKey": "PowerWarStomp",
+          "description": "Stomp the ground for {0}% weapon damage and stun nearby enemies for {1} seconds.\r\n{2} second(s) cooldown.",
+          "descriptionKey": "PowerWarStompDesc",
+          "icon": "WarStomp",
+          "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
+          "tags": [
+            "Offensive",
+            "Attack"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            },
+            {
+              "index": 1,
+              "role": "duration"
+            },
+            {
+              "index": 2,
+              "role": "duration"
+            }
+          ],
+          "implementedBy": "WarStomp",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "bf314125-1448-46ce-8bc0-bc3d3e1c2705",
+          "integerId": 19,
+          "name": "Shatter",
+          "nameKey": "PowerShatter",
+          "description": "Shatter your target for {0}% weapon damage.",
+          "descriptionKey": "PowerShatterDesc",
+          "icon": "Shatter",
+          "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
+          "tags": [
+            "Offensive",
+            "Attack",
+            "Melee"
+          ],
+          "requiredWeapons": [
+            "50a6a6b8-d1df-4dac-b485-73d47c2fc7b9",
+            "6c7b4db0-f658-4d60-83f6-528d181c51ac",
+            "783e1ec4-56f2-4a76-8ff6-649381a9a4df",
+            "a5944f8e-fb64-400c-bb64-9896bd344ac6",
+            "82fe9274-2cac-4d5b-a6ee-1fd4027047c8"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            }
+          ],
+          "implementedBy": "Shatter",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "30cff60f-3b05-4292-ad4b-595a296705a6",
+          "integerId": 12,
+          "name": "Sprint",
+          "nameKey": "PowerSprint",
+          "description": "Increases your movement speed by {0}% for {1} seconds.",
+          "descriptionKey": "PowerSprintDesc",
+          "icon": "Sprint",
+          "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "duration"
+            }
+          ],
+          "implementedBy": "Sprint",
+          "parameterFields": [
+            "_Effect",
+            "_ChargeTarget",
+            "_LastChargeTick",
+            "_CouldUpdatePosition",
+            "_ChargeSpeedBoost",
+            "_CurrentFirstHitDamageBonus",
+            "_FirstHitDamageBonus",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "eebded67-cabd-40b9-b74c-c90211428705",
+          "integerId": 10,
+          "name": "IncrementalFortress",
+          "nameKey": "PowerIncrementalFortress",
+          "description": "Increases your total armor by 1% for each hit you take within 3 seconds, up to {0}% for maximum 20 seconds.",
+          "descriptionKey": "PowerIncrementalFortressDesc",
+          "icon": "IncrementalArmor",
+          "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "IncrementalFortress",
+          "parameterFields": [
+            "_Effect",
+            "_StackInstances",
+            "_HasInstanceBeenRemoved",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "b5192b15-d9ca-42d8-922e-b9f8ed67fd09",
+          "integerId": 17,
+          "name": "Retaliation",
+          "nameKey": "PowerRetaliation",
+          "description": "Every time you are hit by a nearby opponent you retaliate for {0}% of your damage. Lasts 10 seconds.",
+          "descriptionKey": "PowerRetaliationDesc",
+          "icon": "Retaliation",
+          "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "Retaliation",
+          "parameterFields": [
+            "_RetaliationCounter",
+            "_RetaliationStartTick",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "b25758bd-da1e-41e1-88c8-2c290f31a863",
+          "integerId": 67,
+          "name": "Frenzy",
+          "nameKey": "PowerFrenzy",
+          "description": "",
+          "descriptionKey": "PowerFrenzyDesc",
+          "icon": "Frenzy",
+          "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [
+            "6c7b4db0-f658-4d60-83f6-528d181c51ac",
+            "783e1ec4-56f2-4a76-8ff6-649381a9a4df",
+            "a5944f8e-fb64-400c-bb64-9896bd344ac6",
+            "82fe9274-2cac-4d5b-a6ee-1fd4027047c8"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Frenzy",
+          "parameterFields": [
+            "_MaxStackCount",
+            "_StackInstances",
+            "_HasInstanceBeenRemoved",
+            "_Effect",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "1701aa83-ee81-438f-a0db-38ea818d01a3",
+          "integerId": 69,
+          "name": "Intimidate",
+          "nameKey": "PowerIntimidate",
+          "description": "",
+          "descriptionKey": "PowerIntimidateDesc",
+          "icon": "Shout",
+          "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Intimidate",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "957d2ab5-13b7-4e1e-89bf-1f3f61658800",
+          "integerId": 23,
+          "name": "Hunger",
+          "nameKey": "PowerHunger",
+          "description": "Gives you +{0}% life leech and increases your maximum life leech recovery per second by {1}% for {2} seconds.",
+          "descriptionKey": "PowerHungerDesc",
+          "icon": "Hunger",
+          "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "percent"
+            },
+            {
+              "index": 2,
+              "role": "duration"
+            }
+          ],
+          "implementedBy": "Hunger",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "83d7485b-6837-42e2-9821-28b23f4f3807",
+          "integerId": 164,
+          "name": "Mixology",
+          "nameKey": "PowerMixology",
+          "description": "",
+          "descriptionKey": "PowerMixologyDesc",
+          "icon": "Mixology",
+          "type": "ActiveGeneralSkill",
+          "typeId": "5c5102af-b391-45de-a7dd-42c60cd583e7",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Mixology",
+          "parameterFields": [
+            "_Effect",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "9255b475-abde-45b6-b238-bdd6c436bda7",
+          "integerId": 265,
+          "name": "Whirlwind",
+          "nameKey": "PowerWhirlwind",
+          "description": "",
+          "descriptionKey": "PowerWhirlwindDesc",
+          "icon": "Whirlwind",
+          "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
+          "tags": [
+            "Movement",
+            "Duration",
+            "AoE",
+            "Melee",
+            "Offensive",
+            "Attack"
+          ],
+          "requiredWeapons": [
+            "82fe9274-2cac-4d5b-a6ee-1fd4027047c8",
+            "783e1ec4-56f2-4a76-8ff6-649381a9a4df",
+            "a5944f8e-fb64-400c-bb64-9896bd344ac6",
+            "50a6a6b8-d1df-4dac-b485-73d47c2fc7b9",
+            "6c7b4db0-f658-4d60-83f6-528d181c51ac"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Whirlwind",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        }
+      ],
+      "passive": [
+        {
+          "id": "66ba2199-7836-45c5-938e-cc6c62fb32bb",
+          "integerId": 15,
+          "name": "Overkill",
+          "nameKey": "PassiveOverkill",
+          "description": "Your melee overkill damage has {0}% chance to generate a new attack for the remaining damage on another nearby enemy.",
+          "descriptionKey": "PassiveOverkillDesc",
+          "icon": "Overkill",
+          "type": "PassiveWarriorSkill",
+          "typeId": "dc97015b-8dc6-48bd-b896-22d952224ab1",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "Overkill",
+          "parameterFields": [
+            "_OverkillChance",
+            "_IsChaining"
+          ]
+        },
+        {
+          "id": "2722a891-52fb-4322-9dfc-bcededea823b",
+          "integerId": 18,
+          "name": "TreasureHunter",
+          "nameKey": "PassiveTreasureHunter",
+          "description": "Your magic find is increased by {0}% and item quantity is increased by {1}%",
+          "descriptionKey": "PassiveTreasureHunterDesc",
+          "icon": "TreasureFinder",
+          "type": "PassiveWarriorSkill",
+          "typeId": "dc97015b-8dc6-48bd-b896-22d952224ab1",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "TreasureHunter",
+          "parameterFields": [
+            "_MagicFindIncrease",
+            "_ItemQuantityIncrease"
+          ]
+        },
+        {
+          "id": "8e5d0099-5131-4975-9604-15d9794f1be2",
+          "integerId": 2,
+          "name": "AxeSpecialization",
+          "nameKey": "PassiveAxeSpecialization",
+          "description": "{0}% deadly strike chance with axes.\r\nDeadly strike can occur when you perform a critical hit and does 1000% extra damage.",
+          "descriptionKey": "PassiveAxeSpecializationDesc",
+          "icon": "AxeSpecialization",
+          "type": "PassiveWarriorSkill",
+          "typeId": "dc97015b-8dc6-48bd-b896-22d952224ab1",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "AxeSpecialization",
+          "parameterFields": [
+            "_DeadlyChance"
+          ]
+        },
+        {
+          "id": "c5bc4cec-3465-4c00-a8b4-f49aeaa60fa6",
+          "integerId": 6,
+          "name": "SwordSpecialization",
+          "nameKey": "PassiveSwordSpecialization",
+          "description": "{0}% Extra swing proc-on-proc chance up to 10 extra swings.",
+          "descriptionKey": "PassiveSwordSpecializationDesc",
+          "icon": "SwordSpecialization",
+          "type": "PassiveWarriorSkill",
+          "typeId": "dc97015b-8dc6-48bd-b896-22d952224ab1",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "SwordSpecialization",
+          "parameterFields": [
+            "_ExtraSwingChance",
+            "_MaxAdditionalSwings"
+          ]
+        },
+        {
+          "id": "0ddd78a9-9116-4ce5-991a-acd9c1041d10",
+          "integerId": 4,
+          "name": "MaceSpecialization",
+          "nameKey": "PassiveMaceSpecialization",
+          "description": "{0}% reduced enemy stun threshold.\r\nThis makes it easier for you to stun the enemy.\r\nAlso when you stun an opponent, you have {1}% chance to stun up to two nearby opponents for the same duration.",
+          "descriptionKey": "PassiveMaceSpecializationDesc",
+          "icon": "MaceSpecialization",
+          "type": "PassiveWarriorSkill",
+          "typeId": "dc97015b-8dc6-48bd-b896-22d952224ab1",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "MaceSpecialization",
+          "parameterFields": [
+            "_ThrowMaceChance",
+            "_ThrowRadius"
+          ]
+        },
+        {
+          "id": "73f2a7a8-8594-4982-9a7d-72b35c396264",
+          "integerId": 5,
+          "name": "SpearSpecialization",
+          "nameKey": "PassiveSpearSpecialization",
+          "description": "Spears pierce {0}% armor on hit.",
+          "descriptionKey": "PassiveSpearSpecializationDesc",
+          "icon": "SpearSpecialization",
+          "type": "PassiveWarriorSkill",
+          "typeId": "dc97015b-8dc6-48bd-b896-22d952224ab1",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "SpearSpecialization",
+          "parameterFields": [
+            "_ArmorPiercing"
+          ]
+        },
+        {
+          "id": "0253cab7-5092-4ed4-b68f-53207c3aaaa1",
+          "integerId": 3,
+          "name": "DaggerSpecialization",
+          "nameKey": "PassiveDaggerSpecialization",
+          "description": "Increases all damage with daggers by 15%",
+          "descriptionKey": "PassiveDaggerSpecializationDesc",
+          "icon": "DaggerSpecialization",
+          "type": "PassiveWarriorSkill",
+          "typeId": "dc97015b-8dc6-48bd-b896-22d952224ab1",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        },
+        {
+          "id": "a49aaeaa-b377-4c37-9864-37ff6bab83a8",
+          "integerId": 13,
+          "name": "CheatDeath",
+          "nameKey": "PassiveCheatDeath",
+          "description": "",
+          "descriptionKey": "PassiveCheatDeathDesc",
+          "icon": "CheatDeath",
+          "type": "PassiveWarriorSkill",
+          "typeId": "dc97015b-8dc6-48bd-b896-22d952224ab1",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "CheatDeath",
+          "parameterFields": [
+            "_CooldownTime",
+            "_FatalDamageNewLifePercent",
+            "_VitalityBonusPercent"
+          ]
+        },
+        {
+          "id": "bbb7810b-9f0f-4f8b-8cda-9456b8999a15",
+          "integerId": 14,
+          "name": "BossHunter",
+          "nameKey": "PassiveBossHunter",
+          "description": "Increases your chance to find bosses and unique monsters by {0}%",
+          "descriptionKey": "PassiveBossHunterDesc",
+          "icon": "BossHunter",
+          "type": "PassiveWarriorSkill",
+          "typeId": "dc97015b-8dc6-48bd-b896-22d952224ab1",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "BossHunter",
+          "parameterFields": [
+            "_SpawnIncrease"
+          ]
+        },
+        {
+          "id": "e680b66c-e9ec-4ba0-8a79-27ed003962c6",
+          "integerId": 20,
+          "name": "Meditation",
+          "nameKey": "PassiveMeditation",
+          "description": "Reduces the cooldown of all active skills by {0}.\r\nUsing a skill has a {1} chance to reset it's cooldown.",
+          "descriptionKey": "PassiveMeditationDesc",
+          "icon": "Meditation",
+          "type": "PassiveWarriorSkill",
+          "typeId": "dc97015b-8dc6-48bd-b896-22d952224ab1",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "value"
+            },
+            {
+              "index": 1,
+              "role": "value"
+            }
+          ],
+          "implementedBy": "Meditation",
+          "parameterFields": [
+            "_CooldownReduction",
+            "_CooldownResetChance"
+          ]
+        },
+        {
+          "id": "b7f6e702-c8f4-4385-a5f2-c69f9f49dce3",
+          "integerId": 160,
+          "name": "RepelMagic",
+          "nameKey": "PassiveRepelMagic",
+          "description": "",
+          "descriptionKey": "PassiveRepelMagicDesc",
+          "icon": "RepelMagic",
+          "type": "PassiveWarriorSkill",
+          "typeId": "dc97015b-8dc6-48bd-b896-22d952224ab1",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "RepelMagic",
+          "parameterFields": [
+            "_IncreasedMaximumResistances",
+            "_IncreasedMaximumPhysReduction"
+          ]
+        }
+      ],
+      "tactics": [
+        {
+          "id": "4896efa7-01e4-439c-93a3-63a3f2a3a6be",
+          "integerId": 7,
+          "name": "RunAwayTactic",
+          "nameKey": "TacticRunAwayTactic",
+          "description": "Flee from your battle, running to the nearest edge while gaining 25% movement speed.",
+          "descriptionKey": "TacticRunAwayTacticDesc",
+          "icon": "RunAway",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        },
+        {
+          "id": "c8b3e697-51ca-4348-9967-8d3bb301b4ee",
+          "integerId": 8,
+          "name": "AggressiveTactic",
+          "nameKey": "TacticAggressiveTactic",
+          "description": "Charge new opponents head-on.\r\nHas a chance to enter game events like rampage.",
+          "descriptionKey": "TacticAggressiveTacticDesc",
+          "icon": "Aggressive",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        },
+        {
+          "id": "d0377f9b-c2d5-4063-9e5d-0e0a3a9bb6c2",
+          "integerId": 9,
+          "name": "DefensiveTactic",
+          "nameKey": "TacticDefensiveTactic",
+          "description": "Retain a defensive stance.\r\nGame events and modes will not be triggered.",
+          "descriptionKey": "TacticDefensiveTacticDesc",
+          "icon": "Defensive",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        }
+      ],
+      "poolSize": {
+        "abilities": 2,
+        "active": 13,
+        "passive": 11,
+        "tactics": 3
+      }
+    },
+    "4": {
+      "name": "Hunter",
+      "hidden": false,
+      "image": "Badge_hunter",
+      "abilities": [
+        {
+          "id": "e5583b4d-1048-4185-895e-9044f40c8e98",
+          "integerId": 26,
+          "name": "DefaultAttackProxy",
+          "nameKey": "PowerDefaultAttackProxy",
+          "description": "Attack your target for {0}% weapon damage",
+          "descriptionKey": "PowerDefaultAttackProxyDesc",
+          "icon": "MeleeWeaponSwing",
+          "type": "GeneralAbility",
+          "typeId": "85275007-41f1-499f-a194-842bdfe8f16c",
+          "tags": [
+            "Attack"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            }
+          ],
+          "implementedBy": "DefaultAttackProxy",
+          "parameterFields": [
+            "_WeaponDamageMult_k__BackingField",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "41915df7-92e3-4bc8-8029-980ad6f47a87",
+          "integerId": 60,
+          "name": "Interact",
+          "nameKey": null,
+          "description": "",
+          "descriptionKey": null,
+          "icon": "1",
+          "type": "GeneralAbility",
+          "typeId": "85275007-41f1-499f-a194-842bdfe8f16c",
+          "tags": [
+            "AllowOutsideCombat"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": true,
+          "placeholders": [],
+          "implementedBy": "Interact",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_awaiter_5__2"
+          ]
+        }
+      ],
+      "active": [
+        {
+          "id": "612b785d-b1ef-4c20-8a63-ca86593ad078",
+          "integerId": 31,
+          "name": "RapidFire",
+          "nameKey": "PowerRapidFire",
+          "description": "Increases your attack speed by {0}% for {1} second(s).\r\n{2} second(s) cooldown.",
+          "descriptionKey": "PowerRapidFireDesc",
+          "icon": "RapidFire",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2",
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "duration"
+            },
+            {
+              "index": 2,
+              "role": "duration"
+            }
+          ],
+          "implementedBy": "RapidFire",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "41c64b4a-71c4-4ccf-9029-99031eff524c",
+          "integerId": 29,
+          "name": "ArrowRain",
+          "nameKey": "PowerArrowRain",
+          "description": "Fire a rain of arrows towards a selected area of {0} units for {1} seconds. Deals {2}% weapon damage per second.\r\n{3} second(s) cooldown.\r\nCosts {4} mana.",
+          "descriptionKey": "PowerArrowRainDesc",
+          "icon": "ArrowRain",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [
+            "Offensive",
+            "Spell"
+          ],
+          "requiredWeapons": [
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2",
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2"
+          ],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "radius"
+            },
+            {
+              "index": 1,
+              "role": "duration"
+            },
+            {
+              "index": 2,
+              "role": "damage"
+            },
+            {
+              "index": 3,
+              "role": "duration"
+            },
+            {
+              "index": 4,
+              "role": "mana"
+            }
+          ],
+          "implementedBy": "ArrowRain",
+          "parameterFields": [
+            "_Duration_k__BackingField",
+            "_BaseDelayBetweenArrows_k__BackingField",
+            "_VariationDelayBetweenArrows_k__BackingField",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "1c974013-86f3-405f-ac7c-2cfb568dcf35",
+          "integerId": 41,
+          "name": "SummonWolf",
+          "nameKey": "PowerSummonWolf",
+          "description": "Summon a wolf companion with {0}% of your health and {1}% of your damage, which defends you and helps you find {2}% more monsters.",
+          "descriptionKey": "PowerSummonWolfDesc",
+          "icon": "SummonWolf",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [
+            "AllowInTown",
+            "Minion",
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "percent"
+            },
+            {
+              "index": 2,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "SummonWolf",
+          "parameterFields": [
+            "_MoreMonstersPercent",
+            "_MinionHealthPercent",
+            "_MinionDamagePercent",
+            "_IsResummoning",
+            "_MinionHealthPercent",
+            "_MinionDamagePercent",
+            "_IsKillingMinion",
+            "_Wolf",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "b50ac7d0-4339-409a-b7b9-7025b09c7ed4",
+          "integerId": 116,
+          "name": "FrozenArrow",
+          "nameKey": "PowerFrozenArrow",
+          "description": "",
+          "descriptionKey": "PowerFrozenArrowDesc",
+          "icon": "FrozenArrow",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [
+            "Offensive",
+            "Projectile",
+            "Cold",
+            "Attack"
+          ],
+          "requiredWeapons": [
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2",
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "FrozenArrow",
+          "parameterFields": [
+            "_NovaFreezeDuration",
+            "_HasSpawnedNova",
+            "_NovaHitEnemies",
+            "_ChanceToRecastNova",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "__7__wrap1"
+          ]
+        },
+        {
+          "id": "38df7787-1cd3-4a23-a6e8-c8f14e289647",
+          "integerId": 27,
+          "name": "PowerShot",
+          "nameKey": "PowerPowerShot",
+          "description": "Fire a power arrow towards your target for {0}% weapon damage.",
+          "descriptionKey": "PowerPowerShotDesc",
+          "icon": "PowerShot",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [
+            "Offensive",
+            "Attack"
+          ],
+          "requiredWeapons": [
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2",
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            }
+          ],
+          "implementedBy": "PowerShot",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "__7__wrap1"
+          ]
+        },
+        {
+          "id": "92110401-74dd-460d-bc32-718343f1f874",
+          "integerId": 100,
+          "name": "ManaArrows",
+          "nameKey": "PowerManaArrows",
+          "description": "Your auto attack gets {0} charges of mana arrows that deal {1} weapon damage and give you {2} mana on hit.",
+          "descriptionKey": "PowerManaArrowsDesc",
+          "icon": "ManaArrows",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [
+            "Bow"
+          ],
+          "requiredWeapons": [
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2",
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "count"
+            },
+            {
+              "index": 1,
+              "role": "damage"
+            },
+            {
+              "index": 2,
+              "role": "mana"
+            }
+          ],
+          "implementedBy": "ManaArrows",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "6f915bd1-1697-442c-b31b-53977cde52cf",
+          "integerId": 32,
+          "name": "Multishot",
+          "nameKey": "PowerMultishot",
+          "description": "Shoot {0} arrows in an arc using your ranged weapon for {1}% weapon damage.",
+          "descriptionKey": "PowerMultishotDesc",
+          "icon": "MultiShot",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [
+            "Offensive",
+            "Attack",
+            "Projectile"
+          ],
+          "requiredWeapons": [
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "count"
+            },
+            {
+              "index": 1,
+              "role": "damage"
+            }
+          ],
+          "implementedBy": "Multishot",
+          "parameterFields": [
+            "_HitActors",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "__7__wrap1"
+          ]
+        },
+        {
+          "id": "ecef0ec7-e1d8-4177-9408-0e93306c28da",
+          "integerId": 30,
+          "name": "Fade",
+          "nameKey": "PowerFade",
+          "description": "Fade into the shadows, increasing your evasion by {0}% for {1} second(s).",
+          "descriptionKey": "PowerFadeDesc",
+          "icon": "Fade",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "duration"
+            }
+          ],
+          "implementedBy": "Fade",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "903c2197-91e8-4402-ac5c-60d9db7f3ba1",
+          "integerId": 73,
+          "name": "ImpalingTrap",
+          "nameKey": "PowerImpalingTrap",
+          "description": "",
+          "descriptionKey": "PowerImpalingTrapDesc",
+          "icon": "Traps",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [
+            "Offensive",
+            "Spell",
+            "AoE"
+          ],
+          "requiredWeapons": [
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2",
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2"
+          ],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "ImpalingTrap",
+          "parameterFields": [
+            "_Radius_k__BackingField",
+            "_DelayBeforeEruption_k__BackingField",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "8d781cfb-6e26-409c-87ea-9f276c02b87c",
+          "integerId": 28,
+          "name": "Backflip",
+          "nameKey": "PowerBackflip",
+          "description": "Jump backwards {0} units away from your current direction and leave a static mirror image of yourself with {1}% of your maximum life for {2} seconds.",
+          "descriptionKey": "PowerBackflipDesc",
+          "icon": "Backflip",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [
+            "Movement",
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "value"
+            },
+            {
+              "index": 1,
+              "role": "percent"
+            },
+            {
+              "index": 2,
+              "role": "duration"
+            }
+          ],
+          "implementedBy": "Backflip",
+          "parameterFields": [
+            "_Destination",
+            "_OwnerMover",
+            "_Distance",
+            "_HasStarted",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_couldUpdatePosition_5__2"
+          ]
+        },
+        {
+          "id": "6b2a55b6-996d-46c0-bd44-c2cf09f97a7e",
+          "integerId": 75,
+          "name": "MarkOfTheChosen",
+          "nameKey": "PowerMarkOfTheChosen",
+          "description": "",
+          "descriptionKey": "PowerMarkOfTheChosenDesc",
+          "icon": "Mark",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [],
+          "requiredWeapons": [
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "MarkOfTheChosen",
+          "parameterFields": [
+            "_LifeLeechBonusPercent",
+            "_CurrentIncreasedDamageTaken",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "d3291def-f06b-4600-87f7-1a50637e22d1",
+          "integerId": 112,
+          "name": "Thorns",
+          "nameKey": "PowerThorns",
+          "description": "Fade into the shadows, increasing your evasion by {0}% for {1} second(s).",
+          "descriptionKey": "PowerThornsDesc",
+          "icon": "Thorns",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "duration"
+            }
+          ],
+          "implementedBy": "Thorns",
+          "parameterFields": [
+            "_PhysicalDamageReduction",
+            "_Effect",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "5bc23cf7-5d23-4eb2-aeb4-83c21ce4b8e6",
+          "integerId": 114,
+          "name": "BeastWithin",
+          "nameKey": "PowerBeastWithin",
+          "description": "",
+          "descriptionKey": "PowerBeastWithinDesc",
+          "icon": "BeastWithin",
+          "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "BeastWithin",
+          "parameterFields": [
+            "_Effect",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "83d7485b-6837-42e2-9821-28b23f4f3807",
+          "integerId": 164,
+          "name": "Mixology",
+          "nameKey": "PowerMixology",
+          "description": "",
+          "descriptionKey": "PowerMixologyDesc",
+          "icon": "Mixology",
+          "type": "ActiveGeneralSkill",
+          "typeId": "5c5102af-b391-45de-a7dd-42c60cd583e7",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Mixology",
+          "parameterFields": [
+            "_Effect",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        }
+      ],
+      "passive": [
+        {
+          "id": "34f9e5ac-35c2-4bbf-ac4e-9a60339786d2",
+          "integerId": 33,
+          "name": "Precision",
+          "nameKey": "PassivePrecision",
+          "description": "",
+          "descriptionKey": "PassivePrecisionDesc",
+          "icon": "Precision",
+          "type": "PassiveHunterSkill",
+          "typeId": "f8f10f01-711c-4a5a-93f4-316d91cc2512",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Precision",
+          "parameterFields": [
+            "_AttackRatingBonus",
+            "_MaxStacks",
+            "_ShouldRemove"
+          ]
+        },
+        {
+          "id": "33a59607-2766-4954-84e0-4be2f5eeb7db",
+          "integerId": 34,
+          "name": "Sharpshooter",
+          "nameKey": "PassiveSharpshooter",
+          "description": "Increases your total attack range by {0}%",
+          "descriptionKey": "PassiveSharpshooterDesc",
+          "icon": "Sharpshooter",
+          "type": "PassiveHunterSkill",
+          "typeId": "f8f10f01-711c-4a5a-93f4-316d91cc2512",
+          "tags": [],
+          "requiredWeapons": [
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "Sharpshooter",
+          "parameterFields": [
+            "_RangeIncrease"
+          ]
+        },
+        {
+          "id": "3cde65ae-9f3f-4cab-b3c7-a3c492d23354",
+          "integerId": 106,
+          "name": "BeastTracking",
+          "nameKey": "PassiveBeastTracking",
+          "description": "",
+          "descriptionKey": "PassiveBeastTrackingDesc",
+          "icon": "BeastTracking",
+          "type": "PassiveHunterSkill",
+          "typeId": "f8f10f01-711c-4a5a-93f4-316d91cc2512",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "BeastTracking",
+          "parameterFields": [
+            "_MoreBeastDamage",
+            "_MoreChampionMonsters"
+          ]
+        },
+        {
+          "id": "9eb75ec8-6b44-45e3-b1e4-33eec83f7144",
+          "integerId": 36,
+          "name": "DoubleDraw",
+          "nameKey": "PassiveDoubleDraw",
+          "description": "Your abilities have a {0}% chance to fire an additional projectile.",
+          "descriptionKey": "PassiveDoubleDrawDesc",
+          "icon": "DoubleDraw",
+          "type": "PassiveHunterSkill",
+          "typeId": "f8f10f01-711c-4a5a-93f4-316d91cc2512",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "DoubleDraw",
+          "parameterFields": [
+            "_ExtraProjectileChance"
+          ]
+        },
+        {
+          "id": "8269513c-38af-4bcc-9bd7-f03e310294f6",
+          "integerId": 102,
+          "name": "PoolOfMana",
+          "nameKey": "PassivePoolOfMana",
+          "description": "",
+          "descriptionKey": "PassivePoolOfManaDesc",
+          "icon": "PoolOfMana",
+          "type": "PassiveHunterSkill",
+          "typeId": "f8f10f01-711c-4a5a-93f4-316d91cc2512",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "PoolOfMana",
+          "parameterFields": [
+            "_ManaBonus"
+          ]
+        },
+        {
+          "id": "56c14997-7650-456e-b43d-6dc56fbe9dbf",
+          "integerId": 108,
+          "name": "Concentrate",
+          "nameKey": "PassiveConcentrate",
+          "description": "",
+          "descriptionKey": "PassiveConcentrateDesc",
+          "icon": "Concentrate",
+          "type": "PassiveHunterSkill",
+          "typeId": "f8f10f01-711c-4a5a-93f4-316d91cc2512",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Concentrate",
+          "parameterFields": []
+        },
+        {
+          "id": "56743654-4e62-4c9a-ab1a-cc886887fe3c",
+          "integerId": 110,
+          "name": "Cripple",
+          "nameKey": "PassiveCripple",
+          "description": "",
+          "descriptionKey": "PassiveCrippleDesc",
+          "icon": "Cripple",
+          "type": "PassiveHunterSkill",
+          "typeId": "f8f10f01-711c-4a5a-93f4-316d91cc2512",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Cripple",
+          "parameterFields": [
+            "_MinimumAttackRangePercent",
+            "_SlowPercent",
+            "_SlowDuration"
+          ]
+        },
+        {
+          "id": "c9dfee61-c4d8-44f9-8b04-a08a82b61c6f",
+          "integerId": 136,
+          "name": "DeadlyPoison",
+          "nameKey": "PassiveDeadlyPoison",
+          "description": "",
+          "descriptionKey": "PassiveDeadlyPoisonDesc",
+          "icon": "PoisonTip",
+          "type": "PassiveHunterSkill",
+          "typeId": "f8f10f01-711c-4a5a-93f4-316d91cc2512",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "DeadlyPoison",
+          "parameterFields": []
+        },
+        {
+          "id": "ee4b0d46-5799-4799-942f-6cb4eb9c039e",
+          "integerId": 138,
+          "name": "TastyTreats",
+          "nameKey": "PassiveTastyTreats",
+          "description": "",
+          "descriptionKey": "PassiveTastyTreatsDesc",
+          "icon": "TastyTreats",
+          "type": "PassiveHunterSkill",
+          "typeId": "f8f10f01-711c-4a5a-93f4-316d91cc2512",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "TastyTreats",
+          "parameterFields": []
+        },
+        {
+          "id": "0c0eec2e-1536-491b-9f68-b4c924405c1a",
+          "integerId": 140,
+          "name": "Solitary",
+          "nameKey": "PassiveSolitary",
+          "description": "",
+          "descriptionKey": "PassiveSolitaryDesc",
+          "icon": "Solitary",
+          "type": "PassiveHunterSkill",
+          "typeId": "f8f10f01-711c-4a5a-93f4-316d91cc2512",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Solitary",
+          "parameterFields": [
+            "_ListeningWorld"
+          ]
+        },
+        {
+          "id": "9ac0cce2-d318-4efa-a820-59ab7cd18c56",
+          "integerId": 142,
+          "name": "Fork",
+          "nameKey": "PassiveFork",
+          "description": "",
+          "descriptionKey": "PassiveForkDesc",
+          "icon": "Fork",
+          "type": "PassiveHunterSkill",
+          "typeId": "f8f10f01-711c-4a5a-93f4-316d91cc2512",
+          "tags": [],
+          "requiredWeapons": [
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2",
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Fork",
+          "parameterFields": []
+        }
+      ],
+      "tactics": [
+        {
+          "id": "4896efa7-01e4-439c-93a3-63a3f2a3a6be",
+          "integerId": 7,
+          "name": "RunAwayTactic",
+          "nameKey": "TacticRunAwayTactic",
+          "description": "Flee from your battle, running to the nearest edge while gaining 25% movement speed.",
+          "descriptionKey": "TacticRunAwayTacticDesc",
+          "icon": "RunAway",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        },
+        {
+          "id": "c8b3e697-51ca-4348-9967-8d3bb301b4ee",
+          "integerId": 8,
+          "name": "AggressiveTactic",
+          "nameKey": "TacticAggressiveTactic",
+          "description": "Charge new opponents head-on.\r\nHas a chance to enter game events like rampage.",
+          "descriptionKey": "TacticAggressiveTacticDesc",
+          "icon": "Aggressive",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        },
+        {
+          "id": "d0377f9b-c2d5-4063-9e5d-0e0a3a9bb6c2",
+          "integerId": 9,
+          "name": "DefensiveTactic",
+          "nameKey": "TacticDefensiveTactic",
+          "description": "Retain a defensive stance.\r\nGame events and modes will not be triggered.",
+          "descriptionKey": "TacticDefensiveTacticDesc",
+          "icon": "Defensive",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        }
+      ],
+      "poolSize": {
+        "abilities": 2,
+        "active": 14,
+        "passive": 11,
+        "tactics": 3
+      }
+    },
+    "5": {
+      "name": "Mage",
+      "hidden": false,
+      "image": "Badge_mage",
+      "abilities": [
+        {
+          "id": "e5583b4d-1048-4185-895e-9044f40c8e98",
+          "integerId": 26,
+          "name": "DefaultAttackProxy",
+          "nameKey": "PowerDefaultAttackProxy",
+          "description": "Attack your target for {0}% weapon damage",
+          "descriptionKey": "PowerDefaultAttackProxyDesc",
+          "icon": "MeleeWeaponSwing",
+          "type": "GeneralAbility",
+          "typeId": "85275007-41f1-499f-a194-842bdfe8f16c",
+          "tags": [
+            "Attack"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            }
+          ],
+          "implementedBy": "DefaultAttackProxy",
+          "parameterFields": [
+            "_WeaponDamageMult_k__BackingField",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "41915df7-92e3-4bc8-8029-980ad6f47a87",
+          "integerId": 60,
+          "name": "Interact",
+          "nameKey": null,
+          "description": "",
+          "descriptionKey": null,
+          "icon": "1",
+          "type": "GeneralAbility",
+          "typeId": "85275007-41f1-499f-a194-842bdfe8f16c",
+          "tags": [
+            "AllowOutsideCombat"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": true,
+          "placeholders": [],
+          "implementedBy": "Interact",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_awaiter_5__2"
+          ]
+        }
+      ],
+      "active": [
+        {
+          "id": "d3f2c295-0a0e-4008-800f-9f9a0f2eaa99",
+          "integerId": 49,
+          "name": "ChainLightning",
+          "nameKey": "PowerChainLightning",
+          "description": "Cast a jolt of lightning that deals {0}% weapon damage as Lightning and then jumps to additional nearby enemies. Each jump reduces the damage by {1}%. The lightning will dissipate after {2} jumps.\r\n{3} second(s) cooldown.\r\nCosts {4} mana.",
+          "descriptionKey": "PowerChainLightningDesc",
+          "icon": "ChainLightning",
+          "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
+          "tags": [
+            "Offensive",
+            "Lightning",
+            "Spell"
+          ],
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            },
+            {
+              "index": 1,
+              "role": "percent"
+            },
+            {
+              "index": 2,
+              "role": "count"
+            },
+            {
+              "index": 3,
+              "role": "duration"
+            },
+            {
+              "index": 4,
+              "role": "mana"
+            }
+          ],
+          "implementedBy": "ChainLightning",
+          "parameterFields": [
+            "_DamageReductionPerJump",
+            "_ForcedEmptyMasteries",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "35c1fa86-53ff-4558-a0e6-6cc30bb91892",
+          "integerId": 130,
+          "name": "Teleport",
+          "nameKey": "PowerTeleport",
+          "description": "",
+          "descriptionKey": "PowerTeleportDesc",
+          "icon": "Teleport",
+          "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
+          "tags": [
+            "Movement",
+            "Spell"
+          ],
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Teleport",
+          "parameterFields": [
+            "_Mover",
+            "_UserOriginalScale",
+            "_TeleportMovementSpeedMultiplier",
+            "_HasStarted",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_targetPos_5__2",
+            "_couldUpdatePosition_5__3"
+          ]
+        },
+        {
+          "id": "cb4943e8-5ea1-4956-a757-989a316b1ec7",
+          "integerId": 45,
+          "name": "IceNova",
+          "nameKey": "PowerIceNova",
+          "description": "Cast an Ice Nova that deals {0}% weapon damage as Cold and hits all enemies within {1} units, freezing them for {2} seconds.\r\n{3} second(s) cooldown.\r\nCosts {4} mana.",
+          "descriptionKey": "PowerIceNovaDesc",
+          "icon": "IceNova",
+          "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
+          "tags": [
+            "Offensive",
+            "Spell",
+            "AoE",
+            "Cold"
+          ],
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            },
+            {
+              "index": 1,
+              "role": "radius"
+            },
+            {
+              "index": 2,
+              "role": "duration"
+            },
+            {
+              "index": 3,
+              "role": "duration"
+            },
+            {
+              "index": 4,
+              "role": "mana"
+            }
+          ],
+          "implementedBy": "IceNova",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "271f5949-6b38-4217-abdb-32dbe7daf930",
+          "integerId": 53,
+          "name": "ElementalSeal",
+          "nameKey": "PowerElementalSeal",
+          "description": "Place a seal on the ground for {0} second(s) that increases your Weapon damage by {1}% while standing inside it.\r\nEnemies that are inside the seal burn for {2}% Weapon damage per second as Fire.\r\n{3} second(s) cooldown.\r\nCosts {4} mana.",
+          "descriptionKey": "PowerElementalSealDesc",
+          "icon": "ElementalSeal",
+          "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
+          "tags": [
+            "Offensive",
+            "Duration",
+            "Spell",
+            "AoE"
+          ],
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "duration"
+            },
+            {
+              "index": 1,
+              "role": "percent"
+            },
+            {
+              "index": 2,
+              "role": "damage"
+            },
+            {
+              "index": 3,
+              "role": "duration"
+            },
+            {
+              "index": 4,
+              "role": "mana"
+            }
+          ],
+          "implementedBy": "ElementalSeal",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "c74d06e5-4b53-40d1-b064-699ea213ddb7",
+          "integerId": 48,
+          "name": "Blizzard",
+          "nameKey": "PowerBlizzard",
+          "description": "Summon shards of ice that rain down upon a taret area of {0} units for {1} seconds. Deals {2}% weapon damage per second as Cold.\r\n{3} second(s) cooldown.\r\nCosts {4} mana.",
+          "descriptionKey": "PowerBlizzardDesc",
+          "icon": "Blizzard",
+          "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
+          "tags": [
+            "Offensive",
+            "Spell",
+            "Cold"
+          ],
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "radius"
+            },
+            {
+              "index": 1,
+              "role": "duration"
+            },
+            {
+              "index": 2,
+              "role": "damage"
+            },
+            {
+              "index": 3,
+              "role": "duration"
+            },
+            {
+              "index": 4,
+              "role": "mana"
+            }
+          ],
+          "implementedBy": "Blizzard",
+          "parameterFields": [
+            "_BaseDelayBetweenShards_k__BackingField",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "37242bcb-13d7-4fa1-8135-d02baecd749f",
+          "integerId": 52,
+          "name": "ManaShield",
+          "nameKey": "PowerManaShield",
+          "description": "Gain a shield equal to {0}% of your maximum life which absorbs {1}% of the incoming damage.\r\nEvery 1% absorbed by the shield will also be taken from your mana.\r\nThe effect ends when the shield reaches 0.\r\n{2} second(s) cooldown.",
+          "descriptionKey": "PowerManaShieldDesc",
+          "icon": "ManaShield",
+          "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "percent"
+            },
+            {
+              "index": 2,
+              "role": "duration"
+            }
+          ],
+          "implementedBy": "ManaShield",
+          "parameterFields": [
+            "_ShieldRegen",
+            "_Effect",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "6bc3acf6-a9ee-45bd-96e9-3383ca9f4654",
+          "integerId": 46,
+          "name": "IceBlast",
+          "nameKey": "PowerIceBlast",
+          "description": "Cast {0} ice shards towards your current target. The center shard deals {1}% weapon damage and the other shards deal {2}% weapon damage as Cold.\r\n{3} second(s) cooldown.\r\nCosts {4} mana.",
+          "descriptionKey": "PowerIceBlastDesc",
+          "icon": "IceBlast",
+          "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
+          "tags": [
+            "Offensive",
+            "Spell",
+            "Cold"
+          ],
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "value"
+            },
+            {
+              "index": 1,
+              "role": "damage"
+            },
+            {
+              "index": 2,
+              "role": "damage"
+            },
+            {
+              "index": 3,
+              "role": "duration"
+            },
+            {
+              "index": 4,
+              "role": "mana"
+            }
+          ],
+          "implementedBy": "IceBlast",
+          "parameterFields": [
+            "_HitActors",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "__7__wrap1"
+          ]
+        },
+        {
+          "id": "bebff958-509a-45fe-8edd-e3e8168c5f5e",
+          "integerId": 47,
+          "name": "InfernalBlast",
+          "nameKey": "PowerInfernalBlast",
+          "description": "Cast {0} ice shards towards your current target. The center shard deals {1}% weapon damage and the other shards deal {2}% weapon damage as Cold.\r\n{3} second(s) cooldown.\r\nCosts {4} mana.",
+          "descriptionKey": "PowerInfernalBlastDesc",
+          "icon": "InfernalBlast",
+          "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
+          "tags": [
+            "Offensive",
+            "Fire",
+            "Spell"
+          ],
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "value"
+            },
+            {
+              "index": 1,
+              "role": "damage"
+            },
+            {
+              "index": 2,
+              "role": "damage"
+            },
+            {
+              "index": 3,
+              "role": "duration"
+            },
+            {
+              "index": 4,
+              "role": "mana"
+            }
+          ],
+          "implementedBy": "InfernalBlast",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "__7__wrap1"
+          ]
+        },
+        {
+          "id": "691aaf6b-4311-4973-b672-acb511de87b5",
+          "integerId": 51,
+          "name": "Thunderstrike",
+          "nameKey": "PowerThunderstrike",
+          "description": "Call down a powerful thunderstrike on your target which deals {0}% weapon damage as Lightning. Will also shock the target for {1} second(s).\r\n{2} second(s) cooldown.\r\nCosts {3} mana.",
+          "descriptionKey": "PowerThunderstrikeDesc",
+          "icon": "Thunderstrike",
+          "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
+          "tags": [
+            "Offensive",
+            "Lightning",
+            "Spell"
+          ],
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            },
+            {
+              "index": 1,
+              "role": "duration"
+            },
+            {
+              "index": 2,
+              "role": "duration"
+            },
+            {
+              "index": 3,
+              "role": "mana"
+            }
+          ],
+          "implementedBy": "Thunderstrike",
+          "parameterFields": [
+            "Logger",
+            "_ForcedEmptyChainLightningMasteries",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "1531034b-b06b-4476-8e24-a646a220a169",
+          "integerId": 77,
+          "name": "Tornado",
+          "nameKey": "PowerTornado",
+          "description": "",
+          "descriptionKey": "PowerTornadoDesc",
+          "icon": "Tornado",
+          "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
+          "tags": [
+            "Offensive",
+            "Lightning",
+            "Spell"
+          ],
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Tornado",
+          "parameterFields": [
+            "_TimeSinceLastRetarget",
+            "_AttractionActorMovers",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "__7__wrap1"
+          ]
+        },
+        {
+          "id": "c09e8ee0-63d8-44f9-8d18-91404f21956f",
+          "integerId": 128,
+          "name": "PoisonCloud",
+          "nameKey": "PowerPoisonCloud",
+          "description": "",
+          "descriptionKey": "PowerPoisonCloudDesc",
+          "icon": "PoisonCloud",
+          "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
+          "tags": [
+            "Offensive",
+            "AoE",
+            "Duration",
+            "Poison",
+            "Spell"
+          ],
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "PoisonCloud",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "83d7485b-6837-42e2-9821-28b23f4f3807",
+          "integerId": 164,
+          "name": "Mixology",
+          "nameKey": "PowerMixology",
+          "description": "",
+          "descriptionKey": "PowerMixologyDesc",
+          "icon": "Mixology",
+          "type": "ActiveGeneralSkill",
+          "typeId": "5c5102af-b391-45de-a7dd-42c60cd583e7",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Mixology",
+          "parameterFields": [
+            "_Effect",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        }
+      ],
+      "passive": [
+        {
+          "id": "e20c7cbb-3b7d-4b6d-a39d-3ac160e3d2fb",
+          "integerId": 50,
+          "name": "Hubris",
+          "nameKey": "PassiveHubris",
+          "description": "Increases your total Intelligence by {0}%",
+          "descriptionKey": "PassiveHubrisDesc",
+          "icon": "Hubris",
+          "type": "PassiveMageSkill",
+          "typeId": "552f9ebf-1246-4bb9-8390-b208b4047ff0",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "Hubris",
+          "parameterFields": [
+            "_IntelligenceBonus"
+          ]
+        },
+        {
+          "id": "f3487c7f-e362-46ce-818a-1c90c277a4ab",
+          "integerId": 126,
+          "name": "ManaFlow",
+          "nameKey": "PassiveManaFlow",
+          "description": "",
+          "descriptionKey": "PassiveManaFlowDesc",
+          "icon": "ManaFlow",
+          "type": "PassiveMageSkill",
+          "typeId": "552f9ebf-1246-4bb9-8390-b208b4047ff0",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "ManaFlow",
+          "parameterFields": [
+            "_IncreasedMaximumManaPercent",
+            "_IncreasedManaRegeneration"
+          ]
+        },
+        {
+          "id": "2b8c43bc-b38e-4ab2-a113-afc09a173d06",
+          "integerId": 134,
+          "name": "RapidCasting",
+          "nameKey": "PassiveRapidCasting",
+          "description": "",
+          "descriptionKey": "PassiveRapidCastingDesc",
+          "icon": "RapidCasting",
+          "type": "PassiveMageSkill",
+          "typeId": "552f9ebf-1246-4bb9-8390-b208b4047ff0",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "RapidCasting",
+          "parameterFields": [
+            "_MoreAttackSpeedPercent",
+            "_MoreSkillManaCostPercent"
+          ]
+        },
+        {
+          "id": "c5ff2ef6-36a2-44b0-9c3e-a0ba0ce49964",
+          "integerId": 118,
+          "name": "AncientKnowledge",
+          "nameKey": "PassiveAncientKnowledge",
+          "description": "",
+          "descriptionKey": "PassiveAncientKnowledgeDesc",
+          "icon": "AncientKnowledge",
+          "type": "PassiveMageSkill",
+          "typeId": "552f9ebf-1246-4bb9-8390-b208b4047ff0",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "AncientKnowledge",
+          "parameterFields": [
+            "_ExperienceBonus"
+          ]
+        },
+        {
+          "id": "83e473f7-d056-44aa-a2fe-6df90c4c8b4e",
+          "integerId": 120,
+          "name": "BloodCasting",
+          "nameKey": "PassiveBloodCasting",
+          "description": "",
+          "descriptionKey": "PassiveBloodCastingDesc",
+          "icon": "BloodCasting",
+          "type": "PassiveMageSkill",
+          "typeId": "552f9ebf-1246-4bb9-8390-b208b4047ff0",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "BloodCasting",
+          "parameterFields": [
+            "_PercentOfManaCostTakenAsLife"
+          ]
+        },
+        {
+          "id": "d0a03b2e-7649-4970-8927-3bb7395037ca",
+          "integerId": 54,
+          "name": "FireArmor",
+          "nameKey": "PassiveFireArmor",
+          "description": "Increases your Fire resistance by {0}%",
+          "descriptionKey": "PassiveFireArmorDesc",
+          "icon": "FireArmor",
+          "type": "PassiveMageSkill",
+          "typeId": "552f9ebf-1246-4bb9-8390-b208b4047ff0",
+          "tags": [
+            "Fire"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "FireArmor",
+          "parameterFields": [
+            "_ResistanceBonus",
+            "_DamageTakenAsElement"
+          ]
+        },
+        {
+          "id": "ba47c44c-1b66-4d1f-8303-d0bef76fe5f9",
+          "integerId": 55,
+          "name": "ColdArmor",
+          "nameKey": "PassiveColdArmor",
+          "description": "Increases your Cold resistance by {0}%",
+          "descriptionKey": "PassiveColdArmorDesc",
+          "icon": "ColdArmor",
+          "type": "PassiveMageSkill",
+          "typeId": "552f9ebf-1246-4bb9-8390-b208b4047ff0",
+          "tags": [
+            "Fire"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "ColdArmor",
+          "parameterFields": [
+            "_ResistanceBonus",
+            "_DamageTakenAsElement"
+          ]
+        },
+        {
+          "id": "de0eb557-923e-4532-9fa1-83f032e5d6a9",
+          "integerId": 56,
+          "name": "LightningArmor",
+          "nameKey": "PassiveLightningArmor",
+          "description": "Increases your Lightning resistance by {0}%",
+          "descriptionKey": "PassiveLightningArmorDesc",
+          "icon": "LightningArmor",
+          "type": "PassiveMageSkill",
+          "typeId": "552f9ebf-1246-4bb9-8390-b208b4047ff0",
+          "tags": [
+            "Fire"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "LightningArmor",
+          "parameterFields": [
+            "_ResistanceBonus",
+            "_DamageTakenAsElement"
+          ]
+        },
+        {
+          "id": "e9fca590-c097-434d-a292-579858bd12ab",
+          "integerId": 122,
+          "name": "EvasiveManeuver",
+          "nameKey": "PassiveEvasiveManeuver",
+          "description": "",
+          "descriptionKey": "PassiveEvasiveManeuverDesc",
+          "icon": "EvasiveManeuver",
+          "type": "PassiveMageSkill",
+          "typeId": "552f9ebf-1246-4bb9-8390-b208b4047ff0",
+          "tags": [
+            "Movement"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "EvasiveManeuver",
+          "parameterFields": [
+            "_IncreasedDodgeChance",
+            "_ChanceToReduceTeleportCooldownWhenHit",
+            "_TeleportCooldownReductionTime",
+            "_TeleportCooldownReductionProcCooldown",
+            "_LastCooldownProcTick"
+          ]
+        },
+        {
+          "id": "16fd1cd8-7986-4311-811c-eeb674e37a99",
+          "integerId": 124,
+          "name": "ForceField",
+          "nameKey": "PassiveForceField",
+          "description": "",
+          "descriptionKey": "PassiveForceFieldDesc",
+          "icon": "ForceField",
+          "type": "PassiveMageSkill",
+          "typeId": "552f9ebf-1246-4bb9-8390-b208b4047ff0",
+          "tags": [
+            "Movement"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "ForceField",
+          "parameterFields": [
+            "_MoreForceField"
+          ]
+        }
+      ],
+      "tactics": [
+        {
+          "id": "4896efa7-01e4-439c-93a3-63a3f2a3a6be",
+          "integerId": 7,
+          "name": "RunAwayTactic",
+          "nameKey": "TacticRunAwayTactic",
+          "description": "Flee from your battle, running to the nearest edge while gaining 25% movement speed.",
+          "descriptionKey": "TacticRunAwayTacticDesc",
+          "icon": "RunAway",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        },
+        {
+          "id": "c8b3e697-51ca-4348-9967-8d3bb301b4ee",
+          "integerId": 8,
+          "name": "AggressiveTactic",
+          "nameKey": "TacticAggressiveTactic",
+          "description": "Charge new opponents head-on.\r\nHas a chance to enter game events like rampage.",
+          "descriptionKey": "TacticAggressiveTacticDesc",
+          "icon": "Aggressive",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        },
+        {
+          "id": "d0377f9b-c2d5-4063-9e5d-0e0a3a9bb6c2",
+          "integerId": 9,
+          "name": "DefensiveTactic",
+          "nameKey": "TacticDefensiveTactic",
+          "description": "Retain a defensive stance.\r\nGame events and modes will not be triggered.",
+          "descriptionKey": "TacticDefensiveTacticDesc",
+          "icon": "Defensive",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        }
+      ],
+      "poolSize": {
+        "abilities": 2,
+        "active": 12,
+        "passive": 10,
+        "tactics": 3
+      }
+    },
+    "6": {
+      "name": "Necromancer",
+      "hidden": false,
+      "image": "Badge_necro",
+      "abilities": [
+        {
+          "id": "e5583b4d-1048-4185-895e-9044f40c8e98",
+          "integerId": 26,
+          "name": "DefaultAttackProxy",
+          "nameKey": "PowerDefaultAttackProxy",
+          "description": "Attack your target for {0}% weapon damage",
+          "descriptionKey": "PowerDefaultAttackProxyDesc",
+          "icon": "MeleeWeaponSwing",
+          "type": "GeneralAbility",
+          "typeId": "85275007-41f1-499f-a194-842bdfe8f16c",
+          "tags": [
+            "Attack"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            }
+          ],
+          "implementedBy": "DefaultAttackProxy",
+          "parameterFields": [
+            "_WeaponDamageMult_k__BackingField",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "41915df7-92e3-4bc8-8029-980ad6f47a87",
+          "integerId": 60,
+          "name": "Interact",
+          "nameKey": null,
+          "description": "",
+          "descriptionKey": null,
+          "icon": "1",
+          "type": "GeneralAbility",
+          "typeId": "85275007-41f1-499f-a194-842bdfe8f16c",
+          "tags": [
+            "AllowOutsideCombat"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": true,
+          "placeholders": [],
+          "implementedBy": "Interact",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_awaiter_5__2"
+          ]
+        }
+      ],
+      "active": [
+        {
+          "id": "855a7060-826a-4555-8e6a-5da982e3e60f",
+          "integerId": 213,
+          "name": "SummonSkeleton",
+          "nameKey": "PowerSummonSkeleton",
+          "description": "",
+          "descriptionKey": "PowerSummonSkeletonDesc",
+          "icon": "SummonSkeleton",
+          "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
+          "tags": [
+            "AllowInTown",
+            "Spell",
+            "Minion"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "SummonSkeleton",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "763ab376-e1bd-44ab-b4fa-8b03c6d03b16",
+          "integerId": 235,
+          "name": "AstralWalk",
+          "nameKey": "PowerAstralWalk",
+          "description": "",
+          "descriptionKey": "PowerAstralWalkDesc",
+          "icon": "AstralWalk",
+          "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
+          "tags": [
+            "Defensive",
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "AstralWalk",
+          "parameterFields": [
+            "_Mover",
+            "_UserOriginalScale",
+            "_HasStarted",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_couldUpdatePosition_5__2"
+          ]
+        },
+        {
+          "id": "fedd69aa-1a57-4f55-aae2-b6676fb5eea2",
+          "integerId": 221,
+          "name": "Shadowbolt",
+          "nameKey": "PowerShadowbolt",
+          "description": "",
+          "descriptionKey": "PowerShadowboltDesc",
+          "icon": "ShadowBolt",
+          "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
+          "tags": [
+            "Spell",
+            "Offensive"
+          ],
+          "requiredWeapons": [
+            "29a035df-a9f8-4bed-8fc1-5442344ac648",
+            "30a8ccec-b2e1-47b1-a994-9690861a0044"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Shadowbolt",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "__7__wrap1"
+          ]
+        },
+        {
+          "id": "f6a01cab-c188-4d7e-96dd-7aa22b9365a5",
+          "integerId": 219,
+          "name": "UnholyFocus",
+          "nameKey": "PowerUnholyFocus",
+          "description": "",
+          "descriptionKey": "PowerUnholyFocusDesc",
+          "icon": "UnholyFocus",
+          "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "UnholyFocus",
+          "parameterFields": [
+            "_Effect",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "cbfc483c-e01f-404f-b06b-ddc322a48ddb",
+          "integerId": 225,
+          "name": "DrainLife",
+          "nameKey": "PowerDrainLife",
+          "description": "",
+          "descriptionKey": "PowerDrainLifeDesc",
+          "icon": "DrainLife",
+          "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
+          "tags": [
+            "Offensive",
+            "Poison",
+            "Spell"
+          ],
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "DrainLife",
+          "parameterFields": [
+            "_NearbyActors",
+            "_LeechTargets",
+            "_TimeoutTimer",
+            "_BeamThicknessRadius",
+            "_beamEnd",
+            "_beamStart",
+            "_beam",
+            "_WeaponDamageMult",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_totalLifeLeech_5__2",
+            "_leechBonusPerMinion_5__3",
+            "_damagePerTenthSecond_5__4",
+            "_timePassed_5__5",
+            "_percentOfLifeGivenToMinionsOnKill_5__6"
+          ]
+        },
+        {
+          "id": "117c0c9c-f742-4062-9d83-7c428796d594",
+          "integerId": 215,
+          "name": "SummonDemon",
+          "nameKey": "PowerSummonDemon",
+          "description": "",
+          "descriptionKey": "PowerSummonDemonDesc",
+          "icon": "SummonDemon",
+          "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
+          "tags": [
+            "AllowInTown",
+            "Spell",
+            "Minion"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "SummonDemon",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "c3f59b8d-5758-4c91-8876-0274505abc87",
+          "integerId": 233,
+          "name": "BoneLink",
+          "nameKey": "PowerBoneLink",
+          "description": "",
+          "descriptionKey": "PowerBoneLinkDesc",
+          "icon": "BoneLink",
+          "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
+          "tags": [
+            "Defensive",
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "BoneLink",
+          "parameterFields": [
+            "_LinkedBuffs",
+            "_LinkedTargets",
+            "_LastBoneEffectGroupTick",
+            "_Effect",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "3fb52a01-0319-4888-8e08-2287baf19443",
+          "integerId": 229,
+          "name": "Decay",
+          "nameKey": "PowerDecay",
+          "description": "",
+          "descriptionKey": "PowerDecayDesc",
+          "icon": "Decay",
+          "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
+          "tags": [
+            "Offensive",
+            "AoE",
+            "Spell"
+          ],
+          "requiredWeapons": [
+            "29a035df-a9f8-4bed-8fc1-5442344ac648",
+            "30a8ccec-b2e1-47b1-a994-9690861a0044"
+          ],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Decay",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "3dec2f26-f41c-41a3-b2c7-fd2feade9498",
+          "integerId": 227,
+          "name": "DemonicPresence",
+          "nameKey": "PowerDemonicPresence",
+          "description": "",
+          "descriptionKey": "PowerDemonicPresenceDesc",
+          "icon": "DemonicPresence",
+          "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
+          "tags": [
+            "Offensive",
+            "Aura",
+            "AoE",
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "DemonicPresence",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "ea65e99e-e318-475a-b3a8-d7aec66c04cb",
+          "integerId": 231,
+          "name": "Sacrifice",
+          "nameKey": "PowerSacrifice",
+          "description": "",
+          "descriptionKey": "PowerSacrificeDesc",
+          "icon": "Sacrifice",
+          "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Sacrifice",
+          "parameterFields": [
+            "_TimeSinceLastResourceTick",
+            "_ResourceUpdateFrequency",
+            "_HasCastOffensiveSkill",
+            "_LifeGainedAsPercent",
+            "_ForceFieldGainedAsPercent",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "a9edb40b-04be-4f5a-a16b-14092535165a",
+          "integerId": 217,
+          "name": "SummonDeath",
+          "nameKey": "PowerSummonDeath",
+          "description": "",
+          "descriptionKey": "PowerSummonDeathDesc",
+          "icon": "SummonDeath",
+          "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
+          "tags": [
+            "AllowInTown",
+            "Spell",
+            "Minion"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "SummonDeath",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "83d7485b-6837-42e2-9821-28b23f4f3807",
+          "integerId": 164,
+          "name": "Mixology",
+          "nameKey": "PowerMixology",
+          "description": "",
+          "descriptionKey": "PowerMixologyDesc",
+          "icon": "Mixology",
+          "type": "ActiveGeneralSkill",
+          "typeId": "5c5102af-b391-45de-a7dd-42c60cd583e7",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Mixology",
+          "parameterFields": [
+            "_Effect",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        }
+      ],
+      "passive": [
+        {
+          "id": "d9c647ea-63c3-4ff1-936f-06280d7cd51e",
+          "integerId": 245,
+          "name": "Bodyguard",
+          "nameKey": "PassiveBodyguard",
+          "description": "",
+          "descriptionKey": "PassiveBodyguardDesc",
+          "icon": "Bodyguard",
+          "type": "PassiveNecromancerSkill",
+          "typeId": "cfaee0e2-87ae-4f1b-b97f-08785e07c3e5",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Bodyguard",
+          "parameterFields": [
+            "_ReducedCritDamageTaken",
+            "_NearbyActors"
+          ]
+        },
+        {
+          "id": "44a87166-cd26-44ca-903b-4281129c030f",
+          "integerId": 243,
+          "name": "AccumulatingShadows",
+          "nameKey": "PassiveAccumulatingShadows",
+          "description": "",
+          "descriptionKey": "PassiveAccumulatingShadowsDesc",
+          "icon": "AccumulatingShadows2",
+          "type": "PassiveNecromancerSkill",
+          "typeId": "cfaee0e2-87ae-4f1b-b97f-08785e07c3e5",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "AccumulatingShadows",
+          "parameterFields": [
+            "_MaxStacks",
+            "_ShadowBoltDamageIncrease",
+            "_ShadowBoltTimeWindow"
+          ]
+        },
+        {
+          "id": "c7966ab6-c278-4a5b-9437-fde501d39bba",
+          "integerId": 249,
+          "name": "Pillaging",
+          "nameKey": "PassivePillaging",
+          "description": "",
+          "descriptionKey": "PassivePillagingDesc",
+          "icon": "Pillaging",
+          "type": "PassiveNecromancerSkill",
+          "typeId": "cfaee0e2-87ae-4f1b-b97f-08785e07c3e5",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Pillaging",
+          "parameterFields": [
+            "_MinionMagicFindIncrease",
+            "_AdditionalIronDropChance"
+          ]
+        },
+        {
+          "id": "5314d587-bd84-4818-8ff8-8117f1635d01",
+          "integerId": 247,
+          "name": "BoneArmor",
+          "nameKey": "PassiveBoneArmor",
+          "description": "",
+          "descriptionKey": "PassiveBoneArmorDesc",
+          "icon": "BoneArmor",
+          "type": "PassiveNecromancerSkill",
+          "typeId": "cfaee0e2-87ae-4f1b-b97f-08785e07c3e5",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "BoneArmor",
+          "parameterFields": [
+            "_PhysicalDamageReductionBonus",
+            "_DamageTakenAsPhysical"
+          ]
+        },
+        {
+          "id": "99aab558-5a6e-4562-9159-0c806f04772e",
+          "integerId": 251,
+          "name": "DarkMagic",
+          "nameKey": "PassiveDarkMagic",
+          "description": "",
+          "descriptionKey": "PassiveDarkMagicDesc",
+          "icon": "DarkMagic",
+          "type": "PassiveNecromancerSkill",
+          "typeId": "cfaee0e2-87ae-4f1b-b97f-08785e07c3e5",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "DarkMagic",
+          "parameterFields": [
+            "_ManaGainedOnKill",
+            "_ManaCostReduction"
+          ]
+        },
+        {
+          "id": "f7634ea9-826e-4a2f-b797-d6efe28b4d6a",
+          "integerId": 253,
+          "name": "GiftOfTheVampire",
+          "nameKey": "PassiveGiftOfTheVampire",
+          "description": "",
+          "descriptionKey": "PassiveGiftOfTheVampireDesc",
+          "icon": "GiftOfTheVampire",
+          "type": "PassiveNecromancerSkill",
+          "typeId": "cfaee0e2-87ae-4f1b-b97f-08785e07c3e5",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "GiftOfTheVampire",
+          "parameterFields": [
+            "_MinionLeechGainPercent",
+            "_LifeLeechBonus"
+          ]
+        },
+        {
+          "id": "0e0447f2-9211-4a40-b18b-1a2cde0996c4",
+          "integerId": 255,
+          "name": "MasterSummoner",
+          "nameKey": "PassiveMasterSummoner",
+          "description": "",
+          "descriptionKey": "PassiveMasterSummonerDesc",
+          "icon": "MasterSummoner",
+          "type": "PassiveNecromancerSkill",
+          "typeId": "cfaee0e2-87ae-4f1b-b97f-08785e07c3e5",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "MasterSummoner",
+          "parameterFields": [
+            "_MinionLifeBonus",
+            "_MinionDamageBonus"
+          ]
+        },
+        {
+          "id": "3995a33c-c8ab-42c3-ac33-b31363931ad2",
+          "integerId": 257,
+          "name": "Reanimator",
+          "nameKey": "PassiveReanimator",
+          "description": "",
+          "descriptionKey": "PassiveReanimatorDesc",
+          "icon": "Reanimator",
+          "type": "PassiveNecromancerSkill",
+          "typeId": "cfaee0e2-87ae-4f1b-b97f-08785e07c3e5",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Reanimator",
+          "parameterFields": [
+            "_ChanceToReanimateFallenMinion",
+            "_ReanimatedMinionLifePercent"
+          ]
+        },
+        {
+          "id": "b4c44e2d-e002-4eb5-8bc1-a40a90869344",
+          "integerId": 259,
+          "name": "VileTouch",
+          "nameKey": "PassiveVileTouch",
+          "description": "",
+          "descriptionKey": "PassiveVileTouchDesc",
+          "icon": "VileTouch",
+          "type": "PassiveNecromancerSkill",
+          "typeId": "cfaee0e2-87ae-4f1b-b97f-08785e07c3e5",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "VileTouch",
+          "parameterFields": [
+            "_MorePoisonDamage",
+            "_PoisonChanceOnHit"
+          ]
+        },
+        {
+          "id": "7b8baf33-9e62-45aa-afa4-0a1296bfb7c8",
+          "integerId": 263,
+          "name": "WandMaster",
+          "nameKey": "PassiveWandMaster",
+          "description": "",
+          "descriptionKey": "PassiveWandMasterDesc",
+          "icon": "WandMaster",
+          "type": "PassiveNecromancerSkill",
+          "typeId": "cfaee0e2-87ae-4f1b-b97f-08785e07c3e5",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "WandMaster",
+          "parameterFields": [
+            "_MoreDamageWithWands"
+          ]
+        }
+      ],
+      "tactics": [
+        {
+          "id": "4896efa7-01e4-439c-93a3-63a3f2a3a6be",
+          "integerId": 7,
+          "name": "RunAwayTactic",
+          "nameKey": "TacticRunAwayTactic",
+          "description": "Flee from your battle, running to the nearest edge while gaining 25% movement speed.",
+          "descriptionKey": "TacticRunAwayTacticDesc",
+          "icon": "RunAway",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        },
+        {
+          "id": "c8b3e697-51ca-4348-9967-8d3bb301b4ee",
+          "integerId": 8,
+          "name": "AggressiveTactic",
+          "nameKey": "TacticAggressiveTactic",
+          "description": "Charge new opponents head-on.\r\nHas a chance to enter game events like rampage.",
+          "descriptionKey": "TacticAggressiveTacticDesc",
+          "icon": "Aggressive",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        },
+        {
+          "id": "d0377f9b-c2d5-4063-9e5d-0e0a3a9bb6c2",
+          "integerId": 9,
+          "name": "DefensiveTactic",
+          "nameKey": "TacticDefensiveTactic",
+          "description": "Retain a defensive stance.\r\nGame events and modes will not be triggered.",
+          "descriptionKey": "TacticDefensiveTacticDesc",
+          "icon": "Defensive",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        }
+      ],
+      "poolSize": {
+        "abilities": 2,
+        "active": 12,
+        "passive": 10,
+        "tactics": 3
+      }
+    },
+    "7": {
+      "name": "Priest",
+      "hidden": true,
+      "image": "Badge_priest",
+      "abilities": [
+        {
+          "id": "e5583b4d-1048-4185-895e-9044f40c8e98",
+          "integerId": 26,
+          "name": "DefaultAttackProxy",
+          "nameKey": "PowerDefaultAttackProxy",
+          "description": "Attack your target for {0}% weapon damage",
+          "descriptionKey": "PowerDefaultAttackProxyDesc",
+          "icon": "MeleeWeaponSwing",
+          "type": "GeneralAbility",
+          "typeId": "85275007-41f1-499f-a194-842bdfe8f16c",
+          "tags": [
+            "Attack"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            }
+          ],
+          "implementedBy": "DefaultAttackProxy",
+          "parameterFields": [
+            "_WeaponDamageMult_k__BackingField",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        },
+        {
+          "id": "41915df7-92e3-4bc8-8029-980ad6f47a87",
+          "integerId": 60,
+          "name": "Interact",
+          "nameKey": null,
+          "description": "",
+          "descriptionKey": null,
+          "icon": "1",
+          "type": "GeneralAbility",
+          "typeId": "85275007-41f1-499f-a194-842bdfe8f16c",
+          "tags": [
+            "AllowOutsideCombat"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": true,
+          "placeholders": [],
+          "implementedBy": "Interact",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_awaiter_5__2"
+          ]
+        }
+      ],
+      "active": [
+        {
+          "id": "65fa3710-8fbc-47bb-a97e-3c1465fbc0cb",
+          "integerId": 43,
+          "name": "TownPortal",
+          "nameKey": "PowerTownPortal",
+          "description": "",
+          "descriptionKey": "PowerTownPortalDesc",
+          "icon": "TownPortal",
+          "type": "SpecialSkill",
+          "typeId": "94b88dd1-5084-4dd6-8ca1-16971d3eaa4e",
+          "tags": [
+            "AllowOutsideCombat",
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "TownPortal",
+          "parameterFields": [
+            "_Duration",
+            "_WasAutoMovingBeforeCreatingTp",
+            "_TownPortal",
+            "__u__1",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ]
+        }
+      ],
+      "tactics": [
+        {
+          "id": "4896efa7-01e4-439c-93a3-63a3f2a3a6be",
+          "integerId": 7,
+          "name": "RunAwayTactic",
+          "nameKey": "TacticRunAwayTactic",
+          "description": "Flee from your battle, running to the nearest edge while gaining 25% movement speed.",
+          "descriptionKey": "TacticRunAwayTacticDesc",
+          "icon": "RunAway",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        },
+        {
+          "id": "c8b3e697-51ca-4348-9967-8d3bb301b4ee",
+          "integerId": 8,
+          "name": "AggressiveTactic",
+          "nameKey": "TacticAggressiveTactic",
+          "description": "Charge new opponents head-on.\r\nHas a chance to enter game events like rampage.",
+          "descriptionKey": "TacticAggressiveTacticDesc",
+          "icon": "Aggressive",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        },
+        {
+          "id": "d0377f9b-c2d5-4063-9e5d-0e0a3a9bb6c2",
+          "integerId": 9,
+          "name": "DefensiveTactic",
+          "nameKey": "TacticDefensiveTactic",
+          "description": "Retain a defensive stance.\r\nGame events and modes will not be triggered.",
+          "descriptionKey": "TacticDefensiveTacticDesc",
+          "icon": "Defensive",
+          "type": "WarriorTactics",
+          "typeId": "68fb1176-147f-48f9-bce0-614759e29337",
+          "tags": [],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": null,
+          "parameterFields": []
+        }
+      ],
+      "poolSize": {
+        "abilities": 2,
+        "active": 1,
+        "tactics": 3
+      }
+    }
+  },
+  "kits": {
+    "0": {
+      "name": "Warrior",
+      "active": [
+        {
+          "id": "b023f390-a08f-43cf-bd00-52f8b84e6697",
+          "integerId": 94,
+          "name": "Slam",
+          "nameKey": "PowerSlam",
+          "description": "Slam the ground in front of you to deal {0} weapon damage to enemies in a line.",
+          "descriptionKey": "PowerSlamDesc",
+          "icon": "Slam",
+          "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
+          "tags": [
+            "Offensive",
+            "Attack",
+            "Melee"
+          ],
+          "requiredWeapons": [
+            "50a6a6b8-d1df-4dac-b485-73d47c2fc7b9",
+            "6c7b4db0-f658-4d60-83f6-528d181c51ac",
+            "82fe9274-2cac-4d5b-a6ee-1fd4027047c8",
+            "783e1ec4-56f2-4a76-8ff6-649381a9a4df",
+            "a5944f8e-fb64-400c-bb64-9896bd344ac6"
+          ],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            }
+          ],
+          "implementedBy": "Slam",
+          "parameterFields": [
+            "_TargetPositions",
+            "_JointTargetList",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ],
           "effect": "strike",
           "multiplier": 2.2,
           "cooldown": 4.0,
           "radius": 0.0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
-          "buffSeconds": 0.0
+          "buffSeconds": 0.0,
+          "slot": 0,
+          "confidence": "provisional-behaviour"
+        },
+        {
+          "id": "73428deb-2a35-433d-8e67-39d188aa6395",
+          "integerId": 1,
+          "name": "Might",
+          "nameKey": "PowerMight",
+          "description": "Increases your strength by {0}% for {1} seconds.",
+          "descriptionKey": "PowerMightDesc",
+          "icon": "Might",
+          "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
+          "tags": [
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "duration"
+            }
+          ],
+          "implementedBy": "Might",
+          "parameterFields": [
+            "_Effect",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ],
+          "effect": "rally",
+          "multiplier": 0.0,
+          "cooldown": 16.0,
+          "radius": 0.0,
+          "healPercent": 0.15,
+          "buffBonus": 0.25,
+          "buffSeconds": 6.0,
+          "slot": 1,
+          "confidence": "provisional-behaviour"
+        },
+        {
+          "id": "1b17cf95-4a7c-4965-8311-0c88ee192976",
+          "integerId": 71,
+          "name": "Pounce",
+          "nameKey": "PowerPounce",
+          "description": "",
+          "descriptionKey": "PowerPounceDesc",
+          "icon": "Pounce",
+          "type": "ActiveWarriorSkill",
+          "typeId": "79846477-f472-481c-a12d-df5b04adff37",
+          "tags": [
+            "Movement",
+            "Offensive",
+            "Spell"
+          ],
+          "requiredWeapons": [],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Pounce",
+          "parameterFields": [
+            "_Mover",
+            "_HasStarted",
+            "_IsWaitingForCooldown",
+            "OnLanded",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_targetPos_5__2"
+          ],
+          "effect": "strike",
+          "multiplier": 2.2,
+          "cooldown": 4.0,
+          "radius": 0.0,
+          "healPercent": 0.0,
+          "buffBonus": 0.0,
+          "buffSeconds": 0.0,
+          "slot": 2,
+          "confidence": "provisional-behaviour"
         }
       ],
       "passive": {
@@ -84,20 +3762,35 @@
         "descriptionKey": "PassiveOverkillDesc",
         "icon": "Overkill",
         "type": "PassiveWarriorSkill",
+        "typeId": "dc97015b-8dc6-48bd-b896-22d952224ab1",
         "tags": [],
-        "confidence": "provisional-behaviour",
+        "requiredWeapons": [],
+        "isTargetedCast": false,
+        "isHidden": false,
+        "placeholders": [
+          {
+            "index": 0,
+            "role": "percent"
+          }
+        ],
+        "implementedBy": "Overkill",
+        "parameterFields": [
+          "_OverkillChance",
+          "_IsChaining"
+        ],
         "effect": "might",
         "offenseBonus": 0.12,
-        "healthBonus": 0.0
+        "healthBonus": 0.0,
+        "confidence": "provisional-behaviour"
       },
       "activePoolSize": 13,
-      "passivePoolSize": 11
+      "passivePoolSize": 11,
+      "tacticsPoolSize": 3
     },
     "4": {
       "name": "Hunter",
       "active": [
         {
-          "slot": 0,
           "id": "612b785d-b1ef-4c20-8a63-ca86593ad078",
           "integerId": 31,
           "name": "RapidFire",
@@ -106,20 +3799,49 @@
           "descriptionKey": "PowerRapidFireDesc",
           "icon": "RapidFire",
           "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
           "tags": [
             "Spell"
           ],
-          "confidence": "provisional-behaviour",
+          "requiredWeapons": [
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2",
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "duration"
+            },
+            {
+              "index": 2,
+              "role": "duration"
+            }
+          ],
+          "implementedBy": "RapidFire",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ],
           "effect": "rally",
           "multiplier": 0.0,
           "cooldown": 16.0,
           "radius": 0.0,
           "healPercent": 0.15,
           "buffBonus": 0.25,
-          "buffSeconds": 6.0
+          "buffSeconds": 6.0,
+          "slot": 0,
+          "confidence": "provisional-behaviour"
         },
         {
-          "slot": 1,
           "id": "41c64b4a-71c4-4ccf-9029-99031eff524c",
           "integerId": 29,
           "name": "ArrowRain",
@@ -128,21 +3850,61 @@
           "descriptionKey": "PowerArrowRainDesc",
           "icon": "ArrowRain",
           "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
           "tags": [
             "Offensive",
             "Spell"
           ],
-          "confidence": "provisional-behaviour",
+          "requiredWeapons": [
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2",
+            "ff51ac65-8123-4cc9-80c2-5e2eb86a790f",
+            "76343887-08b7-470c-aa3c-fcb8f1d7c1c2"
+          ],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "radius"
+            },
+            {
+              "index": 1,
+              "role": "duration"
+            },
+            {
+              "index": 2,
+              "role": "damage"
+            },
+            {
+              "index": 3,
+              "role": "duration"
+            },
+            {
+              "index": 4,
+              "role": "mana"
+            }
+          ],
+          "implementedBy": "ArrowRain",
+          "parameterFields": [
+            "_Duration_k__BackingField",
+            "_BaseDelayBetweenArrows_k__BackingField",
+            "_VariationDelayBetweenArrows_k__BackingField",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ],
           "effect": "nova",
           "multiplier": 1.4,
           "cooldown": 8.0,
           "radius": 5.5,
           "healPercent": 0.0,
           "buffBonus": 0.0,
-          "buffSeconds": 0.0
+          "buffSeconds": 0.0,
+          "slot": 1,
+          "confidence": "provisional-behaviour"
         },
         {
-          "slot": 2,
           "id": "1c974013-86f3-405f-ac7c-2cfb568dcf35",
           "integerId": 41,
           "name": "SummonWolf",
@@ -151,19 +3913,52 @@
           "descriptionKey": "PowerSummonWolfDesc",
           "icon": "SummonWolf",
           "type": "ActiveHunterSkill",
+          "typeId": "8ed3b37f-7653-4715-b4a0-09931b116aca",
           "tags": [
             "AllowInTown",
             "Minion",
             "Spell"
           ],
-          "confidence": "provisional-behaviour",
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "percent"
+            },
+            {
+              "index": 1,
+              "role": "percent"
+            },
+            {
+              "index": 2,
+              "role": "percent"
+            }
+          ],
+          "implementedBy": "SummonWolf",
+          "parameterFields": [
+            "_MoreMonstersPercent",
+            "_MinionHealthPercent",
+            "_MinionDamagePercent",
+            "_IsResummoning",
+            "_MinionHealthPercent",
+            "_MinionDamagePercent",
+            "_IsKillingMinion",
+            "_Wolf",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ],
           "effect": "rally",
           "multiplier": 0.0,
           "cooldown": 18.0,
           "radius": 0.0,
-          "healPercent": 0.28,
+          "healPercent": 0.2,
           "buffBonus": 0.15,
-          "buffSeconds": 6.0
+          "buffSeconds": 8.0,
+          "slot": 2,
+          "confidence": "provisional-behaviour"
         }
       ],
       "passive": {
@@ -175,20 +3970,31 @@
         "descriptionKey": "PassivePrecisionDesc",
         "icon": "Precision",
         "type": "PassiveHunterSkill",
+        "typeId": "f8f10f01-711c-4a5a-93f4-316d91cc2512",
         "tags": [],
-        "confidence": "provisional-behaviour",
+        "requiredWeapons": [],
+        "isTargetedCast": false,
+        "isHidden": false,
+        "placeholders": [],
+        "implementedBy": "Precision",
+        "parameterFields": [
+          "_AttackRatingBonus",
+          "_MaxStacks",
+          "_ShouldRemove"
+        ],
         "effect": "might",
         "offenseBonus": 0.1,
-        "healthBonus": 0.05
+        "healthBonus": 0.05,
+        "confidence": "provisional-behaviour"
       },
       "activePoolSize": 14,
-      "passivePoolSize": 11
+      "passivePoolSize": 11,
+      "tacticsPoolSize": 3
     },
     "5": {
       "name": "Mage",
       "active": [
         {
-          "slot": 0,
           "id": "d3f2c295-0a0e-4008-800f-9f9a0f2eaa99",
           "integerId": 49,
           "name": "ChainLightning",
@@ -197,22 +4003,59 @@
           "descriptionKey": "PowerChainLightningDesc",
           "icon": "ChainLightning",
           "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
           "tags": [
             "Offensive",
             "Lightning",
             "Spell"
           ],
-          "confidence": "provisional-behaviour",
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            },
+            {
+              "index": 1,
+              "role": "percent"
+            },
+            {
+              "index": 2,
+              "role": "count"
+            },
+            {
+              "index": 3,
+              "role": "duration"
+            },
+            {
+              "index": 4,
+              "role": "mana"
+            }
+          ],
+          "implementedBy": "ChainLightning",
+          "parameterFields": [
+            "_DamageReductionPerJump",
+            "_ForcedEmptyMasteries",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ],
           "effect": "nova",
           "multiplier": 1.4,
           "cooldown": 8.0,
           "radius": 5.5,
           "healPercent": 0.0,
           "buffBonus": 0.0,
-          "buffSeconds": 0.0
+          "buffSeconds": 0.0,
+          "slot": 0,
+          "confidence": "provisional-behaviour"
         },
         {
-          "slot": 1,
           "id": "35c1fa86-53ff-4558-a0e6-6cc30bb91892",
           "integerId": 130,
           "name": "Teleport",
@@ -221,21 +4064,41 @@
           "descriptionKey": "PowerTeleportDesc",
           "icon": "Teleport",
           "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
           "tags": [
             "Movement",
             "Spell"
           ],
-          "confidence": "provisional-behaviour",
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Teleport",
+          "parameterFields": [
+            "_Mover",
+            "_UserOriginalScale",
+            "_TeleportMovementSpeedMultiplier",
+            "_HasStarted",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_targetPos_5__2",
+            "_couldUpdatePosition_5__3"
+          ],
           "effect": "strike",
           "multiplier": 2.2,
           "cooldown": 4.0,
           "radius": 0.0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
-          "buffSeconds": 0.0
+          "buffSeconds": 0.0,
+          "slot": 1,
+          "confidence": "provisional-behaviour"
         },
         {
-          "slot": 2,
           "id": "cb4943e8-5ea1-4956-a757-989a316b1ec7",
           "integerId": 45,
           "name": "IceNova",
@@ -244,20 +4107,56 @@
           "descriptionKey": "PowerIceNovaDesc",
           "icon": "IceNova",
           "type": "ActiveMageSkill",
+          "typeId": "a07d9061-1627-4f4e-b8c3-50803f04ede1",
           "tags": [
             "Offensive",
             "Spell",
             "AoE",
             "Cold"
           ],
-          "confidence": "provisional-behaviour",
+          "requiredWeapons": [
+            "30a8ccec-b2e1-47b1-a994-9690861a0044",
+            "29a035df-a9f8-4bed-8fc1-5442344ac648"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [
+            {
+              "index": 0,
+              "role": "damage"
+            },
+            {
+              "index": 1,
+              "role": "radius"
+            },
+            {
+              "index": 2,
+              "role": "duration"
+            },
+            {
+              "index": 3,
+              "role": "duration"
+            },
+            {
+              "index": 4,
+              "role": "mana"
+            }
+          ],
+          "implementedBy": "IceNova",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ],
           "effect": "nova",
           "multiplier": 1.4,
           "cooldown": 8.0,
           "radius": 5.5,
           "healPercent": 0.0,
           "buffBonus": 0.0,
-          "buffSeconds": 0.0
+          "buffSeconds": 0.0,
+          "slot": 2,
+          "confidence": "provisional-behaviour"
         }
       ],
       "passive": {
@@ -269,20 +4168,34 @@
         "descriptionKey": "PassiveHubrisDesc",
         "icon": "Hubris",
         "type": "PassiveMageSkill",
+        "typeId": "552f9ebf-1246-4bb9-8390-b208b4047ff0",
         "tags": [],
-        "confidence": "provisional-behaviour",
+        "requiredWeapons": [],
+        "isTargetedCast": false,
+        "isHidden": false,
+        "placeholders": [
+          {
+            "index": 0,
+            "role": "percent"
+          }
+        ],
+        "implementedBy": "Hubris",
+        "parameterFields": [
+          "_IntelligenceBonus"
+        ],
         "effect": "might",
         "offenseBonus": 0.12,
-        "healthBonus": 0.0
+        "healthBonus": 0.0,
+        "confidence": "provisional-behaviour"
       },
       "activePoolSize": 12,
-      "passivePoolSize": 10
+      "passivePoolSize": 10,
+      "tacticsPoolSize": 3
     },
     "6": {
       "name": "Necromancer",
       "active": [
         {
-          "slot": 0,
           "id": "855a7060-826a-4555-8e6a-5da982e3e60f",
           "integerId": 213,
           "name": "SummonSkeleton",
@@ -291,22 +4204,33 @@
           "descriptionKey": "PowerSummonSkeletonDesc",
           "icon": "SummonSkeleton",
           "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
           "tags": [
             "AllowInTown",
             "Spell",
             "Minion"
           ],
-          "confidence": "provisional-behaviour",
-          "effect": "strike",
-          "multiplier": 2.2,
-          "cooldown": 4.0,
+          "requiredWeapons": [],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "SummonSkeleton",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId"
+          ],
+          "effect": "rally",
+          "multiplier": 0.0,
+          "cooldown": 18.0,
           "radius": 0.0,
-          "healPercent": 0.0,
-          "buffBonus": 0.0,
-          "buffSeconds": 0.0
+          "healPercent": 0.2,
+          "buffBonus": 0.15,
+          "buffSeconds": 8.0,
+          "slot": 0,
+          "confidence": "provisional-behaviour"
         },
         {
-          "slot": 1,
           "id": "763ab376-e1bd-44ab-b4fa-8b03c6d03b16",
           "integerId": 235,
           "name": "AstralWalk",
@@ -315,21 +4239,36 @@
           "descriptionKey": "PowerAstralWalkDesc",
           "icon": "AstralWalk",
           "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
           "tags": [
             "Defensive",
             "Spell"
           ],
-          "confidence": "provisional-behaviour",
+          "requiredWeapons": [],
+          "isTargetedCast": true,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "AstralWalk",
+          "parameterFields": [
+            "_Mover",
+            "_UserOriginalScale",
+            "_HasStarted",
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "_couldUpdatePosition_5__2"
+          ],
           "effect": "strike",
           "multiplier": 2.2,
           "cooldown": 4.0,
           "radius": 0.0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
-          "buffSeconds": 0.0
+          "buffSeconds": 0.0,
+          "slot": 1,
+          "confidence": "provisional-behaviour"
         },
         {
-          "slot": 2,
           "id": "fedd69aa-1a57-4f55-aae2-b6676fb5eea2",
           "integerId": 221,
           "name": "Shadowbolt",
@@ -338,18 +4277,34 @@
           "descriptionKey": "PowerShadowboltDesc",
           "icon": "ShadowBolt",
           "type": "ActiveNecromancerSkill",
+          "typeId": "1a17f595-3a51-4475-86f7-507191449367",
           "tags": [
             "Spell",
             "Offensive"
           ],
-          "confidence": "provisional-behaviour",
+          "requiredWeapons": [
+            "29a035df-a9f8-4bed-8fc1-5442344ac648",
+            "30a8ccec-b2e1-47b1-a994-9690861a0044"
+          ],
+          "isTargetedCast": false,
+          "isHidden": false,
+          "placeholders": [],
+          "implementedBy": "Shadowbolt",
+          "parameterFields": [
+            "__1__state",
+            "__2__current",
+            "__l__initialThreadId",
+            "__7__wrap1"
+          ],
           "effect": "strike",
           "multiplier": 1.9,
           "cooldown": 5.0,
           "radius": 0.0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
-          "buffSeconds": 0.0
+          "buffSeconds": 0.0,
+          "slot": 2,
+          "confidence": "provisional-behaviour"
         }
       ],
       "passive": {
@@ -361,14 +4316,25 @@
         "descriptionKey": "PassiveBodyguardDesc",
         "icon": "Bodyguard",
         "type": "PassiveNecromancerSkill",
+        "typeId": "cfaee0e2-87ae-4f1b-b97f-08785e07c3e5",
         "tags": [],
-        "confidence": "provisional-behaviour",
+        "requiredWeapons": [],
+        "isTargetedCast": false,
+        "isHidden": false,
+        "placeholders": [],
+        "implementedBy": "Bodyguard",
+        "parameterFields": [
+          "_ReducedCritDamageTaken",
+          "_NearbyActors"
+        ],
         "effect": "might",
         "offenseBonus": 0.1,
-        "healthBonus": 0.05
+        "healthBonus": 0.05,
+        "confidence": "provisional-behaviour"
       },
       "activePoolSize": 12,
-      "passivePoolSize": 10
+      "passivePoolSize": 10,
+      "tacticsPoolSize": 3
     }
   }
 }

@@ -78,7 +78,34 @@ export interface ClassPowers {
 
 export interface PowersDocument {
   contentVersion: string;
-  classes: Record<string, ClassPowers>;
+  slotTypes: Record<string, string>;
+  tags: Record<string, string>;
+  types: Record<string, { name: string; parentId?: string; eligibleSlots?: number[] }>;
+  classes: Record<string, ClassPool>;
+  kits: Record<string, ClassPowers>;
+}
+
+export interface PooledPower {
+  id: string;
+  integerId: number;
+  name: string;
+  description: string;
+  icon: string | null;
+  type: string;
+  tags: string[];
+  placeholders: { index: number; role: string }[];
+  implementedBy?: string | null;
+  parameterFields?: string[];
+}
+
+export interface ClassPool {
+  name: string;
+  hidden: boolean;
+  active?: PooledPower[];
+  passive?: PooledPower[];
+  tactics?: PooledPower[];
+  abilities?: PooledPower[];
+  poolSize?: Record<string, number>;
 }
 
 let cached: ContentManifest | null = null;

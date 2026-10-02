@@ -52,9 +52,10 @@ curl -s -b cookies .../characters/$CID/inventory                                
 
 之前 M2 的 3 个技能（Strike/Nova/Rally）与被动 +10% 是占位，**与 Nordicandia 不一致**。现已从解密定义提取真实技能：
 
-* `tools/web-content/export_powers.py` 读取 `Powers.json`(159) / `PowerTypes.json` / `PowerTags.json` / `CharacterClasses.json`，导出：
-  * `web/public/assets/powers.json`（客户端展示：名称/描述/图标/类型/标签）；
-  * `server/Nordicandia.Server/WebApi/Powers.generated.cs`（服务端行为表）。
+* `tools/web-content/export_powers.py` 读取 `Powers.json`(159) / `PowerTypes.json` / `PowerTags.json` / `CharacterClasses.json` / `PowerMasteries.json`(297) 与 IL2CPP dump，导出：
+  * `web/public/assets/powers.json`（客户端展示：全职业池 + 选定技能组）；
+  * `tools/web-content/generated/powers_full.json`（完整参考：全部技能 + 全部精通 + 实现类/字段映射）；
+  * `server/Nordicandia.Server/WebApi/Powers.generated.cs`（服务端行为表）。详见 [POWERS_EXTRACTED.md](POWERS_EXTRACTED.md)。
 * 每个可见职业取 `ActiveSkills` 前 3 个 + `PassiveSkills` 第 1 个：
 
 | 职业 | 主动（真实名） | 被动 |
@@ -66,7 +67,7 @@ curl -s -b cookies .../characters/$CID/inventory                                
 
 * **名称/描述/图标/标签/类型 = ClientVerified**；**效果归类与数值（multiplier/cooldown/radius/heal/buff）= Provisional**，因为客户端的技能执行代码尚未复原。每个真实技能被映射到最接近的原型（`strike`/`nova`/`rally`）。
 * 服务端 `CombatInstance` 改为按职业加载 `SkillProfile`/`PassiveProfile`，快照返回真实技能名与各自冷却；客户端按钮显示真实技能名，被动显示在 HUD。
-* 尚未提取：技能等级/精通（`PowerMasteries` 297 条）、法力消耗、技能选择/加点、每级数值。
+* 尚未提取（需二进制反汇编）：技能/精通的具体数值、法力系统、技能加点规则。完整清单见 [POWERS_EXTRACTED.md](POWERS_EXTRACTED.md)。
 
 ## 与计划的差异修复（上一轮）
 

@@ -79,7 +79,7 @@ function setStatus(text: string, error = false): void {
 async function boot(): Promise<void> {
   content = await loadContent();
   try {
-    powers = (await loadPowers()).classes;
+    powers = (await loadPowers()).kits;
   } catch (error) {
     console.warn("powers.json unavailable", error);
   }
