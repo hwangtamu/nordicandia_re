@@ -200,16 +200,20 @@ Disassembler / Disassembler_Advanced / Disassembler_Auto_Discard
 
 ```
 GetHighestChanceToSucceed(highestMergeRarity) = highestMergeRarity < 10 ? 0.25 : 1.0
+ProcessSuccessRate(highestMergeRarity, overheatSlider)
+    = overheatSlider * 0.1 * GetHighestChanceToSucceed(highestMergeRarity)
 GetNumIronCost(sourceItems, essence, targetItem, baseCost, qualitySlider, overheatSlider)
     = (int)(overheatSlider * baseCost * 0.5)
 ```
-- `ProcessSuccessRate` 在此基础上再乘 `值 × 常量(0x…838) × 上述几率`（`FMUL`），并在参考实现中设置
-  `secondarySuccessRate`。
+- `ProcessSuccessRate`（`HeatingStone`，`0x02CCEE88`）先 `GetMergableAffixes`，取可合并词缀中最高的
+  `Affix.Rarity`，再 `overheatSlider × 0.1 ×（rarity>9 ? 1.0 : 0.25）`；常量 `0.1` 位于 `.so 0x1387838`。
+  参考实现还设置 `secondarySuccessRate`。
 - `getCostFromRarity(rarity) = 1`，例外：`8→2`、`9→3`、`10→10`（`MOV/CINC/CSEL` 链）。
 - `GetNumItemsCost = (目标可合并词缀数相关值) × overheatSliderValue`（`Multiply`；与 Titansteel 同式，
   内部先 `CraftingUtils.GetMergableAffixes` 取可合并词缀数）。
 
-**已实现**：`GameStore.CraftEssenceItem` 消耗 Iron（`GetNumIronCost`）、按 `GetHighestChanceToSucceed` 掷骰、
+**已实现**：`GameStore.CraftEssenceItem` 消耗 Iron（`GetNumIronCost`）、按 `ProcessSuccessRate`
+（`overheat × 0.1 × GetHighestChanceToSucceed`，overheat 夹在 0–10）掷骰、
 成功时把源物品词缀并入目标：逐个比较 `DefinitionIntegerId`，已存在且新词缀稀有度更高时替换，否则在
 容量内新增（容量仍为 web 近似 `2 + clamp(rarity/3, 0, 4)`）。词缀目录（`affix_catalog.json`）现在带有
 客户端 `ItemAffixDefinition.GenerationType`（1=Prefix、2=Suffix、0=Implicit、4=Set），生成的物品词缀在

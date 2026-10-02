@@ -1464,6 +1464,10 @@ public sealed class GameStore : IDisposable
     /// 8 -> 2, 9 -> 3, 10 -> 10.</summary>
     private static int CostFromRarity(int rarity) => rarity switch { 8 => 2, 9 => 3, 10 => 10, _ => 1 };
 
+    /// <summary>Overheat slider range and the per-point success factor from
+    /// <c>HeatingStone.ProcessSuccessRate</c> (the literal 0.1 at .so 0x1387838).</summary>
+    private const double OverheatSuccessFactor = 0.1;
+
     /// <summary>Consumes <paramref name="amount"/> across the given stacks (attribute 19 holds the
     /// stack size); stacks emptied to zero are removed.</summary>
     private static void ConsumeStacks(List<SerializedItem> items, List<SerializedItem> stacks, int amount)
@@ -1484,7 +1488,9 @@ public sealed class GameStore : IDisposable
     /// <summary>
     /// Simplified essence craft. Consumes Iron using the recovered cost formula
     /// (<c>GetNumIronCost = (int)(overheat * getCostFromRarity(rarity) * 0.5)</c>) and rolls the
-    /// recovered success chance (<c>GetHighestChanceToSucceed = rarity &lt; 10 ? 0.25 : 1.0</c>).
+    /// recovered success chance (<c>HeatingStone.ProcessSuccessRate</c>: <c>overheat * 0.1 *
+    /// GetHighestChanceToSucceed</c>, where <c>GetHighestChanceToSucceed = rarity &lt; 10 ? 0.25 : 1.0</c>
+    /// and the rarity is the highest among the merge participants).
     /// On success the source items' affixes are merged onto the Blacksmith target item, up to its
     /// rarity's affix capacity. The merge is a documented simplification of the client's affix
     /// pipeline (which uses full item generation); the cost and success formulas are ClientVerified.
@@ -1511,7 +1517,10 @@ public sealed class GameStore : IDisposable
             return (false, false, null, sourceSnapshot, 0);
         ConsumeStacks(items, ironStacks, ironCost);
 
-        var rate = rarity < 10 ? 0.25 : 1.0;
+        // ClientVerified HeatingStone.ProcessSuccessRate: overheat * 0.1 * GetHighestChanceToSucceed.
+        var highestMergeRarity = Math.Max(rarity, sources.Max(s => (int)s.BaseRarity));
+        var rate = Math.Clamp(Math.Clamp(overheatSliderValue, 0, 10) * OverheatSuccessFactor *
+            (highestMergeRarity > 9 ? 1.0 : 0.25), 0.0, 1.0);
         var success = Random.Shared.NextDouble() <= rate;
         if (success)
         {

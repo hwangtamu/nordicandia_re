@@ -535,6 +535,26 @@ static class AcceptanceRegressionTests
             Check(sourceIds.Any(id => !originalIds.Contains(id) && resultIds.Contains(id)),
                 "merge: at least one new source affix is adopted");
 
+            // ProcessSuccessRate: overheat * 0.1 means overheat 0 can never succeed.
+            store.SetItemSlots(owner, characterId, new Dictionary<Guid, ItemSlotTypes>
+            {
+                [mergeTarget.Id] = ItemSlotTypes.Inventory,
+            });
+            var zeroTarget = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 73));
+            zeroTarget.Slot = ItemSlotTypes.Blacksmith_TargetItem;
+            var zeroSource = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 74));
+            zeroSource.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            var iron3 = new List<SerializedItem>();
+            for (var i = 0; i < 10; i++) iron3.Add(Iron());
+            store.GrantItems(owner, characterId, new List<SerializedItem> { zeroTarget, zeroSource }.Concat(iron3).ToList());
+            var (zOk, zSuccess, _, _, _) = store.CraftEssenceItem(owner, characterId, 0);
+            Check(zOk && !zSuccess, "essence: overheat 0 cannot succeed (ProcessSuccessRate)");
+            store.SetItemSlots(owner, characterId, new Dictionary<Guid, ItemSlotTypes>
+            {
+                [zeroTarget.Id] = ItemSlotTypes.Inventory,
+                [zeroSource.Id] = ItemSlotTypes.Inventory,
+            });
+
             // Relic craft: consume a source relic and bless the target's affixes.
             var relicTarget = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 7));
             relicTarget.Slot = ItemSlotTypes.Blacksmith_TargetItem;
