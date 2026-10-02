@@ -271,6 +271,59 @@ public static class WebApiEndpoints
         // Merchant catalog + barter trade (the offered items move into the YourTrade slot).
         group.MapGet("/merchant/catalog", () => Results.Ok(MerchantCatalog.Products));
 
+        // Buy a merchant product with silver or opals.
+        group.MapPost("/characters/{id:guid}/npc/buy", (HttpContext ctx, Guid id, NpcBuyRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var product = MerchantCatalog.Find(req?.CatalogItemId ?? Guid.Empty);
+            if (product is null) return Results.BadRequest(new { error = "unknown_catalog_item" });
+            var useOpals = req?.UseOpals == true;
+            var price = useOpals ? product.Value.OpalPrice : product.Value.SilverPrice;
+            try
+            {
+                var purchase = GameStore.Instance.BuyMerchantItem(user.UserId, id,
+                    MerchantCatalog.CreateItem(product.Value), price, useOpals);
+                return Results.Ok(new { purchased = true, newBalance = purchase.NewBalance, inventory = CombatRegistry.Instance.Inventory(user.UserId, id) });
+            }
+            catch (Grpc.Core.RpcException ex)
+            {
+                return Results.BadRequest(new { error = ex.Status.Detail });
+            }
+        });
+
+        // Attribute allocation: read the current allocation/totals and apply pending deltas.
+        group.MapGet("/characters/{id:guid}/attributes", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(CombatRegistry.Instance.Attributes(user.UserId, id));
+        });
+
+        group.MapPost("/characters/{id:guid}/attributes", (HttpContext ctx, Guid id, WebAllocateAttributesRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var allocation = new SharedNet.Api.AllocateCharacterAttributesRequest
+            {
+                CharacterId = id,
+                Strength = req?.Strength ?? 0,
+                Dexterity = req?.Dexterity ?? 0,
+                Intelligence = req?.Intelligence ?? 0,
+                Vitality = req?.Vitality ?? 0,
+                Constitution = req?.Constitution ?? 0,
+                Agility = req?.Agility ?? 0,
+                Mindpower = req?.Mindpower ?? 0,
+            };
+            var (available, _, _, _, _, _, _, _) = GameStore.Instance.ApplyAllocatedAttributes(user.UserId, id, allocation);
+            return Results.Ok(new { available, attributes = CombatRegistry.Instance.Attributes(user.UserId, id) });
+        });
+
         group.MapPost("/characters/{id:guid}/npc/trade", (HttpContext ctx, Guid id, NpcTradeRequest req) =>
         {
             var user = ResolveUser(ctx);

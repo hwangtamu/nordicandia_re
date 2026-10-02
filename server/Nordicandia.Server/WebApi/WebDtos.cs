@@ -52,3 +52,19 @@ public sealed record WebSnapshot(
     int InventoryCount,
     IReadOnlyList<int> ActiveSkillIds,
     DateTime ServerTimeUtc);
+
+/// <summary>Attribute allocation view: remaining points, the allocated values per attribute, and
+/// the engine's synthesised totals.</summary>
+public sealed record WebAttributes(
+    double Available,
+    double StrengthAllocated, double DexterityAllocated, double IntelligenceAllocated, double VitalityAllocated,
+    double ConstitutionAllocated, double AgilityAllocated, double MindpowerAllocated,
+    double Strength, double Dexterity, double Intelligence, double Vitality, double Constitution,
+    double Agility, double Mindpower);
+
+/// <summary>Attribute allocation request (pending deltas, matching the client's preview).</summary>
+public sealed record WebAllocateAttributesRequest(
+    double Strength = 0, double Dexterity = 0, double Intelligence = 0, double Vitality = 0,
+    double Constitution = 0, double Agility = 0, double Mindpower = 0);
+
+public sealed record NpcBuyRequest(Guid CatalogItemId, bool UseOpals = false);

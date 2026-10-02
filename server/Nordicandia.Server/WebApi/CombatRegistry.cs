@@ -208,6 +208,22 @@ public sealed class CombatRegistry
         }
     }
 
+    /// <summary>Attribute allocation view: the remaining pool, the allocated values, and the
+    /// synthesised totals the engine derives from them.</summary>
+    public WebAttributes Attributes(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            var stored = store.GetAttributeMap(owner, characterId);
+            var eval = CharacterAttributeEngine.Instance.Evaluate(stored);
+            var (available, str, dex, intel, vit, con, agi, mind) = store.GetAttributeAllocation(owner, characterId);
+            return new WebAttributes(available,
+                str, dex, intel, vit, con, agi, mind,
+                eval.Strength, eval.Dexterity, eval.Intelligence, eval.Vitality, eval.Constitution, eval.Agility, eval.Mindpower);
+        }
+    }
+
     /// <summary>Mastery tree view for the class's three active skills.</summary>
     public IReadOnlyList<SkillMasteryView> MasteryView(Guid owner, Guid characterId)
     {

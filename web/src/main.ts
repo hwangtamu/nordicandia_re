@@ -1,5 +1,5 @@
 import "./style.css";
-import { api, CharacterSummary, CombatEnvelope, LootDrop, MerchantProduct, newCommandId, NpcResult, SkillMasteryView, Snapshot, WebInventory } from "./api";
+import { api, AttributeKey, CharacterSummary, CombatEnvelope, LootDrop, MerchantProduct, newCommandId, NpcResult, SkillMasteryView, Snapshot, WebAttributes, WebInventory } from "./api";
 import { loadContent, loadPowers, ContentManifest, ClassPowers, className } from "./content";
 import { HudState, World } from "./game";
 
@@ -52,6 +52,13 @@ app.innerHTML = `
       </div>
       <div id="powers-items" class="inv-items"></div>
     </div>
+    <div id="attrs" class="inventory hidden">
+      <div class="inv-head">
+        <span>Attributes <small id="attrs-points"></small></span>
+        <button id="attrs-close" class="icon-btn">×</button>
+      </div>
+      <div id="attrs-items" class="inv-items"></div>
+    </div>
     <div id="npc" class="npc-panel hidden">
       <div class="npc-head">
         <span id="npc-title">Blacksmith</span>
@@ -74,6 +81,7 @@ app.innerHTML = `
       <button id="hud-powers" class="skill alt">Skills <small>P</small></button>
       <button id="hud-smith" class="skill alt">Blacksmith <small>K</small></button>
       <button id="hud-merchant" class="skill alt">Merchant <small>M</small></button>
+      <button id="hud-attrs" class="skill alt">Attrs <small>C</small></button>
     </div>
     <div id="hud-message" class="toast"></div>
   </div>
@@ -277,6 +285,22 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
   document.getElementById("hud-merchant")!.addEventListener("click", () => openNpc("merchant"));
   document.getElementById("npc-close")!.addEventListener("click", () => closeNpc());
   npcActionEl.addEventListener("click", () => void npcActionHandler?.());
+  document.getElementById("hud-attrs")!.addEventListener("click", () => toggleAttrs());
+  document.getElementById("attrs-close")!.addEventListener("click", () => toggleAttrs(false));
+  attrsRefreshHandler = async (): Promise<void> => {
+    try { attributesCache = await api.attributes(characterId); renderAttrs(); }
+    catch (error) { console.warn("attributes failed", error); }
+  };
+  allocateHandler = async (key: AttributeKey): Promise<void> => {
+    try {
+      const result = await api.allocateAttributes(characterId, { [key]: 1 });
+      attributesCache = result.attributes;
+      renderAttrs();
+      await refreshInventory();
+    } catch (error) {
+      console.warn("allocate failed", error);
+    }
+  };
   const keyToSkill: Record<string, number> = { Digit1: 0, Digit2: 1, Digit3: 2, Numpad1: 0, Numpad2: 1, Numpad3: 2 };
   window.addEventListener("keydown", (event) => {
     if (event.code === "Space") {
@@ -301,6 +325,9 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
     } else if (event.code === "KeyM") {
       event.preventDefault();
       openNpc("merchant");
+    } else if (event.code === "KeyC") {
+      event.preventDefault();
+      toggleAttrs();
     } else if (event.code === "Escape") {
       closeNpc();
     }
@@ -309,13 +336,13 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
 
 function toggleBag(force?: boolean): void {
   const show = force ?? inventoryEl.classList.contains("hidden");
-  if (show) { powersEl.classList.add("hidden"); closeNpc(); }
+  if (show) { powersEl.classList.add("hidden"); closeNpc(); attrsEl.classList.add("hidden"); }
   inventoryEl.classList.toggle("hidden", !show);
 }
 
 function togglePowers(force?: boolean): void {
   const show = force ?? powersEl.classList.contains("hidden");
-  if (show) { inventoryEl.classList.add("hidden"); closeNpc(); }
+  if (show) { inventoryEl.classList.add("hidden"); closeNpc(); attrsEl.classList.add("hidden"); }
   powersEl.classList.toggle("hidden", !show);
 }
 
@@ -380,7 +407,7 @@ function renderInventory(inventory: WebInventory, onToggle: (itemId: string, equ
   }
 }
 
-type NpcTab = "smelt" | "disassemble" | "essence" | "relic" | "socket" | "add-socket" | "trade";
+type NpcTab = "smelt" | "disassemble" | "essence" | "relic" | "socket" | "add-socket" | "trade" | "buy";
 
 const npcEl = document.getElementById("npc") as HTMLDivElement;
 const npcTitleEl = document.getElementById("npc-title") as HTMLElement;
@@ -399,6 +426,46 @@ let inventoryCache: WebInventory | null = null;
 let npcCharacterId = "";
 let npcActionHandler: (() => Promise<void>) | null = null;
 
+const attrsEl = document.getElementById("attrs") as HTMLDivElement;
+const attrsItemsEl = document.getElementById("attrs-items") as HTMLDivElement;
+const attrsPointsEl = document.getElementById("attrs-points") as HTMLElement;
+let attributesCache: WebAttributes | null = null;
+let attrsRefreshHandler: (() => Promise<void>) | null = null;
+let allocateHandler: ((key: AttributeKey) => Promise<void>) | null = null;
+
+const ATTR_LABELS: [AttributeKey, string][] = [
+  ["strength", "Strength"], ["dexterity", "Dexterity"], ["intelligence", "Intelligence"],
+  ["vitality", "Vitality"], ["constitution", "Constitution"], ["agility", "Agility"], ["mindpower", "Mindpower"],
+];
+
+function toggleAttrs(force?: boolean): void {
+  const show = force ?? attrsEl.classList.contains("hidden");
+  if (show) { inventoryEl.classList.add("hidden"); powersEl.classList.add("hidden"); closeNpc(); void attrsRefreshHandler?.(); }
+  attrsEl.classList.toggle("hidden", !show);
+}
+
+function renderAttrs(): void {
+  const a = attributesCache;
+  if (!a) { attrsItemsEl.innerHTML = `<div class="inv-empty">Loading…</div>`; return; }
+  attrsPointsEl.textContent = `${a.available} points`;
+  attrsItemsEl.innerHTML = "";
+  const record = a as unknown as Record<string, number>;
+  for (const [key, label] of ATTR_LABELS) {
+    const allocated = record[`${key}Allocated`] ?? 0;
+    const total = record[key] ?? 0;
+    const row = document.createElement("div");
+    row.className = "inv-row";
+    row.innerHTML = `<span class="inv-name">${label}</span><span class="inv-stats">alloc ${allocated} · total ${Math.round(total)}</span>`;
+    const button = document.createElement("button");
+    button.className = "inv-btn";
+    button.textContent = "+";
+    button.disabled = a.available <= 0;
+    button.addEventListener("click", () => void allocateHandler?.(key));
+    row.appendChild(button);
+    attrsItemsEl.appendChild(row);
+  }
+}
+
 const NPc_TABS: Record<string, { label: string; hint: string }> = {
   smelt: { label: "Smelting", hint: "Smelt selected materials into Steel (essence → steel value)." },
   disassemble: { label: "Disassemble", hint: "Disassemble selected equipment into Iron." },
@@ -407,11 +474,13 @@ const NPc_TABS: Record<string, { label: string; hint: string }> = {
   socket: { label: "Socket", hint: "Pick a gem and a target; inserts the gem into a free socket." },
   "add-socket": { label: "Add Socket", hint: "Pick a target; consumes Titansteel to add a socket." },
   trade: { label: "Trade", hint: "Offer items for the selected merchant product." },
+  buy: { label: "Buy", hint: "Purchase a product with silver or opals." },
 };
 
 function openNpc(mode: "smith" | "merchant"): void {
   npcMode = mode;
-  npcTab = mode === "smith" ? "smelt" : "trade";
+  npcTab = mode === "smith" ? "smelt" : "buy";
+  attrsEl.classList.add("hidden");
   npcPicked.clear();
   npcTarget = null;
   npcStatusEl.textContent = "";
@@ -434,7 +503,7 @@ function renderNpc(): void {
   npcTitleEl.textContent = npcMode === "smith" ? "Blacksmith" : "Merchant";
   const tabs: NpcTab[] = npcMode === "smith"
     ? ["smelt", "disassemble", "essence", "relic", "socket", "add-socket"]
-    : ["trade"];
+    : ["buy", "trade"];
   if (!tabs.includes(npcTab)) npcTab = tabs[0];
   npcTabsEl.innerHTML = tabs.map((t) =>
     `<button class="npc-tab${t === npcTab ? " active" : ""}" data-tab="${t}">${NPc_TABS[t].label}</button>`).join("");
@@ -443,6 +512,21 @@ function renderNpc(): void {
   npcHintEl.textContent = NPc_TABS[npcTab].hint;
 
   const items = inventoryCache?.items ?? [];
+  npcActionEl.style.display = npcTab === "buy" ? "none" : "";
+  if (npcTab === "buy") {
+    npcBodyEl.innerHTML = npcCatalog.length === 0
+      ? `<div class="inv-empty">Loading merchant stock…</div>`
+      : npcCatalog.map((p) => `<div class="npc-row">
+        <span class="npc-slot">${p.silverPrice}s · ${p.opalPrice}o</span>
+        <span class="inv-name">${escapeHtml(p.name)}</span>
+        <button class="inv-btn" data-buy="silver" data-id="${p.itemId}">Buy</button>
+        <button class="inv-btn" data-buy="opal" data-id="${p.itemId}">Buy (o)</button></div>`).join("");
+    for (const button of Array.from(npcBodyEl.querySelectorAll("[data-buy]"))) {
+      const el = button as HTMLButtonElement;
+      el.addEventListener("click", () => void buyProduct(el.dataset.id!, el.dataset.buy === "opal"));
+    }
+    return;
+  }
   if (npcTab === "trade") {
     npcBodyEl.innerHTML = npcCatalog.length === 0
       ? `<div class="inv-empty">Loading merchant stock…</div>`
@@ -484,6 +568,19 @@ function onClickItem(itemId: string): void {
     npcPicked.add(itemId);
   }
   renderNpc();
+}
+
+async function buyProduct(catalogItemId: string, useOpals: boolean): Promise<void> {
+  if (!npcCharacterId) return;
+  npcStatusEl.textContent = "Buying…";
+  try {
+    const result = await api.buy(npcCharacterId, catalogItemId, useOpals);
+    inventoryCache = result.inventory;
+    npcStatusEl.textContent = `Bought · balance ${result.newBalance}`;
+    renderNpc();
+  } catch (error) {
+    npcStatusEl.textContent = `Failed: ${error instanceof Error ? error.message : String(error)}`;
+  }
 }
 
 function showLoot(loot: LootDrop[]): void {

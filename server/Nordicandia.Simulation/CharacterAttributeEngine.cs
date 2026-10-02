@@ -147,7 +147,10 @@ public sealed class CharacterAttributeEngine
 
         public double Strength => Resolve("Strength_Total");
         public double Dexterity => Resolve("Dexterity_Total");
+        public double Intelligence => Resolve("Intelligence_Total");
+        public double Vitality => Resolve("Vitality_Total");
         public double Constitution => Resolve("Constitution_Total");
         public double Agility => Resolve("Agility_Total");
+        public double Mindpower => Resolve("Mindpower_Total");
     }
 }

@@ -1719,6 +1719,29 @@ public sealed class GameStore : IDisposable
             return (available, str, dex, intel, vit, con, agi, mind);
         });
 
+    /// <summary>Current attribute allocation: the remaining point pool plus the allocated values
+    /// for each of the seven attributes (web attribute panel).</summary>
+    public (double Available, double Strength, double Dexterity, double Intelligence, double Vitality,
+        double Constitution, double Agility, double Mindpower) GetAttributeAllocation(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var c = Owned(state, owner, characterId);
+            var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+            var str = GetAttribute(data, AttrStrengthAllocated) ?? 0;
+            var dex = GetAttribute(data, AttrDexterityAllocated) ?? 0;
+            var intel = GetAttribute(data, AttrIntelligenceAllocated) ?? 0;
+            var vit = GetAttribute(data, AttrVitalityAllocated) ?? 0;
+            var con = GetAttribute(data, AttrConstitutionAllocated) ?? 0;
+            var agi = GetAttribute(data, AttrAgilityAllocated) ?? 0;
+            var mind = GetAttribute(data, AttrMindpowerAllocated) ?? 0;
+            var level = Unpack<CharacterHeaderDto>(c.Header).Level;
+            var totalPoints = Math.Max(0, (level - 1) * 5);
+            var available = Math.Max(0, totalPoints - (str + dex + intel + vit + con + agi + mind));
+            return (available, str, dex, intel, vit, con, agi, mind);
+        }
+    }
+
     /// <summary>Raises the persisted world progression ("area level") when a run completes.
     /// Stores the unlocked tier, the per-tier waypoint record, and (for Helheim) the depth.</summary>
     /// <summary>Persists a skill-bar / passive-tree assignment. The client sends the

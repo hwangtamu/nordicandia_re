@@ -256,13 +256,39 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ offerItemIds, catalogItemId, stacks }),
     }),
+
+  buy: (characterId: string, catalogItemId: string, useOpals: boolean) =>
+    request<{ purchased: boolean; newBalance: number; inventory: WebInventory }>(`/characters/${characterId}/npc/buy`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ catalogItemId, useOpals }),
+    }),
+
+  attributes: (characterId: string) => request<WebAttributes>(`/characters/${characterId}/attributes`),
+
+  allocateAttributes: (characterId: string, deltas: Partial<Record<AttributeKey, number>>) =>
+    request<{ available: number; attributes: WebAttributes }>(`/characters/${characterId}/attributes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(deltas),
+    }),
 };
+
+export type AttributeKey = "strength" | "dexterity" | "intelligence" | "vitality" | "constitution" | "agility" | "mindpower";
+
+export interface WebAttributes {
+  available: number;
+  strengthAllocated: number; dexterityAllocated: number; intelligenceAllocated: number; vitalityAllocated: number;
+  constitutionAllocated: number; agilityAllocated: number; mindpowerAllocated: number;
+  strength: number; dexterity: number; intelligence: number; vitality: number; constitution: number; agility: number; mindpower: number;
+}
 
 export interface MerchantProduct {
   itemId: string;
   name: string;
   definitionIntegerId: number;
   silverPrice: number;
+  opalPrice: number;
 }
 
 export interface NpcResult {

@@ -28,6 +28,7 @@ static class AcceptanceRegressionTests
         SetBonusesAndEquipRequirements();
         UniqueAndSetItemDefinitions();
         NpcSlotPlacementSmelts();
+        AttributeAllocationAccumulates();
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
@@ -329,6 +330,28 @@ static class AcceptanceRegressionTests
             Check(tConsumed.Items.Count == 1, "trade: consumes the offered items");
             Check(tInventory.Items.Any(i => i.DefinitionIntegerId == 606), "trade: grants the product stack");
             Check(store.GetItems(owner, characterId).All(i => i.Slot != ItemSlotTypes.YourTrade), "trade: empties the trade window");
+        }
+    }
+
+    private static void AttributeAllocationAccumulates()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var (store, _, owner, characterId, _) = Create("r13", 100);
+        using (store)
+        {
+            store.ApplyAllocatedAttributes(owner, characterId, new SharedNet.Api.AllocateCharacterAttributesRequest
+            {
+                CharacterId = characterId, Strength = 1, Dexterity = 2,
+            });
+            var first = store.GetAttributeAllocation(owner, characterId);
+            Check(first.Strength == 1 && first.Dexterity == 2, "attributes: allocation stores the pending deltas");
+            store.ApplyAllocatedAttributes(owner, characterId, new SharedNet.Api.AllocateCharacterAttributesRequest
+            {
+                CharacterId = characterId, Strength = 3,
+            });
+            var second = store.GetAttributeAllocation(owner, characterId);
+            Check(second.Strength == 4, "attributes: a second allocation adds to (not overwrites) the first");
+            Check(second.Available >= 0, "attributes: the available pool never goes negative");
         }
     }
 

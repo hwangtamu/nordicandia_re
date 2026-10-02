@@ -69,16 +69,28 @@ try {
   await page.waitForTimeout(1200);
   const merchantTitle = await page.textContent("#npc-title");
   const merchantRows = await page.$$eval("#npc-body .npc-row", (rows) => rows.length);
+  const buyButtons = await page.$$eval("#npc-body [data-buy]", (rows) => rows.length);
+  await page.click("#npc-close");
+
+  // Attribute panel.
+  await page.click("#hud-attrs");
+  await page.waitForSelector("#attrs:not([hidden])", { timeout: 5000 });
+  await page.waitForTimeout(1000);
+  const attrRows = await page.$$eval("#attrs-items .inv-row", (rows) => rows.length);
+  const attrPoints = await page.textContent("#attrs-points");
 
   await page.screenshot({ path: out });
 
   console.log(`smith: ${smithTitle} tabs=[${smithTabs.join(", ")}]`);
   console.log(`add-socket hint: ${addSocketHint}`);
-  console.log(`merchant: ${merchantTitle} products=${merchantRows}`);
+  console.log(`merchant: ${merchantTitle} products=${merchantRows} buyButtons=${buyButtons}`);
+  console.log(`attributes: rows=${attrRows} points=${attrPoints}`);
   console.log(`screenshot: ${out}`);
   const realErrors = errors.filter((e) => !e.includes("favicon"));
   if (smithTabs.length < 6) throw new Error("Blacksmith should expose its six tabs");
   if (merchantRows < 1) throw new Error("Merchant catalog did not render");
+  if (buyButtons < 2) throw new Error("Merchant Buy tab should offer silver and opal purchases");
+  if (attrRows !== 7) throw new Error("Attribute panel should list the seven attributes");
   if (realErrors.length) throw new Error("browser errors:\n" + realErrors.join("\n"));
   console.log("PASS npc smoke");
 } finally {
