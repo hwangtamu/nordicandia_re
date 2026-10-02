@@ -11,7 +11,7 @@ M0 是决策门槛：验证素材导出、网页读取测试角色、以及最�
 | 网页客户端 | `web/src/`：Babylon 3D 地城 + 头像 token、相机、点击移动、自动索敌/攻击、技能、伤害飘字、HUD、在线快照 |
 | 战斗规则 | `server/Nordicandia.Simulation/`：`Progression`（已校准）、`CombatModel`（Provisional）、可复现随机数 |
 | 网页 API | `server/Nordicandia.Server/WebApi/`：`/api/web/v1` 会话、角色、快照 |
-| 测试 | `server/Nordicandia.StoreTests/WebM0Tests.cs`、`web/tests/m0-smoke.mjs`、内容校验脚本 |
+| 测试 | `server/Nordicandia.StoreTests/WebM0Tests.cs`、`web/tests/smoke.mjs`、内容校验脚本 |
 
 审计与规则详情见 [M0_ASSET_AUDIT.md](M0_ASSET_AUDIT.md)、[M0_RULES.md](M0_RULES.md)。
 

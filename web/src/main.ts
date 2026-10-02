@@ -1,5 +1,5 @@
 import "./style.css";
-import { api, CharacterSummary, Snapshot } from "./api";
+import { api, CharacterSummary, CombatState, newCommandId, Snapshot } from "./api";
 import { loadContent, ContentManifest, className } from "./content";
 import { HudState, World } from "./game";
 
@@ -119,10 +119,34 @@ async function startGame(snapshot: Snapshot, character: CharacterSummary): Promi
   (document.getElementById("hud-class") as HTMLElement).textContent =
     `${className(content, character.class)} · Lv ${snapshot.level}`;
 
-  world = new World(canvas, overlay, snapshot, content, renderHud);
-  await world.start(snapshot);
+  const sendCommand = async (type: "move" | "skill", x = 0, z = 0): Promise<void> => {
+    const expectedVersion = world?.currentVersion() ?? 0;
+    try {
+      const result = await api.command(character.characterId, newCommandId(), expectedVersion, type, x, z);
+      world?.pushState(result.snapshot);
+      if (!result.applied && result.reason === "cooldown") showHudMessage("Skill on cooldown");
+      if (!result.applied && result.reason === "no_target") showHudMessage("No target in range");
+    } catch (error) {
+      console.warn("command failed", error);
+    }
+  };
 
-  document.getElementById("hud-skill")!.addEventListener("click", () => world?.useSkill());
+  const initial: CombatState = await api.state(character.characterId);
+  world = new World(canvas, overlay, content, snapshot.race, {
+    onHud: renderHud,
+    pollState: async () => {
+      try {
+        return await api.state(character.characterId);
+      } catch {
+        return null;
+      }
+    },
+    moveTo: (x, z) => void sendCommand("move", x, z),
+    castSkill: () => void sendCommand("skill"),
+  });
+  await world.start(initial);
+
+  document.getElementById("hud-skill")!.addEventListener("click", () => void sendCommand("skill"));
   const autoButton = document.getElementById("hud-auto") as HTMLButtonElement;
   autoButton.addEventListener("click", () => {
     const on = world?.toggleAutoMove() ?? false;
@@ -131,7 +155,7 @@ async function startGame(snapshot: Snapshot, character: CharacterSummary): Promi
   window.addEventListener("keydown", (event) => {
     if (event.code === "Space") {
       event.preventDefault();
-      world?.useSkill();
+      void sendCommand("skill");
     } else if (event.code === "Tab") {
       event.preventDefault();
       const on = world?.toggleAutoMove() ?? false;
@@ -155,9 +179,19 @@ function renderHud(hudState: HudState): void {
   (document.getElementById("hud-opals") as HTMLElement).textContent = String(hudState.opals);
   (document.getElementById("hud-kills") as HTMLElement).textContent = String(hudState.monsterKills);
   (document.getElementById("hud-alive") as HTMLElement).textContent = String(hudState.monstersAlive);
+  const skillButton = document.getElementById("hud-skill") as HTMLButtonElement;
+  skillButton.textContent = hudState.skillReady ? "Skill" : "Cooling…";
+  skillButton.classList.toggle("disabled", !hudState.skillReady);
   const message = document.getElementById("hud-message") as HTMLElement;
   message.textContent = hudState.message;
   message.classList.toggle("show", Boolean(hudState.message));
+}
+
+function showHudMessage(text: string): void {
+  const message = document.getElementById("hud-message") as HTMLElement;
+  message.textContent = text;
+  message.classList.add("show");
+  window.setTimeout(() => message.classList.remove("show"), 1500);
 }
 
 function capitalize(value: string): string {

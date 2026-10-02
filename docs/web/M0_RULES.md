@@ -27,11 +27,12 @@ LevelForExperience(x) = floor(round(((x - 350) / 20)^(1/1.7), 6))   // 闭式反
 Mitigation(def, atkLevel) = def / (def + 50 + 10 * max(1, atkLevel))
 ExpectedDamage            = max(1, Offense * skillMult * (1 - Mitigation)) * critFactor
 Damage                    = max(1, mitigated * jitter * critFactor)      // hit
-MaxHealth(level)          = 50 + 10 * level^1.5                          // Provisional
+MaxHealth(level)          = 100 + 40 * max(1, level)                      // Provisional
 ExperienceReward(level)   = (8 * level^1.35 + 5) * multiplier            // Provisional
 ```
 
-* 实现：`server/Nordicandia.Simulation/CombatModel.cs`（权威）与 `web/src/combat.ts`（客户端镜像）。
+* 实现：`server/Nordicandia.Simulation/CombatModel.cs`（权威）与 `web/src/combat.ts`（仅供人读的镜像）。
+* M1 起战斗由服务端 `CombatInstance` 以固定步长（0.05 s）模拟并持久化，浏览器只发送意图、渲染状态；`web/src/combat.ts` 不再是运行路径。
 * 随机数：`CombatRandom`（SplitMix64，固定种子可复现）。固定样本见下。
 
 ### 固定样本（回归基线）

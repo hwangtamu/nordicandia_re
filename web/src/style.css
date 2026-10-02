@@ -128,6 +128,7 @@ html, body, #app {
 .skill small { display: block; font-size: 10px; color: #8fa3a8; }
 .skill:hover { filter: brightness(1.2); }
 .skill.alt { border-color: rgba(90, 140, 180, 0.4); }
+.skill.disabled { opacity: 0.5; cursor: default; }
 
 .toast {
   position: absolute; bottom: 82px; left: 50%; transform: translateX(-50%);

@@ -63,9 +63,9 @@ public readonly record struct DamageResult(double Damage, bool Critical, RuleCon
 /// </summary>
 public static class CombatModel
 {
-    /// <summary>Provisional health curve: 50 at level 1, growing with level.</summary>
+    /// <summary>Provisional health curve: 100 at level 1, growing 40/level.</summary>
     public static double MaxHealth(CombatantStats stats, RuleConfidence confidence = RuleConfidence.Provisional)
-        => 50.0 + 10.0 * Math.Pow(stats.Level, 1.5);
+        => 100.0 + 40.0 * Math.Max(1, stats.Level);
 
     /// <summary>
     /// Provisional mitigation: armor scales against an attacker-level baseline so low

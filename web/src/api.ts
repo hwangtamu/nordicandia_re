@@ -44,6 +44,38 @@ export interface Snapshot {
 
 const BASE = "/api/web/v1";
 
+export interface MonsterState {
+  index: number;
+  name: string;
+  level: number;
+  x: number;
+  z: number;
+  hp: number;
+  maxHp: number;
+  alive: boolean;
+}
+
+export interface CombatState {
+  version: number;
+  playerX: number;
+  playerZ: number;
+  playerHp: number;
+  playerMaxHp: number;
+  playerLevel: number;
+  experience: number;
+  silver: number;
+  opals: number;
+  kills: number;
+  skillCooldown: number;
+  monsters: MonsterState[];
+}
+
+let commandCounter = 0;
+export function newCommandId(): string {
+  commandCounter += 1;
+  return `${Date.now().toString(36)}-${commandCounter}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const headers = new Headers(init.headers);
   if (init.method && init.method !== "GET") headers.set("X-Nord-Request", "1");
@@ -95,4 +127,20 @@ export const api = {
     }),
 
   snapshot: (characterId: string) => request<Snapshot>(`/characters/${characterId}/snapshot`),
+
+  state: (characterId: string) => request<CombatState>(`/characters/${characterId}/state`),
+
+  command: (
+    characterId: string,
+    commandId: string,
+    expectedVersion: number,
+    type: "move" | "skill",
+    x = 0,
+    z = 0,
+  ) =>
+    request<{ applied: boolean; reason: string; snapshot: CombatState }>(`/characters/${characterId}/commands`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ commandId, expectedVersion, type, x, z }),
+    }),
 };

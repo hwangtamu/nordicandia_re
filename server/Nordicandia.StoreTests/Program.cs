@@ -47,3 +47,5 @@ BlessingPersistenceTests.Run();
 ConsumeItemTests.Run();
 
 WebM0Tests.Run();
+
+CombatInstanceTests.Run();

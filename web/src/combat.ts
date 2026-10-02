@@ -1,6 +1,6 @@
-// Client-side mirror of server/Nordicandia.Simulation/CombatModel. The M0 web loop resolves
-// hits locally for responsiveness, but every value here is tagged Provisional: the
-// authoritative, calibrated formulas will live on the server (see docs/web/M0_RULES.md).
+// Reference mirror of server/Nordicandia.Simulation/CombatModel. As of M1 the browser is
+// render-only: all damage/XP is resolved by the authoritative server instance, so this file
+// is kept as the human-readable spec of the provisional formulas until they are calibrated.
 
 export const XP_ADD = 350;
 export const XP_MULT = 20;

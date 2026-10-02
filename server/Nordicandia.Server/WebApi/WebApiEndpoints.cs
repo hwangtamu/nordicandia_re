@@ -112,7 +112,7 @@ public static class WebApiEndpoints
             {
                 // Provisional starter values until the web client reports client-accurate
                 // stats, or the character is imported from an existing save.
-                Offense = 10, Defense = 5, Recovery = 2,
+                Offense = 35, Defense = 20, Recovery = 6,
             };
             var header = GameStore.Instance.CreateCharacter(user.UserId, new CreateCharacterRequest
             {
@@ -131,6 +131,35 @@ public static class WebApiEndpoints
             if (user is null) return Results.Unauthorized();
             if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
             return Results.Ok(GameStore.Instance.ProjectWebSnapshot(user.UserId, id));
+        });
+
+        // ----- authoritative combat (M1) -----
+
+        // Poll the live combat state. Advances the simulation by the real elapsed time
+        // and persists any progression, so a refresh starts from the last authoritative XP.
+        group.MapGet("/characters/{id:guid}/state", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(CombatRegistry.Instance.Advance(user.UserId, id));
+        });
+
+        // Apply one action intent. The command id makes retries idempotent; expectedVersion
+        // is the snapshot version the client acted on.
+        group.MapPost("/characters/{id:guid}/commands", (HttpContext ctx, Guid id, WebCommandEnvelope envelope) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            if (envelope is null)
+                return Results.BadRequest(new { error = "invalid_command" });
+
+            var command = new WebCommandRequest(envelope.Type, envelope.X, envelope.Z);
+            var (applied, reason, snapshot) = CombatRegistry.Instance.ApplyCommand(
+                user.UserId, id, envelope.CommandId, envelope.ExpectedVersion, command);
+            return Results.Ok(new { applied, reason, snapshot });
         });
     }
 
@@ -187,3 +216,5 @@ public static class WebApiEndpoints
 public sealed record DevSessionRequest(string Name);
 
 public sealed record WebCreateCharacterRequest(string DisplayName, int Class, int Race, int GameMode);
+
+public sealed record WebCommandEnvelope(string CommandId, long ExpectedVersion, string Type, double X = 0, double Z = 0);
