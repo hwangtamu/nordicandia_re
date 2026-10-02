@@ -87,6 +87,21 @@ public static class LootTable
         }
 
         var suffix = string.Concat(chosen.Select(a => " " + AffixName(a.Index)));
+        var itemAttributes = new Dictionary<int, GameAttributeValue>
+        {
+            [AttrOffense] = Value(offense),
+            [AttrDefense] = Value(defense),
+            [AttrRecovery] = Value(recovery),
+            [AttrEquipSlot] = Value(drop.Slot),
+        };
+        // Main-hand weapons carry the client's Item_Weapon_Physical_Damage_Min/Delta_MainHand
+        // (507/508) so the recovered Weapon_*_MainHand_Total formulas drive the damage. The
+        // magnitudes reuse the provisional offence roll (documented Provisional).
+        if (drop.Slot == 12)
+        {
+            itemAttributes[507] = Value(Math.Round(offense * 0.8));
+            itemAttributes[508] = Value(Math.Round(offense * 0.4));
+        }
         var item = new SerializedItem
         {
             Id = Guid.NewGuid(),
@@ -99,13 +114,7 @@ public static class LootTable
             {
                 Values = new Dictionary<AttributeOrigin, Dictionary<int, GameAttributeValue>>
                 {
-                    [AttributeOrigin.Item] = new()
-                    {
-                        [AttrOffense] = Value(offense),
-                        [AttrDefense] = Value(defense),
-                        [AttrRecovery] = Value(recovery),
-                        [AttrEquipSlot] = Value(drop.Slot),
-                    },
+                    [AttributeOrigin.Item] = itemAttributes,
                 },
                 MultiplicativeValues = new(),
             },

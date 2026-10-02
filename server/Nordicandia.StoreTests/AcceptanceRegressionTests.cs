@@ -21,6 +21,7 @@ static class AcceptanceRegressionTests
         MissingCommandIdIsRejected();
         CombatVersionSurvivesRestart();
         WebCharacterGetsRecoveredRatings();
+        EquippedWeaponFeedsWeaponDamage();
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
@@ -280,6 +281,23 @@ static class AcceptanceRegressionTests
             Check(instance.CritChance >= 0 && !double.IsNaN(instance.CritChance), "ratings: CritChance is resolved (0 without a weapon)");
             Check(instance.LifeMax > 0, "ratings: fresh character has recovered Life_Max");
             Check(instance.ManaMax > 0, "ratings: fresh character has recovered Mana_Max");
+        }
+    }
+
+    private static void EquippedWeaponFeedsWeaponDamage()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var (store, registry, owner, characterId, _) = Create("r8", 100);
+        using (store)
+        {
+            var weapon = LootTable.CreateItem(new LootDrop(12, 5, 10, false, 999));
+            Check(LootTable.AttributeOf(weapon, 507) > 0, "weapon: main-hand carries Item_Weapon_Physical_Damage_Min");
+            store.GrantItems(owner, characterId, new List<SerializedItem> { weapon });
+            var version = registry.Advance(owner, characterId).Combat.Version;
+            registry.ApplyCommand(owner, characterId, "r8-equip", version, new WebCommandRequest("equip", ItemId: weapon.Id));
+            var instance = registry.GetOrCreate(owner, characterId);
+            Console.WriteLine($"INFO weapon: bundle={instance.Damage.Total:F1} physical={instance.Damage.Physical:F1}");
+            Check(instance.Damage.Total > 0, "weapon: equipped main-hand feeds the weapon-damage bundle");
         }
     }
 
