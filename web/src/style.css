@@ -134,6 +134,7 @@ html, body, #app {
 .hidden { display: none !important; }
 
 .stats { margin-top: 6px; font-size: 11px; color: #9fb2b6; }
+.passive { margin-top: 4px; font-size: 11px; color: #c9a24a; }
 .hud-top-right .boss { color: #e0b45a; font-weight: 700; }
 
 .loot-feed {

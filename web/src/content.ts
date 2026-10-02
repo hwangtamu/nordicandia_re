@@ -37,7 +37,52 @@ export interface ContentManifest {
   check: { avatarsAvailable: number; iconReferencesMissing: string[] };
 }
 
+export interface ActivePower {
+  slot: number;
+  id: string;
+  integerId: number;
+  name: string;
+  description: string;
+  icon: string | null;
+  type: string;
+  tags: string[];
+  effect: string;
+  multiplier: number;
+  cooldown: number;
+  radius: number;
+  healPercent: number;
+  buffBonus: number;
+  buffSeconds: number;
+}
+
+export interface PassivePower {
+  id: string;
+  integerId: number;
+  name: string;
+  description: string;
+  icon: string | null;
+  type: string;
+  tags: string[];
+  effect: string;
+  offenseBonus: number;
+  healthBonus: number;
+}
+
+export interface ClassPowers {
+  name: string;
+  active: ActivePower[];
+  passive: PassivePower;
+  activePoolSize: number;
+  passivePoolSize: number;
+}
+
+export interface PowersDocument {
+  contentVersion: string;
+  classes: Record<string, ClassPowers>;
+}
+
 let cached: ContentManifest | null = null;
+let cachedPowers: PowersDocument | null = null;
 
 export async function loadContent(): Promise<ContentManifest> {
   if (cached) return cached;
@@ -45,6 +90,14 @@ export async function loadContent(): Promise<ContentManifest> {
   if (!response.ok) throw new Error("content.json missing; run tools/web-content/export_content.py");
   cached = (await response.json()) as ContentManifest;
   return cached;
+}
+
+export async function loadPowers(): Promise<PowersDocument> {
+  if (cachedPowers) return cachedPowers;
+  const response = await fetch("/assets/powers.json");
+  if (!response.ok) throw new Error("powers.json missing; run tools/web-content/export_powers.py");
+  cachedPowers = (await response.json()) as PowersDocument;
+  return cachedPowers;
 }
 
 export function raceIcon(content: ContentManifest, raceId: number): string {

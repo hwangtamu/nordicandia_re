@@ -29,8 +29,8 @@ ExpectedDamage            = max(1, Offense * skillMult * (1 - Mitigation)) * cri
 Damage                    = max(1, mitigated * jitter * critFactor)      // hit
 MaxHealth(level)          = (100 + 40 * max(1, level)) * (1 + 0.10 passive)  // Provisional
 ExperienceReward(level)   = (8 * level^1.35 + 5) * multiplier              // Provisional
-Skills (M2)               = 0 Strike ×2.4 cd4 | 1 Nova AoE r5.5 ×1.5 cd8 | 2 Rally +30%hp & +25%off 6s cd20
-Passive (M2)              = +10% Offense, +10% MaxHealth
+Skills (M2)               = 真实职业技能：Warrior Slam/Might/Pounce、Hunter RapidFire/ArrowRain/SummonWolf、Mage ChainLightning/Teleport/IceNova、Necro SummonSkeleton/AstralWalk/Shadowbolt（名称 ClientVerified，效果参数 Provisional）
+Passive (M2)              = 真实职业被动：Overkill / Precision / Hubris / Bodyguard（效果参数 Provisional）
 Rarity weights (M2)       = Droprates.json 真实权重 F..SS（ClientVerified）
 ```
 

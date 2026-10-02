@@ -1,0 +1,374 @@
+{
+  "contentVersion": "m0-1",
+  "classes": {
+    "0": {
+      "name": "Warrior",
+      "active": [
+        {
+          "slot": 0,
+          "id": "b023f390-a08f-43cf-bd00-52f8b84e6697",
+          "integerId": 94,
+          "name": "Slam",
+          "nameKey": "PowerSlam",
+          "description": "Slam the ground in front of you to deal {0} weapon damage to enemies in a line.",
+          "descriptionKey": "PowerSlamDesc",
+          "icon": "Slam",
+          "type": "ActiveWarriorSkill",
+          "tags": [
+            "Offensive",
+            "Attack",
+            "Melee"
+          ],
+          "confidence": "provisional-behaviour",
+          "effect": "strike",
+          "multiplier": 2.2,
+          "cooldown": 4.0,
+          "radius": 0.0,
+          "healPercent": 0.0,
+          "buffBonus": 0.0,
+          "buffSeconds": 0.0
+        },
+        {
+          "slot": 1,
+          "id": "73428deb-2a35-433d-8e67-39d188aa6395",
+          "integerId": 1,
+          "name": "Might",
+          "nameKey": "PowerMight",
+          "description": "Increases your strength by {0}% for {1} seconds.",
+          "descriptionKey": "PowerMightDesc",
+          "icon": "Might",
+          "type": "ActiveWarriorSkill",
+          "tags": [
+            "Spell"
+          ],
+          "confidence": "provisional-behaviour",
+          "effect": "rally",
+          "multiplier": 0.0,
+          "cooldown": 16.0,
+          "radius": 0.0,
+          "healPercent": 0.15,
+          "buffBonus": 0.25,
+          "buffSeconds": 6.0
+        },
+        {
+          "slot": 2,
+          "id": "1b17cf95-4a7c-4965-8311-0c88ee192976",
+          "integerId": 71,
+          "name": "Pounce",
+          "nameKey": "PowerPounce",
+          "description": "",
+          "descriptionKey": "PowerPounceDesc",
+          "icon": "Pounce",
+          "type": "ActiveWarriorSkill",
+          "tags": [
+            "Movement",
+            "Offensive",
+            "Spell"
+          ],
+          "confidence": "provisional-behaviour",
+          "effect": "strike",
+          "multiplier": 2.2,
+          "cooldown": 4.0,
+          "radius": 0.0,
+          "healPercent": 0.0,
+          "buffBonus": 0.0,
+          "buffSeconds": 0.0
+        }
+      ],
+      "passive": {
+        "id": "66ba2199-7836-45c5-938e-cc6c62fb32bb",
+        "integerId": 15,
+        "name": "Overkill",
+        "nameKey": "PassiveOverkill",
+        "description": "Your melee overkill damage has {0}% chance to generate a new attack for the remaining damage on another nearby enemy.",
+        "descriptionKey": "PassiveOverkillDesc",
+        "icon": "Overkill",
+        "type": "PassiveWarriorSkill",
+        "tags": [],
+        "confidence": "provisional-behaviour",
+        "effect": "might",
+        "offenseBonus": 0.12,
+        "healthBonus": 0.0
+      },
+      "activePoolSize": 13,
+      "passivePoolSize": 11
+    },
+    "4": {
+      "name": "Hunter",
+      "active": [
+        {
+          "slot": 0,
+          "id": "612b785d-b1ef-4c20-8a63-ca86593ad078",
+          "integerId": 31,
+          "name": "RapidFire",
+          "nameKey": "PowerRapidFire",
+          "description": "Increases your attack speed by {0}% for {1} second(s).\r\n{2} second(s) cooldown.",
+          "descriptionKey": "PowerRapidFireDesc",
+          "icon": "RapidFire",
+          "type": "ActiveHunterSkill",
+          "tags": [
+            "Spell"
+          ],
+          "confidence": "provisional-behaviour",
+          "effect": "rally",
+          "multiplier": 0.0,
+          "cooldown": 16.0,
+          "radius": 0.0,
+          "healPercent": 0.15,
+          "buffBonus": 0.25,
+          "buffSeconds": 6.0
+        },
+        {
+          "slot": 1,
+          "id": "41c64b4a-71c4-4ccf-9029-99031eff524c",
+          "integerId": 29,
+          "name": "ArrowRain",
+          "nameKey": "PowerArrowRain",
+          "description": "Fire a rain of arrows towards a selected area of {0} units for {1} seconds. Deals {2}% weapon damage per second.\r\n{3} second(s) cooldown.\r\nCosts {4} mana.",
+          "descriptionKey": "PowerArrowRainDesc",
+          "icon": "ArrowRain",
+          "type": "ActiveHunterSkill",
+          "tags": [
+            "Offensive",
+            "Spell"
+          ],
+          "confidence": "provisional-behaviour",
+          "effect": "nova",
+          "multiplier": 1.4,
+          "cooldown": 8.0,
+          "radius": 5.5,
+          "healPercent": 0.0,
+          "buffBonus": 0.0,
+          "buffSeconds": 0.0
+        },
+        {
+          "slot": 2,
+          "id": "1c974013-86f3-405f-ac7c-2cfb568dcf35",
+          "integerId": 41,
+          "name": "SummonWolf",
+          "nameKey": "PowerSummonWolf",
+          "description": "Summon a wolf companion with {0}% of your health and {1}% of your damage, which defends you and helps you find {2}% more monsters.",
+          "descriptionKey": "PowerSummonWolfDesc",
+          "icon": "SummonWolf",
+          "type": "ActiveHunterSkill",
+          "tags": [
+            "AllowInTown",
+            "Minion",
+            "Spell"
+          ],
+          "confidence": "provisional-behaviour",
+          "effect": "rally",
+          "multiplier": 0.0,
+          "cooldown": 18.0,
+          "radius": 0.0,
+          "healPercent": 0.28,
+          "buffBonus": 0.15,
+          "buffSeconds": 6.0
+        }
+      ],
+      "passive": {
+        "id": "34f9e5ac-35c2-4bbf-ac4e-9a60339786d2",
+        "integerId": 33,
+        "name": "Precision",
+        "nameKey": "PassivePrecision",
+        "description": "",
+        "descriptionKey": "PassivePrecisionDesc",
+        "icon": "Precision",
+        "type": "PassiveHunterSkill",
+        "tags": [],
+        "confidence": "provisional-behaviour",
+        "effect": "might",
+        "offenseBonus": 0.1,
+        "healthBonus": 0.05
+      },
+      "activePoolSize": 14,
+      "passivePoolSize": 11
+    },
+    "5": {
+      "name": "Mage",
+      "active": [
+        {
+          "slot": 0,
+          "id": "d3f2c295-0a0e-4008-800f-9f9a0f2eaa99",
+          "integerId": 49,
+          "name": "ChainLightning",
+          "nameKey": "PowerChainLightning",
+          "description": "Cast a jolt of lightning that deals {0}% weapon damage as Lightning and then jumps to additional nearby enemies. Each jump reduces the damage by {1}%. The lightning will dissipate after {2} jumps.\r\n{3} second(s) cooldown.\r\nCosts {4} mana.",
+          "descriptionKey": "PowerChainLightningDesc",
+          "icon": "ChainLightning",
+          "type": "ActiveMageSkill",
+          "tags": [
+            "Offensive",
+            "Lightning",
+            "Spell"
+          ],
+          "confidence": "provisional-behaviour",
+          "effect": "nova",
+          "multiplier": 1.4,
+          "cooldown": 8.0,
+          "radius": 5.5,
+          "healPercent": 0.0,
+          "buffBonus": 0.0,
+          "buffSeconds": 0.0
+        },
+        {
+          "slot": 1,
+          "id": "35c1fa86-53ff-4558-a0e6-6cc30bb91892",
+          "integerId": 130,
+          "name": "Teleport",
+          "nameKey": "PowerTeleport",
+          "description": "",
+          "descriptionKey": "PowerTeleportDesc",
+          "icon": "Teleport",
+          "type": "ActiveMageSkill",
+          "tags": [
+            "Movement",
+            "Spell"
+          ],
+          "confidence": "provisional-behaviour",
+          "effect": "strike",
+          "multiplier": 2.2,
+          "cooldown": 4.0,
+          "radius": 0.0,
+          "healPercent": 0.0,
+          "buffBonus": 0.0,
+          "buffSeconds": 0.0
+        },
+        {
+          "slot": 2,
+          "id": "cb4943e8-5ea1-4956-a757-989a316b1ec7",
+          "integerId": 45,
+          "name": "IceNova",
+          "nameKey": "PowerIceNova",
+          "description": "Cast an Ice Nova that deals {0}% weapon damage as Cold and hits all enemies within {1} units, freezing them for {2} seconds.\r\n{3} second(s) cooldown.\r\nCosts {4} mana.",
+          "descriptionKey": "PowerIceNovaDesc",
+          "icon": "IceNova",
+          "type": "ActiveMageSkill",
+          "tags": [
+            "Offensive",
+            "Spell",
+            "AoE",
+            "Cold"
+          ],
+          "confidence": "provisional-behaviour",
+          "effect": "nova",
+          "multiplier": 1.4,
+          "cooldown": 8.0,
+          "radius": 5.5,
+          "healPercent": 0.0,
+          "buffBonus": 0.0,
+          "buffSeconds": 0.0
+        }
+      ],
+      "passive": {
+        "id": "e20c7cbb-3b7d-4b6d-a39d-3ac160e3d2fb",
+        "integerId": 50,
+        "name": "Hubris",
+        "nameKey": "PassiveHubris",
+        "description": "Increases your total Intelligence by {0}%",
+        "descriptionKey": "PassiveHubrisDesc",
+        "icon": "Hubris",
+        "type": "PassiveMageSkill",
+        "tags": [],
+        "confidence": "provisional-behaviour",
+        "effect": "might",
+        "offenseBonus": 0.12,
+        "healthBonus": 0.0
+      },
+      "activePoolSize": 12,
+      "passivePoolSize": 10
+    },
+    "6": {
+      "name": "Necromancer",
+      "active": [
+        {
+          "slot": 0,
+          "id": "855a7060-826a-4555-8e6a-5da982e3e60f",
+          "integerId": 213,
+          "name": "SummonSkeleton",
+          "nameKey": "PowerSummonSkeleton",
+          "description": "",
+          "descriptionKey": "PowerSummonSkeletonDesc",
+          "icon": "SummonSkeleton",
+          "type": "ActiveNecromancerSkill",
+          "tags": [
+            "AllowInTown",
+            "Spell",
+            "Minion"
+          ],
+          "confidence": "provisional-behaviour",
+          "effect": "strike",
+          "multiplier": 2.2,
+          "cooldown": 4.0,
+          "radius": 0.0,
+          "healPercent": 0.0,
+          "buffBonus": 0.0,
+          "buffSeconds": 0.0
+        },
+        {
+          "slot": 1,
+          "id": "763ab376-e1bd-44ab-b4fa-8b03c6d03b16",
+          "integerId": 235,
+          "name": "AstralWalk",
+          "nameKey": "PowerAstralWalk",
+          "description": "",
+          "descriptionKey": "PowerAstralWalkDesc",
+          "icon": "AstralWalk",
+          "type": "ActiveNecromancerSkill",
+          "tags": [
+            "Defensive",
+            "Spell"
+          ],
+          "confidence": "provisional-behaviour",
+          "effect": "strike",
+          "multiplier": 2.2,
+          "cooldown": 4.0,
+          "radius": 0.0,
+          "healPercent": 0.0,
+          "buffBonus": 0.0,
+          "buffSeconds": 0.0
+        },
+        {
+          "slot": 2,
+          "id": "fedd69aa-1a57-4f55-aae2-b6676fb5eea2",
+          "integerId": 221,
+          "name": "Shadowbolt",
+          "nameKey": "PowerShadowbolt",
+          "description": "",
+          "descriptionKey": "PowerShadowboltDesc",
+          "icon": "ShadowBolt",
+          "type": "ActiveNecromancerSkill",
+          "tags": [
+            "Spell",
+            "Offensive"
+          ],
+          "confidence": "provisional-behaviour",
+          "effect": "strike",
+          "multiplier": 1.9,
+          "cooldown": 5.0,
+          "radius": 0.0,
+          "healPercent": 0.0,
+          "buffBonus": 0.0,
+          "buffSeconds": 0.0
+        }
+      ],
+      "passive": {
+        "id": "d9c647ea-63c3-4ff1-936f-06280d7cd51e",
+        "integerId": 245,
+        "name": "Bodyguard",
+        "nameKey": "PassiveBodyguard",
+        "description": "",
+        "descriptionKey": "PassiveBodyguardDesc",
+        "icon": "Bodyguard",
+        "type": "PassiveNecromancerSkill",
+        "tags": [],
+        "confidence": "provisional-behaviour",
+        "effect": "might",
+        "offenseBonus": 0.1,
+        "healthBonus": 0.05
+      },
+      "activePoolSize": 12,
+      "passivePoolSize": 10
+    }
+  }
+}

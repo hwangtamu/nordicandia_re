@@ -1,6 +1,6 @@
 import "./style.css";
 import { api, CharacterSummary, CombatEnvelope, LootDrop, newCommandId, Snapshot, WebInventory } from "./api";
-import { loadContent, ContentManifest, className } from "./content";
+import { loadContent, loadPowers, ContentManifest, ClassPowers, className } from "./content";
 import { HudState, World } from "./game";
 
 const RARITY_NAMES = ["F", "E", "D", "C", "B", "A", "AA", "AAA", "AAAA", "AAAAA", "S", "SS"];
@@ -26,6 +26,7 @@ app.innerHTML = `
       <div class="name-row"><span id="hud-name">—</span><span id="hud-class"></span></div>
       <div class="bar hp"><div id="hud-hp-fill"></div><span id="hud-hp-text"></span></div>
       <div class="bar xp"><div id="hud-xp-fill"></div><span id="hud-xp-text"></span></div>
+      <div class="passive" id="hud-passive"></div>
       <div class="stats"><span id="hud-stats">OFF 0 · DEF 0 · REC 0</span></div>
     </div>
     <div class="hud-top-right">
@@ -65,6 +66,8 @@ const invItemsEl = document.getElementById("inv-items") as HTMLDivElement;
 const lootFeedEl = document.getElementById("loot-feed") as HTMLDivElement;
 
 let content: ContentManifest;
+let powers: Record<string, ClassPowers> = {};
+let classPowers: ClassPowers | null = null;
 let world: World | null = null;
 let character: CharacterSummary | null = null;
 
@@ -75,6 +78,11 @@ function setStatus(text: string, error = false): void {
 
 async function boot(): Promise<void> {
   content = await loadContent();
+  try {
+    powers = (await loadPowers()).classes;
+  } catch (error) {
+    console.warn("powers.json unavailable", error);
+  }
   contentEl.textContent = content.contentVersion;
   try {
     const health = await api.health();
@@ -136,6 +144,10 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
     `${className(content, selected.class)} · Lv ${snapshot.level}`;
 
   const characterId = selected.characterId;
+  classPowers = powers[String(selected.class)] ?? null;
+  (document.getElementById("hud-passive") as HTMLElement).textContent = classPowers
+    ? `Passive · ${classPowers.passive.name}`
+    : "";
   const sendCommand = async (
     type: "move" | "skill" | "equip" | "unequip",
     options: { x?: number; z?: number; itemId?: string; skillId?: number } = {},
@@ -282,8 +294,11 @@ function renderHud(hudState: HudState): void {
     const button = document.getElementById(id) as HTMLButtonElement;
     const skill = hudState.skills[index];
     const ready = skill?.ready ?? true;
+    const name = skill?.name ?? `Skill ${index + 1}`;
+    const description = classPowers?.active[index]?.description?.replace(/\{[0-9]+\}/g, "…") ?? "";
+    if (description) button.title = description;
     button.classList.toggle("disabled", !ready);
-    button.textContent = ready ? `Skill ${index + 1}` : `Cooling ${Math.ceil(skill.cooldown)}s`;
+    button.textContent = ready ? name : `${name} ${Math.ceil(skill.cooldown)}s`;
   });
   const message = document.getElementById("hud-message") as HTMLElement;
   message.textContent = hudState.message;

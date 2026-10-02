@@ -79,7 +79,8 @@ public sealed class CombatRegistry
                 (int)persisted.Level);
             var seed = (ulong)(uint)characterId.GetHashCode() << 32 | (uint)characterId.GetHashCode();
             var instance = new CombatInstance(stats, persisted.Experience, persisted.Silver, persisted.Opals,
-                (int)persisted.MonsterKills, seed, monsterProfiles: MonsterProfiles);
+                (int)persisted.MonsterKills, seed, monsterProfiles: MonsterProfiles,
+                classPowers: PowerCatalog.ForClass(persisted.Class));
             entries[characterId] = new Entry
             {
                 Instance = instance,

@@ -46,7 +46,7 @@ public readonly record struct CombatSnapshot(
     int Silver,
     int Opals,
     int Kills,
-    IReadOnlyList<double> SkillCooldowns,
+    IReadOnlyList<SkillStatus> Skills,
     double OffenseBuffRemaining,
     int DungeonsCleared,
     int BossKillsRemaining,
@@ -79,17 +79,16 @@ public sealed class CombatInstance
     public const int BossKillGoal = 8;
     public const int BossIndex = 100;
     public const double TrashDropChance = 0.45;
-    public const double PassiveOffenseBonus = 0.10;
-    public const double PassiveHealthBonus = 0.10;
 
-    /// <summary>Provisional skill table: id 0 strike, 1 nova, 2 rally.</summary>
-    public const int SkillCount = 3;
-    private static readonly double[] SkillCooldownSeconds = { 4.0, 8.0, 20.0 };
-    private static readonly double[] SkillMultipliers = { 2.4, 1.5, 0.0 };
-    private const double NovaRadius = 5.5;
-    private const double RallyHealPercent = 0.30;
-    private const double RallyBuffBonus = 0.25;
-    private const double RallyBuffSeconds = 6.0;
+    private static readonly ClassPowers DefaultPowers = new(
+        "Basic",
+        new[]
+        {
+            new SkillProfile(0, "Strike", "", "", "strike", 2.4, 4.0, 0, 0, 0, 0),
+            new SkillProfile(1, "Nova", "", "", "nova", 1.5, 8.0, 5.5, 0, 0, 0),
+            new SkillProfile(2, "Rally", "", "", "rally", 0, 20.0, 0, 0.30, 0.25, 6.0),
+        },
+        new PassiveProfile("Might", "", "", "might", 0.10, 0.10));
 
     private static readonly int[] DropSlots =
     {
@@ -104,13 +103,16 @@ public sealed class CombatInstance
     private readonly double playerSpeed = 6.5;
     private readonly int monsterCount;
     private readonly MonsterProfile[] profiles;
+    private readonly SkillProfile[] skills;
+    private readonly PassiveProfile passive;
 
     private double targetX;
     private double targetZ;
     private bool hasTarget;
     private double attackCooldown;
-    private readonly double[] skillCooldowns = new double[SkillCount];
+    private readonly double[] skillCooldowns;
     private double offenseBuffTimer;
+    private double offenseBuffBonus;
     private double playerRespawnTimer;
     private int dungeonKills;
     private CombatMonster boss;
@@ -142,14 +144,13 @@ public sealed class CombatInstance
         int kills,
         ulong seed,
         int monsterCount = 5,
-        IReadOnlyList<MonsterProfile> monsterProfiles = null)
+        IReadOnlyList<MonsterProfile> monsterProfiles = null,
+        ClassPowers classPowers = null)
     {
         PlayerLevel = stats.Level;
         Offense = stats.Offense;
         Defense = stats.Defense;
         Recovery = stats.Recovery;
-        PlayerMaxHp = EffectiveMaxHealth();
-        PlayerHp = PlayerMaxHp;
         Experience = experience;
         Silver = silver;
         Opals = opals;
@@ -158,15 +159,21 @@ public sealed class CombatInstance
         profiles = monsterProfiles is { Count: > 0 }
             ? monsterProfiles.ToArray()
             : new[] { new MonsterProfile("Draugr") };
+        var powers = classPowers ?? DefaultPowers;
+        skills = powers.Active.Take(3).ToArray();
+        passive = powers.Passive;
+        skillCooldowns = new double[skills.Length];
+        PlayerMaxHp = EffectiveMaxHealth();
+        PlayerHp = PlayerMaxHp;
         rng = new CombatRandom(seed == 0 ? 0x9E3779B97F4A7C15UL : seed);
         SpawnMonsters();
         Version = 1;
     }
 
     private double EffectiveMaxHealth() => CombatModel.MaxHealth(new CombatantStats(Offense, Defense, Recovery, PlayerLevel))
-        * (1 + PassiveHealthBonus);
+        * (1 + passive.HealthBonus);
 
-    private double EffectiveOffense() => Offense * (1 + PassiveOffenseBonus + (offenseBuffTimer > 0 ? RallyBuffBonus : 0));
+    private double EffectiveOffense() => Offense * (1 + passive.OffenseBonus + (offenseBuffTimer > 0 ? offenseBuffBonus : 0));
 
     /// <summary>Replace the player's combat stats (e.g. after equipping an item). Level stays
     /// experience-derived and is not changed here.</summary>
@@ -498,48 +505,54 @@ public sealed class CombatInstance
         Version++;
     }
 
-    /// <summary>Cast skill <paramref name="skillId"/>; 0 is the default single strike.</summary>
+    /// <summary>Cast active skill <paramref name="skillId"/> (index into the class kit).</summary>
     public SkillOutcome UseSkill(int skillId = 0)
     {
         if (PlayerHp <= 0) return new SkillOutcome(false, 0, -1, "dead");
-        if (skillId < 0 || skillId >= SkillCount) return new SkillOutcome(false, 0, -1, "unknown_skill");
+        if (skillId < 0 || skillId >= skills.Length) return new SkillOutcome(false, 0, -1, "unknown_skill");
         if (skillCooldowns[skillId] > 0) return new SkillOutcome(false, 0, -1, "cooldown");
+        var skill = skills[skillId];
 
-        switch (skillId)
+        switch (skill.Effect)
         {
-            case 0:
+            case "nova":
             {
-                var target = NearestAliveMonster(8);
-                if (target is null) return new SkillOutcome(false, 0, -1, "no_target");
-                skillCooldowns[skillId] = SkillCooldownSeconds[skillId];
-                var hit = ResolveSkill(target, SkillMultipliers[skillId]);
-                DamageMonster(target, hit.Damage);
-                Version++;
-                return new SkillOutcome(true, hit.Damage, target.Index, "ok");
-            }
-            case 1:
-            {
-                var inRange = AliveMonstersInRadius(NovaRadius);
+                var inRange = AliveMonstersInRadius(skill.Radius);
                 if (inRange.Count == 0) return new SkillOutcome(false, 0, -1, "no_target");
-                skillCooldowns[skillId] = SkillCooldownSeconds[skillId];
+                skillCooldowns[skillId] = skill.Cooldown;
                 double total = 0;
                 var first = inRange[0].Index;
                 foreach (var monster in inRange)
                 {
-                    var hit = ResolveSkill(monster, SkillMultipliers[skillId]);
+                    var hit = ResolveSkill(monster, skill.Multiplier);
                     total += hit.Damage;
                     DamageMonster(monster, hit.Damage);
                 }
                 Version++;
                 return new SkillOutcome(true, total, first, "ok");
             }
-            default:
+            case "rally":
             {
-                skillCooldowns[skillId] = SkillCooldownSeconds[skillId];
-                PlayerHp = Math.Min(PlayerMaxHp, PlayerHp + PlayerMaxHp * RallyHealPercent);
-                offenseBuffTimer = RallyBuffSeconds;
+                skillCooldowns[skillId] = skill.Cooldown;
+                if (skill.HealPercent > 0)
+                    PlayerHp = Math.Min(PlayerMaxHp, PlayerHp + PlayerMaxHp * skill.HealPercent);
+                if (skill.BuffBonus > 0)
+                {
+                    offenseBuffTimer = skill.BuffSeconds;
+                    offenseBuffBonus = skill.BuffBonus;
+                }
                 Version++;
                 return new SkillOutcome(true, 0, -1, "ok");
+            }
+            default:
+            {
+                var target = NearestAliveMonster(8);
+                if (target is null) return new SkillOutcome(false, 0, -1, "no_target");
+                skillCooldowns[skillId] = skill.Cooldown;
+                var hit = ResolveSkill(target, skill.Multiplier);
+                DamageMonster(target, hit.Damage);
+                Version++;
+                return new SkillOutcome(true, hit.Damage, target.Index, "ok");
             }
         }
     }
@@ -578,7 +591,9 @@ public sealed class CombatInstance
 
         return new CombatSnapshot(Version, Math.Round(PlayerX, 3), Math.Round(PlayerZ, 3),
             Math.Round(PlayerHp, 2), Math.Round(PlayerMaxHp, 2), PlayerLevel, Experience, Silver, Opals,
-            Kills, skillCooldowns.Select(c => Math.Round(c, 2)).ToList(), Math.Round(offenseBuffTimer, 2),
+            Kills,
+            skills.Select((s, i) => new SkillStatus(s.Slot, s.Name, s.Effect, Math.Round(skillCooldowns[i], 2), s.Cooldown)).ToList(),
+            Math.Round(offenseBuffTimer, 2),
             DungeonsCleared, Math.Max(0, BossKillGoal - dungeonKills), boss is { Alive: true }, rows);
     }
 

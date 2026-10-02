@@ -44,6 +44,14 @@ export interface Snapshot {
 
 const BASE = "/api/web/v1";
 
+export interface SkillStatus {
+  slot: number;
+  name: string;
+  effect: string;
+  cooldown: number;
+  maxCooldown: number;
+}
+
 export interface MonsterState {
   index: number;
   name: string;
@@ -67,7 +75,7 @@ export interface CombatSnapshot {
   silver: number;
   opals: number;
   kills: number;
-  skillCooldowns: number[];
+  skills: SkillStatus[];
   offenseBuffRemaining: number;
   dungeonsCleared: number;
   bossKillsRemaining: number;

@@ -48,13 +48,33 @@ curl -s -b cookies .../characters/$CID/inventory                                
 # 穿戴 → OFF 35 -> 56，重复请求返回 duplicate
 ```
 
-## 与计划的差异修复（本次）
+## 真实技能提取（本次）
+
+之前 M2 的 3 个技能（Strike/Nova/Rally）与被动 +10% 是占位，**与 Nordicandia 不一致**。现已从解密定义提取真实技能：
+
+* `tools/web-content/export_powers.py` 读取 `Powers.json`(159) / `PowerTypes.json` / `PowerTags.json` / `CharacterClasses.json`，导出：
+  * `web/public/assets/powers.json`（客户端展示：名称/描述/图标/类型/标签）；
+  * `server/Nordicandia.Server/WebApi/Powers.generated.cs`（服务端行为表）。
+* 每个可见职业取 `ActiveSkills` 前 3 个 + `PassiveSkills` 第 1 个：
+
+| 职业 | 主动（真实名） | 被动 |
+|---|---|---|
+| Warrior | Slam / Might / Pounce | Overkill |
+| Hunter | RapidFire / ArrowRain / SummonWolf | Precision |
+| Mage | ChainLightning / Teleport / IceNova | Hubris |
+| Necromancer | SummonSkeleton / AstralWalk / Shadowbolt | Bodyguard |
+
+* **名称/描述/图标/标签/类型 = ClientVerified**；**效果归类与数值（multiplier/cooldown/radius/heal/buff）= Provisional**，因为客户端的技能执行代码尚未复原。每个真实技能被映射到最接近的原型（`strike`/`nova`/`rally`）。
+* 服务端 `CombatInstance` 改为按职业加载 `SkillProfile`/`PassiveProfile`，快照返回真实技能名与各自冷却；客户端按钮显示真实技能名，被动显示在 HUD。
+* 尚未提取：技能等级/精通（`PowerMasteries` 297 条）、法力消耗、技能选择/加点、每级数值。
+
+## 与计划的差异修复（上一轮）
 
 | 原差异 | 处理 |
 |---|---|
 | 同一槽位可叠加装备 | ✅ 强制一槽一件：穿 B 时自动将同槽 A 放回背包（测试 `m2 slots: only one slot bonus is counted`） |
 | 稀有度权重为编造值 | ✅ 改为来自 `gamedata_decrypted/Droprates.json` 的真实权重（F..SS），只有掉落“概率”仍为 Provisional |
-| 技能仅 1 个主动 | ✅ 3 个主动（0 单体 Strike、1 范围 Nova、2 集结 Rally）+ 1 个被动（+10% Offense / +10% MaxHealth）；冷却独立追踪 |
+| 技能仅 1 个主动 | ✅ 先补齐为 3 主动 + 1 被动（效果原型），并已替换为**真实技能**（见上节） |
 | 敌人仅 1 类 | ✅ 5 类普通敌人（Bat/DemonOrc/Skeleton/BloodHound/StoneGolem，各自数值倍率），按索引循环刷新 |
 | 无词缀 | ✅ 有限词缀集（of Might/Warding/Vigor/Fury/the Bulwark/Focus）；按稀有度 1–3 条，写入 `SerializedItem.Affixes` 并展示 |
 

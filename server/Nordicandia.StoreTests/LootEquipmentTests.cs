@@ -45,14 +45,16 @@ static class LootEquipmentTests
             var names = state.Combat.Monsters.Where(m => !m.IsBoss).Select(m => m.Name).Distinct().ToList();
             Check(names.Count >= 2, "m2 enemies: more than one archetype spawns");
 
-            // Skills: rally always casts and applies a buff/cooldown.
+            // Skills: Warrior skill 1 is "Might" (a rally/buff). It always casts and applies a buff.
+            Check(state.Combat.Skills.Count == 3 && state.Combat.Skills.Select(s => s.Name).SequenceEqual(new[] { "Slam", "Might", "Pounce" }),
+                "m2 skills: real Warrior kit Slam/Might/Pounce is loaded");
             var rally = registry.ApplyCommand(owner, characterId, "sk-rally", state.Combat.Version,
-                new WebCommandRequest("skill", SkillId: 2));
+                new WebCommandRequest("skill", SkillId: 1));
             Check(rally.Applied && rally.Reason == "ok", "m2 skills: rally casts");
             Check(rally.State.Combat.OffenseBuffRemaining > 0, "m2 skills: rally applies an offence buff");
-            Check(rally.State.Combat.SkillCooldowns.Count == 3, "m2 skills: three cooldowns are tracked");
+            Check(rally.State.Combat.Skills.Count == 3, "m2 skills: three cooldowns are tracked");
             var rallyAgain = registry.ApplyCommand(owner, characterId, "sk-rally-2", rally.State.Combat.Version,
-                new WebCommandRequest("skill", SkillId: 2));
+                new WebCommandRequest("skill", SkillId: 1));
             Check(!rallyAgain.Applied && rallyAgain.Reason == "cooldown", "m2 skills: repeated rally is on cooldown");
 
             // One item per equip slot: equipping B must unequip A.
