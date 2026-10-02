@@ -116,6 +116,7 @@ R4 equal-version eviction: True/ok, Aequipped=True
 
 ### 仍未完成
 
-- 最小属性依赖链（基础属性 → 单件武器/护甲 → 命中/暴击 → 最终伤害）尚未实现；226 条公式
-  仍不是实际属性来源。
+- 属性→公式映射已完成：`extract_attribute_formulas.py` 产出全部 **226** 条（id/名称/公式），见
+  `generated/attribute_formulas.json` 与 `GAME_MECHANICS.md`。仍缺基础属性来源与表达式求值器，
+  即最小依赖链的输入侧。
 - 元素抗性/穿透应用、DoT、AI、离线收益仍为缺口。

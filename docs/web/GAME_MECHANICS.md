@@ -50,6 +50,25 @@ block/dodge/resistance 均有对应的 Total 公式（见 attribute_scripts.json
 ### 掉落
 稀有度权重取自 `Droprates.json`；掉落概率为 Provisional。
 
+## 属性 → 公式映射（已完成，ClientVerified）
+
+`tools/web-content/extract_attribute_formulas.py` 解析桌面 `GameAttributes` 的静态构造，把每个脚本属性的
+**enum id → 名称 → 公式** 配对出来（`GameAttributeD/I` 的 `ctor(this, id, default, script, name, ...)`，
+公式在 `r9`、名称在 `[rsp+0x20]`）。产出 `tools/web-content/generated/attribute_formulas.json`，共 **226 条**：
+
+```
+0x10c Armor_Factor_Constitution => (Constitution_Total * Constants.Armor_Per_Constitution_Factor)
+0x10d Armor_SubTotal             => ((Armor + Flat_Armor_From_Constitution) * (1 + Armor_Factor_Constitution))
+0x48? Armor_Total                => (Armor_SubTotal * Armor_Focus_Factor_Constitution * (1 + Armor_Bonus_Percent) * Base_Armor_Multiplier)
+0x137 Life_Max_Total             => ((Life_Max_SubTotal * (1 + Life_Bonus_Percent)) * Base_Life_Multiplier) MultiplyWith:Life_Bonus_Percent_Final
+```
+
+公式语言：中缀 `+ - * /`、括号、`Pin(a,min,max)`（钳制）、`Min(a,b)`、`Pow`、`Constants.X`、
+后缀 `MultiplyWith:X`（= 乘 `(1+X)`）、以及三元 `(Cond ? A : B)`（双持/武器类型）。
+
+**仍缺**：基础属性来源（`Base_Strength`/`Base_Constitution`/`Base_Agility`/`Life_Per_Level_Multiplier` 等
+来自种族/职业/等级/装备），以及一个表达式求值器——这是「最小属性依赖链」剩余的输入侧工作。
+
 ## 怪物 / 物品缩放（数据已提取，公式 Inferred）
 
 `gamedata_decrypted/GameBalance.json` 的 `ScalingFunctions`（38 条）定义了等级/世界层级缩放，字段为
