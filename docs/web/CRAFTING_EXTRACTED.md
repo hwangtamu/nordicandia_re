@@ -145,3 +145,13 @@ Disassembler / Disassembler_Advanced / Disassembler_Auto_Discard
 ## 原始元数据
 `global-metadata.dat` 可从 `dist/android-arm64-online-patched/com.IterativeStudios.Nordicandia.apk`
 （`assets/bin/Data/Managed/Metadata/`）提取，用于解析 IL2CPP 字符串字面量（`tmp/global-metadata.dat`）。
+
+## 元数据用法（metadata-usage）解析尝试与结论
+
+- 已从补丁版 APK 提取 `tmp/global-metadata.dat`；`android-metadata.json` 的 `addressMap.stringLiterals`
+  给出 36771 条字面量（含上述 55 条 `*Reason_*` 键）及其 `.so` 缓存槽地址（如 `0x58A0A68`）。
+- 这些槽内容是 IL2CPP metadata-usage 令牌（`0xA0003AFF` 等，kind=5=StringLiteral）。
+- **但代码不直接引用这些槽地址**：全 `.so` 内对相关页 `0x58A0000` 只有 2 处 `adrp`（均属 Firebase/Unity，
+  与制作无关）；令牌值也只出现在数据段（`0x56740B0`），代码段内没有立即数引用。
+- 结论：该 release 构建通过间接机制（`Il2CppCodeGenModule` 的字符串字面量表）引用，需 Il2CppDumper
+  级别的解析器才能把"某指令 → 字面量"。因此**条件 → 理由键的逐条映射暂未完成**；规则条目本身已完整枚举。
