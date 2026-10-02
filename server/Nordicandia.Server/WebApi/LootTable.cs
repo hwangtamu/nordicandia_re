@@ -62,7 +62,9 @@ public static class LootTable
     public static SerializedItem CreateItem(LootDrop drop)
     {
         var rng = new CombatRandom(drop.Seed == 0 ? 0x2545F4914F6CDD1DUL : drop.Seed);
-        var definition = ItemCatalog.Pick(drop.Slot, rng);
+        // Roll Normal/Unique/Set using the client weights, then pick a matching definition.
+        var rarityType = ItemCatalog.RollRarityType(rng);
+        var definition = ItemCatalog.Pick(drop.Slot, rarityType, rng);
         var fallbackNames = SlotNames.TryGetValue(drop.Slot, out var list) ? list : new[] { "Trinket" };
         var name = definition?.Name ?? fallbackNames[Math.Abs(Hash(drop.Level, drop.Slot)) % fallbackNames.Length];
         var definitionId = definition?.IntegerId ?? 0;
@@ -148,8 +150,23 @@ public static class LootTable
             // Accessories and armour carry a small all-resistance (Resistance_All = 1002).
             itemAttributes[1002] = Value(Math.Round(defense * 0.0006, 4));
         }
-        // Rare+ equipment rolls a set; equipping enough pieces grants the set bonuses.
-        if (drop.Rarity >= 4 && SetCatalog.Count > 0)
+        // All of the definition's implicit affixes (unique items carry their special affixes here),
+        // except those already mapped explicitly above, so unique/set bonuses are preserved.
+        if (definition is { } def)
+        {
+            var engine = CharacterAttributeEngine.Instance;
+            foreach (var implicitValue in def.Implicits)
+            {
+                if (!engine.TryGetId(implicitValue.Name, out var attributeId)) continue;
+                if (itemAttributes.ContainsKey(attributeId)) continue;
+                if (implicitValue.For(drop.Rarity) is { } range)
+                    itemAttributes[attributeId] = Value(Math.Round(range.Roll(rng), 4));
+            }
+        }
+        // Set items carry their definition's set id; other rare+ items roll a random set.
+        if (definition is { SetId: { } definitionSetId })
+            itemAttributes[AttrSetId] = Value(definitionSetId);
+        else if (drop.Rarity >= 4 && SetCatalog.Count > 0)
         {
             var setIds = SetCatalog.Ids;
             itemAttributes[AttrSetId] = Value(setIds[(int)(rng.NextDouble() * setIds.Count) % setIds.Count]);

@@ -26,6 +26,7 @@ static class AcceptanceRegressionTests
         CraftEssenceConsumesIron();
         RealAffixesCarryClientAttributes();
         SetBonusesAndEquipRequirements();
+        UniqueAndSetItemDefinitions();
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
@@ -328,6 +329,22 @@ static class AcceptanceRegressionTests
             Check(tInventory.Items.Any(i => i.DefinitionIntegerId == 606), "trade: grants the product stack");
             Check(store.GetItems(owner, characterId).All(i => i.Slot != ItemSlotTypes.YourTrade), "trade: empties the trade window");
         }
+    }
+
+    private static void UniqueAndSetItemDefinitions()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var rng = new Nordicandia.Simulation.CombatRandom(1);
+        var unique = ItemCatalog.Pick(3, ItemCatalog.RarityType.Unique, rng);
+        Check(unique is { IsUnique: true }, "unique: Pick(Unique) returns a unique definition");
+        Check(unique is { Implicits.Count: > 0 }, "unique: the definition carries its affix attributes");
+        var set = ItemCatalog.Pick(3, ItemCatalog.RarityType.Set, rng);
+        Check(set is { SetId: not null }, "set: Pick(Set) returns a set definition with a set id");
+        var normal = ItemCatalog.Pick(3, ItemCatalog.RarityType.Normal, rng);
+        Check(normal is { IsUnique: false, SetId: null }, "normal: Pick(Normal) is not unique/set");
+        Check(ItemCatalog.RarityTypeWeights.GetValueOrDefault("Unique") > 0
+            && ItemCatalog.RarityTypeWeights.GetValueOrDefault("Set") > 0,
+            "droprates: unique and set weights loaded from Droprates.json");
     }
 
     private static void SetBonusesAndEquipRequirements()

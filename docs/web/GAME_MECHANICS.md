@@ -140,6 +140,10 @@ id 与公式为 ClientVerified。**基础数值已标定**：`ItemCatalog`（458
 缩放武器伤害（`WeaponFlatDamageScaling`）与护甲（`ArmorFlatArmorScaling`/`ArmorFlatEvasionScaling`）。
 实测同类型武器 lvl10→24.33、lvl60→27.25。
 
+**唯一/传奇与套装物品**：`ItemCatalog` 区分 `Normal`/`Unique`/`Set`（180 唯一、93 套装定义），
+掉落按 `Droprates.json.ItemRarityTypeWeights`（Normal 10,000,000 / Unique 500 / Set 375）掷稀有度类型；
+唯一物品携带其专属词缀属性（隐式区间），套装物品带 `SetId` 触发套装奖励。
+
 **词缀**：`AffixCatalog`（18 个真实词缀，来自 `Affixes.json`）授予客户端属性：
 `Strength/Dexterity/Intelligence/Vitality/Constitution/Agility_Bonus_Percent`(109-130)、
 `Armor_Bonus_Percent`(252)、`Evasion_Bonus_Percent`(257)、`AttackRating_Bonus_Percent`(204)、

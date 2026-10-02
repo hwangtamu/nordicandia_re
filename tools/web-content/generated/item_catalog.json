@@ -1688,6 +1688,7 @@
     "type": "RejuvenationPotion"
   },
   "IdolOfCraftingLarge": {
+    "baseRarity": 6,
     "implicit": {
       "Buff_Duration": {
         "byRarity": {
@@ -1712,6 +1713,7 @@
     "type": "IdolOfCrafting"
   },
   "IdolOfCraftingMedium": {
+    "baseRarity": 3,
     "implicit": {
       "Buff_Duration": {
         "byRarity": {
@@ -1758,6 +1760,7 @@
     "type": "IdolOfCrafting"
   },
   "IdolOfExperienceLarge": {
+    "baseRarity": 6,
     "implicit": {
       "Buff_Duration": {
         "byRarity": {
@@ -1782,6 +1785,7 @@
     "type": "IdolOfExperience"
   },
   "IdolOfExperienceMedium": {
+    "baseRarity": 3,
     "implicit": {
       "Buff_Duration": {
         "byRarity": {
@@ -2772,6 +2776,7 @@
     "type": "MediumHelmet"
   },
   "MediumDefensePotion": {
+    "baseRarity": 7,
     "implicit": {
       "Defense_Final_Granted_Duration": {
         "byRarity": {
@@ -2844,6 +2849,7 @@
     "type": "ManaPotion"
   },
   "MediumMovementSpeedPotion": {
+    "baseRarity": 7,
     "implicit": {
       "Movement_Speed_Final_Granted_Duration": {
         "byRarity": {
@@ -3353,6 +3359,7 @@
       }
     },
     "integerId": 626,
+    "isUnique": true,
     "type": "LightHelmet"
   },
   "SapphireStaff": {
@@ -3561,6 +3568,7 @@
       }
     },
     "integerId": 147,
+    "setId": 1,
     "type": "Sword1H"
   },
   "Set_Heavy_TheBerserker_Belt": {
@@ -3574,6 +3582,7 @@
       }
     },
     "integerId": 160,
+    "setId": 3,
     "type": "Belt"
   },
   "Set_Heavy_TheBerserker_Boots": {
@@ -3596,6 +3605,7 @@
       }
     },
     "integerId": 162,
+    "setId": 3,
     "type": "HeavyBoots"
   },
   "Set_Heavy_TheBerserker_Bracers": {
@@ -3621,6 +3631,7 @@
       }
     },
     "integerId": 165,
+    "setId": 3,
     "type": "HeavyBracers"
   },
   "Set_Heavy_TheBerserker_Chest": {
@@ -3643,6 +3654,7 @@
       }
     },
     "integerId": 164,
+    "setId": 3,
     "type": "HeavyChest"
   },
   "Set_Heavy_TheBerserker_Cloak": {
@@ -3663,6 +3675,7 @@
       }
     },
     "integerId": 166,
+    "setId": 3,
     "type": "Cloak"
   },
   "Set_Heavy_TheBerserker_Gloves": {
@@ -3685,6 +3698,7 @@
       }
     },
     "integerId": 163,
+    "setId": 3,
     "type": "HeavyGloves"
   },
   "Set_Heavy_TheBerserker_Helmet": {
@@ -3707,6 +3721,7 @@
       }
     },
     "integerId": 161,
+    "setId": 3,
     "type": "HeavyHelmet"
   },
   "Set_Heavy_TheBerserker_Leggings": {
@@ -3729,6 +3744,7 @@
       }
     },
     "integerId": 167,
+    "setId": 3,
     "type": "HeavyLeggings"
   },
   "Set_Heavy_TheBerserker_Shoulders": {
@@ -3751,6 +3767,7 @@
       }
     },
     "integerId": 168,
+    "setId": 3,
     "type": "HeavyShoulders"
   },
   "Set_Heavy_TheBoneWall_Belt": {
@@ -3771,6 +3788,7 @@
       }
     },
     "integerId": 470,
+    "setId": 27,
     "type": "Belt"
   },
   "Set_Heavy_TheBoneWall_Boots": {
@@ -3800,6 +3818,7 @@
       }
     },
     "integerId": 472,
+    "setId": 27,
     "type": "HeavyBoots"
   },
   "Set_Heavy_TheBoneWall_Bracers": {
@@ -3832,6 +3851,7 @@
       }
     },
     "integerId": 475,
+    "setId": 27,
     "type": "HeavyBracers"
   },
   "Set_Heavy_TheBoneWall_Chest": {
@@ -3861,6 +3881,7 @@
       }
     },
     "integerId": 474,
+    "setId": 27,
     "type": "HeavyChest"
   },
   "Set_Heavy_TheBoneWall_Cloak": {
@@ -3888,6 +3909,7 @@
       }
     },
     "integerId": 476,
+    "setId": 27,
     "type": "Cloak"
   },
   "Set_Heavy_TheBoneWall_Gloves": {
@@ -3917,6 +3939,7 @@
       }
     },
     "integerId": 473,
+    "setId": 27,
     "type": "HeavyGloves"
   },
   "Set_Heavy_TheBoneWall_Helmet": {
@@ -3946,6 +3969,7 @@
       }
     },
     "integerId": 471,
+    "setId": 27,
     "type": "HeavyHelmet"
   },
   "Set_Heavy_TheBoneWall_Leggings": {
@@ -3975,6 +3999,7 @@
       }
     },
     "integerId": 477,
+    "setId": 27,
     "type": "HeavyLeggings"
   },
   "Set_Heavy_TheBoneWall_Shoulders": {
@@ -4004,6 +4029,7 @@
       }
     },
     "integerId": 478,
+    "setId": 27,
     "type": "HeavyShoulders"
   },
   "Set_Heavy_TheDreadnought_Belt": {
@@ -4026,6 +4052,7 @@
       }
     },
     "integerId": 499,
+    "setId": 2,
     "type": "Belt"
   },
   "Set_Heavy_TheDreadnought_Boots": {
@@ -4066,6 +4093,7 @@
       }
     },
     "integerId": 157,
+    "setId": 2,
     "type": "HeavyBoots"
   },
   "Set_Heavy_TheDreadnought_Bracers": {
@@ -4100,6 +4128,7 @@
       }
     },
     "integerId": 500,
+    "setId": 2,
     "type": "HeavyBracers"
   },
   "Set_Heavy_TheDreadnought_Chest": {
@@ -4140,6 +4169,7 @@
       }
     },
     "integerId": 154,
+    "setId": 2,
     "type": "HeavyChest"
   },
   "Set_Heavy_TheDreadnought_Cloak": {
@@ -4169,6 +4199,7 @@
       }
     },
     "integerId": 501,
+    "setId": 2,
     "type": "Cloak"
   },
   "Set_Heavy_TheDreadnought_Gloves": {
@@ -4209,6 +4240,7 @@
       }
     },
     "integerId": 158,
+    "setId": 2,
     "type": "HeavyGloves"
   },
   "Set_Heavy_TheDreadnought_Helmet": {
@@ -4249,6 +4281,7 @@
       }
     },
     "integerId": 153,
+    "setId": 2,
     "type": "HeavyHelmet"
   },
   "Set_Heavy_TheDreadnought_Leggings": {
@@ -4289,6 +4322,7 @@
       }
     },
     "integerId": 155,
+    "setId": 2,
     "type": "HeavyLeggings"
   },
   "Set_Heavy_TheDreadnought_Shoulders": {
@@ -4329,6 +4363,7 @@
       }
     },
     "integerId": 156,
+    "setId": 2,
     "type": "HeavyShoulders"
   },
   "Set_Heavy_TheMarauder_Belt": {
@@ -4342,6 +4377,7 @@
       }
     },
     "integerId": 138,
+    "setId": 0,
     "type": "Belt"
   },
   "Set_Heavy_TheMarauder_Boots": {
@@ -4373,6 +4409,7 @@
       }
     },
     "integerId": 140,
+    "setId": 0,
     "type": "HeavyBoots"
   },
   "Set_Heavy_TheMarauder_Bracers": {
@@ -4407,6 +4444,7 @@
       }
     },
     "integerId": 143,
+    "setId": 0,
     "type": "HeavyBracers"
   },
   "Set_Heavy_TheMarauder_Chest": {
@@ -4438,6 +4476,7 @@
       }
     },
     "integerId": 142,
+    "setId": 0,
     "type": "HeavyChest"
   },
   "Set_Heavy_TheMarauder_Gloves": {
@@ -4469,6 +4508,7 @@
       }
     },
     "integerId": 141,
+    "setId": 0,
     "type": "HeavyGloves"
   },
   "Set_Heavy_TheMarauder_Helmet": {
@@ -4500,6 +4540,7 @@
       }
     },
     "integerId": 139,
+    "setId": 0,
     "type": "HeavyHelmet"
   },
   "Set_Heavy_TheMarauder_Leggings": {
@@ -4531,6 +4572,7 @@
       }
     },
     "integerId": 145,
+    "setId": 0,
     "type": "HeavyLeggings"
   },
   "Set_Heavy_TheMarauder_Shoulders": {
@@ -4562,6 +4604,7 @@
       }
     },
     "integerId": 146,
+    "setId": 0,
     "type": "HeavyShoulders"
   },
   "Set_Light_TheDiscoverer_Belt": {
@@ -4575,6 +4618,7 @@
       }
     },
     "integerId": 364,
+    "setId": 26,
     "type": "Belt"
   },
   "Set_Light_TheDiscoverer_Boots": {
@@ -4604,6 +4648,7 @@
       }
     },
     "integerId": 366,
+    "setId": 26,
     "type": "LightBoots"
   },
   "Set_Light_TheDiscoverer_Bracers": {
@@ -4635,6 +4680,7 @@
       }
     },
     "integerId": 369,
+    "setId": 26,
     "type": "LightBracers"
   },
   "Set_Light_TheDiscoverer_Chest": {
@@ -4669,6 +4715,7 @@
       }
     },
     "integerId": 368,
+    "setId": 26,
     "type": "LightChest"
   },
   "Set_Light_TheDiscoverer_Cloak": {
@@ -4698,6 +4745,7 @@
       }
     },
     "integerId": 370,
+    "setId": 26,
     "type": "Cloak"
   },
   "Set_Light_TheDiscoverer_Gloves": {
@@ -4729,6 +4777,7 @@
       }
     },
     "integerId": 367,
+    "setId": 26,
     "type": "LightGloves"
   },
   "Set_Light_TheDiscoverer_Helmet": {
@@ -4760,6 +4809,7 @@
       }
     },
     "integerId": 365,
+    "setId": 26,
     "type": "LightHelmet"
   },
   "Set_Light_TheDiscoverer_Leggings": {
@@ -4791,6 +4841,7 @@
       }
     },
     "integerId": 371,
+    "setId": 26,
     "type": "LightLeggings"
   },
   "Set_Light_TheDiscoverer_Shoulders": {
@@ -4822,6 +4873,7 @@
       }
     },
     "integerId": 372,
+    "setId": 26,
     "type": "LightShoulders"
   },
   "Set_Light_TheSorcerer_Belt": {
@@ -4835,6 +4887,7 @@
       }
     },
     "integerId": 324,
+    "setId": 24,
     "type": "Belt"
   },
   "Set_Light_TheSorcerer_Boots": {
@@ -4855,6 +4908,7 @@
       }
     },
     "integerId": 326,
+    "setId": 24,
     "type": "LightBoots"
   },
   "Set_Light_TheSorcerer_Bracers": {
@@ -4877,6 +4931,7 @@
       }
     },
     "integerId": 329,
+    "setId": 24,
     "type": "LightBracers"
   },
   "Set_Light_TheSorcerer_Chest": {
@@ -4902,6 +4957,7 @@
       }
     },
     "integerId": 328,
+    "setId": 24,
     "type": "LightChest"
   },
   "Set_Light_TheSorcerer_Cloak": {
@@ -4922,6 +4978,7 @@
       }
     },
     "integerId": 330,
+    "setId": 24,
     "type": "Cloak"
   },
   "Set_Light_TheSorcerer_Gloves": {
@@ -4944,6 +5001,7 @@
       }
     },
     "integerId": 327,
+    "setId": 24,
     "type": "LightGloves"
   },
   "Set_Light_TheSorcerer_Helmet": {
@@ -4966,6 +5024,7 @@
       }
     },
     "integerId": 325,
+    "setId": 24,
     "type": "LightHelmet"
   },
   "Set_Light_TheSorcerer_Leggings": {
@@ -4988,6 +5047,7 @@
       }
     },
     "integerId": 331,
+    "setId": 24,
     "type": "LightLeggings"
   },
   "Set_Light_TheSorcerer_Shoulders": {
@@ -5010,6 +5070,7 @@
       }
     },
     "integerId": 332,
+    "setId": 24,
     "type": "LightShoulders"
   },
   "Set_Light_TheSoulOfGroa_Belt": {
@@ -5030,6 +5091,7 @@
       }
     },
     "integerId": 488,
+    "setId": 29,
     "type": "Belt"
   },
   "Set_Light_TheSoulOfGroa_Boots": {
@@ -5057,6 +5119,7 @@
       }
     },
     "integerId": 490,
+    "setId": 29,
     "type": "LightBoots"
   },
   "Set_Light_TheSoulOfGroa_Bracers": {
@@ -5086,6 +5149,7 @@
       }
     },
     "integerId": 493,
+    "setId": 29,
     "type": "LightBracers"
   },
   "Set_Light_TheSoulOfGroa_Chest": {
@@ -5118,6 +5182,7 @@
       }
     },
     "integerId": 492,
+    "setId": 29,
     "type": "LightChest"
   },
   "Set_Light_TheSoulOfGroa_Gloves": {
@@ -5147,6 +5212,7 @@
       }
     },
     "integerId": 491,
+    "setId": 29,
     "type": "LightGloves"
   },
   "Set_Light_TheSoulOfGroa_Helmet": {
@@ -5176,6 +5242,7 @@
       }
     },
     "integerId": 489,
+    "setId": 29,
     "type": "LightHelmet"
   },
   "Set_Light_TheSoulOfGroa_Leggings": {
@@ -5205,6 +5272,7 @@
       }
     },
     "integerId": 495,
+    "setId": 29,
     "type": "LightLeggings"
   },
   "Set_Light_TheSoulOfGroa_Shoulders": {
@@ -5234,6 +5302,7 @@
       }
     },
     "integerId": 496,
+    "setId": 29,
     "type": "LightShoulders"
   },
   "Set_Medium_EmbodimentOfUllr_Belt": {
@@ -5247,6 +5316,7 @@
       }
     },
     "integerId": 305,
+    "setId": 23,
     "type": "Belt"
   },
   "Set_Medium_EmbodimentOfUllr_Boots": {
@@ -5269,6 +5339,7 @@
       }
     },
     "integerId": 307,
+    "setId": 23,
     "type": "MediumBoots"
   },
   "Set_Medium_EmbodimentOfUllr_Bracers": {
@@ -5291,6 +5362,7 @@
       }
     },
     "integerId": 310,
+    "setId": 23,
     "type": "MediumBracers"
   },
   "Set_Medium_EmbodimentOfUllr_Chest": {
@@ -5313,6 +5385,7 @@
       }
     },
     "integerId": 309,
+    "setId": 23,
     "type": "MediumChest"
   },
   "Set_Medium_EmbodimentOfUllr_Cloak": {
@@ -5333,6 +5406,7 @@
       }
     },
     "integerId": 312,
+    "setId": 23,
     "type": "Cloak"
   },
   "Set_Medium_EmbodimentOfUllr_Gloves": {
@@ -5355,6 +5429,7 @@
       }
     },
     "integerId": 308,
+    "setId": 23,
     "type": "MediumGloves"
   },
   "Set_Medium_EmbodimentOfUllr_Helmet": {
@@ -5377,6 +5452,7 @@
       }
     },
     "integerId": 306,
+    "setId": 23,
     "type": "MediumHelmet"
   },
   "Set_Medium_EmbodimentOfUllr_Leggings": {
@@ -5399,6 +5475,7 @@
       }
     },
     "integerId": 311,
+    "setId": 23,
     "type": "MediumLeggings"
   },
   "Set_Medium_EmbodimentOfUllr_Shoulders": {
@@ -5421,6 +5498,7 @@
       }
     },
     "integerId": 313,
+    "setId": 23,
     "type": "MediumShoulders"
   },
   "Set_Medium_TheHorde_Belt": {
@@ -5441,6 +5519,7 @@
       }
     },
     "integerId": 479,
+    "setId": 28,
     "type": "Belt"
   },
   "Set_Medium_TheHorde_Boots": {
@@ -5470,6 +5549,7 @@
       }
     },
     "integerId": 481,
+    "setId": 28,
     "type": "MediumBoots"
   },
   "Set_Medium_TheHorde_Bracers": {
@@ -5499,6 +5579,7 @@
       }
     },
     "integerId": 484,
+    "setId": 28,
     "type": "MediumBracers"
   },
   "Set_Medium_TheHorde_Chest": {
@@ -5528,6 +5609,7 @@
       }
     },
     "integerId": 483,
+    "setId": 28,
     "type": "MediumChest"
   },
   "Set_Medium_TheHorde_Cloak": {
@@ -5555,6 +5637,7 @@
       }
     },
     "integerId": 485,
+    "setId": 28,
     "type": "Cloak"
   },
   "Set_Medium_TheHorde_Gloves": {
@@ -5584,6 +5667,7 @@
       }
     },
     "integerId": 482,
+    "setId": 28,
     "type": "MediumGloves"
   },
   "Set_Medium_TheHorde_Helmet": {
@@ -5613,6 +5697,7 @@
       }
     },
     "integerId": 480,
+    "setId": 28,
     "type": "MediumHelmet"
   },
   "Set_Medium_TheHorde_Leggings": {
@@ -5642,6 +5727,7 @@
       }
     },
     "integerId": 486,
+    "setId": 28,
     "type": "MediumLeggings"
   },
   "Set_Medium_TheHorde_Shoulders": {
@@ -5671,6 +5757,7 @@
       }
     },
     "integerId": 487,
+    "setId": 28,
     "type": "MediumShoulders"
   },
   "Set_Medium_TheMarauder_Cloak": {
@@ -5700,6 +5787,7 @@
       }
     },
     "integerId": 144,
+    "setId": 0,
     "type": "Cloak"
   },
   "Set_Medium_TheScavenger_Belt": {
@@ -5713,6 +5801,7 @@
       }
     },
     "integerId": 348,
+    "setId": 25,
     "type": "Belt"
   },
   "Set_Medium_TheScavenger_Boots": {
@@ -5744,6 +5833,7 @@
       }
     },
     "integerId": 349,
+    "setId": 25,
     "type": "MediumBoots"
   },
   "Set_Medium_TheScavenger_Bracers": {
@@ -5775,6 +5865,7 @@
       }
     },
     "integerId": 352,
+    "setId": 25,
     "type": "MediumBracers"
   },
   "Set_Medium_TheScavenger_Chest": {
@@ -5806,6 +5897,7 @@
       }
     },
     "integerId": 351,
+    "setId": 25,
     "type": "MediumChest"
   },
   "Set_Medium_TheScavenger_Cloak": {
@@ -5835,6 +5927,7 @@
       }
     },
     "integerId": 353,
+    "setId": 25,
     "type": "Cloak"
   },
   "Set_Medium_TheScavenger_Gloves": {
@@ -5866,6 +5959,7 @@
       }
     },
     "integerId": 350,
+    "setId": 25,
     "type": "MediumGloves"
   },
   "Set_Medium_TheScavenger_Helmet": {
@@ -5897,6 +5991,7 @@
       }
     },
     "integerId": 347,
+    "setId": 25,
     "type": "MediumHelmet"
   },
   "Set_Medium_TheScavenger_Leggings": {
@@ -5928,6 +6023,7 @@
       }
     },
     "integerId": 354,
+    "setId": 25,
     "type": "MediumLeggings"
   },
   "Set_Medium_TheScavenger_Shoulders": {
@@ -5959,6 +6055,7 @@
       }
     },
     "integerId": 355,
+    "setId": 25,
     "type": "MediumShoulders"
   },
   "Set_Mimung": {
@@ -6032,6 +6129,7 @@
       }
     },
     "integerId": 148,
+    "setId": 1,
     "type": "Sword1H"
   },
   "Set_SoulOfGroa_Wand": {
@@ -6073,6 +6171,7 @@
       }
     },
     "integerId": 497,
+    "setId": 29,
     "type": "PoisonWand1H"
   },
   "Set_TheSoulOfGroa_Book": {
@@ -6105,6 +6204,7 @@
       }
     },
     "integerId": 498,
+    "setId": 29,
     "type": "Tome"
   },
   "ShortBow": {
@@ -6250,6 +6350,7 @@
     "type": "HeavyHelmet"
   },
   "SmallAttackSpeedPotion": {
+    "baseRarity": 6,
     "implicit": {
       "Attack_Speed_Final_Granted_Duration": {
         "byRarity": {
@@ -6274,6 +6375,7 @@
     "type": "AttackSpeedPotion"
   },
   "SmallExperiencePotion": {
+    "baseRarity": 6,
     "implicit": {
       "Experience_Granted_Duration": {
         "byRarity": {
@@ -7057,6 +7159,7 @@
       }
     },
     "integerId": 282,
+    "isUnique": true,
     "type": "Amulet"
   },
   "Unique_AlchemistsLeggings": {
@@ -7072,6 +7175,7 @@
       }
     },
     "integerId": 576,
+    "isUnique": true,
     "type": "LightLeggings"
   },
   "Unique_AmuletOfElements": {
@@ -7120,6 +7224,7 @@
       }
     },
     "integerId": 464,
+    "isUnique": true,
     "type": "Amulet"
   },
   "Unique_AmuletOfFocus": {
@@ -7140,6 +7245,7 @@
       }
     },
     "integerId": 456,
+    "isUnique": true,
     "type": "Amulet"
   },
   "Unique_AmuletOfSeidr": {
@@ -7167,6 +7273,7 @@
       }
     },
     "integerId": 445,
+    "isUnique": true,
     "type": "Amulet"
   },
   "Unique_AssassinsCap": {
@@ -7189,6 +7296,7 @@
       }
     },
     "integerId": 516,
+    "isUnique": true,
     "type": "MediumHelmet"
   },
   "Unique_AxeOfThunder": {
@@ -7259,6 +7367,7 @@
       }
     },
     "integerId": 280,
+    "isUnique": true,
     "type": "Axe1H"
   },
   "Unique_BeltOfAbjuration": {
@@ -7279,6 +7388,7 @@
       }
     },
     "integerId": 461,
+    "isUnique": true,
     "type": "Belt"
   },
   "Unique_BeltOfAthleticism": {
@@ -7306,6 +7416,7 @@
       }
     },
     "integerId": 459,
+    "isUnique": true,
     "type": "Belt"
   },
   "Unique_BeltOfLife": {
@@ -7326,6 +7437,7 @@
       }
     },
     "integerId": 462,
+    "isUnique": true,
     "type": "Belt"
   },
   "Unique_BeltOfWarmth": {
@@ -7346,6 +7458,7 @@
       }
     },
     "integerId": 460,
+    "isUnique": true,
     "type": "Belt"
   },
   "Unique_BootsOfBloodletting": {
@@ -7368,6 +7481,7 @@
       }
     },
     "integerId": 523,
+    "isUnique": true,
     "type": "MediumBoots"
   },
   "Unique_BootsOfComfort": {
@@ -7390,6 +7504,7 @@
       }
     },
     "integerId": 505,
+    "isUnique": true,
     "type": "MediumBoots"
   },
   "Unique_BootsOfLightning": {
@@ -7419,6 +7534,7 @@
       }
     },
     "integerId": 526,
+    "isUnique": true,
     "type": "LightBoots"
   },
   "Unique_BootsOfShielding": {
@@ -7441,6 +7557,7 @@
       }
     },
     "integerId": 525,
+    "isUnique": true,
     "type": "LightBoots"
   },
   "Unique_BootsOfTheMammoth": {
@@ -7470,6 +7587,7 @@
       }
     },
     "integerId": 521,
+    "isUnique": true,
     "type": "HeavyBoots"
   },
   "Unique_BootsOfTheStampede": {
@@ -7492,6 +7610,7 @@
       }
     },
     "integerId": 506,
+    "isUnique": true,
     "type": "HeavyBoots"
   },
   "Unique_BootsOfWizardry": {
@@ -7521,6 +7640,7 @@
       }
     },
     "integerId": 522,
+    "isUnique": true,
     "type": "LightBoots"
   },
   "Unique_BowOfTorching": {
@@ -7585,6 +7705,7 @@
       }
     },
     "integerId": 322,
+    "isUnique": true,
     "type": "Bow"
   },
   "Unique_Bow_AngelsAlacrity": {
@@ -7640,6 +7761,7 @@
       }
     },
     "integerId": 401,
+    "isUnique": true,
     "type": "Bow"
   },
   "Unique_Bow_Argentum": {
@@ -7695,6 +7817,7 @@
       }
     },
     "integerId": 398,
+    "isUnique": true,
     "type": "Bow"
   },
   "Unique_Bow_Arrowstream": {
@@ -7766,6 +7889,7 @@
       }
     },
     "integerId": 409,
+    "isUnique": true,
     "type": "Bow"
   },
   "Unique_Bow_BowOfGluttony": {
@@ -7837,6 +7961,7 @@
       }
     },
     "integerId": 402,
+    "isUnique": true,
     "type": "Bow"
   },
   "Unique_Bow_FeralCall": {
@@ -7899,6 +8024,7 @@
       }
     },
     "integerId": 407,
+    "isUnique": true,
     "type": "Bow"
   },
   "Unique_Bow_FletchersRage": {
@@ -7954,6 +8080,7 @@
       }
     },
     "integerId": 399,
+    "isUnique": true,
     "type": "Bow"
   },
   "Unique_Bow_MoltenBow": {
@@ -8002,6 +8129,7 @@
       }
     },
     "integerId": 400,
+    "isUnique": true,
     "type": "Bow"
   },
   "Unique_BowmastersTunic": {
@@ -8024,6 +8152,7 @@
       }
     },
     "integerId": 542,
+    "isUnique": true,
     "type": "MediumChest"
   },
   "Unique_BracersOfLife": {
@@ -8049,6 +8178,7 @@
       }
     },
     "integerId": 552,
+    "isUnique": true,
     "type": "HeavyBracers"
   },
   "Unique_BracersOfNecromancy": {
@@ -8064,6 +8194,7 @@
       }
     },
     "integerId": 559,
+    "isUnique": true,
     "type": "LightBracers"
   },
   "Unique_BracersOfSorcery": {
@@ -8086,6 +8217,7 @@
       }
     },
     "integerId": 560,
+    "isUnique": true,
     "type": "LightBracers"
   },
   "Unique_BracersOfSpeed": {
@@ -8111,6 +8243,7 @@
       }
     },
     "integerId": 550,
+    "isUnique": true,
     "type": "HeavyBracers"
   },
   "Unique_BracersOfWinter": {
@@ -8140,6 +8273,7 @@
       }
     },
     "integerId": 553,
+    "isUnique": true,
     "type": "MediumBracers"
   },
   "Unique_BurningGloves": {
@@ -8162,6 +8296,7 @@
       }
     },
     "integerId": 537,
+    "isUnique": true,
     "type": "LightGloves"
   },
   "Unique_ChainOfTheAesir": {
@@ -8218,6 +8353,7 @@
       }
     },
     "integerId": 453,
+    "isUnique": true,
     "type": "Amulet"
   },
   "Unique_ChestOfBaldr": {
@@ -8240,6 +8376,7 @@
       }
     },
     "integerId": 544,
+    "isUnique": true,
     "type": "MediumChest"
   },
   "Unique_ChestOfImmortality": {
@@ -8262,6 +8399,7 @@
       }
     },
     "integerId": 538,
+    "isUnique": true,
     "type": "HeavyChest"
   },
   "Unique_ChestOfSkadi": {
@@ -8284,6 +8422,7 @@
       }
     },
     "integerId": 541,
+    "isUnique": true,
     "type": "MediumChest"
   },
   "Unique_CowlOfAcrobatics": {
@@ -8313,6 +8452,7 @@
       }
     },
     "integerId": 517,
+    "isUnique": true,
     "type": "MediumHelmet"
   },
   "Unique_DamageRing": {
@@ -8333,6 +8473,7 @@
       }
     },
     "integerId": 599,
+    "isUnique": true,
     "type": "Ring"
   },
   "Unique_DimensionalLoop": {
@@ -8364,6 +8505,7 @@
       }
     },
     "integerId": 333,
+    "isUnique": true,
     "type": "Ring"
   },
   "Unique_EludingRobe": {
@@ -8389,6 +8531,7 @@
       }
     },
     "integerId": 546,
+    "isUnique": true,
     "type": "LightChest"
   },
   "Unique_ExpRing": {
@@ -8418,6 +8561,7 @@
       }
     },
     "integerId": 600,
+    "isUnique": true,
     "type": "Ring"
   },
   "Unique_FaustianBargain": {
@@ -8447,6 +8591,7 @@
       }
     },
     "integerId": 319,
+    "isUnique": true,
     "type": "Amulet"
   },
   "Unique_FireGloves": {
@@ -8469,6 +8614,7 @@
       }
     },
     "integerId": 596,
+    "isUnique": true,
     "type": "HeavyGloves"
   },
   "Unique_GauntletsOfValor": {
@@ -8498,6 +8644,7 @@
       }
     },
     "integerId": 527,
+    "isUnique": true,
     "type": "HeavyGloves"
   },
   "Unique_GlacialRod": {
@@ -8539,6 +8686,7 @@
       }
     },
     "integerId": 323,
+    "isUnique": true,
     "type": "ColdStaff2H"
   },
   "Unique_GlovesOfCommand": {
@@ -8561,6 +8709,7 @@
       }
     },
     "integerId": 534,
+    "isUnique": true,
     "type": "LightGloves"
   },
   "Unique_GlovesOfPurity": {
@@ -8583,6 +8732,7 @@
       }
     },
     "integerId": 535,
+    "isUnique": true,
     "type": "LightGloves"
   },
   "Unique_GlovesOfTheMagi": {
@@ -8605,6 +8755,7 @@
       }
     },
     "integerId": 536,
+    "isUnique": true,
     "type": "LightGloves"
   },
   "Unique_HatOfSpellcasting": {
@@ -8620,6 +8771,7 @@
       }
     },
     "integerId": 502,
+    "isUnique": true,
     "type": "LightHelmet"
   },
   "Unique_Heartpiercer": {
@@ -8679,6 +8831,7 @@
       }
     },
     "integerId": 334,
+    "isUnique": true,
     "type": "Bow"
   },
   "Unique_Heartseeker": {
@@ -8706,6 +8859,7 @@
       }
     },
     "integerId": 454,
+    "isUnique": true,
     "type": "Ring"
   },
   "Unique_HelmOfDeflection": {
@@ -8735,6 +8889,7 @@
       }
     },
     "integerId": 514,
+    "isUnique": true,
     "type": "HeavyHelmet"
   },
   "Unique_HelmOfImmortality": {
@@ -8764,6 +8919,7 @@
       }
     },
     "integerId": 508,
+    "isUnique": true,
     "type": "HeavyHelmet"
   },
   "Unique_HelmOfTheValkyrie": {
@@ -8786,6 +8942,7 @@
       }
     },
     "integerId": 518,
+    "isUnique": true,
     "type": "HeavyHelmet"
   },
   "Unique_HelmOfTrueshot": {
@@ -8808,6 +8965,7 @@
       }
     },
     "integerId": 512,
+    "isUnique": true,
     "type": "MediumHelmet"
   },
   "Unique_HelmOfUnleashedRage": {
@@ -8830,6 +8988,7 @@
       }
     },
     "integerId": 515,
+    "isUnique": true,
     "type": "MediumHelmet"
   },
   "Unique_HelsWrath": {
@@ -8877,6 +9036,7 @@
       }
     },
     "integerId": 339,
+    "isUnique": true,
     "type": "Ring"
   },
   "Unique_HoodOfPower": {
@@ -8906,6 +9066,7 @@
       }
     },
     "integerId": 511,
+    "isUnique": true,
     "type": "LightHelmet"
   },
   "Unique_ImpenetrableGloves": {
@@ -8935,6 +9096,7 @@
       }
     },
     "integerId": 530,
+    "isUnique": true,
     "type": "HeavyGloves"
   },
   "Unique_ItemQuantityRing": {
@@ -8964,6 +9126,7 @@
       }
     },
     "integerId": 602,
+    "isUnique": true,
     "type": "Ring"
   },
   "Unique_LavaPlate": {
@@ -8993,6 +9156,7 @@
       }
     },
     "integerId": 540,
+    "isUnique": true,
     "type": "HeavyChest"
   },
   "Unique_LeggingsOfAvoidance": {
@@ -9008,6 +9172,7 @@
       }
     },
     "integerId": 570,
+    "isUnique": true,
     "type": "MediumLeggings"
   },
   "Unique_LeggingsOfCelerity": {
@@ -9030,6 +9195,7 @@
       }
     },
     "integerId": 571,
+    "isUnique": true,
     "type": "MediumLeggings"
   },
   "Unique_LeggingsOfInfinitePower": {
@@ -9045,6 +9211,7 @@
       }
     },
     "integerId": 573,
+    "isUnique": true,
     "type": "LightLeggings"
   },
   "Unique_LeggingsOfLoot": {
@@ -9074,6 +9241,7 @@
       }
     },
     "integerId": 567,
+    "isUnique": true,
     "type": "HeavyLeggings"
   },
   "Unique_LeggingsOfPiercing": {
@@ -9103,6 +9271,7 @@
       }
     },
     "integerId": 572,
+    "isUnique": true,
     "type": "MediumLeggings"
   },
   "Unique_LeggingsOfProtection": {
@@ -9132,6 +9301,7 @@
       }
     },
     "integerId": 566,
+    "isUnique": true,
     "type": "HeavyLeggings"
   },
   "Unique_LeggingsOfRegeneration": {
@@ -9147,6 +9317,7 @@
       }
     },
     "integerId": 565,
+    "isUnique": true,
     "type": "HeavyLeggings"
   },
   "Unique_LeggingsOfSwiftRegeneration": {
@@ -9169,6 +9340,7 @@
       }
     },
     "integerId": 575,
+    "isUnique": true,
     "type": "LightLeggings"
   },
   "Unique_LifeRing": {
@@ -9196,6 +9368,7 @@
       }
     },
     "integerId": 601,
+    "isUnique": true,
     "type": "Ring"
   },
   "Unique_LightningGloves": {
@@ -9218,6 +9391,7 @@
       }
     },
     "integerId": 598,
+    "isUnique": true,
     "type": "LightGloves"
   },
   "Unique_LivsNecklace": {
@@ -9245,6 +9419,7 @@
       }
     },
     "integerId": 321,
+    "isUnique": true,
     "type": "Amulet"
   },
   "Unique_LokulfsHood": {
@@ -9260,6 +9435,7 @@
       }
     },
     "integerId": 510,
+    "isUnique": true,
     "type": "LightHelmet"
   },
   "Unique_LokulfsWisdom": {
@@ -9280,6 +9456,7 @@
       }
     },
     "integerId": 314,
+    "isUnique": true,
     "type": "Ring"
   },
   "Unique_LuckyBracers": {
@@ -9302,6 +9479,7 @@
       }
     },
     "integerId": 557,
+    "isUnique": true,
     "type": "LightBracers"
   },
   "Unique_LuckyShoulders": {
@@ -9324,6 +9502,7 @@
       }
     },
     "integerId": 587,
+    "isUnique": true,
     "type": "LightShoulders"
   },
   "Unique_ManaStone": {
@@ -9351,6 +9530,7 @@
       }
     },
     "integerId": 455,
+    "isUnique": true,
     "type": "Ring"
   },
   "Unique_MantleOfElements": {
@@ -9376,6 +9556,7 @@
       }
     },
     "integerId": 547,
+    "isUnique": true,
     "type": "LightChest"
   },
   "Unique_MantleOfMinions": {
@@ -9401,6 +9582,7 @@
       }
     },
     "integerId": 548,
+    "isUnique": true,
     "type": "LightChest"
   },
   "Unique_MantleOfSkirnir": {
@@ -9423,6 +9605,7 @@
       }
     },
     "integerId": 543,
+    "isUnique": true,
     "type": "MediumChest"
   },
   "Unique_Medium_BranchingGloves": {
@@ -9452,6 +9635,7 @@
       }
     },
     "integerId": 533,
+    "isUnique": true,
     "type": "MediumGloves"
   },
   "Unique_Medium_ColdGloves": {
@@ -9481,6 +9665,7 @@
       }
     },
     "integerId": 597,
+    "isUnique": true,
     "type": "MediumGloves"
   },
   "Unique_Medium_GlovesOfCriticalStrikes": {
@@ -9510,6 +9695,7 @@
       }
     },
     "integerId": 531,
+    "isUnique": true,
     "type": "MediumGloves"
   },
   "Unique_Medium_GlovesOfPowershot": {
@@ -9539,6 +9725,7 @@
       }
     },
     "integerId": 532,
+    "isUnique": true,
     "type": "MediumGloves"
   },
   "Unique_Medium_VargrsBond": {
@@ -9582,6 +9769,7 @@
       }
     },
     "integerId": 315,
+    "isUnique": true,
     "type": "MediumGloves"
   },
   "Unique_NaturesYouth": {
@@ -9609,6 +9797,7 @@
       }
     },
     "integerId": 458,
+    "isUnique": true,
     "type": "Belt"
   },
   "Unique_OneHandedAxe2": {
@@ -9677,6 +9866,7 @@
       }
     },
     "integerId": 390,
+    "isUnique": true,
     "type": "Axe1H"
   },
   "Unique_OneHandedAxe3": {
@@ -9742,6 +9932,7 @@
       }
     },
     "integerId": 388,
+    "isUnique": true,
     "type": "Axe1H"
   },
   "Unique_OneHandedAxe4": {
@@ -9801,6 +9992,7 @@
       }
     },
     "integerId": 391,
+    "isUnique": true,
     "type": "Axe1H"
   },
   "Unique_OneHandedAxe5": {
@@ -9869,6 +10061,7 @@
       }
     },
     "integerId": 392,
+    "isUnique": true,
     "type": "Axe1H"
   },
   "Unique_OneHandedColdWand1": {
@@ -9896,6 +10089,7 @@
       }
     },
     "integerId": 468,
+    "isUnique": true,
     "type": "ColdWand1H"
   },
   "Unique_OneHandedCrossbow1": {
@@ -9953,6 +10147,7 @@
       }
     },
     "integerId": 417,
+    "isUnique": true,
     "type": "Crossbow1H"
   },
   "Unique_OneHandedCrossbow2": {
@@ -10010,6 +10205,7 @@
       }
     },
     "integerId": 427,
+    "isUnique": true,
     "type": "Crossbow1H"
   },
   "Unique_OneHandedCrossbow3": {
@@ -10072,6 +10268,7 @@
       }
     },
     "integerId": 428,
+    "isUnique": true,
     "type": "Crossbow1H"
   },
   "Unique_OneHandedCrossbow4": {
@@ -10136,6 +10333,7 @@
       }
     },
     "integerId": 429,
+    "isUnique": true,
     "type": "Crossbow1H"
   },
   "Unique_OneHandedCrossbow5": {
@@ -10177,6 +10375,7 @@
       }
     },
     "integerId": 469,
+    "isUnique": true,
     "type": "Crossbow1H"
   },
   "Unique_OneHandedElementalWand1": {
@@ -10218,6 +10417,7 @@
       }
     },
     "integerId": 433,
+    "isUnique": true,
     "type": "ElementalWand1H"
   },
   "Unique_OneHandedFireWand1": {
@@ -10273,6 +10473,7 @@
       }
     },
     "integerId": 465,
+    "isUnique": true,
     "type": "FireWand1H"
   },
   "Unique_OneHandedLightningWand1": {
@@ -10328,6 +10529,7 @@
       }
     },
     "integerId": 434,
+    "isUnique": true,
     "type": "LightningWand1H"
   },
   "Unique_OneHandedLightningWand2": {
@@ -10376,6 +10578,7 @@
       }
     },
     "integerId": 467,
+    "isUnique": true,
     "type": "LightningWand1H"
   },
   "Unique_OneHandedMace1": {
@@ -10451,6 +10654,7 @@
       }
     },
     "integerId": 403,
+    "isUnique": true,
     "type": "Mace1H"
   },
   "Unique_OneHandedMace2": {
@@ -10526,6 +10730,7 @@
       }
     },
     "integerId": 404,
+    "isUnique": true,
     "type": "Mace1H"
   },
   "Unique_OneHandedMace3": {
@@ -10575,6 +10780,7 @@
       }
     },
     "integerId": 405,
+    "isUnique": true,
     "type": "Mace1H"
   },
   "Unique_OneHandedMace4": {
@@ -10650,6 +10856,7 @@
       }
     },
     "integerId": 406,
+    "isUnique": true,
     "type": "Mace1H"
   },
   "Unique_OneHandedSword1": {
@@ -10709,6 +10916,7 @@
       }
     },
     "integerId": 393,
+    "isUnique": true,
     "type": "Sword1H"
   },
   "Unique_OneHandedSword2": {
@@ -10782,6 +10990,7 @@
       }
     },
     "integerId": 395,
+    "isUnique": true,
     "type": "Sword1H"
   },
   "Unique_OneHandedSword3": {
@@ -10855,6 +11064,7 @@
       }
     },
     "integerId": 396,
+    "isUnique": true,
     "type": "Sword1H"
   },
   "Unique_OneHandedSword4": {
@@ -10930,6 +11140,7 @@
       }
     },
     "integerId": 397,
+    "isUnique": true,
     "type": "Sword1H"
   },
   "Unique_PauldronsOfSafety": {
@@ -10959,6 +11170,7 @@
       }
     },
     "integerId": 577,
+    "isUnique": true,
     "type": "HeavyShoulders"
   },
   "Unique_PiercingArrows": {
@@ -10972,6 +11184,7 @@
       }
     },
     "integerId": 605,
+    "isUnique": true,
     "type": "Arrows"
   },
   "Unique_PiercingRing": {
@@ -10999,6 +11212,7 @@
       }
     },
     "integerId": 463,
+    "isUnique": true,
     "type": "Ring"
   },
   "Unique_PlateOfRiches": {
@@ -11014,6 +11228,7 @@
       }
     },
     "integerId": 539,
+    "isUnique": true,
     "type": "HeavyChest"
   },
   "Unique_PoisonedShoulders": {
@@ -11036,6 +11251,7 @@
       }
     },
     "integerId": 585,
+    "isUnique": true,
     "type": "LightShoulders"
   },
   "Unique_PouncingBoots": {
@@ -11058,6 +11274,7 @@
       }
     },
     "integerId": 520,
+    "isUnique": true,
     "type": "HeavyBoots"
   },
   "Unique_PreciseBracers": {
@@ -11087,6 +11304,7 @@
       }
     },
     "integerId": 556,
+    "isUnique": true,
     "type": "MediumBracers"
   },
   "Unique_ProtectiveBracers": {
@@ -11109,6 +11327,7 @@
       }
     },
     "integerId": 555,
+    "isUnique": true,
     "type": "MediumBracers"
   },
   "Unique_ProtectiveLeggings": {
@@ -11131,6 +11350,7 @@
       }
     },
     "integerId": 574,
+    "isUnique": true,
     "type": "LightLeggings"
   },
   "Unique_RapidBracers": {
@@ -11153,6 +11373,7 @@
       }
     },
     "integerId": 554,
+    "isUnique": true,
     "type": "MediumBracers"
   },
   "Unique_RecklessLeggings": {
@@ -11175,6 +11396,7 @@
       }
     },
     "integerId": 569,
+    "isUnique": true,
     "type": "MediumLeggings"
   },
   "Unique_RobeOfTheSage": {
@@ -11193,6 +11415,7 @@
       }
     },
     "integerId": 545,
+    "isUnique": true,
     "type": "LightChest"
   },
   "Unique_RoyaltyStone": {
@@ -11222,6 +11445,7 @@
       }
     },
     "integerId": 318,
+    "isUnique": true,
     "type": "Ring"
   },
   "Unique_SettingStone": {
@@ -11242,6 +11466,7 @@
       }
     },
     "integerId": 343,
+    "isUnique": true,
     "type": "Amulet"
   },
   "Unique_Shadowboots": {
@@ -11264,6 +11489,7 @@
       }
     },
     "integerId": 504,
+    "isUnique": true,
     "type": "LightBoots"
   },
   "Unique_Shield2": {
@@ -11311,6 +11537,7 @@
       }
     },
     "integerId": 438,
+    "isUnique": true,
     "type": "Shield"
   },
   "Unique_Shield3": {
@@ -11349,6 +11576,7 @@
       }
     },
     "integerId": 439,
+    "isUnique": true,
     "type": "Shield"
   },
   "Unique_Shield4": {
@@ -11403,6 +11631,7 @@
       }
     },
     "integerId": 440,
+    "isUnique": true,
     "type": "Shield"
   },
   "Unique_Shield5": {
@@ -11457,6 +11686,7 @@
       }
     },
     "integerId": 441,
+    "isUnique": true,
     "type": "Shield"
   },
   "Unique_Shield6": {
@@ -11502,6 +11732,7 @@
       }
     },
     "integerId": 444,
+    "isUnique": true,
     "type": "Shield"
   },
   "Unique_ShockingBracers": {
@@ -11524,6 +11755,7 @@
       }
     },
     "integerId": 558,
+    "isUnique": true,
     "type": "LightBracers"
   },
   "Unique_ShouldersOfAvoidance": {
@@ -11553,6 +11785,7 @@
       }
     },
     "integerId": 582,
+    "isUnique": true,
     "type": "MediumShoulders"
   },
   "Unique_ShouldersOfFury": {
@@ -11575,6 +11808,7 @@
       }
     },
     "integerId": 583,
+    "isUnique": true,
     "type": "MediumShoulders"
   },
   "Unique_ShouldersOfMagicProtection": {
@@ -11625,6 +11859,7 @@
       }
     },
     "integerId": 579,
+    "isUnique": true,
     "type": "HeavyShoulders"
   },
   "Unique_ShouldersOfMana": {
@@ -11654,6 +11889,7 @@
       }
     },
     "integerId": 581,
+    "isUnique": true,
     "type": "MediumShoulders"
   },
   "Unique_ShouldersOfNecromancy": {
@@ -11669,6 +11905,7 @@
       }
     },
     "integerId": 588,
+    "isUnique": true,
     "type": "LightShoulders"
   },
   "Unique_ShouldersOfShadow": {
@@ -11691,6 +11928,7 @@
       }
     },
     "integerId": 584,
+    "isUnique": true,
     "type": "MediumShoulders"
   },
   "Unique_ShouldersOfTheBarbarian": {
@@ -11713,6 +11951,7 @@
       }
     },
     "integerId": 578,
+    "isUnique": true,
     "type": "HeavyShoulders"
   },
   "Unique_ShouldersOfTheLeech": {
@@ -11742,6 +11981,7 @@
       }
     },
     "integerId": 580,
+    "isUnique": true,
     "type": "HeavyShoulders"
   },
   "Unique_SkullGauntlets": {
@@ -11764,6 +12004,7 @@
       }
     },
     "integerId": 528,
+    "isUnique": true,
     "type": "HeavyGloves"
   },
   "Unique_SteadfastBoots": {
@@ -11793,6 +12034,7 @@
       }
     },
     "integerId": 519,
+    "isUnique": true,
     "type": "HeavyBoots"
   },
   "Unique_StoneOfKnowledge": {
@@ -11822,6 +12064,7 @@
       }
     },
     "integerId": 340,
+    "isUnique": true,
     "type": "Amulet"
   },
   "Unique_SwiftBoots": {
@@ -11844,6 +12087,7 @@
       }
     },
     "integerId": 507,
+    "isUnique": true,
     "type": "MediumBoots"
   },
   "Unique_TheBulwark": {
@@ -11893,6 +12137,7 @@
       }
     },
     "integerId": 281,
+    "isUnique": true,
     "type": "Shield"
   },
   "Unique_TitaniumChest": {
@@ -11922,6 +12167,7 @@
       }
     },
     "integerId": 509,
+    "isUnique": true,
     "type": "HeavyChest"
   },
   "Unique_Tome1": {
@@ -11982,6 +12228,7 @@
       }
     },
     "integerId": 421,
+    "isUnique": true,
     "type": "Tome"
   },
   "Unique_Tome2": {
@@ -12007,6 +12254,7 @@
       }
     },
     "integerId": 442,
+    "isUnique": true,
     "type": "Tome"
   },
   "Unique_Tome3": {
@@ -12039,6 +12287,7 @@
       }
     },
     "integerId": 443,
+    "isUnique": true,
     "type": "Tome"
   },
   "Unique_TumblingBoots": {
@@ -12068,6 +12317,7 @@
       }
     },
     "integerId": 524,
+    "isUnique": true,
     "type": "MediumBoots"
   },
   "Unique_TwoHandedAxe1": {
@@ -12130,6 +12380,7 @@
       }
     },
     "integerId": 220,
+    "isUnique": true,
     "type": "Axe2H"
   },
   "Unique_TwoHandedAxe2": {
@@ -12206,6 +12457,7 @@
       }
     },
     "integerId": 435,
+    "isUnique": true,
     "type": "Axe2H"
   },
   "Unique_TwoHandedAxe3": {
@@ -12268,6 +12520,7 @@
       }
     },
     "integerId": 437,
+    "isUnique": true,
     "type": "Axe2H"
   },
   "Unique_TwoHandedColdStaff2": {
@@ -12309,6 +12562,7 @@
       }
     },
     "integerId": 408,
+    "isUnique": true,
     "type": "ColdStaff2H"
   },
   "Unique_TwoHandedElementalStaff1": {
@@ -12343,6 +12597,7 @@
       }
     },
     "integerId": 416,
+    "isUnique": true,
     "type": "ElementalStaff2H"
   },
   "Unique_TwoHandedElementalStaff2": {
@@ -12398,6 +12653,7 @@
       }
     },
     "integerId": 430,
+    "isUnique": true,
     "type": "ElementalStaff2H"
   },
   "Unique_TwoHandedFireStaff1": {
@@ -12432,6 +12688,7 @@
       }
     },
     "integerId": 411,
+    "isUnique": true,
     "type": "FireStaff2H"
   },
   "Unique_TwoHandedFireStaff2": {
@@ -12459,6 +12716,7 @@
       }
     },
     "integerId": 422,
+    "isUnique": true,
     "type": "FireStaff2H"
   },
   "Unique_TwoHandedFireStaff3": {
@@ -12479,6 +12737,7 @@
       }
     },
     "integerId": 466,
+    "isUnique": true,
     "type": "FireStaff2H"
   },
   "Unique_TwoHandedLightningStaff1": {
@@ -12520,6 +12779,7 @@
       }
     },
     "integerId": 414,
+    "isUnique": true,
     "type": "LightningStaff2H"
   },
   "Unique_TwoHandedLightningStaff2": {
@@ -12554,6 +12814,7 @@
       }
     },
     "integerId": 423,
+    "isUnique": true,
     "type": "LightningStaff2H"
   },
   "Unique_TwoHandedMace1": {
@@ -12621,6 +12882,7 @@
       }
     },
     "integerId": 320,
+    "isUnique": true,
     "type": "Mace2H"
   },
   "Unique_TwoHandedMace2": {
@@ -12683,6 +12945,7 @@
       }
     },
     "integerId": 335,
+    "isUnique": true,
     "type": "Mace2H"
   },
   "Unique_TwoHandedMace3": {
@@ -12743,6 +13006,7 @@
       }
     },
     "integerId": 426,
+    "isUnique": true,
     "type": "Mace2H"
   },
   "Unique_TwoHandedPoisonStaff1": {
@@ -12784,6 +13048,7 @@
       }
     },
     "integerId": 415,
+    "isUnique": true,
     "type": "PoisonStaff2H"
   },
   "Unique_TwoHandedPoisonStaff2": {
@@ -12818,6 +13083,7 @@
       }
     },
     "integerId": 424,
+    "isUnique": true,
     "type": "PoisonStaff2H"
   },
   "Unique_TwoHandedSpear1": {
@@ -12896,6 +13162,7 @@
       }
     },
     "integerId": 410,
+    "isUnique": true,
     "type": "Spear2H"
   },
   "Unique_TwoHandedSpear2": {
@@ -12958,6 +13225,7 @@
       }
     },
     "integerId": 436,
+    "isUnique": true,
     "type": "Spear2H"
   },
   "Unique_TwoHandedSword1": {
@@ -13019,6 +13287,7 @@
       }
     },
     "integerId": 221,
+    "isUnique": true,
     "type": "Sword2H"
   },
   "Unique_TwoHandedSword2": {
@@ -13078,6 +13347,7 @@
       }
     },
     "integerId": 394,
+    "isUnique": true,
     "type": "Sword2H"
   },
   "Unique_TwoHandedSword3": {
@@ -13144,6 +13414,7 @@
       }
     },
     "integerId": 425,
+    "isUnique": true,
     "type": "Sword2H"
   },
   "Unique_UnbreakableBracers": {
@@ -13169,6 +13440,7 @@
       }
     },
     "integerId": 551,
+    "isUnique": true,
     "type": "HeavyBracers"
   },
   "Unique_UnstoppableLeggings": {
@@ -13191,6 +13463,7 @@
       }
     },
     "integerId": 568,
+    "isUnique": true,
     "type": "HeavyLeggings"
   },
   "Unique_VampiresThirst": {
@@ -13222,6 +13495,7 @@
       }
     },
     "integerId": 316,
+    "isUnique": true,
     "type": "Belt"
   },
   "Unique_VampiricCloak": {
@@ -13235,6 +13509,7 @@
       }
     },
     "integerId": 562,
+    "isUnique": true,
     "type": "Cloak"
   },
   "Unique_VampiricGloves": {
@@ -13257,6 +13532,7 @@
       }
     },
     "integerId": 529,
+    "isUnique": true,
     "type": "HeavyGloves"
   },
   "Unique_VileTouch": {
@@ -13284,6 +13560,7 @@
       }
     },
     "integerId": 457,
+    "isUnique": true,
     "type": "Belt"
   },
   "Unique_WarlordsHelm": {
@@ -13306,6 +13583,7 @@
       }
     },
     "integerId": 513,
+    "isUnique": true,
     "type": "HeavyHelmet"
   },
   "Unique_WideswingBracers": {
@@ -13331,6 +13609,7 @@
       }
     },
     "integerId": 549,
+    "isUnique": true,
     "type": "HeavyBracers"
   },
   "Unique_WizardsShoulderguards": {
@@ -13353,6 +13632,7 @@
       }
     },
     "integerId": 586,
+    "isUnique": true,
     "type": "LightShoulders"
   },
   "Unique_WrathOfSouls": {
@@ -13375,6 +13655,7 @@
       }
     },
     "integerId": 503,
+    "isUnique": true,
     "type": "LightHelmet"
   },
   "UruzRune": {

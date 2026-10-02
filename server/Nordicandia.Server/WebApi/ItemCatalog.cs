@@ -34,7 +34,11 @@ public static class ItemCatalog
         }
     }
 
-    public readonly record struct Definition(string Name, int IntegerId, string Type, IReadOnlyList<Implicit> Implicits)
+    /// <summary>Item rarity type from Droprates.json (Normal / Unique / Set).</summary>
+    public enum RarityType { Normal, Unique, Set }
+
+    public readonly record struct Definition(string Name, int IntegerId, string Type, bool IsUnique,
+        int? SetId, IReadOnlyList<Implicit> Implicits)
     {
         public Implicit? Find(string attributeName)
         {
@@ -42,6 +46,21 @@ public static class ItemCatalog
                 if (implicitValue.Name == attributeName) return implicitValue;
             return null;
         }
+    }
+
+    /// <summary>Item rarity-type roll weights from Droprates.json.ItemRarityTypeWeights.</summary>
+    public static IReadOnlyDictionary<string, double> RarityTypeWeights { get; private set; } = new Dictionary<string, double>();
+
+    /// <summary>Rolls Normal/Unique/Set using the client weights.</summary>
+    public static RarityType RollRarityType(CombatRandom rng)
+    {
+        double normal = RarityTypeWeights.GetValueOrDefault("Normal", 1), unique = RarityTypeWeights.GetValueOrDefault("Unique", 0), set = RarityTypeWeights.GetValueOrDefault("Set", 0);
+        var total = normal + unique + set;
+        if (total <= 0) return RarityType.Normal;
+        var roll = rng.NextDouble() * total;
+        if (roll < set) return RarityType.Set;
+        if (roll < set + unique) return RarityType.Unique;
+        return RarityType.Normal;
     }
 
     // Equip slot -> candidate item type names (client ItemTypes).
@@ -71,16 +90,24 @@ public static class ItemCatalog
     private static readonly Lazy<IReadOnlyList<Definition>> All = new(Load);
     public static IReadOnlyList<Definition> Definitions => All.Value;
 
-    /// <summary>Picks a definition matching the equip slot; falls back to any definition.</summary>
-    public static Definition? Pick(int slot, CombatRandom rng)
+    /// <summary>Picks a definition matching the equip slot and rarity type (Normal excludes
+    /// unique/set items); falls back to any matching-slot definition.</summary>
+    public static Definition? Pick(int slot, RarityType rarityType, CombatRandom rng)
     {
         var all = All.Value;
+        bool Matches(Definition d) => rarityType switch
+        {
+            RarityType.Unique => d.IsUnique,
+            RarityType.Set => d.SetId.HasValue,
+            _ => !d.IsUnique && !d.SetId.HasValue,
+        };
+        var candidates = all.Where(Matches).ToList();
         if (slot >= 0 && slot < SlotTypes.Length)
         {
-            var candidates = all.Where(d => SlotTypes[slot].Contains(d.Type)).ToList();
-            if (candidates.Count > 0) return candidates[(int)(rng.NextDouble() * candidates.Count) % candidates.Count];
+            var bySlot = candidates.Where(d => SlotTypes[slot].Contains(d.Type)).ToList();
+            if (bySlot.Count > 0) return bySlot[(int)(rng.NextDouble() * bySlot.Count) % bySlot.Count];
         }
-        return all.Count > 0 ? all[(int)(rng.NextDouble() * all.Count) % all.Count] : null;
+        return candidates.Count > 0 ? candidates[(int)(rng.NextDouble() * candidates.Count) % candidates.Count] : null;
     }
 
     private static IReadOnlyList<Definition> Load()
@@ -91,13 +118,23 @@ public static class ItemCatalog
         using var stream = assembly.GetManifestResourceStream(resource)!;
         var raw = JsonSerializer.Deserialize<Dictionary<string, RawDefinition>>(stream,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
+        RarityTypeWeights = JsonSerializer.Deserialize<Dictionary<string, double>>(
+            ReadResource("GameData.droprate_weights.json"))!;
         return raw.Select(kv => new Definition(kv.Key, kv.Value.IntegerId, kv.Value.Type,
-            kv.Value.Implicit.Select(i => new Implicit(i.Key,
+            kv.Value.IsUnique, kv.Value.SetId, kv.Value.Implicit.Select(i => new Implicit(i.Key,
                 i.Value.Default is { Length: 2 } d ? new Range(d[0], d[1]) : null,
                 i.Value.ByRarity.Select(r => (int.Parse(r.Key), new Range(r.Value[0], r.Value[1]))).ToList()
             )).ToList())).ToList();
     }
 
+    private static Stream ReadResource(string suffix)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        var resource = assembly.GetManifestResourceNames()
+            .First(n => n.EndsWith(suffix, StringComparison.Ordinal));
+        return assembly.GetManifestResourceStream(resource)!;
+    }
+
     private sealed record RawImplicit(double[] Default, Dictionary<string, double[]> ByRarity);
-    private sealed record RawDefinition(int IntegerId, string Type, Dictionary<string, RawImplicit> Implicit);
+    private sealed record RawDefinition(int IntegerId, string Type, bool IsUnique, int? SetId, Dictionary<string, RawImplicit> Implicit);
 }
