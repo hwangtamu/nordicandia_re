@@ -161,6 +161,50 @@ def derive_effect(name: str, description: str, tags: list[str]) -> dict:
             "healPercent": 0.0, "buffBonus": 0.0, "buffSeconds": 0.0}
 
 
+def classify_effect(name: str, description: str, tags: list[str], values: dict) -> str:
+    """Data-driven effect classification from the recovered attribute set."""
+    keys = list(values.keys())
+    text = f"{name} {description}".lower()
+    if any("Num_Chains" in k for k in keys):
+        return "chain"
+    if any(k.startswith("Minion_Inheritance") or "Minion_Duration" in k for k in keys):
+        return "summon"
+    if any("Mana_Shield" in k for k in keys):
+        return "shield"
+    if any("Life_Leech" in k for k in keys):
+        return "leech"
+    if "Base_Power_Radius" in values and values["Base_Power_Radius"] > 0:
+        return "nova"
+    if any("Movement_Speed" in k for k in keys) and "Base_Power_Weapon_Damage_Multiplier" not in values:
+        return "mobility"
+    if any("Pierce" in k or "Num_Charges" in k for k in keys):
+        return "projectile"
+    if any(w in text for w in ("rain", "nova", "whirlwind", "all enemies", "nearby")):
+        return "nova"
+    if "Base_Power_Weapon_Damage_Multiplier" in values or "Power_Weapon_Damage_Multiplier_2" in values:
+        return "strike"
+    return "rally"
+
+
+def special_of(values: dict) -> str:
+    for key in values:
+        if "Freeze" in key:
+            return "freeze"
+        if "Stun" in key:
+            return "stun"
+        if "Life_Leech" in key:
+            return "leech"
+        if key.startswith("Minion_Inheritance") or "Minion_Duration" in key:
+            return "summon"
+        if "Movement_Speed" in key:
+            return "mobility"
+        if "Mana_Shield" in key:
+            return "shield"
+        if "Pierce" in key:
+            return "pierce"
+    return ""
+
+
 def derive_passive(name: str, description: str) -> dict:
     text = f"{name} {description}".lower()
     if any(w in text for w in ("magic find", "item quantity", "treasure")):
@@ -295,7 +339,8 @@ def main() -> int:
             mana = v.get("Base_Mana_Cost")
             radius = v.get("Base_Power_Radius")
             duration = v.get("Buff_Duration") or v.get("Power_Duration") or v.get("Power_Freeze_Duration")
-            effect_kind = "nova" if (radius or 0) > 0 else effect["effect"]
+            effect_kind = classify_effect(a["name"], a["description"], a["tags"], v)
+            chains = int(v.get("ChainLightning_Max_Num_Chains", 0) or 0)
             verified = multiplier is not None or cooldown is not None or mana is not None
             resolved = {}
             if multiplier is not None:
@@ -308,16 +353,18 @@ def main() -> int:
                 resolved["radius"] = radius
             if v.get("ChainLightning_Max_Num_Chains") is not None:
                 resolved["count"] = v["ChainLightning_Max_Num_Chains"]
-            return dict(a, slot=slot, effect=effect_kind,
+            return dict(a, slot=slot, effect=effect_kind, special=special_of(v), chains=chains,
                         multiplier=multiplier if multiplier is not None else effect["multiplier"],
                         cooldown=cooldown if cooldown is not None else effect["cooldown"],
                         radius=radius if radius is not None else effect["radius"],
                         manaCost=mana if mana is not None else 0,
                         healPercent=effect["healPercent"],
                         buffBonus=v.get("Strength_Bonus_Percent", effect["buffBonus"]),
-                        buffSeconds=duration if (duration is not None and effect_kind == "rally") else effect["buffSeconds"],
+                        buffSeconds=duration if duration is not None else effect["buffSeconds"],
                         values=v, confidence="client-verified" if verified else "provisional-behaviour",
-                        descriptionFilled=fill_description(a["description"], a["placeholders"], resolved))
+                        descriptionFilled=fill_description(a["description"], a["placeholders"], resolved),
+                        masteries=[{"name": m["name"], "treeRow": m["treeRow"], "maxPoints": m["maxPoints"],
+                                    "specs": m["attributeSpecifiers"]} for m in by_parent.get(a["id"], [])])
 
         def merged_passive(p):
             v = values.get(p.get("implementedBy") or "", {})
@@ -330,8 +377,10 @@ def main() -> int:
                     offense = base
                 elif effect["effect"] == "warding":
                     health = base
-            record = dict(p, **effect, values=v,
-                          confidence="client-verified" if base is not None else "provisional-behaviour")
+            record = dict(p, **effect, values=v, special=special_of(v),
+                          confidence="client-verified" if base is not None else "provisional-behaviour",
+                          masteries=[{"name": m["name"], "treeRow": m["treeRow"], "maxPoints": m["maxPoints"],
+                                      "specs": m["attributeSpecifiers"]} for m in by_parent.get(p["id"], [])])
             record["offenseBonus"] = offense
             record["healthBonus"] = health
             return record
@@ -388,6 +437,11 @@ def cs_str(value: str | None) -> str:
     return '"' + (value or "").replace("\\", "\\\\").replace('"', '\\"').replace("\n", "\\n").replace("\r", "") + '"'
 
 
+def cs_values(values) -> str:
+    items = ", ".join(f"[{cs_str(k)}] = {v}D" for k, v in (values or {}).items())
+    return "new Dictionary<string, double> { " + items + " }"
+
+
 def write_csharp(kits: dict) -> None:
     lines = [
         "// <auto-generated> by tools/web-content/export_powers.py — do not edit by hand.",
@@ -409,7 +463,7 @@ def write_csharp(kits: dict) -> None:
                     str(a["slot"]), cs_str(a["name"]), cs_str(a["description"]), cs_str(a["icon"]),
                     cs_str(a["effect"]), f"{a['multiplier']}D", f"{a['cooldown']}D", f"{a['radius']}D",
                     f"{a['manaCost']}D", f"{a['healPercent']}D", f"{a['buffBonus']}D", f"{a['buffSeconds']}D",
-                    cs_str(a["confidence"]),
+                    cs_str(a["confidence"]), cs_values(a.get("values")),
                 ]) + "),")
         p = value["passive"]
         lines.append("        }, new PassiveProfile(" + ", ".join([

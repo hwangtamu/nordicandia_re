@@ -84,9 +84,9 @@ public sealed class CombatInstance
         "Basic",
         new[]
         {
-            new SkillProfile(0, "Strike", "", "", "strike", 2.4, 4.0, 0, 0, 0, 0, 0, "provisional-behaviour"),
-            new SkillProfile(1, "Nova", "", "", "nova", 1.5, 8.0, 5.5, 0, 0, 0, 0, "provisional-behaviour"),
-            new SkillProfile(2, "Rally", "", "", "rally", 0, 20.0, 0, 0, 0.30, 0.25, 6.0, "provisional-behaviour"),
+            new SkillProfile(0, "Strike", "", "", "strike", 2.4, 4.0, 0, 0, 0, 0, 0, "provisional-behaviour", new Dictionary<string, double>()),
+            new SkillProfile(1, "Nova", "", "", "nova", 1.5, 8.0, 5.5, 0, 0, 0, 0, "provisional-behaviour", new Dictionary<string, double>()),
+            new SkillProfile(2, "Rally", "", "", "rally", 0, 20.0, 0, 0, 0.30, 0.25, 6.0, "provisional-behaviour", new Dictionary<string, double>()),
         },
         new PassiveProfile("Might", "", "", "might", 0.10, 0.10, "provisional-behaviour"));
 
@@ -113,6 +113,8 @@ public sealed class CombatInstance
     private readonly double[] skillCooldowns;
     private double offenseBuffTimer;
     private double offenseBuffBonus;
+    private double moveSpeedBuffTimer;
+    private double moveSpeedBuffBonus;
     private double playerRespawnTimer;
     private int dungeonKills;
     private CombatMonster boss;
@@ -290,6 +292,7 @@ public sealed class CombatInstance
         attackCooldown -= dt;
         for (var i = 0; i < skillCooldowns.Length; i++) skillCooldowns[i] = Math.Max(0, skillCooldowns[i] - dt);
         offenseBuffTimer = Math.Max(0, offenseBuffTimer - dt);
+        moveSpeedBuffTimer = Math.Max(0, moveSpeedBuffTimer - dt);
         if (Recovery > 0 && PlayerHp > 0)
             PlayerHp = Math.Min(PlayerMaxHp, PlayerHp + Recovery * dt);
 
@@ -301,7 +304,7 @@ public sealed class CombatInstance
             if (distance < 0.15) hasTarget = false;
             else
             {
-                var step = Math.Min(distance, playerSpeed * dt);
+                var step = Math.Min(distance, (playerSpeed * (1 + (moveSpeedBuffTimer > 0 ? moveSpeedBuffBonus : 0))) * dt);
                 PlayerX += dx / distance * step;
                 PlayerZ += dz / distance * step;
                 ClampToArena();
@@ -531,15 +534,52 @@ public sealed class CombatInstance
                 Version++;
                 return new SkillOutcome(true, total, first, "ok");
             }
+            case "chain":
+            {
+                var candidates = AliveMonstersInRadius(Math.Max(skill.Radius, 8));
+                if (candidates.Count == 0) return new SkillOutcome(false, 0, -1, "no_target");
+                skillCooldowns[skillId] = skill.Cooldown;
+                candidates.Sort((a, b) => Distance(a).CompareTo(Distance(b)));
+                var maxTargets = Math.Max(1, ChainsOf(skill));
+                var decay = skill.Values.TryGetValue("Power_Chain_Lightning_Damage_Reduction_Percent", out var d)
+                    ? Math.Clamp(1 - d, 0.1, 1.0)
+                    : Math.Clamp(1 - 0.15, 0.1, 1.0);
+                double total = 0;
+                var first = candidates[0].Index;
+                var currentMultiplier = skill.Multiplier;
+                foreach (var monster in candidates.Take(maxTargets))
+                {
+                    var hit = ResolveSkill(monster, currentMultiplier);
+                    total += hit.Damage;
+                    DamageMonster(monster, hit.Damage);
+                    currentMultiplier *= decay;
+                }
+                Version++;
+                return new SkillOutcome(true, total, first, "ok");
+            }
+            case "summon":
+            case "mobility":
+            case "shield":
             case "rally":
             {
                 skillCooldowns[skillId] = skill.Cooldown;
                 if (skill.HealPercent > 0)
                     PlayerHp = Math.Min(PlayerMaxHp, PlayerHp + PlayerMaxHp * skill.HealPercent);
-                if (skill.BuffBonus > 0)
+                var bonus = skill.BuffBonus;
+                if (bonus <= 0 && skill.Effect == "summon")
+                    bonus = skill.Values.TryGetValue("Minion_Inheritance_Weapon_Damage_Bonus_Percent", out var b) ? b : 0.15;
+                if (bonus > 0)
                 {
-                    offenseBuffTimer = skill.BuffSeconds;
-                    offenseBuffBonus = skill.BuffBonus;
+                    offenseBuffTimer = Math.Max(offenseBuffTimer, skill.BuffSeconds);
+                    offenseBuffBonus = bonus;
+                }
+                if (skill.Effect == "mobility")
+                {
+                    var speed = skill.Values.TryGetValue("Movement_Speed_Bonus_Percent", out var s)
+                        ? s / 100.0
+                        : 0.25;
+                    moveSpeedBuffTimer = Math.Max(moveSpeedBuffTimer, skill.BuffSeconds);
+                    moveSpeedBuffBonus = speed;
                 }
                 Version++;
                 return new SkillOutcome(true, 0, -1, "ok");
@@ -563,6 +603,29 @@ public sealed class CombatInstance
             new CombatantStats(target.Offense, target.Defense, 0, target.Level),
             new AttackProfile(multiplier, 0.15, 2.0, 0.08),
             rng);
+
+    private double Distance(CombatMonster monster)
+        => Math.Sqrt(Math.Pow(monster.X - PlayerX, 2) + Math.Pow(monster.Z - PlayerZ, 2));
+
+    private static int ChainsOf(SkillProfile skill)
+        => skill.Values.TryGetValue("ChainLightning_Max_Num_Chains", out var chains) ? (int)chains : 0;
+
+    /// <summary>Classification of a skill's special mechanic from its recovered attributes.</summary>
+    private static string SpecialOf(SkillProfile skill)
+    {
+        foreach (var key in skill.Values.Keys)
+        {
+            if (key.Contains("Freeze")) return "freeze";
+            if (key.Contains("Stun")) return "stun";
+            if (key.Contains("Life_Leech")) return "leech";
+            if (key.StartsWith("Minion_Inheritance") || key.Contains("Minion_Duration")) return "summon";
+            if (key.Contains("Movement_Speed")) return "mobility";
+            if (key.Contains("Mana_Shield")) return "shield";
+            if (key.Contains("Pierce")) return "pierce";
+            if (key.Contains("Num_Chains")) return "chain";
+        }
+        return "";
+    }
 
     private List<CombatMonster> AliveMonstersInRadius(double radius)
     {
@@ -592,7 +655,7 @@ public sealed class CombatInstance
         return new CombatSnapshot(Version, Math.Round(PlayerX, 3), Math.Round(PlayerZ, 3),
             Math.Round(PlayerHp, 2), Math.Round(PlayerMaxHp, 2), PlayerLevel, Experience, Silver, Opals,
             Kills,
-            skills.Select((s, i) => new SkillStatus(s.Slot, s.Name, s.Effect, Math.Round(skillCooldowns[i], 2), s.Cooldown, s.ManaCost, s.Confidence)).ToList(),
+            skills.Select((s, i) => new SkillStatus(s.Slot, s.Name, s.Effect, Math.Round(skillCooldowns[i], 2), s.Cooldown, s.ManaCost, s.Confidence, ChainsOf(s), SpecialOf(s))).ToList(),
             Math.Round(offenseBuffTimer, 2),
             DungeonsCleared, Math.Max(0, BossKillGoal - dungeonKills), boss is { Alive: true }, rows);
     }

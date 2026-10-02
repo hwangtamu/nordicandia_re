@@ -3661,6 +3661,8 @@
           ],
           "slot": 0,
           "effect": "strike",
+          "special": "",
+          "chains": 0,
           "multiplier": 5.5,
           "cooldown": 15.0,
           "radius": 0.0,
@@ -3675,7 +3677,56 @@
             "Slam_Max_Distance": 15.0
           },
           "confidence": "client-verified",
-          "descriptionFilled": "Slam the ground in front of you to deal 550 weapon damage to enemies in a line."
+          "descriptionFilled": "Slam the ground in front of you to deal 550 weapon damage to enemies in a line.",
+          "masteries": [
+            {
+              "name": "MasterySlamImprovedSlam",
+              "treeRow": 1,
+              "maxPoints": null,
+              "specs": []
+            },
+            {
+              "name": "MasterySlamWideSlam",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 193,
+                  "Value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "MasterySlamEarthquake",
+              "treeRow": 2,
+              "maxPoints": 6,
+              "specs": []
+            },
+            {
+              "name": "MasterySlamQuickSlam",
+              "treeRow": 2,
+              "maxPoints": 10,
+              "specs": []
+            },
+            {
+              "name": "MasterySlamShockwave",
+              "treeRow": 3,
+              "maxPoints": 2,
+              "specs": []
+            },
+            {
+              "name": "MasterySlamVampiricSlam",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasterySlamMana",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            }
+          ]
         },
         {
           "id": "73428deb-2a35-433d-8e67-39d188aa6395",
@@ -3712,6 +3763,8 @@
           ],
           "slot": 1,
           "effect": "rally",
+          "special": "",
+          "chains": 0,
           "multiplier": 0.0,
           "cooldown": 30.0,
           "radius": 0.0,
@@ -3725,7 +3778,80 @@
             "Base_Cooldown": 30.0
           },
           "confidence": "client-verified",
-          "descriptionFilled": "Increases your strength by {0}% for 30 seconds."
+          "descriptionFilled": "Increases your strength by {0}% for 30 seconds.",
+          "masteries": [
+            {
+              "name": "MasteryMightImprovedMight",
+              "treeRow": 1,
+              "maxPoints": null,
+              "specs": [
+                {
+                  "AttributeId": 109,
+                  "Value": 0.03
+                }
+              ]
+            },
+            {
+              "name": "MasteryMightFuriousRage",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 6,
+                  "Value": 0.02
+                },
+                {
+                  "AttributeId": 244,
+                  "Value": 0.04
+                }
+              ]
+            },
+            {
+              "name": "MasteryMightPiercingStrength",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 717,
+                  "StartValue": 0.0,
+                  "Value": 0.02
+                },
+                {
+                  "AttributeId": 79,
+                  "StartValue": 0.0,
+                  "AttributeOperator": 2
+                },
+                {
+                  "AttributeId": 232,
+                  "Value": 360.0
+                }
+              ]
+            },
+            {
+              "name": "MasteryMightDuration",
+              "treeRow": 2,
+              "maxPoints": 6,
+              "specs": []
+            },
+            {
+              "name": "MasteryMightObsession",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryMightDisarm",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryMightSturdiness",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            }
+          ]
         },
         {
           "id": "1b17cf95-4a7c-4965-8311-0c88ee192976",
@@ -3759,6 +3885,8 @@
           ],
           "slot": 2,
           "effect": "strike",
+          "special": "",
+          "chains": 0,
           "multiplier": 0.25,
           "cooldown": 10.0,
           "radius": 0.0,
@@ -3772,7 +3900,88 @@
             "Base_Mana_Cost": 15.0
           },
           "confidence": "client-verified",
-          "descriptionFilled": ""
+          "descriptionFilled": "",
+          "masteries": [
+            {
+              "name": "MasteryPounceKnockback",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 267,
+                  "Value": 0.5
+                },
+                {
+                  "AttributeId": 58,
+                  "Value": 0.03
+                }
+              ]
+            },
+            {
+              "name": "MasteryPounceProwess",
+              "treeRow": 2,
+              "maxPoints": 6,
+              "specs": [
+                {
+                  "AttributeId": 264,
+                  "Value": 1.5
+                },
+                {
+                  "AttributeId": 850,
+                  "StartValue": 20.0,
+                  "Value": -2.0
+                },
+                {
+                  "AttributeId": 232,
+                  "Value": 120.0
+                },
+                {
+                  "AttributeId": 79,
+                  "Value": 90.0
+                },
+                {
+                  "AttributeId": 58,
+                  "Value": 0.03,
+                  "AttributeOperator": 1
+                }
+              ]
+            },
+            {
+              "name": "MasteryPounceImprovedPounce",
+              "treeRow": 1,
+              "maxPoints": null,
+              "specs": [
+                {
+                  "AttributeId": 22,
+                  "Value": 0.01
+                }
+              ]
+            },
+            {
+              "name": "MasteryPounceLongjump",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 850,
+                  "StartValue": 20.0,
+                  "Value": -2.0
+                }
+              ]
+            },
+            {
+              "name": "MasteryPounceWings",
+              "treeRow": 2,
+              "maxPoints": 10,
+              "specs": []
+            },
+            {
+              "name": "MasteryPounceRend",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            }
+          ]
         }
       ],
       "passive": {
@@ -3806,7 +4015,9 @@
         "values": {
           "field_0x120": 1.0
         },
-        "confidence": "client-verified"
+        "special": "",
+        "confidence": "client-verified",
+        "masteries": []
       },
       "activePoolSize": 13,
       "passivePoolSize": 11,
@@ -3858,6 +4069,8 @@
           ],
           "slot": 0,
           "effect": "rally",
+          "special": "",
+          "chains": 0,
           "multiplier": 0.0,
           "cooldown": 25.0,
           "radius": 0.0,
@@ -3870,7 +4083,79 @@
             "Base_Mana_Cost": 30.0
           },
           "confidence": "client-verified",
-          "descriptionFilled": "Increases your attack speed by {0}% for 25 second(s).\r\n25 second(s) cooldown."
+          "descriptionFilled": "Increases your attack speed by {0}% for 25 second(s).\r\n25 second(s) cooldown.",
+          "masteries": [
+            {
+              "name": "MasteryRapidFireEnduringSwiftness",
+              "treeRow": 2,
+              "maxPoints": 6,
+              "specs": [
+                {
+                  "AttributeId": 79,
+                  "Value": 120.0
+                },
+                {
+                  "AttributeId": 166,
+                  "Value": 300.0
+                },
+                {
+                  "AttributeId": 451,
+                  "StartValue": -2.0,
+                  "Value": 0.05
+                }
+              ]
+            },
+            {
+              "name": "MasteryRapidFireBattery",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 79,
+                  "Value": 2.0,
+                  "AttributeOperator": 1
+                },
+                {
+                  "AttributeId": 373,
+                  "StartValue": 1.0,
+                  "ModifierForSpecificLevel": 1
+                },
+                {
+                  "AttributeId": 451,
+                  "Value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "MasteryRapidFireImprovedRapidFire",
+              "treeRow": 1,
+              "maxPoints": null,
+              "specs": [
+                {
+                  "AttributeId": 371,
+                  "Value": 0.05
+                }
+              ]
+            },
+            {
+              "name": "MasteryRapidFireAttackRange",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryRapidFireMaxAttackSpeed",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryRapidFireReducedStandStill",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            }
+          ]
         },
         {
           "id": "41c64b4a-71c4-4ccf-9029-99031eff524c",
@@ -3927,6 +4212,8 @@
           ],
           "slot": 1,
           "effect": "nova",
+          "special": "",
+          "chains": 0,
           "multiplier": 1.4,
           "cooldown": 25.0,
           "radius": 3.0,
@@ -3940,7 +4227,77 @@
             "Base_Power_Radius": 3.0
           },
           "confidence": "client-verified",
-          "descriptionFilled": "Fire a rain of arrows towards a selected area of 3 units for 25 seconds. Deals {2}% weapon damage per second.\r\n25 second(s) cooldown.\r\nCosts 20 mana."
+          "descriptionFilled": "Fire a rain of arrows towards a selected area of 3 units for 25 seconds. Deals {2}% weapon damage per second.\r\n25 second(s) cooldown.\r\nCosts 20 mana.",
+          "masteries": [
+            {
+              "name": "MasteryArrowRainImprovedArrowRain",
+              "treeRow": 1,
+              "maxPoints": null,
+              "specs": [
+                {
+                  "AttributeId": 58,
+                  "Value": 0.1,
+                  "ModifierForSpecificLevel": 50
+                }
+              ]
+            },
+            {
+              "name": "MasteryArrowRainArrowCascade",
+              "treeRow": 2,
+              "maxPoints": 6,
+              "specs": [
+                {
+                  "AttributeId": 193,
+                  "Value": 0.5
+                },
+                {
+                  "AttributeId": 79,
+                  "Value": 4.0
+                }
+              ]
+            },
+            {
+              "name": "MasteryArrowRainPrecisionArrows",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 79,
+                  "Value": 5.0,
+                  "AttributeOperator": 1
+                },
+                {
+                  "AttributeId": 193,
+                  "Value": 0.25,
+                  "AttributeOperator": 1
+                }
+              ]
+            },
+            {
+              "name": "MasteryArrowRainTorrent",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 58,
+                  "Value": 0.1,
+                  "ModifierForSpecificLevel": 50
+                }
+              ]
+            },
+            {
+              "name": "MasteryArrowRainPenetrate",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryArrowRainPureArrows",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            }
+          ]
         },
         {
           "id": "1c974013-86f3-405f-ac7c-2cfb568dcf35",
@@ -3990,6 +4347,8 @@
           ],
           "slot": 2,
           "effect": "rally",
+          "special": "",
+          "chains": 0,
           "multiplier": 0.0,
           "cooldown": 45.0,
           "radius": 0.0,
@@ -4002,7 +4361,100 @@
             "Base_Mana_Cost": 45.0
           },
           "confidence": "client-verified",
-          "descriptionFilled": "Summon a wolf companion with {0}% of your health and {1}% of your damage, which defends you and helps you find {2}% more monsters."
+          "descriptionFilled": "Summon a wolf companion with {0}% of your health and {1}% of your damage, which defends you and helps you find {2}% more monsters.",
+          "masteries": [
+            {
+              "name": "MasterySummonWolfSpiritWolf",
+              "treeRow": 2,
+              "maxPoints": 10,
+              "specs": [
+                {
+                  "AttributeId": 79,
+                  "StartValue": 120.0,
+                  "Value": 30.0
+                },
+                {
+                  "AttributeId": 375,
+                  "Value": 1.0,
+                  "AttributeModifierType": 1,
+                  "ModifierForSpecificLevel": 1
+                },
+                {
+                  "AttributeId": 376,
+                  "Value": 0.1
+                }
+              ]
+            },
+            {
+              "name": "MasterySummonWolfSpeed",
+              "treeRow": 1,
+              "maxPoints": null,
+              "specs": [
+                {
+                  "AttributeId": 1101,
+                  "Value": 0.15
+                }
+              ]
+            },
+            {
+              "name": "MasterySummonWolfEnrage",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 79,
+                  "Value": 2.0,
+                  "AttributeOperator": 1
+                },
+                {
+                  "AttributeId": 378,
+                  "Value": 0.02
+                },
+                {
+                  "AttributeId": 293,
+                  "Value": 2.0
+                }
+              ]
+            },
+            {
+              "name": "MasterySummonWolfAgility",
+              "treeRow": 3,
+              "maxPoints": 1,
+              "specs": [
+                {
+                  "AttributeId": 377,
+                  "StartValue": 0.0,
+                  "Value": 1.0,
+                  "ModifierForSpecificLevel": 1
+                }
+              ]
+            },
+            {
+              "name": "MasterySummonWolfVigor",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 377,
+                  "StartValue": 0.0,
+                  "Value": 1.0,
+                  "ModifierForSpecificLevel": 1
+                }
+              ]
+            },
+            {
+              "name": "MasterySummonWolfAoeAttack",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasterySummonWolfReducedCooldown",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            }
+          ]
         }
       ],
       "passive": {
@@ -4032,7 +4484,9 @@
         "values": {
           "field_0x120": 0.5
         },
-        "confidence": "client-verified"
+        "special": "",
+        "confidence": "client-verified",
+        "masteries": []
       },
       "activePoolSize": 14,
       "passivePoolSize": 11,
@@ -4093,7 +4547,9 @@
             "__l__initialThreadId"
           ],
           "slot": 0,
-          "effect": "nova",
+          "effect": "chain",
+          "special": "",
+          "chains": 4,
           "multiplier": 2.5,
           "cooldown": 20.0,
           "radius": 5.5,
@@ -4107,7 +4563,77 @@
             "Base_Cooldown": 20.0
           },
           "confidence": "client-verified",
-          "descriptionFilled": "Cast a jolt of lightning that deals 250% weapon damage as Lightning and then jumps to additional nearby enemies. Each jump reduces the damage by {1}%. The lightning will dissipate after 4 jumps.\r\n20 second(s) cooldown.\r\nCosts {4} mana."
+          "descriptionFilled": "Cast a jolt of lightning that deals 250% weapon damage as Lightning and then jumps to additional nearby enemies. Each jump reduces the damage by {1}%. The lightning will dissipate after 4 jumps.\r\n20 second(s) cooldown.\r\nCosts {4} mana.",
+          "masteries": [
+            {
+              "name": "MasteryChainLightningImprovedChainLightning",
+              "treeRow": 1,
+              "maxPoints": null,
+              "specs": [
+                {
+                  "AttributeId": 58,
+                  "Value": 0.1,
+                  "ModifierForSpecificLevel": 50
+                }
+              ]
+            },
+            {
+              "name": "MasteryChainLightningWeapon",
+              "treeRow": 2,
+              "maxPoints": 6,
+              "specs": [
+                {
+                  "AttributeId": 79,
+                  "StartValue": 0.0,
+                  "Value": 15.0
+                }
+              ]
+            },
+            {
+              "name": "MasteryChainLightningChains",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 143,
+                  "Value": 1.0
+                },
+                {
+                  "AttributeId": 79,
+                  "Value": 3.0,
+                  "AttributeOperator": 1
+                }
+              ]
+            },
+            {
+              "name": "MasteryChainLightningManaChain",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 143,
+                  "Value": 1.0
+                },
+                {
+                  "AttributeId": 79,
+                  "Value": 3.0,
+                  "AttributeOperator": 1
+                }
+              ]
+            },
+            {
+              "name": "MasteryChainLightningDamagePerJump",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryChainLightningThunderstrike",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            }
+          ]
         },
         {
           "id": "35c1fa86-53ff-4558-a0e6-6cc30bb91892",
@@ -4143,7 +4669,9 @@
             "_couldUpdatePosition_5__3"
           ],
           "slot": 1,
-          "effect": "strike",
+          "effect": "rally",
+          "special": "",
+          "chains": 0,
           "multiplier": 2.2,
           "cooldown": 12.0,
           "radius": 0.0,
@@ -4156,7 +4684,78 @@
             "Base_Mana_Cost": 20.0
           },
           "confidence": "client-verified",
-          "descriptionFilled": ""
+          "descriptionFilled": "",
+          "masteries": [
+            {
+              "name": "MasteryTeleportImprovedTeleport",
+              "treeRow": 1,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 80,
+                  "Value": 4.0,
+                  "AttributeOperator": 1
+                }
+              ]
+            },
+            {
+              "name": "MasteryTeleportElusiveness",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 166,
+                  "Value": 20.0
+                },
+                {
+                  "AttributeId": 801,
+                  "StartValue": 0.1,
+                  "AttributeModifierType": 1,
+                  "ModifierForSpecificLevel": 1
+                },
+                {
+                  "AttributeId": 79,
+                  "StartValue": 0.0,
+                  "Value": 10.0
+                }
+              ]
+            },
+            {
+              "name": "MasteryTeleportRecitement",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 166,
+                  "Value": 1.0
+                },
+                {
+                  "AttributeId": 58,
+                  "StartValue": 0.15,
+                  "AttributeModifierType": 1,
+                  "ModifierForSpecificLevel": 1
+                }
+              ]
+            },
+            {
+              "name": "MasteryTeleportSafetyTeleport",
+              "treeRow": 2,
+              "maxPoints": 6,
+              "specs": []
+            },
+            {
+              "name": "MasteryTeleportLightningSpeed",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryTeleportKnockback",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            }
+          ]
         },
         {
           "id": "cb4943e8-5ea1-4956-a757-989a316b1ec7",
@@ -4210,13 +4809,15 @@
           ],
           "slot": 2,
           "effect": "nova",
+          "special": "freeze",
+          "chains": 0,
           "multiplier": 0.5,
           "cooldown": 30.0,
           "radius": 6.0,
           "manaCost": 0,
           "healPercent": 0.0,
           "buffBonus": 0.0,
-          "buffSeconds": 0.0,
+          "buffSeconds": 2.0,
           "values": {
             "Base_Power_Radius": 6.0,
             "Base_Power_Weapon_Damage_Multiplier": 0.5,
@@ -4224,7 +4825,79 @@
             "Base_Cooldown": 30.0
           },
           "confidence": "client-verified",
-          "descriptionFilled": "Cast an Ice Nova that deals 50% weapon damage as Cold and hits all enemies within 6 units, freezing them for 30 seconds.\r\n30 second(s) cooldown.\r\nCosts {4} mana."
+          "descriptionFilled": "Cast an Ice Nova that deals 50% weapon damage as Cold and hits all enemies within 6 units, freezing them for 30 seconds.\r\n30 second(s) cooldown.\r\nCosts {4} mana.",
+          "masteries": [
+            {
+              "name": "MasteryIceNovaImprovedIceNova",
+              "treeRow": 1,
+              "maxPoints": null,
+              "specs": [
+                {
+                  "AttributeId": 58,
+                  "Value": 0.05
+                }
+              ]
+            },
+            {
+              "name": "MasteryIceNovaDeepFreeze",
+              "treeRow": 2,
+              "maxPoints": 6,
+              "specs": [
+                {
+                  "AttributeId": 205,
+                  "Value": 0.5
+                },
+                {
+                  "AttributeId": 193,
+                  "Value": 1.0
+                },
+                {
+                  "AttributeId": 79,
+                  "Value": 4.0
+                }
+              ]
+            },
+            {
+              "name": "MasteryIceNovaConcentratedIce",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 193,
+                  "Value": 0.5,
+                  "AttributeOperator": 1
+                },
+                {
+                  "AttributeId": 79,
+                  "Value": 3.0,
+                  "AttributeOperator": 1
+                }
+              ]
+            },
+            {
+              "name": "MasteryIceNovaFreeze",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": [
+                {
+                  "AttributeId": 58,
+                  "Value": 0.05
+                }
+              ]
+            },
+            {
+              "name": "MasteryIceNovaThaw",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryIceNovaIceBomb",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            }
+          ]
         }
       ],
       "passive": {
@@ -4257,7 +4930,9 @@
         "values": {
           "field_0x120": 0.3
         },
-        "confidence": "client-verified"
+        "special": "",
+        "confidence": "client-verified",
+        "masteries": []
       },
       "activePoolSize": 12,
       "passivePoolSize": 10,
@@ -4292,7 +4967,9 @@
             "__l__initialThreadId"
           ],
           "slot": 0,
-          "effect": "rally",
+          "effect": "summon",
+          "special": "summon",
+          "chains": 0,
           "multiplier": 0.0,
           "cooldown": 10.0,
           "radius": 0.0,
@@ -4313,7 +4990,45 @@
             "Base_Cooldown": 10.0
           },
           "confidence": "client-verified",
-          "descriptionFilled": ""
+          "descriptionFilled": "",
+          "masteries": [
+            {
+              "name": "MasterySummonSkeletonImprovedSkeletons",
+              "treeRow": 1,
+              "maxPoints": 10,
+              "specs": []
+            },
+            {
+              "name": "MasterySummonSkeletonAutoSummon",
+              "treeRow": 2,
+              "maxPoints": 6,
+              "specs": []
+            },
+            {
+              "name": "MasterySummonSkeletonSkeletalArmy",
+              "treeRow": 2,
+              "maxPoints": 4,
+              "specs": []
+            },
+            {
+              "name": "MasterySummonSkeletonDurableBones",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasterySummonSkeletonMoreArmor",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasterySummonSkeletonDetonate",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            }
+          ]
         },
         {
           "id": "763ab376-e1bd-44ab-b4fa-8b03c6d03b16",
@@ -4344,7 +5059,9 @@
             "_couldUpdatePosition_5__2"
           ],
           "slot": 1,
-          "effect": "strike",
+          "effect": "mobility",
+          "special": "mobility",
+          "chains": 0,
           "multiplier": 2.2,
           "cooldown": 16.0,
           "radius": 0.0,
@@ -4357,7 +5074,45 @@
             "Base_Cooldown": 16.0
           },
           "confidence": "client-verified",
-          "descriptionFilled": ""
+          "descriptionFilled": "",
+          "masteries": [
+            {
+              "name": "MasteryAstralWalkImprovedAstralWalk",
+              "treeRow": 1,
+              "maxPoints": 10,
+              "specs": []
+            },
+            {
+              "name": "MasteryAstralWalkAutoWalk",
+              "treeRow": 2,
+              "maxPoints": 6,
+              "specs": []
+            },
+            {
+              "name": "MasteryAstralWalkFlight",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryAstralWalkDecoy",
+              "treeRow": 2,
+              "maxPoints": 1,
+              "specs": []
+            },
+            {
+              "name": "MasteryAstralWalkReducedManaCost",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryAstralWalkImmortal",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            }
+          ]
         },
         {
           "id": "fedd69aa-1a57-4f55-aae2-b6676fb5eea2",
@@ -4389,6 +5144,8 @@
           ],
           "slot": 2,
           "effect": "nova",
+          "special": "",
+          "chains": 0,
           "multiplier": 3.0,
           "cooldown": 15.0,
           "radius": 2.5,
@@ -4404,7 +5161,51 @@
             "Base_Mana_Cost": 30.0
           },
           "confidence": "client-verified",
-          "descriptionFilled": ""
+          "descriptionFilled": "",
+          "masteries": [
+            {
+              "name": "MasteryShadowboltImprovedShadowbolt",
+              "treeRow": 1,
+              "maxPoints": null,
+              "specs": []
+            },
+            {
+              "name": "MasteryShadowboltAutoCast",
+              "treeRow": 2,
+              "maxPoints": 6,
+              "specs": []
+            },
+            {
+              "name": "MasteryShadowboltShadowPower",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryShadowboltExplosion",
+              "treeRow": 2,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryShadowboltSpeed",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryShadowboltPenetration",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            },
+            {
+              "name": "MasteryShadowboltCooldown",
+              "treeRow": 3,
+              "maxPoints": 5,
+              "specs": []
+            }
+          ]
         }
       ],
       "passive": {
@@ -4433,7 +5234,9 @@
         "values": {
           "field_0x120": 0.1
         },
-        "confidence": "client-verified"
+        "special": "",
+        "confidence": "client-verified",
+        "masteries": []
       },
       "activePoolSize": 12,
       "passivePoolSize": 10,

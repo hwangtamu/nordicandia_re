@@ -64,6 +64,32 @@ GameAttributeMap.set_Item(AttributeOrigin, GameAttribute, double)
 
 这些数值已写入 `Powers.generated.cs`，服务端冷却/倍率/半径/法力均使用真实值；客户端按钮显示真实技能名与法力。
 
+## 效果语义（本次完善）
+
+不再用文案启发式，而是**根据恢复出的属性集**判定语义：
+
+| 恢复到的属性 | 语义 |
+|---|---|
+| `*_Max_Num_Chains` | `chain`（链式，最多 N 跳） |
+| `Minion_Inheritance_*` / `Minion_Duration` | `summon`（召唤） |
+| `Mana_Shield_*` | `shield` |
+| `*_Life_Leech*` | `leech` |
+| `*_Movement_Speed_*`（无伤害） | `mobility` |
+| `Base_Power_Radius > 0` | `nova`（范围） |
+| `*_Pierce*` / `*_Num_Charges*` | `projectile` |
+| 有伤害倍率 | `strike` |
+| 无伤害但有 Buff/力量 | `rally` |
+
+服务端已实现：`chain`（按距离取 N 个目标、逐跳衰减 15%）、`nova`、`rally`、`summon`（近似为攻击 Buff）、`mobility`（移速 Buff）、`shield`（近似治疗）；每个技能快照带 `special` / `chains`。
+
+典型结果：ChainLightning=`chain`(4)、IceNova=`nova`/`freeze`、SummonSkeleton=`summon`、AstralWalk=`mobility`、RapidFire/Might=`rally`。
+
+## 精通（PowerMasteries）
+
+* 297 条精通、124 条带属性修正已全部提取，保存在 `tools/web-content/generated/powers_full.json` 的 `masteriesByPower`。
+* `powers.json` 里每个选定技能附带其精通列表（名称/树行/上限/属性修正），客户端 tooltip 显示精通条数。
+* **尚未接入战斗**：真正生效需要技能树/加点系统与每点属性修正计算，属于后续里程碑。
+
 ## 仍然 Provisional 的部分
 
 * **效果归类**：把每个技能映射到 `strike/nova/rally` 是启发式；真实语义（链式、传送、召唤、持续引导）需要继续读方法体（已恢复的字段名如 `_DamageReductionPerJump`、`_NumMinions`、`AstralWalk_Movement_Speed_Bonus_Percent` 是起点）。

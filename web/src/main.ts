@@ -295,7 +295,12 @@ function renderHud(hudState: HudState): void {
     const skill = hudState.skills[index];
     const ready = skill?.ready ?? true;
     const name = skill?.name ?? `Skill ${index + 1}`;
-    const description = classPowers?.active[index]?.descriptionFilled ?? classPowers?.active[index]?.description?.replace(/\{[0-9]+\}/g, "…") ?? "";
+    const power = classPowers?.active[index];
+    const description = [power?.descriptionFilled ?? power?.description?.replace(/\{[0-9]+\}/g, "…") ?? "",
+      power?.special ? `Special: ${power.special}` : "",
+      power?.chains ? `Chains: ${power.chains}` : "",
+      power?.masteries?.length ? `Masteries: ${power.masteries.length}` : "",
+      power?.confidence ? `[${power.confidence}]` : ""].filter(Boolean).join("\n");
     const mana = skill?.manaCost ? `  ${Math.round(skill.manaCost)}m` : "";
     if (description) button.title = description;
     button.classList.toggle("disabled", !ready);

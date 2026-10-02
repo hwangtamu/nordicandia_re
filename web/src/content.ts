@@ -55,6 +55,9 @@ export interface ActivePower {
   buffBonus: number;
   buffSeconds: number;
   confidence: string;
+  special?: string;
+  chains?: number;
+  masteries?: { name: string; treeRow: number | null; maxPoints: number | null; specs: unknown[] }[];
   descriptionFilled?: string;
   values?: Record<string, number>;
 }
@@ -71,6 +74,8 @@ export interface PassivePower {
   offenseBonus: number;
   healthBonus: number;
   confidence: string;
+  special?: string;
+  masteries?: { name: string; treeRow: number | null; maxPoints: number | null; specs: unknown[] }[];
 }
 
 export interface ClassPowers {
