@@ -193,3 +193,26 @@ Disassembler / Disassembler_Advanced / Disassembler_Auto_Discard
 条件逻辑也可读（例：`Artifact.CanCraft` 中 `Item.get_IsImbued(targetItem)` 为真且 `!allowOnImbued`
 → `CannotCraftOnImbued`；否则如前所述）。注解版 ISIL 见
 `tmp/cpp2il-annotated/Items/Implementations/*.txt`（用 `--annotate-out` 生成）。
+
+## 精华/加热石制作公式（ClientVerified，`HeatingStone` 实现）
+
+来自 `Game.Items.Implementations.HeatingStone`（`0x02CC…`）：
+
+```
+GetHighestChanceToSucceed(highestMergeRarity) = highestMergeRarity < 10 ? 0.25 : 1.0
+GetNumIronCost(sourceItems, essence, targetItem, baseCost, qualitySlider, overheatSlider)
+    = (int)(overheatSlider * baseCost * 0.5)
+```
+- `ProcessSuccessRate` 在此基础上再乘 `值 × 常量(0x…838) × 上述几率`（`FMUL`），并在参考实现中设置
+  `secondarySuccessRate`。
+- `GetNumItemsCost` 按目标物品稀有度累加（`getCostFromRarity`）。
+
+**仍缺**（因此 `CraftEssenceItem(2)`/`CraftRelicItem`/`SocketItem`/`ItemAddNewSocket`/`TradeWithSetItemMerchant`
+仍为空桩）：
+- 精华制作的成功/失败产出物品与 `ChangedIronInstances`/`Tools` 结构；
+- `getCostFromRarity` 的逐稀有度消耗表；
+- 遗物制作（`CraftRelicItem`）的目标物品来源与产出；
+- 镶嵌（`SocketItem`/`ItemAddNewSocket`）的插槽与消耗规则；
+- 套装商人（`TradeWithSetItemMerchant`）的换购规则。
+
+这些需要继续用 Cpp2IL+字面量工具逐操作解出产出与消耗（不建议靠猜实现）。
