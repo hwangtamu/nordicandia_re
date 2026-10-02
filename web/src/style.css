@@ -113,7 +113,8 @@ html, body, #app {
 
 .hud-bottom {
   position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 10px;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+  max-width: 94vw;
 }
 .skill {
   min-width: 130px;
@@ -165,6 +166,8 @@ html, body, #app {
 }
 .inv-row.equipped { background: rgba(201, 162, 74, 0.09); }
 .inv-name { font-size: 13px; }
+.inv-affixes { display: block; font-size: 10px; color: #8fa3a8; }
+.inv-affixes .affix { margin-right: 6px; color: #c9a24a; }
 .inv-stats { font-size: 11px; color: #9fb2b6; }
 .inv-btn {
   background: linear-gradient(#3a5a24, #24400f); border: 1px solid #6f9a3f; border-radius: 5px;

@@ -27,8 +27,11 @@ LevelForExperience(x) = floor(round(((x - 350) / 20)^(1/1.7), 6))   // 闭式反
 Mitigation(def, atkLevel) = def / (def + 50 + 10 * max(1, atkLevel))
 ExpectedDamage            = max(1, Offense * skillMult * (1 - Mitigation)) * critFactor
 Damage                    = max(1, mitigated * jitter * critFactor)      // hit
-MaxHealth(level)          = 100 + 40 * max(1, level)                      // Provisional
-ExperienceReward(level)   = (8 * level^1.35 + 5) * multiplier            // Provisional
+MaxHealth(level)          = (100 + 40 * max(1, level)) * (1 + 0.10 passive)  // Provisional
+ExperienceReward(level)   = (8 * level^1.35 + 5) * multiplier              // Provisional
+Skills (M2)               = 0 Strike ×2.4 cd4 | 1 Nova AoE r5.5 ×1.5 cd8 | 2 Rally +30%hp & +25%off 6s cd20
+Passive (M2)              = +10% Offense, +10% MaxHealth
+Rarity weights (M2)       = Droprates.json 真实权重 F..SS（ClientVerified）
 ```
 
 * 实现：`server/Nordicandia.Simulation/CombatModel.cs`（权威）与 `web/src/combat.ts`（仅供人读的镜像）。

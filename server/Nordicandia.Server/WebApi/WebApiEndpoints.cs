@@ -156,7 +156,7 @@ public static class WebApiEndpoints
             if (envelope is null)
                 return Results.BadRequest(new { error = "invalid_command" });
 
-            var command = new WebCommandRequest(envelope.Type, envelope.X, envelope.Z, envelope.ItemId);
+            var command = new WebCommandRequest(envelope.Type, envelope.X, envelope.Z, envelope.ItemId, envelope.SkillId);
             var (applied, reason, state) = CombatRegistry.Instance.ApplyCommand(
                 user.UserId, id, envelope.CommandId, envelope.ExpectedVersion, command);
             return Results.Ok(new { applied, reason, state });
@@ -227,4 +227,4 @@ public sealed record DevSessionRequest(string Name);
 public sealed record WebCreateCharacterRequest(string DisplayName, int Class, int Race, int GameMode);
 
 public sealed record WebCommandEnvelope(
-    string CommandId, long ExpectedVersion, string Type, double X = 0, double Z = 0, Guid ItemId = default);
+    string CommandId, long ExpectedVersion, string Type, double X = 0, double Z = 0, Guid ItemId = default, int SkillId = 0);

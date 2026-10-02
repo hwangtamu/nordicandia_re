@@ -48,12 +48,26 @@ curl -s -b cookies .../characters/$CID/inventory                                
 # 穿戴 → OFF 35 -> 56，重复请求返回 duplicate
 ```
 
-## 已知限制 / 与计划的差异
+## 与计划的差异修复（本次）
 
-* 无词缀随机生成、无分解/合成/商店融合（后续）。
-* 背包无格子/堆叠/拖拽；装备按槽位直接替换（同一槽位未做冲突校验，M2 允许叠加展示）。
-* 技能仍 1 个主动 + 普攻；「补齐首版技能」只完成了数值可运行的 1 个主动，其余在后续迭代。
-* 玩家位置与背包位置不持久化网格坐标；物品与装备槽位持久化。
+| 原差异 | 处理 |
+|---|---|
+| 同一槽位可叠加装备 | ✅ 强制一槽一件：穿 B 时自动将同槽 A 放回背包（测试 `m2 slots: only one slot bonus is counted`） |
+| 稀有度权重为编造值 | ✅ 改为来自 `gamedata_decrypted/Droprates.json` 的真实权重（F..SS），只有掉落“概率”仍为 Provisional |
+| 技能仅 1 个主动 | ✅ 3 个主动（0 单体 Strike、1 范围 Nova、2 集结 Rally）+ 1 个被动（+10% Offense / +10% MaxHealth）；冷却独立追踪 |
+| 敌人仅 1 类 | ✅ 5 类普通敌人（Bat/DemonOrc/Skeleton/BloodHound/StoneGolem，各自数值倍率），按索引循环刷新 |
+| 无词缀 | ✅ 有限词缀集（of Might/Warding/Vigor/Fury/the Bulwark/Focus）；按稀有度 1–3 条，写入 `SerializedItem.Affixes` 并展示 |
+
+## 已知限制 / 与计划的差异（修正后）
+
+* 掉落**概率**与装备/词缀属性权重仍为 **Provisional**；客户端词缀结算（属性 2500/2501/462）未复原。
+* 背包无格子/堆叠/拖拽；无分解/合成/商店融合（属后续里程碑，非 M2 要求）。
+* 玩家位置不持久化；物品、装备槽位、经验、货币、击杀持久化。
+
+## 已验证
+
+* 服务端测试 **166 PASS**（其中 M2 相关 21 项）。
+* `tsc` 通过；`npm run smoke` PASS：`7 kills`、`HP 154/154`（被动 +10%）、`OFF 36 · DEF 41 · REC 12`、3 个技能按钮（含冷却）、词缀展示；截图 `tmp/web-m2/smoke.png`。
 
 ## 下一步（M3 持久化与特殊流程）
 

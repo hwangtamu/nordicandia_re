@@ -13,14 +13,15 @@ public sealed record WebItem(Guid Id, string Name, int Slot, int DefinitionInteg
 /// <summary>Inventory row with resolved equipment stats.</summary>
 public sealed record WebItemDetail(
     Guid Id, string Name, int Slot, int Rarity, int EquipSlot, bool Equipped,
-    double Offense, double Defense, double Recovery);
+    double Offense, double Defense, double Recovery, IReadOnlyList<string> Affixes);
 
 public sealed record WebInventory(
     IReadOnlyList<WebItemDetail> Items, double Offense, double Defense, double Recovery);
 
 /// <summary>A drop rolled by combat, resolved into display/testable stats.</summary>
 public sealed record LootDropView(
-    string Name, int Slot, int Rarity, int Level, double Offense, double Defense, double Recovery);
+    string Name, int Slot, int Rarity, int Level, double Offense, double Defense, double Recovery,
+    IReadOnlyList<string> Affixes);
 
 /// <summary>Authoritative combat snapshot plus the loot generated since the previous call.</summary>
 public sealed record WebCombatState(

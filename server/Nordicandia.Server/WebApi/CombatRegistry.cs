@@ -35,6 +35,17 @@ public sealed class CombatRegistry
 
     private DateTime Now => clock.GetUtcNow().UtcDateTime;
 
+    // Five normal enemy archetypes (provisional tuning, names match gamedata monsters so the
+    // client can resolve their portrait icons). The boss is spawned separately.
+    private static readonly MonsterProfile[] MonsterProfiles =
+    {
+        new("Bat", HpMult: 0.7, OffenseMult: 1.0, DefenseMult: 0.7, Speed: 3.2),
+        new("DemonOrc", HpMult: 1.3, OffenseMult: 1.2, DefenseMult: 1.0, Speed: 2.4),
+        new("Skeleton", HpMult: 1.0, OffenseMult: 0.9, DefenseMult: 1.1, Speed: 2.2),
+        new("BloodHound", HpMult: 0.8, OffenseMult: 1.4, DefenseMult: 0.6, Speed: 3.0),
+        new("StoneGolem", HpMult: 1.8, OffenseMult: 0.8, DefenseMult: 1.6, Speed: 1.6),
+    };
+
     private sealed class Entry
     {
         public CombatInstance Instance = null!;
@@ -68,7 +79,7 @@ public sealed class CombatRegistry
                 (int)persisted.Level);
             var seed = (ulong)(uint)characterId.GetHashCode() << 32 | (uint)characterId.GetHashCode();
             var instance = new CombatInstance(stats, persisted.Experience, persisted.Silver, persisted.Opals,
-                (int)persisted.MonsterKills, seed);
+                (int)persisted.MonsterKills, seed, monsterProfiles: MonsterProfiles);
             entries[characterId] = new Entry
             {
                 Instance = instance,
@@ -118,7 +129,7 @@ public sealed class CombatRegistry
                     entry.Instance.MoveTo(command.X, command.Z);
                     break;
                 case "skill":
-                    var outcome = entry.Instance.UseSkill();
+                    var outcome = entry.Instance.UseSkill(command.SkillId);
                     applied = outcome.Cast;
                     reason = outcome.Reason;
                     break;
@@ -157,19 +168,29 @@ public sealed class CombatRegistry
 
     private (bool, string) Equip(Guid owner, Guid characterId, Entry entry, Guid itemId, bool equip)
     {
-        var item = store.GetItems(owner, characterId).FirstOrDefault(i => i != null && i.Id == itemId);
+        var items = store.GetItems(owner, characterId);
+        var item = items.FirstOrDefault(i => i != null && i.Id == itemId);
         if (item is null) return (false, "no_item");
-        var target = ItemSlotTypes.Inventory;
-        if (equip)
+
+        if (!equip)
         {
-            var slot = LootTable.EquipSlotOf(item);
-            if (slot is < 0 or > 13) return (false, "not_equippable");
-            target = (ItemSlotTypes)slot;
+            store.ApplyItemOperations(owner, characterId, new List<ItemOperationEntry>
+            {
+                new MoveItemOperationEntry { ItemId = itemId, ToSlot = ItemSlotTypes.Inventory, ToLocation = item.Location },
+            });
+            RecomputeStats(owner, characterId, entry);
+            return (true, "ok");
         }
-        store.ApplyItemOperations(owner, characterId, new List<ItemOperationEntry>
-        {
-            new MoveItemOperationEntry { ItemId = itemId, ToSlot = target, ToLocation = item.Location },
-        });
+
+        var slot = LootTable.EquipSlotOf(item);
+        if (slot is < 0 or > 13) return (false, "not_equippable");
+
+        // Enforce one item per equip slot: anything already there returns to the bag.
+        var operations = new List<ItemOperationEntry>();
+        foreach (var conflict in items.Where(i => i != null && i.Id != itemId && LootTable.IsEquipped(i) && LootTable.EquipSlotOf(i) == slot))
+            operations.Add(new MoveItemOperationEntry { ItemId = conflict.Id, ToSlot = ItemSlotTypes.Inventory, ToLocation = conflict.Location });
+        operations.Add(new MoveItemOperationEntry { ItemId = itemId, ToSlot = (ItemSlotTypes)slot, ToLocation = item.Location });
+        store.ApplyItemOperations(owner, characterId, operations);
         RecomputeStats(owner, characterId, entry);
         return (true, "ok");
     }
@@ -213,7 +234,8 @@ public sealed class CombatRegistry
             entry.RecentLoot.Add(new LootDropView(item.Name, slot, (int)item.BaseRarity, 0,
                 LootTable.AttributeOf(item, LootTable.AttrOffense),
                 LootTable.AttributeOf(item, LootTable.AttrDefense),
-                LootTable.AttributeOf(item, LootTable.AttrRecovery)));
+                LootTable.AttributeOf(item, LootTable.AttrRecovery),
+                AffixNames(item)));
         }
     }
 
@@ -252,8 +274,14 @@ public sealed class CombatRegistry
             equipped,
             LootTable.AttributeOf(item, LootTable.AttrOffense),
             LootTable.AttributeOf(item, LootTable.AttrDefense),
-            LootTable.AttributeOf(item, LootTable.AttrRecovery));
+            LootTable.AttributeOf(item, LootTable.AttrRecovery),
+            AffixNames(item));
     }
+
+    private static List<string> AffixNames(SerializedItem item)
+        => item.Affixes == null
+            ? new List<string>()
+            : item.Affixes.Where(a => a != null).Select(a => LootTable.AffixName(a.DefinitionIntegerId)).ToList();
 
     private static void RememberCommand(Entry entry, string commandId, WebCombatState state)
     {
@@ -275,4 +303,4 @@ public sealed class CombatRegistry
     }
 }
 
-public sealed record WebCommandRequest(string Type, double X = 0, double Z = 0, Guid ItemId = default);
+public sealed record WebCommandRequest(string Type, double X = 0, double Z = 0, Guid ItemId = default, int SkillId = 0);

@@ -42,7 +42,7 @@ export interface HudState {
   bossAlive: boolean;
   bossKillsRemaining: number;
   autoMove: boolean;
-  skillReady: boolean;
+  skills: { ready: boolean; cooldown: number }[];
   message: string;
 }
 
@@ -52,7 +52,7 @@ export interface WorldHooks {
   /** Returns the latest authoritative state, or null while offline. */
   pollState: () => Promise<CombatEnvelope | null>;
   moveTo: (x: number, z: number) => void;
-  castSkill: () => void;
+  castSkill: (skillId: number) => void;
 }
 
 interface Entity {
@@ -283,9 +283,10 @@ export class World {
   private buildMonsters(initial: CombatSnapshot): void {
     for (const monster of initial.monsters) {
       const root = new TransformNode(`monster_${monster.index}`, this.scene);
+      const matching = this.content.monsters.find((m) => m.name === monster.name);
       const icon = monster.isBoss
         ? monsterIcon(this.content, this.content.monsters[0])
-        : monsterIcon(this.content, this.content.monsters[monster.index % this.content.monsters.length]);
+        : monsterIcon(this.content, matching ?? this.content.monsters[monster.index % this.content.monsters.length]);
       this.addToken(root, icon, monster.isBoss ? new Color3(0.95, 0.75, 0.2) : new Color3(0.9, 0.25, 0.2));
       if (monster.isBoss) root.scaling = new Vector3(1.6, 1.6, 1.6);
       this.monsterEntities.set(monster.index, {
@@ -476,7 +477,7 @@ export class World {
       bossAlive: state.bossAlive,
       bossKillsRemaining: state.bossKillsRemaining,
       autoMove: this.autoMove,
-      skillReady: state.skillCooldown <= 0,
+      skills: (state.skillCooldowns ?? []).map((cooldown) => ({ ready: cooldown <= 0, cooldown })),
       message: this.elapsed < this.messageUntil ? this.message : "",
     });
   }

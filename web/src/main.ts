@@ -44,7 +44,9 @@ app.innerHTML = `
       <div id="inv-items" class="inv-items"></div>
     </div>
     <div class="hud-bottom">
-      <button id="hud-skill" class="skill">Skill <small>Space</small></button>
+      <button id="hud-skill" class="skill">Skill 1 <small>1</small></button>
+      <button id="hud-skill-2" class="skill">Skill 2 <small>2</small></button>
+      <button id="hud-skill-3" class="skill">Skill 3 <small>3</small></button>
       <button id="hud-auto" class="skill alt">Auto-move: ON <small>Tab</small></button>
       <button id="hud-bag" class="skill alt">Bag <small>B</small></button>
     </div>
@@ -136,7 +138,7 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
   const characterId = selected.characterId;
   const sendCommand = async (
     type: "move" | "skill" | "equip" | "unequip",
-    options: { x?: number; z?: number; itemId?: string } = {},
+    options: { x?: number; z?: number; itemId?: string; skillId?: number } = {},
   ): Promise<void> => {
     const expectedVersion = world?.currentVersion() ?? 0;
     try {
@@ -173,12 +175,18 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
       }
     },
     moveTo: (x, z) => void sendCommand("move", { x, z }),
-    castSkill: () => void sendCommand("skill"),
+    castSkill: (skillId) => void sendCommand("skill", { skillId }),
   });
   await world.start(initial);
   await refreshInventory();
 
-  document.getElementById("hud-skill")!.addEventListener("click", () => void sendCommand("skill"));
+  const skillButtons: [string, number][] = [
+    ["hud-skill", 0],
+    ["hud-skill-2", 1],
+    ["hud-skill-3", 2],
+  ];
+  for (const [id, skillId] of skillButtons)
+    document.getElementById(id)!.addEventListener("click", () => void sendCommand("skill", { skillId }));
   const autoButton = document.getElementById("hud-auto") as HTMLButtonElement;
   autoButton.addEventListener("click", () => {
     const on = world?.toggleAutoMove() ?? false;
@@ -186,10 +194,14 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
   });
   document.getElementById("hud-bag")!.addEventListener("click", () => toggleBag());
   document.getElementById("inv-close")!.addEventListener("click", () => toggleBag(false));
+  const keyToSkill: Record<string, number> = { Digit1: 0, Digit2: 1, Digit3: 2, Numpad1: 0, Numpad2: 1, Numpad3: 2 };
   window.addEventListener("keydown", (event) => {
     if (event.code === "Space") {
       event.preventDefault();
-      void sendCommand("skill");
+      void sendCommand("skill", { skillId: 0 });
+    } else if (event.code in keyToSkill) {
+      event.preventDefault();
+      void sendCommand("skill", { skillId: keyToSkill[event.code] });
     } else if (event.code === "Tab") {
       event.preventDefault();
       const on = world?.toggleAutoMove() ?? false;
@@ -219,9 +231,10 @@ function renderInventory(inventory: WebInventory, onToggle: (itemId: string, equ
     const row = document.createElement("div");
     row.className = `inv-row${item.equipped ? " equipped" : ""}`;
     const stats = `+${Math.round(item.offense)} off · +${Math.round(item.defense)} def · +${Math.round(item.recovery)} rec`;
+    const affixes = item.affixes && item.affixes.length ? item.affixes.map((a) => `<span class="affix">${escapeHtml(a)}</span>`).join(" ") : "";
     row.innerHTML = `
       <span class="rarity" style="color:${RARITY_COLORS[item.rarity] ?? "#ccc"}">${RARITY_NAMES[item.rarity] ?? "?"}</span>
-      <span class="inv-name">${escapeHtml(item.name)}</span>
+      <span class="inv-name">${escapeHtml(item.name)}${affixes ? `<span class="inv-affixes">${affixes}</span>` : ""}</span>
       <span class="inv-stats">${stats}</span>
     `;
     const button = document.createElement("button");
@@ -264,9 +277,14 @@ function renderHud(hudState: HudState): void {
   const boss = document.getElementById("hud-boss") as HTMLElement;
   boss.classList.toggle("hidden", hudState.bossAlive || hudState.bossKillsRemaining <= 0);
   (document.getElementById("hud-boss-count") as HTMLElement).textContent = String(hudState.bossKillsRemaining);
-  const skillButton = document.getElementById("hud-skill") as HTMLButtonElement;
-  skillButton.textContent = hudState.skillReady ? "Skill" : "Cooling…";
-  skillButton.classList.toggle("disabled", !hudState.skillReady);
+  const skillButtons = ["hud-skill", "hud-skill-2", "hud-skill-3"] as const;
+  skillButtons.forEach((id, index) => {
+    const button = document.getElementById(id) as HTMLButtonElement;
+    const skill = hudState.skills[index];
+    const ready = skill?.ready ?? true;
+    button.classList.toggle("disabled", !ready);
+    button.textContent = ready ? `Skill ${index + 1}` : `Cooling ${Math.ceil(skill.cooldown)}s`;
+  });
   const message = document.getElementById("hud-message") as HTMLElement;
   message.textContent = hudState.message;
   message.classList.toggle("show", Boolean(hudState.message));

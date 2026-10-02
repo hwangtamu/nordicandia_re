@@ -62,7 +62,9 @@ try {
   await page.waitForSelector("#hud:not([hidden])", { timeout: 20000 });
   await page.waitForTimeout(6000);
   await page.click("#hud-skill");
-  await page.waitForTimeout(8000);
+  await page.waitForTimeout(1500);
+  await page.click("#hud-skill-3");
+  await page.waitForTimeout(6500);
 
   // M2: open the bag, equip the first unequipped item, and confirm the server marked it.
   await page.click("#hud-bag");

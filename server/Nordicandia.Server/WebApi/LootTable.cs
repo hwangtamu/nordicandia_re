@@ -41,6 +41,21 @@ public static class LootTable
     private static readonly string[] RarityNames =
         { "F", "E", "D", "C", "B", "A", "AA", "AAA", "AAAA", "AAAAA", "S", "SS" };
 
+    /// <summary>Limited provisional affix set (index, display suffix, stat id, factor of the
+    /// item's base power). Names are provisional; the stat ids are the dedicated web ids.</summary>
+    private static readonly (string Name, int AttributeId, double Factor)[] AffixTemplates =
+    {
+        ("of Might", AttrOffense, 0.10),
+        ("of Warding", AttrDefense, 0.10),
+        ("of Vigor", AttrRecovery, 0.15),
+        ("of Fury", AttrOffense, 0.18),
+        ("of the Bulwark", AttrDefense, 0.20),
+        ("of Focus", AttrRecovery, 0.25),
+    };
+
+    public static string AffixName(int index)
+        => index >= 0 && index < AffixTemplates.Length ? AffixTemplates[index].Name : "of Power";
+
     public static string RarityName(int rarity)
         => rarity >= 0 && rarity < RarityNames.Length ? RarityNames[rarity] : "?";
 
@@ -48,12 +63,34 @@ public static class LootTable
     {
         var names = SlotNames.TryGetValue(drop.Slot, out var list) ? list : new[] { "Trinket" };
         var name = names[Math.Abs(Hash(drop.Level, drop.Slot)) % names.Length];
-        var stats = StatsFor(drop.Slot, drop.Rarity, drop.Level);
+        var baseStats = StatsFor(drop.Slot, drop.Rarity, drop.Level);
+        var rng = new CombatRandom(drop.Seed == 0 ? 0x2545F4914F6CDD1DUL : drop.Seed);
+
+        // 1 affix, +1 at C+, +1 at A+ (capped at 3), matching a limited first-pass affix set.
+        var affixCount = 1 + (drop.Rarity >= 3 ? 1 : 0) + (drop.Rarity >= 5 ? 1 : 0);
+        var offense = baseStats.Offense;
+        var defense = baseStats.Defense;
+        var recovery = baseStats.Recovery;
+        var power = (4 + drop.Level * 2.2) * (1 + drop.Rarity * 0.55);
+        var chosen = new List<(int Index, double Value)>();
+        var used = new HashSet<int>();
+        for (var i = 0; i < affixCount; i++)
+        {
+            var index = (int)(rng.NextDouble() * AffixTemplates.Length) % AffixTemplates.Length;
+            if (!used.Add(index)) continue;
+            var (_, attributeId, factor) = AffixTemplates[index];
+            var value = Math.Round(power * factor);
+            if (attributeId == AttrOffense) offense += value;
+            else if (attributeId == AttrDefense) defense += value;
+            else recovery += value;
+            chosen.Add((index, value));
+        }
+
+        var suffix = string.Concat(chosen.Select(a => " " + AffixName(a.Index)));
         var item = new SerializedItem
         {
             Id = Guid.NewGuid(),
-            Name = $"{name} ({RarityName(drop.Rarity)})",
-            // Inventory until equipped; the eligible slot is stored as an attribute.
+            Name = $"{name} ({RarityName(drop.Rarity)}){suffix}",
             Slot = ItemSlotTypes.Inventory,
             DefinitionIntegerId = 0,
             BaseRarity = (Rarity)Math.Clamp(drop.Rarity, 0, 11),
@@ -64,14 +101,30 @@ public static class LootTable
                 {
                     [AttributeOrigin.Item] = new()
                     {
-                        [AttrOffense] = Value(stats.Offense),
-                        [AttrDefense] = Value(stats.Defense),
-                        [AttrRecovery] = Value(stats.Recovery),
+                        [AttrOffense] = Value(offense),
+                        [AttrDefense] = Value(defense),
+                        [AttrRecovery] = Value(recovery),
                         [AttrEquipSlot] = Value(drop.Slot),
                     },
                 },
                 MultiplicativeValues = new(),
             },
+            Affixes = chosen.Select(a => new SerializedAffix
+            {
+                DefinitionIntegerId = a.Index,
+                Rarity = (Rarity)Math.Clamp(drop.Rarity, 0, 11),
+                Attributes = new SerializedAttributes
+                {
+                    Values = new Dictionary<AttributeOrigin, Dictionary<int, GameAttributeValue>>
+                    {
+                        [AttributeOrigin.Item] = new()
+                        {
+                            [AffixTemplates[a.Index].AttributeId] = Value(a.Value),
+                        },
+                    },
+                    MultiplicativeValues = new(),
+                },
+            }).ToList(),
         };
         return item;
     }

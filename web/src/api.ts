@@ -67,7 +67,8 @@ export interface CombatSnapshot {
   silver: number;
   opals: number;
   kills: number;
-  skillCooldown: number;
+  skillCooldowns: number[];
+  offenseBuffRemaining: number;
   dungeonsCleared: number;
   bossKillsRemaining: number;
   bossAlive: boolean;
@@ -82,6 +83,7 @@ export interface LootDrop {
   offense: number;
   defense: number;
   recovery: number;
+  affixes: string[];
 }
 
 /** Authoritative combat snapshot plus loot generated since the previous call. */
@@ -100,6 +102,7 @@ export interface WebItemDetail {
   offense: number;
   defense: number;
   recovery: number;
+  affixes: string[];
 }
 
 export interface WebInventory {
@@ -176,7 +179,7 @@ export const api = {
     commandId: string,
     expectedVersion: number,
     type: "move" | "skill" | "equip" | "unequip",
-    options: { x?: number; z?: number; itemId?: string } = {},
+    options: { x?: number; z?: number; itemId?: string; skillId?: number } = {},
   ) =>
     request<{ applied: boolean; reason: string; state: CombatEnvelope }>(`/characters/${characterId}/commands`, {
       method: "POST",
@@ -188,6 +191,7 @@ export const api = {
         x: options.x ?? 0,
         z: options.z ?? 0,
         itemId: options.itemId ?? "00000000-0000-0000-0000-000000000000",
+        skillId: options.skillId ?? 0,
       }),
     }),
 };
