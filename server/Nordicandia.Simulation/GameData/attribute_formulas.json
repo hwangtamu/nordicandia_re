@@ -1,0 +1,1234 @@
+{
+  "860": {
+    "name": "Total_Max_Attacks_Per_Second",
+    "script": "(Base_Max_Attacks_Per_Second + Max_Attacks_Per_Second_Bonus)"
+  },
+  "33": {
+    "name": "Local_Attack_Range_Total",
+    "script": "(Local_Base_Attack_Range * (1 + Local_Attack_Range_Bonus_Percent))"
+  },
+  "41": {
+    "name": "Offline_Battle_Time_Minutes_Total",
+    "script": "(Constants.Offline_Base_Battle_Time_Minutes)"
+  },
+  "565": {
+    "name": "Offline_Battle_Efficiency_Multiplier",
+    "script": "Base_Stamina_Multiplier"
+  },
+  "465": {
+    "name": "Buff_Duration_Total",
+    "script": "(Buff_Duration + Buff_Duration_Bonus) * (1 + Buff_Duration_Bonus_Percent)"
+  },
+  "30": {
+    "name": "Durability_Total",
+    "script": "(Durability_Implicit_Base + Durability_Base + Durability)"
+  },
+  "422": {
+    "name": "Auto_Battle_Time_Minutes_Total",
+    "script": "(Pet_Base_Auto_Battle_Time_Minutes * Base_Stamina_Multiplier)"
+  },
+  "244": {
+    "name": "?",
+    "script": "Strength_Bonus_Percent_Final"
+  },
+  "245": {
+    "name": "?",
+    "script": "Dexterity_Bonus_Percent_Final"
+  },
+  "246": {
+    "name": "?",
+    "script": "Intelligence_Bonus_Percent_Final"
+  },
+  "247": {
+    "name": "?",
+    "script": "Vitality_Bonus_Percent_Final"
+  },
+  "248": {
+    "name": "?",
+    "script": "Constitution_Bonus_Percent_Final"
+  },
+  "249": {
+    "name": "?",
+    "script": "Agility_Bonus_Percent_Final"
+  },
+  "260": {
+    "name": "?",
+    "script": "Mindpower_Bonus_Percent_Final"
+  },
+  "117": {
+    "name": "Strength_Total",
+    "script": "((Base_Strength + Strength_Allocated) * (1 + (Strength_Bonus_Percent + Attributes_All_Bonus_Percent))) MultiplyWith:Strength_Bonus_Percent_Final"
+  },
+  "118": {
+    "name": "Dexterity_Total",
+    "script": "((Base_Dexterity + Dexterity_Allocated) * (1 + (Dexterity_Bonus_Percent + Attributes_All_Bonus_Percent))) MultiplyWith:Dexterity_Bonus_Percent_Final"
+  },
+  "119": {
+    "name": "Intelligence_Total",
+    "script": "((Base_Intelligence + Intelligence_Allocated) * (1 + (Intelligence_Bonus_Percent + Attributes_All_Bonus_Percent))) MultiplyWith:Intelligence_Bonus_Percent_Final"
+  },
+  "120": {
+    "name": "Vitality_Total",
+    "script": "((Base_Vitality + Vitality_Allocated) * (1 + (Vitality_Bonus_Percent + Attributes_All_Bonus_Percent))) MultiplyWith:Vitality_Bonus_Percent_Final"
+  },
+  "135": {
+    "name": "Constitution_Total",
+    "script": "((Base_Constitution + Constitution_Allocated) * (1 + (Constitution_Bonus_Percent + Attributes_All_Bonus_Percent))) MultiplyWith:Constitution_Bonus_Percent_Final"
+  },
+  "136": {
+    "name": "Agility_Total",
+    "script": "((Base_Agility + Agility_Allocated) * (1 + (Agility_Bonus_Percent + Attributes_All_Bonus_Percent))) MultiplyWith:Agility_Bonus_Percent_Final"
+  },
+  "137": {
+    "name": "Mindpower_Total",
+    "script": "((Base_Mindpower + Mindpower_Allocated) * (1 + (Mindpower_Bonus_Percent + Attributes_All_Bonus_Percent))) MultiplyWith:Mindpower_Bonus_Percent_Final"
+  },
+  "138": {
+    "name": "Total_Attributes",
+    "script": "(Strength_Total + Dexterity_Total + Intelligence_Total + Vitality_Total + Constitution_Total + Agility_Total + Mindpower_Total)"
+  },
+  "139": {
+    "name": "Attributes_Allocated",
+    "script": "(Strength_Allocated + Dexterity_Allocated + Intelligence_Allocated + Vitality_Allocated + Constitution_Allocated + Agility_Allocated + Mindpower_Allocated)"
+  },
+  "140": {
+    "name": "Attributes_Base",
+    "script": "(Base_Strength + Base_Dexterity + Base_Intelligence + Base_Vitality + Base_Constitution + Base_Agility + Base_Mindpower)"
+  },
+  "216": {
+    "name": "Hit_Chance_CurrentHand",
+    "script": "(DualWield_Hand ? Hit_Chance_OffHand : Hit_Chance_MainHand)"
+  },
+  "368": {
+    "name": "?",
+    "script": "AttackRating_Bonus_Percent_Final"
+  },
+  "206": {
+    "name": "AttackRating_Total",
+    "script": "((AttackRating_SubTotal * AttackRating_Focus_Factor_Dexterity) * (1 + AttackRating_Bonus_Percent)) MultiplyWith:AttackRating_Bonus_Percent_Final"
+  },
+  "209": {
+    "name": "Extra_Swing_Chance_CurrentHand",
+    "script": "(DualWield_Hand ? Extra_Swing_Chance_OffHand : Extra_Swing_Chance_MainHand)"
+  },
+  "213": {
+    "name": "AttackRating_From_Dexterity",
+    "script": "(Dexterity_Total * Constants.Attack_Rating_Per_Dexterity)"
+  },
+  "214": {
+    "name": "AttackRating_SubTotal",
+    "script": "(AttackRating_From_Dexterity + Base_AttackRating)"
+  },
+  "215": {
+    "name": "AttackRating_Focus_Factor_Dexterity",
+    "script": "1"
+  },
+  "599": {
+    "name": "?",
+    "script": "Attack_Range_Bonus_Percent_Final"
+  },
+  "222": {
+    "name": "Attack_Range_MainHand_Total",
+    "script": "(Item_Attack_Range_MainHand * (1+Attack_Range_Bonus_Percent)) MultiplyWith:Attack_Range_Bonus_Percent_Final * Base_Attack_Range_Multiplier"
+  },
+  "223": {
+    "name": "Attack_Range_OffHand_Total",
+    "script": "(Item_Attack_Range_OffHand * (1+Attack_Range_Bonus_Percent)) MultiplyWith:Attack_Range_Bonus_Percent_Final * Base_Attack_Range_Multiplier"
+  },
+  "224": {
+    "name": "Attack_Range_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Attack_Range_OffHand_Total : Attack_Range_MainHand_Total)"
+  },
+  "225": {
+    "name": "Attack_Range_Max",
+    "script": "Max(Attack_Range_MainHand_Total, Attack_Range_OffHand_Total)"
+  },
+  "253": {
+    "name": "?",
+    "script": "Armor_Bonus_Percent_Final"
+  },
+  "254": {
+    "name": "Armor_Total",
+    "script": "(Armor_SubTotal * Armor_Focus_Factor_Constitution * (1 + Armor_Bonus_Percent) * Base_Armor_Multiplier) MultiplyWith:Armor_Bonus_Percent_Final"
+  },
+  "258": {
+    "name": "?",
+    "script": "Evasion_Bonus_Percent_Final"
+  },
+  "259": {
+    "name": "Evasion_Total",
+    "script": "(Evasion_SubTotal * Evasion_Focus_Factor_Agility * (1 + Evasion_Bonus_Percent) * Base_Evasion_Multiplier) MultiplyWith:Evasion_Bonus_Percent_Final"
+  },
+  "3101": {
+    "name": "?",
+    "script": "ForceField_Bonus_Percent_Final"
+  },
+  "3120": {
+    "name": "ForceField_Regen_Total",
+    "script": "(Base_ForceField_Regen_Percent + ForceField_Regen_Bonus) * (1 + ForceField_Regen_Bonus_Percent)"
+  },
+  "3127": {
+    "name": "ForceField_Regen_Delay_Total",
+    "script": "((Base_ForceField_Regen_Delay - ForceField_Regen_Delay_Bonus) / (1.0 + ForceField_Regen_Delay_Reduction_Percent))"
+  },
+  "3115": {
+    "name": "ForceField_Current",
+    "script": "Min(ForceField_Max_Total, ForceField_Current.Agg)"
+  },
+  "396": {
+    "name": "Flat_ForceField_From_Mindpower",
+    "script": "(Constants.Flat_ForceField_From_Mindpower_Base_Value * (1 + (Pow(Mindpower_Total * Constants.Flat_ForceField_Per_Mindpower_Multiplier, Constants.Flat_ForceField_Per_Mindpower_Exponent) * Constants.Flat_ForceField_Per_Mindpower_FinalMultiplier))) - Constants.Flat_ForceField_From_Mindpower_Base_Value"
+  },
+  "3116": {
+    "name": "ForceField_Factor_Mindpower",
+    "script": "(Mindpower_Total * Constants.ForceField_Per_Mindpower_Factor)"
+  },
+  "3117": {
+    "name": "ForceField_SubTotal",
+    "script": "((Base_ForceField_Max + Flat_ForceField_From_Mindpower) * (1 + ForceField_Factor_Mindpower))"
+  },
+  "3118": {
+    "name": "ForceField_Focus_Factor_Mindpower",
+    "script": "1"
+  },
+  "3119": {
+    "name": "ForceField_Max_Total",
+    "script": "(ForceField_SubTotal * ForceField_Focus_Factor_Mindpower * (1 + ForceField_Bonus_Percent) * Base_ForceField_Multiplier) MultiplyWith:ForceField_Bonus_Percent_Final"
+  },
+  "395": {
+    "name": "Flat_Armor_From_Constitution",
+    "script": "(Constants.Flat_Armor_From_Constitution_Base_Value * (1 + (Pow(Constitution_Total * Constants.Flat_Armor_Per_Constitution_Multiplier, Constants.Flat_Armor_Per_Constitution_Exponent) * Constants.Flat_Armor_Per_Constitution_FinalMultiplier))) - Constants.Flat_Armor_From_Constitution_Base_Value"
+  },
+  "268": {
+    "name": "Armor_Factor_Constitution",
+    "script": "(Constitution_Total * Constants.Armor_Per_Constitution_Factor)"
+  },
+  "269": {
+    "name": "Armor_SubTotal",
+    "script": "((Armor + Flat_Armor_From_Constitution) * (1 + Armor_Factor_Constitution))"
+  },
+  "270": {
+    "name": "Armor_Focus_Factor_Constitution",
+    "script": "1"
+  },
+  "282": {
+    "name": "Local_Armor_Total",
+    "script": "((Local_Implicit_Base_Armor + Local_Base_Armor) * (1 + Local_Armor_Bonus_Percent))"
+  },
+  "283": {
+    "name": "Local_Evasion_Total",
+    "script": "((Local_Implicit_Base_Evasion + Local_Base_Evasion) * (1 + Local_Evasion_Bonus_Percent))"
+  },
+  "284": {
+    "name": "Local_ForceField_Total",
+    "script": "((Local_Implicit_Base_ForceField + Local_Base_ForceField) * (1 + Local_ForceField_Bonus_Percent))"
+  },
+  "394": {
+    "name": "Flat_Evasion_From_Agility",
+    "script": "(Constants.Flat_Evasion_From_Agility_Base_Value * (1 + (Pow(Agility_Total * Constants.Flat_Evasion_Per_Agility_Multiplier, Constants.Flat_Evasion_Per_Agility_Exponent) * Constants.Flat_Evasion_Per_Agility_FinalMultiplier))) - Constants.Flat_Evasion_From_Agility_Base_Value"
+  },
+  "285": {
+    "name": "Evasion_Factor_Agility",
+    "script": "(Agility_Total * Constants.Evasion_Per_Agility_Factor)"
+  },
+  "286": {
+    "name": "Evasion_SubTotal",
+    "script": "((Evasion + Flat_Evasion_From_Agility) * (1 + Evasion_Factor_Agility))"
+  },
+  "287": {
+    "name": "Evasion_Focus_Factor_Agility",
+    "script": "1"
+  },
+  "583": {
+    "name": "Glancing_Hit_Debuff_Duration_Total",
+    "script": "(Base_Glancing_Hit_Debuff_Duration + Glancing_Hit_Debuff_Duration_Bonus) * (1 + Glancing_Hit_Debuff_Duration_Percent)"
+  },
+  "688": {
+    "name": "?",
+    "script": "Life_Bonus_Percent_Final"
+  },
+  "307": {
+    "name": "?",
+    "script": "Life_Regen_Bonus_Percent_Final"
+  },
+  "308": {
+    "name": "Life_Current",
+    "script": "Min(Life_Max_Total, Life_Current.Agg)"
+  },
+  "309": {
+    "name": "Life_Total_From_Level",
+    "script": "(Level - 1) * Life_Per_Level_Multiplier"
+  },
+  "43": {
+    "name": "Life_Per_Level_Multiplier",
+    "script": "(Constants.Life_Per_Level_Mult * Pow(Level-1, Constants.Life_Per_Level_Exponent)) + Life_Factor_Level"
+  },
+  "310": {
+    "name": "Life_Max_SubTotal",
+    "script": "((Base_Life_Max + Life_Total_From_Level + (Life_From_Vitality * Life_Focus_Factor_Vitality)))"
+  },
+  "311": {
+    "name": "Life_Max_Total",
+    "script": "((Life_Max_SubTotal * (1 + Life_Bonus_Percent)) * Base_Life_Multiplier) MultiplyWith:Life_Bonus_Percent_Final"
+  },
+  "312": {
+    "name": "Life_Regen_Total",
+    "script": "(Base_Life_Regen_Percent * (1 + Life_Regen_Bonus_Percent) + Life_Regen_Bonus) MultiplyWith:Life_Regen_Bonus_Percent_Final"
+  },
+  "424": {
+    "name": "?",
+    "script": "Mana_Bonus_Percent_Final"
+  },
+  "332": {
+    "name": "?",
+    "script": "Mana_Regen_Bonus_Percent_Final"
+  },
+  "333": {
+    "name": "Mana_Current",
+    "script": "Min(Mana_Max_Total, Mana_Current.Agg)"
+  },
+  "334": {
+    "name": "Mana_Total_From_Level",
+    "script": "(Level - 1) * Mana_Factor_Level"
+  },
+  "335": {
+    "name": "Mana_Max_SubTotal",
+    "script": "(Base_Mana_Max + Mana_Total_From_Level)"
+  },
+  "336": {
+    "name": "Mana_Max_Total",
+    "script": "(Mana_Max_SubTotal * (1 + Mana_Bonus_Percent)) MultiplyWith:Mana_Bonus_Percent_Final"
+  },
+  "337": {
+    "name": "Mana_Regen_Total",
+    "script": "((Base_Mana_Regen_Percent + Mana_Regen_Bonus) * (1 + Mana_Regen_Bonus_Percent)) MultiplyWith:Mana_Regen_Bonus_Percent_Final"
+  },
+  "341": {
+    "name": "Life_Leech_Rate_Total",
+    "script": "(Base_Life_Leech_Rate * (1 + Life_Leech_Rate_Bonus_Percent))"
+  },
+  "344": {
+    "name": "Life_Leech_Maximum_Recovery_Per_Instance_Total",
+    "script": "(Base_Life_Leech_Maximum_Recovery_Per_Instance * (1 + Life_Leech_Maximum_Recovery_Per_Instance_Bonus_Percent))"
+  },
+  "347": {
+    "name": "Life_Leech_Maximum_Recovery_Total",
+    "script": "(Base_Life_Leech_Maximum_Recovery * (1 + Life_Leech_Maximum_Recovery_Bonus_Percent))"
+  },
+  "348": {
+    "name": "Life_From_Vitality",
+    "script": "(Vitality_Total * Life_Per_Vitality_Multiplier)"
+  },
+  "39": {
+    "name": "Life_Per_Vitality_Multiplier",
+    "script": "(Constants.Life_Per_Vitality_Mult * Pow(Level, Constants.Life_Per_Vitality_Exponent)) + Constants.Life_Per_Vitality"
+  },
+  "349": {
+    "name": "Life_Focus_Factor_Vitality",
+    "script": "1"
+  },
+  "161": {
+    "name": "?",
+    "script": "Potion_Cooldown_Increase_Percent_Final"
+  },
+  "162": {
+    "name": "Potion_Cooldown_Multiplier",
+    "script": "(1 + Potion_Cooldown_Increase_Percent) MultiplyWith:Potion_Cooldown_Increase_Percent_Final"
+  },
+  "564": {
+    "name": "Potion_Effect_Multiplier",
+    "script": "(1 + Potion_Effect_Increase_Percent)"
+  },
+  "924": {
+    "name": "Mana_Potion_Effect_Multiplier",
+    "script": "(1 + Mana_Potion_Effect_Increase_Percent)"
+  },
+  "116": {
+    "name": "?",
+    "script": "Magic_Find_Bonus_Percent_Final"
+  },
+  "358": {
+    "name": "Magic_Find_Percent_Total",
+    "script": "(Base_Magic_Find * (1 + Magic_Find_Bonus_Percent)) MultiplyWith:Magic_Find_Bonus_Percent_Final - 1"
+  },
+  "419": {
+    "name": "?",
+    "script": "Experience_Bonus_Percent_Final"
+  },
+  "363": {
+    "name": "Experience_Percent_Total",
+    "script": "(Base_Experience_Percent * (1 + Experience_Bonus_Percent + Experience_Bonus_When_Active_Percent)) MultiplyWith:Experience_Bonus_Percent_Final"
+  },
+  "364": {
+    "name": "Next_Level_Exp",
+    "script": "Pow(Level, Constants.ExpNeededToLevel_PowerParam) * Constants.ExpNeededToLevel_MultParam + Constants.ExpNeededToLevel_AddParam"
+  },
+  "714": {
+    "name": "Item_Quantity_Bonus_Percent_Total",
+    "script": "(Item_Quantity_Bonus_Percent + Unique_Increased_Item_Quantity_Bonus_From_Imbued_Items)"
+  },
+  "403": {
+    "name": "Cast_Speed_Percent_Total",
+    "script": "(Base_Cast_Speed_Percent * (1 + Cast_Speed_Bonus_Percent))"
+  },
+  "406": {
+    "name": "Cast_Speed_MainHand_Total",
+    "script": "(Item_Cast_Speed_MainHand * Cast_Speed_Percent_Total * (Is_DualWielding ? Constants.DualWield_Cast_Speed_Multiplier : 1))"
+  },
+  "407": {
+    "name": "Cast_Speed_OffHand_Total",
+    "script": "(Item_Cast_Speed_OffHand * Cast_Speed_Percent_Total * (Is_DualWielding ? Constants.DualWield_Cast_Speed_Multiplier : 1))"
+  },
+  "408": {
+    "name": "Cast_Speed_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Cast_Speed_OffHand_Total : Cast_Speed_MainHand_Total)"
+  },
+  "452": {
+    "name": "?",
+    "script": "Attack_Speed_Bonus_Percent_Final"
+  },
+  "453": {
+    "name": "Attack_Speed_Percent_Total",
+    "script": "(Base_Attack_Speed_Percent * (1 + Attack_Speed_Bonus_Percent)) MultiplyWith:Attack_Speed_Bonus_Percent_Final"
+  },
+  "456": {
+    "name": "Attack_Speed_MainHand_Total",
+    "script": "Min(Total_Max_Attacks_Per_Second, Item_Attack_Speed_MainHand * Attack_Speed_Percent_Total * (Is_DualWielding ? Constants.DualWield_Attack_Speed_Multiplier : 1))"
+  },
+  "457": {
+    "name": "Attack_Speed_OffHand_Total",
+    "script": "Min(Total_Max_Attacks_Per_Second, Item_Attack_Speed_OffHand * Attack_Speed_Percent_Total * (Is_DualWielding ? Constants.DualWield_Attack_Speed_Multiplier : 1))"
+  },
+  "458": {
+    "name": "Attack_Speed_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Attack_Speed_OffHand_Total : Attack_Speed_MainHand_Total)"
+  },
+  "461": {
+    "name": "Local_Cast_Speed_Total",
+    "script": "(Local_Implicit_Base_Cast_Speed * (1 + Local_Cast_Speed_Bonus_Percent))"
+  },
+  "464": {
+    "name": "Local_Attack_Speed_Total",
+    "script": "(Local_Implicit_Base_Attack_Speed * (1 + Local_Attack_Speed_Bonus_Percent))"
+  },
+  "84": {
+    "name": "?",
+    "script": "Weapon_Physical_Damage_Bonus_Percent_Final"
+  },
+  "506": {
+    "name": "Weapon_Physical_Damage_Percent_Total",
+    "script": "(Base_Weapon_Physical_Damage_Percent * (1+Weapon_Physical_Damage_Bonus_Percent))"
+  },
+  "511": {
+    "name": "Weapon_Physical_Damage_Min_MainHand_Total",
+    "script": "((Item_Weapon_Physical_Damage_Min_MainHand + Base_Weapon_Physical_Damage_Min_Bonus) * (1+(((Weapon_Physical_Damage_Strength_Coefficient * Strength_Total)) * 0.01)) * (Physical_Weapon_Damage_Focus_Factor_Strength + (Physical_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Physical_Damage_Percent_Total * (1 + Pin(Wand_MainHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Physical_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "512": {
+    "name": "Weapon_Physical_Damage_Delta_MainHand_Total",
+    "script": "((Item_Weapon_Physical_Damage_Delta_MainHand + Base_Weapon_Physical_Damage_Delta_Bonus) * (1+(((Weapon_Physical_Damage_Strength_Coefficient * Strength_Total)) * 0.01))* (Physical_Weapon_Damage_Focus_Factor_Strength + (Physical_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Physical_Damage_Percent_Total * (1 + Pin(Wand_MainHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Physical_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "513": {
+    "name": "Weapon_Physical_Damage_Min_OffHand_Total",
+    "script": "((Item_Weapon_Physical_Damage_Min_OffHand + Base_Weapon_Physical_Damage_Min_Bonus) * (1+(((Weapon_Physical_Damage_Strength_Coefficient * Strength_Total)) * 0.01))* (Physical_Weapon_Damage_Focus_Factor_Strength + (Physical_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Physical_Damage_Percent_Total * (1 + Pin(Wand_OffHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Physical_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "514": {
+    "name": "Weapon_Physical_Damage_Delta_OffHand_Total",
+    "script": "((Item_Weapon_Physical_Damage_Delta_OffHand + Base_Weapon_Physical_Damage_Delta_Bonus) * (1+(((Weapon_Physical_Damage_Strength_Coefficient * Strength_Total)) * 0.01))* (Physical_Weapon_Damage_Focus_Factor_Strength + (Physical_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Physical_Damage_Percent_Total * (1 + Pin(Wand_OffHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Physical_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "515": {
+    "name": "Weapon_Physical_Damage_Min_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Weapon_Physical_Damage_Min_OffHand_Total : Weapon_Physical_Damage_Min_MainHand_Total)"
+  },
+  "516": {
+    "name": "Weapon_Physical_Damage_Delta_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Weapon_Physical_Damage_Delta_OffHand_Total : Weapon_Physical_Damage_Delta_MainHand_Total)"
+  },
+  "521": {
+    "name": "Physical_Weapon_Damage_Focus_Factor_Strength",
+    "script": "1"
+  },
+  "522": {
+    "name": "Elemental_Weapon_Damage_Focus_Factor_Strength",
+    "script": "1"
+  },
+  "523": {
+    "name": "Physical_Weapon_Damage_Focus_Factor_Intelligence",
+    "script": "1"
+  },
+  "524": {
+    "name": "Elemental_Weapon_Damage_Focus_Factor_Intelligence",
+    "script": "1"
+  },
+  "85": {
+    "name": "?",
+    "script": "Weapon_Fire_Damage_Bonus_Percent_Final"
+  },
+  "1406": {
+    "name": "Weapon_Fire_Damage_Percent_Total",
+    "script": "(Base_Weapon_Fire_Damage_Percent * (1+Weapon_Fire_Damage_Bonus_Percent))"
+  },
+  "1411": {
+    "name": "Weapon_Fire_Damage_Min_MainHand_Total",
+    "script": "((Item_Weapon_Fire_Damage_Min_MainHand + Base_Weapon_Fire_Damage_Min_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01)) * (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Fire_Damage_Percent_Total * (1 + Pin(Wand_MainHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Fire_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1412": {
+    "name": "Weapon_Fire_Damage_Delta_MainHand_Total",
+    "script": "((Item_Weapon_Fire_Damage_Delta_MainHand + Base_Weapon_Fire_Damage_Delta_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01)) * (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Fire_Damage_Percent_Total * (1 + Pin(Wand_MainHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Fire_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1413": {
+    "name": "Weapon_Fire_Damage_Min_OffHand_Total",
+    "script": "((Item_Weapon_Fire_Damage_Min_OffHand + Base_Weapon_Fire_Damage_Min_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01)) * (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Fire_Damage_Percent_Total * (1 + Pin(Wand_OffHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Fire_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1414": {
+    "name": "Weapon_Fire_Damage_Delta_OffHand_Total",
+    "script": "((Item_Weapon_Fire_Damage_Delta_OffHand + Base_Weapon_Fire_Damage_Delta_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01)) * (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Fire_Damage_Percent_Total * (1 + Pin(Wand_OffHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Fire_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1415": {
+    "name": "Weapon_Fire_Damage_Min_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Weapon_Fire_Damage_Min_OffHand_Total : Weapon_Fire_Damage_Min_MainHand_Total)"
+  },
+  "1416": {
+    "name": "Weapon_Fire_Damage_Delta_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Weapon_Fire_Damage_Delta_OffHand_Total : Weapon_Fire_Damage_Delta_MainHand_Total)"
+  },
+  "86": {
+    "name": "?",
+    "script": "Weapon_Cold_Damage_Bonus_Percent_Final"
+  },
+  "1506": {
+    "name": "Weapon_Cold_Damage_Percent_Total",
+    "script": "(Base_Weapon_Cold_Damage_Percent * (1+Weapon_Cold_Damage_Bonus_Percent))"
+  },
+  "1511": {
+    "name": "Weapon_Cold_Damage_Min_MainHand_Total",
+    "script": "((Item_Weapon_Cold_Damage_Min_MainHand + Base_Weapon_Cold_Damage_Min_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01)) * (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Cold_Damage_Percent_Total * (1 + Pin(Wand_MainHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Cold_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1512": {
+    "name": "Weapon_Cold_Damage_Delta_MainHand_Total",
+    "script": "((Item_Weapon_Cold_Damage_Delta_MainHand + Base_Weapon_Cold_Damage_Delta_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01))* (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Cold_Damage_Percent_Total * (1 + Pin(Wand_MainHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Cold_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1513": {
+    "name": "Weapon_Cold_Damage_Min_OffHand_Total",
+    "script": "((Item_Weapon_Cold_Damage_Min_OffHand + Base_Weapon_Cold_Damage_Min_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01))* (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Cold_Damage_Percent_Total * (1 + Pin(Wand_OffHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Cold_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1514": {
+    "name": "Weapon_Cold_Damage_Delta_OffHand_Total",
+    "script": "((Item_Weapon_Cold_Damage_Delta_OffHand + Base_Weapon_Cold_Damage_Delta_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01))* (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Cold_Damage_Percent_Total * (1 + Pin(Wand_OffHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Cold_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1515": {
+    "name": "Weapon_Cold_Damage_Min_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Weapon_Cold_Damage_Min_OffHand_Total : Weapon_Cold_Damage_Min_MainHand_Total)"
+  },
+  "1516": {
+    "name": "Weapon_Cold_Damage_Delta_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Weapon_Cold_Damage_Delta_OffHand_Total : Weapon_Cold_Damage_Delta_MainHand_Total)"
+  },
+  "87": {
+    "name": "?",
+    "script": "Weapon_Lightning_Damage_Bonus_Percent_Final"
+  },
+  "1606": {
+    "name": "Weapon_Lightning_Damage_Percent_Total",
+    "script": "(Base_Weapon_Lightning_Damage_Percent * (1+Weapon_Lightning_Damage_Bonus_Percent))"
+  },
+  "1611": {
+    "name": "Weapon_Lightning_Damage_Min_MainHand_Total",
+    "script": "((Item_Weapon_Lightning_Damage_Min_MainHand + Base_Weapon_Lightning_Damage_Min_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01)) * (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Lightning_Damage_Percent_Total * (1 + Pin(Wand_MainHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Lightning_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1612": {
+    "name": "Weapon_Lightning_Damage_Delta_MainHand_Total",
+    "script": "((Item_Weapon_Lightning_Damage_Delta_MainHand + Base_Weapon_Lightning_Damage_Delta_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01))* (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Lightning_Damage_Percent_Total * (1 + Pin(Wand_MainHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Lightning_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1613": {
+    "name": "Weapon_Lightning_Damage_Min_OffHand_Total",
+    "script": "((Item_Weapon_Lightning_Damage_Min_OffHand + Base_Weapon_Lightning_Damage_Min_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01))* (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Lightning_Damage_Percent_Total * (1 + Pin(Wand_OffHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Lightning_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1614": {
+    "name": "Weapon_Lightning_Damage_Delta_OffHand_Total",
+    "script": "((Item_Weapon_Lightning_Damage_Delta_OffHand + Base_Weapon_Lightning_Damage_Delta_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01))* (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Lightning_Damage_Percent_Total * (1 + Pin(Wand_OffHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Lightning_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1615": {
+    "name": "Weapon_Lightning_Damage_Min_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Weapon_Lightning_Damage_Min_OffHand_Total : Weapon_Lightning_Damage_Min_MainHand_Total)"
+  },
+  "1616": {
+    "name": "Weapon_Lightning_Damage_Delta_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Weapon_Lightning_Damage_Delta_OffHand_Total : Weapon_Lightning_Damage_Delta_MainHand_Total)"
+  },
+  "88": {
+    "name": "?",
+    "script": "Weapon_Poison_Damage_Bonus_Percent_Final"
+  },
+  "1706": {
+    "name": "Weapon_Poison_Damage_Percent_Total",
+    "script": "(Base_Weapon_Poison_Damage_Percent * (1+Weapon_Poison_Damage_Bonus_Percent))"
+  },
+  "1711": {
+    "name": "Weapon_Poison_Damage_Min_MainHand_Total",
+    "script": "((Item_Weapon_Poison_Damage_Min_MainHand + Base_Weapon_Poison_Damage_Min_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01)) * (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Poison_Damage_Percent_Total * (1 + Pin(Wand_MainHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Poison_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1712": {
+    "name": "Weapon_Poison_Damage_Delta_MainHand_Total",
+    "script": "((Item_Weapon_Poison_Damage_Delta_MainHand + Base_Weapon_Poison_Damage_Delta_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01))* (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Poison_Damage_Percent_Total * (1 + Pin(Wand_MainHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Poison_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1713": {
+    "name": "Weapon_Poison_Damage_Min_OffHand_Total",
+    "script": "((Item_Weapon_Poison_Damage_Min_OffHand + Base_Weapon_Poison_Damage_Min_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01))* (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Poison_Damage_Percent_Total * (1 + Pin(Wand_OffHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Poison_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1714": {
+    "name": "Weapon_Poison_Damage_Delta_OffHand_Total",
+    "script": "((Item_Weapon_Poison_Damage_Delta_OffHand + Base_Weapon_Poison_Damage_Delta_Bonus) * (1+(( (Weapon_Elemental_Damage_Intelligence_Coefficient * Intelligence_Total)) * 0.01))* (Elemental_Weapon_Damage_Focus_Factor_Strength + (Elemental_Weapon_Damage_Focus_Factor_Intelligence - 1)) * Weapon_Poison_Damage_Percent_Total * (1 + Pin(Wand_OffHand, 0, 1) * Increased_Damage_With_Wands)) MultiplyWith:Weapon_Poison_Damage_Bonus_Percent_Final MultiplyWith:Weapon_Damage_Percent_Bonus_Final"
+  },
+  "1715": {
+    "name": "Weapon_Poison_Damage_Min_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Weapon_Poison_Damage_Min_OffHand_Total : Weapon_Poison_Damage_Min_MainHand_Total)"
+  },
+  "1716": {
+    "name": "Weapon_Poison_Damage_Delta_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Weapon_Poison_Damage_Delta_OffHand_Total : Weapon_Poison_Damage_Delta_MainHand_Total)"
+  },
+  "89": {
+    "name": "?",
+    "script": "Weapon_Damage_Percent_Bonus_Final"
+  },
+  "608": {
+    "name": "AttackSpell_Damage_Percent_Total",
+    "script": "(Base_AttackSpell_Power_Percent * (1+Spell_Damage_Bonus_Percent))"
+  },
+  "609": {
+    "name": "HealSpell_Damage_Percent_Total",
+    "script": "(Base_HealSpell_Power_Percent * (1+Spell_Damage_Bonus_Percent))"
+  },
+  "90": {
+    "name": "?",
+    "script": "Crit_Chance_Bonus_Percent_Final"
+  },
+  "707": {
+    "name": "Crit_Chance_MainHand_Total",
+    "script": "((Item_Crit_Chance_MainHand * (1+Crit_Chance_Bonus_Percent)) * Base_Crit_Chance_Multiplier) MultiplyWith:Crit_Chance_Bonus_Percent_Final"
+  },
+  "708": {
+    "name": "Crit_Chance_OffHand_Total",
+    "script": "((Item_Crit_Chance_OffHand * (1+Crit_Chance_Bonus_Percent)) * Base_Crit_Chance_Multiplier) MultiplyWith:Crit_Chance_Bonus_Percent_Final"
+  },
+  "709": {
+    "name": "Crit_Chance_AttackSpell_Total",
+    "script": "((Item_Crit_Chance_AttackSpell * (1+Crit_Chance_Bonus_Percent)) * Base_Crit_Chance_Multiplier) MultiplyWith:Crit_Chance_Bonus_Percent_Final"
+  },
+  "710": {
+    "name": "Crit_Chance_HealSpell_Total",
+    "script": "((Item_Crit_Chance_HealSpell * (1+Crit_Chance_Bonus_Percent)) * Base_Crit_Chance_Multiplier) MultiplyWith:Crit_Chance_Bonus_Percent_Final"
+  },
+  "711": {
+    "name": "Crit_Chance_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Crit_Chance_OffHand_Total : Crit_Chance_MainHand_Total)"
+  },
+  "91": {
+    "name": "?",
+    "script": "Crit_Damage_Bonus_Percent_Final"
+  },
+  "715": {
+    "name": "Crit_Damage_Total",
+    "script": "(Base_Crit_Damage * (1 + Crit_Damage_Bonus_Percent)) MultiplyWith:Crit_Damage_Bonus_Percent_Final"
+  },
+  "618": {
+    "name": "?",
+    "script": "Bleeding_Damage_Percent_Bonus_Final"
+  },
+  "619": {
+    "name": "?",
+    "script": "Bleeding_Damage_Taken_Increased_Percent_Final"
+  },
+  "420": {
+    "name": "Armor_Piercing_Percent_Total",
+    "script": "Min(1, (Pin(SpearAny, 0, 1) * Armor_Piercing_Percent_With_Spears) + Armor_Piercing_Percent)"
+  },
+  "720": {
+    "name": "Local_Crit_Chance_Total",
+    "script": "(Local_Base_Crit_Chance * (1 + Local_Crit_Chance_Percent_Bonus))"
+  },
+  "622": {
+    "name": "Melee_Auto_Attacks_Splash_Damage_Cone_Radius_Total",
+    "script": "(Base_Melee_Auto_Attacks_Splash_Damage_Cone_Radius_Multiplier * (1 + Melee_Auto_Attacks_Splash_Damage_Cone_Radius_Bonus_Percent))"
+  },
+  "409": {
+    "name": "?",
+    "script": "Melee_Auto_Attacks_Splash_Damage_Bonus_Percent_Final"
+  },
+  "410": {
+    "name": "Base_Melee_Auto_Attacks_Splash_Damage_Percent_Total",
+    "script": "(Base_Melee_Auto_Attacks_Splash_Damage_Percent * (1 + Melee_Auto_Attacks_Splash_Damage_Bonus_Percent)) MultiplyWith:Melee_Auto_Attacks_Splash_Damage_Bonus_Percent_Final"
+  },
+  "1203": {
+    "name": "Reduced_Enemy_Stun_Threshold_Total",
+    "script": "(Pin(MaceAny_CurrentHand, 0, 1) * Reduced_Enemy_Stun_Threshold_With_Maces) + Reduced_Enemy_Stun_Threshold"
+  },
+  "352": {
+    "name": "Stun_Chance_MainHand_Total",
+    "script": "Item_Stun_Chance_MainHand"
+  },
+  "353": {
+    "name": "Stun_Chance_OffHand_Total",
+    "script": "Item_Stun_Chance_OffHand"
+  },
+  "212": {
+    "name": "Stun_Chance_CurrentHand",
+    "script": "(DualWield_Hand ? Item_Stun_Chance_OffHand : Item_Stun_Chance_MainHand)"
+  },
+  "351": {
+    "name": "Local_Stun_Chance_Total",
+    "script": "(Local_Base_Stun_Chance * (1 + Local_Stun_Chance_Percent_Bonus))"
+  },
+  "354": {
+    "name": "Stun_Chance_CurrentHand_Total",
+    "script": "(DualWield_Hand ? Stun_Chance_OffHand_Total : Stun_Chance_MainHand_Total)"
+  },
+  "92": {
+    "name": "?",
+    "script": "Block_Chance_Percent_Bonus_Final"
+  },
+  "753": {
+    "name": "Block_Chance_Total",
+    "script": "(Base_Block_Chance * (1 + Block_Chance_Percent_Bonus)) MultiplyWith:Block_Chance_Percent_Bonus_Final"
+  },
+  "93": {
+    "name": "?",
+    "script": "Block_Chance_Spell_Percent_Bonus_Final"
+  },
+  "757": {
+    "name": "Block_Chance_Spell_Total",
+    "script": "(Base_Block_Chance_Spell * (1 + Block_Chance_Spell_Percent_Bonus)) MultiplyWith:Block_Chance_Spell_Percent_Bonus_Final"
+  },
+  "671": {
+    "name": "Blocked_Damage_Taken_Multiplier_Total",
+    "script": "(Base_Blocked_Damage_Taken_Multiplier + Blocked_Damage_Taken_Bonus) * (1 + Blocked_Damage_Taken_Increased_Bonus_Percent)"
+  },
+  "762": {
+    "name": "Local_Block_Chance_Total",
+    "script": "Local_Base_Block_Chance * (1 + Local_Block_Chance_Bonus_Percent)"
+  },
+  "763": {
+    "name": "Local_Block_Chance_Spell_Total",
+    "script": "Local_Base_Block_Chance_Spell * (1 + Local_Block_Chance_Spell_Bonus_Percent)"
+  },
+  "94": {
+    "name": "?",
+    "script": "Dodge_Chance_Bonus_Percent_Final"
+  },
+  "803": {
+    "name": "Dodge_Chance_Total",
+    "script": "((Base_Dodge_Chance + Dodge_Chance_Bonus) * (1 + Dodge_Chance_Bonus_Percent)) MultiplyWith:Dodge_Chance_Bonus_Percent_Final"
+  },
+  "95": {
+    "name": "?",
+    "script": "Dodge_Chance_Spell_Percent_Bonus_Final"
+  },
+  "807": {
+    "name": "Dodge_Chance_Spell_Total",
+    "script": "((Base_Dodge_Chance_Spell + Dodge_Chance_Spell_Bonus) * (1 + Dodge_Chance_Spell_Percent_Bonus)) MultiplyWith:Dodge_Chance_Spell_Percent_Bonus_Final"
+  },
+  "96": {
+    "name": "?",
+    "script": "Power_Cooldown_Increase_Percent_Final"
+  },
+  "856": {
+    "name": "Power_Cooldown_Multiplier",
+    "script": "(1 + Power_Cooldown_Increase_Percent) MultiplyWith:Power_Cooldown_Increase_Percent_Final"
+  },
+  "478": {
+    "name": "Power_Cooldown_Total",
+    "script": "Base_Cooldown * Power_Cooldown_Multiplier"
+  },
+  "97": {
+    "name": "?",
+    "script": "Mana_Cost_Increase_Percent_Final"
+  },
+  "2605": {
+    "name": "Mana_Cost_Multiplier",
+    "script": "(1 + Mana_Cost_Increase_Percent) MultiplyWith:Mana_Cost_Increase_Percent_Final"
+  },
+  "477": {
+    "name": "Mana_Cost_Total",
+    "script": "Base_Mana_Cost * Mana_Cost_Multiplier"
+  },
+  "475": {
+    "name": "Power_Weapon_Damage_Multiplier_Total",
+    "script": "(Base_Power_Weapon_Damage_Multiplier + Power_Weapon_Damage_Multiplier_Bonus)"
+  },
+  "473": {
+    "name": "Power_Radius_Total",
+    "script": "(Base_Power_Radius) * (1 + Power_Radius_Bonus_Percent)"
+  },
+  "446": {
+    "name": "?",
+    "script": "Local_Power_Skill_Power_Bonus_Percent_Final"
+  },
+  "447": {
+    "name": "Power_Skill_Power_Multiplier",
+    "script": "(1 + Local_Power_Skill_Power_Bonus_Percent) MultiplyWith:Local_Power_Skill_Power_Bonus_Percent_Final"
+  },
+  "914": {
+    "name": "Power_Weapon_Damage_Multiplier_2_Total",
+    "script": "(Power_Weapon_Damage_Multiplier_2 + Power_Weapon_Damage_Multiplier_2_Bonus)"
+  },
+  "596": {
+    "name": "?",
+    "script": "(Power_Num_Projectiles + Power_Num_Projectiles_Bonus)"
+  },
+  "560": {
+    "name": "?",
+    "script": "Power_Projectile_Speed_Bonus_Percent_Final"
+  },
+  "372": {
+    "name": "Power_Projectile_Speed_Total",
+    "script": "(Power_Projectile_Speed * (1 + Power_Projectile_Speed_Bonus)) MultiplyWith:Power_Projectile_Speed_Bonus_Percent_Final"
+  },
+  "778": {
+    "name": "Minion_Inheritance_Weapon_Damage_Percent_Total",
+    "script": "(Minion_Inheritance_Weapon_Damage_Bonus_Percent)"
+  },
+  "779": {
+    "name": "Minion_Inheritance_Attack_Speed_Percent_Total",
+    "script": "(Minion_Inheritance_Attack_Speed_Bonus_Percent)"
+  },
+  "780": {
+    "name": "Minion_Inheritance_Movement_Speed_Percent_Total",
+    "script": "(Minion_Inheritance_Movement_Speed_Bonus_Percent)"
+  },
+  "781": {
+    "name": "Minion_Inheritance_Life_Percent_Total",
+    "script": "(Minion_Inheritance_Life_Bonus_Percent)"
+  },
+  "782": {
+    "name": "Minion_Inheritance_Force_Field_Percent_Total",
+    "script": "(Minion_Inheritance_Force_Field_Bonus_Percent)"
+  },
+  "783": {
+    "name": "Minion_Inheritance_Armor_Evasion_Percent_Total",
+    "script": "(Minion_Inheritance_Armor_Evasion_Bonus_Percent)"
+  },
+  "784": {
+    "name": "Minion_Inheritance_Resistances_Percent_Total",
+    "script": "(Minion_Inheritance_Resistances_Bonus_Percent)"
+  },
+  "785": {
+    "name": "Minion_Inheritance_Crit_Chance_Percent_Total",
+    "script": "(Minion_Inheritance_Crit_Chance_Bonus_Percent)"
+  },
+  "786": {
+    "name": "Minion_Inheritance_Crit_Damage_Percent_Total",
+    "script": "(Minion_Inheritance_Crit_Damage_Bonus_Percent)"
+  },
+  "787": {
+    "name": "Minion_Inheritance_Life_Leech_Percent_Total",
+    "script": "(Minion_Inheritance_Life_Leech_Bonus_Percent)"
+  },
+  "930": {
+    "name": "Power_Teleport_Action_Speed_Total",
+    "script": "(Base_Action_Speed * (1 - Power_Teleport_Action_Speed_Bonus_Percent))"
+  },
+  "938": {
+    "name": "Power_Unholy_Focus_Skeleton_Charge_Cooldown_Total",
+    "script": "Power_Unholy_Focus_Skeleton_Charge_Cooldown * (1 - Power_Unholy_Focus_Skeleton_Charge_Cooldown_Reduction_Percent)"
+  },
+  "946": {
+    "name": "Power_Unholy_Focus_Demon_Shadowbolt_Weapon_Damage_Multiplier_Total",
+    "script": "Power_Unholy_Focus_Demon_Shadowbolt_Weapon_Damage_Multiplier * (1 + Power_Unholy_Focus_Demon_Shadowbolt_Weapon_Damage_Bonus_Percent)"
+  },
+  "951": {
+    "name": "Power_Demonic_Presence_Life_Bonus_Percent_Total",
+    "script": "Power_Demonic_Presence_Base_Life_Bonus_Percent + Power_Demonic_Presence_Life_Bonus_Percent"
+  },
+  "952": {
+    "name": "Power_Demonic_Presence_ForceField_Bonus_Percent_Total",
+    "script": "Power_Demonic_Presence_Base_ForceField_Bonus_Percent + Power_Demonic_Presence_ForceField_Bonus_Percent"
+  },
+  "819": {
+    "name": "?",
+    "script": "(Power_Base_Max_Num_Minions + Power_Max_Num_Minions_Bonus)"
+  },
+  "489": {
+    "name": "?",
+    "script": "Resistance_Fire_Final"
+  },
+  "490": {
+    "name": "?",
+    "script": "Resistance_Cold_Final"
+  },
+  "491": {
+    "name": "?",
+    "script": "Resistance_Lightning_Final"
+  },
+  "492": {
+    "name": "?",
+    "script": "Resistance_Poison_Final"
+  },
+  "538": {
+    "name": "?",
+    "script": "Resistance_All_Final"
+  },
+  "1014": {
+    "name": "Resistance_Fire_Total",
+    "script": "(Resistance_Fire + Resistance_All) MultiplyWith:Resistance_Fire_Final MultiplyWith:Resistance_All_Final SubtractWith:Resistance_All_World_Penalty"
+  },
+  "1015": {
+    "name": "Resistance_Cold_Total",
+    "script": "(Resistance_Cold + Resistance_All) MultiplyWith:Resistance_Cold_Final MultiplyWith:Resistance_All_Final SubtractWith:Resistance_All_World_Penalty"
+  },
+  "1016": {
+    "name": "Resistance_Lightning_Total",
+    "script": "(Resistance_Lightning + Resistance_All) MultiplyWith:Resistance_Lightning_Final MultiplyWith:Resistance_All_Final SubtractWith:Resistance_All_World_Penalty"
+  },
+  "1017": {
+    "name": "Resistance_Poison_Total",
+    "script": "(Resistance_Poison + Resistance_All) MultiplyWith:Resistance_Poison_Final MultiplyWith:Resistance_All_Final SubtractWith:Resistance_All_World_Penalty"
+  },
+  "1580": {
+    "name": "Resistance_Fire_Total_Capped",
+    "script": "Min(Resistance_Fire_Total, Resistance_Max_Total)"
+  },
+  "1581": {
+    "name": "Resistance_Cold_Total_Capped",
+    "script": "Min(Resistance_Cold_Total, Resistance_Max_Total)"
+  },
+  "1582": {
+    "name": "Resistance_Lightning_Total_Capped",
+    "script": "Min(Resistance_Lightning_Total, Resistance_Max_Total)"
+  },
+  "1583": {
+    "name": "Resistance_Poison_Total_Capped",
+    "script": "Min(Resistance_Poison_Total, Resistance_Max_Total)"
+  },
+  "1008": {
+    "name": "Resistance_Stun_Total",
+    "script": "Resistance_Stun"
+  },
+  "1020": {
+    "name": "Resistance_Max_Total",
+    "script": "Min(0.95, Resistance_Max + Resistance_Max_Bonus)"
+  },
+  "98": {
+    "name": "Fire_Resistance_Penetration_Total",
+    "script": "Fire_Resistance_Penetration + All_Resistance_Penetration"
+  },
+  "99": {
+    "name": "Cold_Resistance_Penetration_Total",
+    "script": "Cold_Resistance_Penetration + All_Resistance_Penetration"
+  },
+  "113": {
+    "name": "Lightning_Resistance_Penetration_Total",
+    "script": "Lightning_Resistance_Penetration + All_Resistance_Penetration"
+  },
+  "114": {
+    "name": "Poison_Resistance_Penetration_Total",
+    "script": "Poison_Resistance_Penetration + All_Resistance_Penetration"
+  },
+  "115": {
+    "name": "?",
+    "script": "Movement_Speed_Bonus_Percent_Final"
+  },
+  "1103": {
+    "name": "Movement_Speed_Total",
+    "script": "(Base_Movement_Speed * (1 + Movement_Speed_Bonus_Percent + Unique_Movement_Speed_Bonus_From_Imbued_Items)) MultiplyWith:Movement_Speed_Bonus_Percent_Final"
+  },
+  "1201": {
+    "name": "Extra_Swing_Reproc_Chance_Total",
+    "script": "Pin(SwordAny_CurrentHand, 0, 1) * Extra_Swing_Reproc_Chance_Swords"
+  },
+  "1205": {
+    "name": "Deadly_Strike_Chance_Total",
+    "script": "Pin(AxeAny_CurrentHand, 0, 1) * Deadly_Strike_Chance_With_Axes"
+  },
+  "1302": {
+    "name": "?",
+    "script": "(DualWield_Hand ? Axe_OffHand : Axe_MainHand)"
+  },
+  "777": {
+    "name": "?",
+    "script": "(DualWield_Hand ? Crossbow_OffHand : Crossbow_MainHand)"
+  },
+  "1308": {
+    "name": "?",
+    "script": "(DualWield_Hand ? Mace_OffHand : Mace_MainHand)"
+  },
+  "1312": {
+    "name": "?",
+    "script": "(DualWield_Hand ? Sword_OffHand : Sword_MainHand)"
+  },
+  "1350": {
+    "name": "?",
+    "script": "Pin(Axe_CurrentHand + Axe2H, 0, 1)"
+  },
+  "1351": {
+    "name": "?",
+    "script": "Pin(Bow + Crossbow, 0, 1)"
+  },
+  "298": {
+    "name": "?",
+    "script": "Pin(Spear, 0, 1)"
+  },
+  "1352": {
+    "name": "?",
+    "script": "Pin(Mace_CurrentHand + Mace2H, 0, 1)"
+  },
+  "1353": {
+    "name": "?",
+    "script": "Pin(Sword_CurrentHand + Sword2H, 0, 1)"
+  },
+  "1354": {
+    "name": "?",
+    "script": "Pin(AxeAny_CurrentHand + MaceAny_CurrentHand + SwordAny_CurrentHand + Wand_CurrentHand + Crossbow_CurrentHand, 0, 1)"
+  },
+  "1355": {
+    "name": "?",
+    "script": "Pin(Axe2H + BowAny + Mace2H + Mace2H + Sword2H + Polearm + Spear, 0, 1)"
+  },
+  "1356": {
+    "name": "?",
+    "script": "Pin(Axe_CurrentHand + Axe2H + MaceAny_CurrentHand + Dagger + SwordAny_CurrentHand + Polearm + Spear, 0, 1)"
+  },
+  "774": {
+    "name": "?",
+    "script": "(DualWield_Hand ? Wand_OffHand : Wand_MainHand)"
+  },
+  "1362": {
+    "name": "?",
+    "script": "Pin(Axe + Axe2H + ThrowingAxe, 0, 1)"
+  },
+  "1363": {
+    "name": "?",
+    "script": "Pin(Mace + Mace2H, 0, 1)"
+  },
+  "1364": {
+    "name": "?",
+    "script": "Pin(Sword + Sword2H, 0, 1)"
+  },
+  "1365": {
+    "name": "?",
+    "script": "Pin(ColdStaff + FireStaff + LightningStaff + PoisonStaff + ElementalStaff, 0, 1)"
+  },
+  "1317": {
+    "name": "?",
+    "script": "Pin(ColdWand + FireWand + LightningWand + PoisonWand + ElementalWand, 0, 1)"
+  },
+  "1366": {
+    "name": "?",
+    "script": "Pin(Axe + Mace + Dagger + Mace + Sword + WandAny, 0, 1)"
+  },
+  "1367": {
+    "name": "?",
+    "script": "Pin(AxeAny + MaceAny + Dagger + MaceAny + SwordAny + Polearm + Spear, 0, 1)"
+  },
+  "1368": {
+    "name": "?",
+    "script": "Pin(ThrowingAxe + BowAny + Crossbow + WandAny, 0, 1)"
+  },
+  "1369": {
+    "name": "?",
+    "script": "Pin(WandAny + StaffAny, 0, 1)"
+  },
+  "630": {
+    "name": "?",
+    "script": "Unique_Muninn_More_Magic_Find_Per_Observed_Enemy_Percent"
+  },
+  "642": {
+    "name": "?",
+    "script": "Unique_More_Damage_Percent_Per_Health_Percent_Missing"
+  },
+  "652": {
+    "name": "?",
+    "script": "More_Damage_Percent_Done_To_Stunned_Enemies"
+  },
+  "655": {
+    "name": "?",
+    "script": "Unique_More_Attack_Speed_Per_Nearby_Bleeding_Enemy_Percent"
+  },
+  "657": {
+    "name": "?",
+    "script": "Unique_More_Weapon_Damage_For_Each_Nearby_Enemy"
+  },
+  "659": {
+    "name": "?",
+    "script": "Unique_More_Life_For_Each_Nearby_Enemy_Percent"
+  },
+  "666": {
+    "name": "?",
+    "script": "Unique_More_Strength_Per_Block_Percent"
+  },
+  "699": {
+    "name": "Unique_Movement_Speed_Bonus_From_Imbued_Items",
+    "script": "(Unique_Increased_Movement_Speed_For_Each_Equipped_Imbued_Non_Set_Item * Num_Imbued_Non_Set_Items_Equipped) + (Unique_Increased_Movement_Speed_For_Each_Equipped_Imbued_Set_Item * Num_Imbued_Set_Items_Equipped)"
+  },
+  "706": {
+    "name": "Unique_Increased_Item_Quantity_Bonus_From_Imbued_Items",
+    "script": "(Unique_Increased_Item_Quantity_For_Each_Equipped_Imbued_Non_Set_Item * Num_Imbued_Non_Set_Items_Equipped) + (Unique_Increased_Item_Quantity_For_Each_Equipped_Imbued_Set_Item * Num_Imbued_Set_Items_Equipped)"
+  },
+  "2508": {
+    "name": "Local_Physical_Damage_Min_Total",
+    "script": "(Local_Implicit_Physical_Base_Damage_Min + Local_Base_Physical_Damage_Min) * (1 + Local_Physical_Damage_Percent)"
+  },
+  "2509": {
+    "name": "Local_Physical_Damage_Delta_Total",
+    "script": "(Local_Implicit_Physical_Base_Damage_Delta + Local_Base_Physical_Damage_Delta) * (1 + Local_Physical_Damage_Percent)"
+  },
+  "2510": {
+    "name": "Local_Physical_Damage_Max_Total",
+    "script": "(Local_Physical_Damage_Min_Total + Local_Physical_Damage_Delta_Total)"
+  },
+  "2519": {
+    "name": "Fire_Damage_Min_Total",
+    "script": "(Local_Implicit_Fire_Base_Damage_Min + Local_Base_Fire_Damage_Min) * (1 + Local_Fire_Damage_Percent + Local_Elemental_Damage_Percent)"
+  },
+  "2520": {
+    "name": "Fire_Damage_Delta_Total",
+    "script": "(Local_Implicit_Fire_Base_Damage_Delta + Local_Base_Fire_Damage_Delta) * (1 + Local_Fire_Damage_Percent + Local_Elemental_Damage_Percent)"
+  },
+  "2521": {
+    "name": "Fire_Damage_Max_Total",
+    "script": "(Fire_Damage_Min_Total + Fire_Damage_Delta_Total)"
+  },
+  "2530": {
+    "name": "Cold_Damage_Min_Total",
+    "script": "(Local_Implicit_Cold_Base_Damage_Min + Local_Base_Cold_Damage_Min) * (1 + Local_Cold_Damage_Percent + Local_Elemental_Damage_Percent)"
+  },
+  "2531": {
+    "name": "Cold_Damage_Delta_Total",
+    "script": "(Local_Implicit_Cold_Base_Damage_Delta + Local_Base_Cold_Damage_Delta) * (1 + Local_Cold_Damage_Percent + Local_Elemental_Damage_Percent)"
+  },
+  "2532": {
+    "name": "Cold_Damage_Max_Total",
+    "script": "(Cold_Damage_Min_Total + Cold_Damage_Delta_Total)"
+  },
+  "2541": {
+    "name": "Lightning_Damage_Min_Total",
+    "script": "(Local_Implicit_Lightning_Base_Damage_Min + Local_Base_Lightning_Damage_Min) * (1 + Local_Lightning_Damage_Percent + Local_Elemental_Damage_Percent)"
+  },
+  "2542": {
+    "name": "Lightning_Damage_Delta_Total",
+    "script": "(Local_Implicit_Lightning_Base_Damage_Delta + Local_Base_Lightning_Damage_Delta) * (1 + Local_Lightning_Damage_Percent + Local_Elemental_Damage_Percent)"
+  },
+  "2543": {
+    "name": "Lightning_Damage_Max_Total",
+    "script": "(Lightning_Damage_Min_Total + Lightning_Damage_Delta_Total)"
+  },
+  "2552": {
+    "name": "Poison_Damage_Min_Total",
+    "script": "(Local_Implicit_Poison_Base_Damage_Min + Local_Base_Poison_Damage_Min) * (1 + Local_Poison_Damage_Percent + Local_Elemental_Damage_Percent)"
+  },
+  "2553": {
+    "name": "Poison_Damage_Delta_Total",
+    "script": "(Local_Implicit_Poison_Base_Damage_Delta + Local_Base_Poison_Damage_Delta) * (1 + Local_Poison_Damage_Percent + Local_Elemental_Damage_Percent)"
+  },
+  "2554": {
+    "name": "Poison_Damage_Max_Total",
+    "script": "(Poison_Damage_Min_Total + Poison_Damage_Delta_Total)"
+  },
+  "2563": {
+    "name": "Pure_Damage_Min_Total",
+    "script": "(Local_Implicit_Pure_Base_Damage_Min + Local_Base_Pure_Damage_Min) * (1 + Local_Pure_Damage_Percent)"
+  },
+  "2564": {
+    "name": "Pure_Damage_Delta_Total",
+    "script": "(Local_Implicit_Pure_Base_Damage_Delta + Local_Base_Pure_Damage_Delta) * (1 + Local_Pure_Damage_Percent)"
+  },
+  "2565": {
+    "name": "Pure_Damage_Max_Total",
+    "script": "(Pure_Damage_Min_Total + Pure_Damage_Delta_Total)"
+  },
+  "2566": {
+    "name": "Elemental_Damage_Min_Total",
+    "script": "(Fire_Damage_Min_Total + Cold_Damage_Min_Total + Lightning_Damage_Min_Total + Poison_Damage_Min_Total)"
+  },
+  "2567": {
+    "name": "Elemental_Damage_Delta_Total",
+    "script": "(Fire_Damage_Delta_Total + Cold_Damage_Delta_Total + Lightning_Damage_Delta_Total + Poison_Damage_Delta_Total)"
+  },
+  "2568": {
+    "name": "Elemental_Damage_Max_Total",
+    "script": "(Elemental_Damage_Min_Total + Elemental_Damage_Delta_Total)"
+  },
+  "2569": {
+    "name": "Damage_Min_Total",
+    "script": "(Local_Physical_Damage_Min_Total + Elemental_Damage_Min_Total + Pure_Damage_Min_Total)"
+  },
+  "2570": {
+    "name": "Damage_Delta_Total",
+    "script": "(Local_Physical_Damage_Delta_Total + Elemental_Damage_Delta_Total + Pure_Damage_Delta_Total)"
+  },
+  "2571": {
+    "name": "Damage_Max_Total",
+    "script": "(Damage_Min_Total + Damage_Delta_Total)"
+  },
+  "163": {
+    "name": "?",
+    "script": "More_Damage_To_Beasts"
+  },
+  "597": {
+    "name": "?",
+    "script": "More_Damage_To_Demons"
+  },
+  "598": {
+    "name": "?",
+    "script": "More_Damage_To_Dragons"
+  },
+  "607": {
+    "name": "?",
+    "script": "More_Damage_To_Orcs"
+  },
+  "614": {
+    "name": "?",
+    "script": "More_Damage_To_Undead"
+  },
+  "690": {
+    "name": "?",
+    "script": "Area_Pack_Size_Bonus_Percent_Final"
+  },
+  "691": {
+    "name": "?",
+    "script": "Area_Item_Drop_Quantity_Bonus_Percent_Final"
+  },
+  "692": {
+    "name": "?",
+    "script": "Area_Monsters_Life_Bonus_Percent_Final"
+  },
+  "292": {
+    "name": "?",
+    "script": "Abilities_More_Projectiles_Chance_Array"
+  },
+  "573": {
+    "name": "ChainLightning_Max_Num_Chains_Total",
+    "script": "(ChainLightning_Max_Num_Chains + ChainLightning_Additional_Max_Num_Chains)"
+  },
+  "534": {
+    "name": "Power_Elemental_Seal_Duration_Total",
+    "script": "(Power_Duration + Power_Elemental_Seal_Duration_Bonus)"
+  },
+  "920": {
+    "name": "Power_Blizzard_Duration_Total",
+    "script": "(Power_Duration + Power_Duration_Bonus_Blizzard)"
+  },
+  "8123": {
+    "name": "Power_Demonic_Presence_Duration_Total",
+    "script": "(Power_Duration + Power_Demonic_Presence_Duration_Bonus)"
+  },
+  "806": {
+    "name": "Power_Drain_Life_Duration_Total",
+    "script": "(Power_Duration + Power_Drain_Life_Duration_Bonus)"
+  },
+  "811": {
+    "name": "Power_Sacrifice_Duration_Total",
+    "script": "(Power_Duration + Power_Sacrifice_Duration_Bonus)"
+  },
+  "813": {
+    "name": "Power_Decay_Duration_Total",
+    "script": "(Power_Duration + Power_Decay_Duration_Bonus)"
+  },
+  "815": {
+    "name": "Power_Whirlwind_Duration_Total",
+    "script": "(Power_Duration + Power_Whirlwind_Duration_Bonus)"
+  },
+  "864": {
+    "name": "Power_Minion_Duration_Total",
+    "script": "(Power_Minion_Duration * (1 + Power_Minion_Duration_Bonus_Percent))"
+  }
+}

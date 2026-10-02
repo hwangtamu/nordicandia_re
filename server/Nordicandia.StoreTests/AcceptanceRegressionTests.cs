@@ -20,6 +20,7 @@ static class AcceptanceRegressionTests
         EqualVersionEvictedCommandIsRejected();
         MissingCommandIdIsRejected();
         CombatVersionSurvivesRestart();
+        WebCharacterGetsRecoveredRatings();
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
@@ -249,6 +250,27 @@ static class AcceptanceRegressionTests
             var v0 = registry.Advance(owner, characterId).Combat.Version;
             var result = registry.ApplyCommand(owner, characterId, string.Empty, v0, new WebCommandRequest("move", 3, 3));
             Check(!result.Applied && result.Reason == "missing_command_id", "R4c empty command id is rejected");
+        }
+    }
+
+    private static void WebCharacterGetsRecoveredRatings()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var (store, registry, owner, characterId, _) = Create("r7", 100);
+        using (store)
+        {
+            // A freshly created web character is seeded with the client's Base_* defaults, so the
+            // recovered attribute engine must produce non-zero combat ratings for it.
+            var instance = registry.GetOrCreate(owner, characterId);
+            Console.WriteLine($"INFO ratings: atk={instance.AttackRating:F2} armor={instance.Armor:F2} " +
+                $"evasion={instance.Evasion:F2} crit={instance.CritChance:F3} life={instance.LifeMax:F1} mana={instance.ManaMax:F1}");
+            Check(instance.AttackRating > 0, "ratings: fresh character has a recovered AttackRating");
+            Check(instance.Armor > 0, "ratings: fresh character has recovered Armor");
+            Check(instance.Evasion > 0, "ratings: fresh character has recovered Evasion");
+            // Crit comes from the weapon's Item_Crit_Chance_MainHand; a weaponless character is 0.
+            Check(instance.CritChance >= 0 && !double.IsNaN(instance.CritChance), "ratings: CritChance is resolved (0 without a weapon)");
+            Check(instance.LifeMax > 0, "ratings: fresh character has recovered Life_Max");
+            Check(instance.ManaMax > 0, "ratings: fresh character has recovered Mana_Max");
         }
     }
 

@@ -1,0 +1,122 @@
+using System.Reflection;
+using System.Text.Json;
+
+namespace Nordicandia.Simulation;
+
+/// <summary>
+/// Evaluates the client's recovered scripted-attribute formulas (see
+/// <c>tools/web-content/generated/attribute_formulas.json</c>) over a character's stored
+/// attribute map, producing the derived ratings the client's <c>CalculateCombatAttributes</c>
+/// consumes (AttackRating, Armor, Evasion, Crit chance, Life/Mana max, ...).
+///
+/// The formula data is embedded from <c>GameData/</c>. Per-character state lives in
+/// <see cref="Evaluation"/>, so a single engine instance can evaluate many characters.
+/// </summary>
+public sealed class CharacterAttributeEngine
+{
+    private static readonly Lazy<CharacterAttributeEngine> Default = new(Load);
+    public static CharacterAttributeEngine Instance => Default.Value;
+
+    private readonly Dictionary<string, int> nameToId;
+    private readonly Dictionary<int, string> formulas;
+    private readonly Dictionary<string, double> constants;
+
+    private CharacterAttributeEngine(Dictionary<string, int> nameToId,
+        Dictionary<int, string> formulas, Dictionary<string, double> constants)
+    {
+        this.nameToId = nameToId;
+        this.formulas = formulas;
+        this.constants = constants;
+    }
+
+    /// <summary>Number of scripted formulas loaded (sanity check for the embedded data).</summary>
+    public int FormulaCount => formulas.Count;
+
+    public bool TryGetId(string name, out int id) => nameToId.TryGetValue(name, out id);
+
+    /// <summary>Begin an evaluation over a stored attribute map (id -> summed value).</summary>
+    public Evaluation Evaluate(IReadOnlyDictionary<int, double> stored) => new(this, stored);
+
+    public Evaluation Evaluate(IEnumerable<KeyValuePair<int, double>> stored)
+    {
+        var map = new Dictionary<int, double>();
+        foreach (var kvp in stored) map[kvp.Key] = map.GetValueOrDefault(kvp.Key) + kvp.Value;
+        return new Evaluation(this, map);
+    }
+
+    private static CharacterAttributeEngine Load()
+    {
+        var nameToId = new Dictionary<string, int>();
+        foreach (var (id, name) in ReadJson<Dictionary<string, string>>("attribute_ids.json"))
+            nameToId.TryAdd(name, int.Parse(id));
+
+        var formulas = new Dictionary<int, string>();
+        foreach (var (id, entry) in ReadJson<Dictionary<string, FormulaEntry>>("attribute_formulas.json"))
+            formulas[int.Parse(id)] = entry.Script;
+
+        var constants = ReadJson<Dictionary<string, double>>("constants.json");
+        return new CharacterAttributeEngine(nameToId, formulas, constants);
+    }
+
+    private static T ReadJson<T>(string fileName)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        var resource = assembly.GetManifestResourceNames()
+            .First(n => n.EndsWith("GameData." + fileName, StringComparison.Ordinal));
+        using var stream = assembly.GetManifestResourceStream(resource)!;
+        return JsonSerializer.Deserialize<T>(stream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
+    }
+
+    private sealed record FormulaEntry(string Name, string Script);
+
+    /// <summary>A single character's evaluation: resolves a named attribute to its value,
+    /// evaluating scripted formulas recursively and memoising the result.</summary>
+    public sealed class Evaluation
+    {
+        private readonly CharacterAttributeEngine engine;
+        private readonly IReadOnlyDictionary<int, double> stored;
+        private readonly Dictionary<string, double> memo = new();
+        private readonly HashSet<string> visiting = new();
+
+        internal Evaluation(CharacterAttributeEngine engine, IReadOnlyDictionary<int, double> stored)
+        {
+            this.engine = engine;
+            this.stored = stored;
+        }
+
+        /// <summary>Resolve an attribute by name. Scripted attributes evaluate their formula;
+        /// plain attributes return the stored value (0 when absent); <c>Constants.X</c> resolve
+        /// from the recovered constants table.</summary>
+        public double Resolve(string name)
+        {
+            if (name.StartsWith("Constants.", StringComparison.Ordinal))
+                return engine.constants.GetValueOrDefault(name["Constants.".Length..]);
+            if (!engine.nameToId.TryGetValue(name, out var id)) return 0.0;
+            if (memo.TryGetValue(name, out var cached)) return cached;
+            if (!visiting.Add(name)) throw new InvalidOperationException($"attribute cycle at '{name}'");
+
+            double value;
+            if (engine.formulas.TryGetValue(id, out var script))
+                value = AttributeFormula.Evaluate(script, Resolve);
+            else
+                value = stored.GetValueOrDefault(id);
+
+            visiting.Remove(name);
+            memo[name] = value;
+            return value;
+        }
+
+        // Derived combat ratings the client's CalculateCombatAttributes reads.
+        public double AttackRating => Resolve("AttackRating_Total");
+        public double Armor => Resolve("Armor_Total");
+        public double Evasion => Resolve("Evasion_Total");
+        public double CritChanceMainHand => Resolve("Crit_Chance_MainHand_Total");
+        public double CritDamageTotal => Resolve("Crit_Damage_Total");
+        public double LifeMax => Resolve("Life_Max_Total");
+        public double ManaMax => Resolve("Mana_Max_Total");
+        public double Strength => Resolve("Strength_Total");
+        public double Dexterity => Resolve("Dexterity_Total");
+        public double Constitution => Resolve("Constitution_Total");
+        public double Agility => Resolve("Agility_Total");
+    }
+}

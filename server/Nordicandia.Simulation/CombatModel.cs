@@ -39,10 +39,19 @@ public enum RuleConfidence
 /// Minimum combat stats needed by the M0 slice. Values map directly onto the client's
 /// <c>SerializedCombatStats.Offense/Defense/Recovery</c> plus level.
 /// </summary>
-public readonly record struct CombatantStats(double Offense, double Defense, double Recovery, int Level)
+public readonly record struct CombatantStats(double Offense, double Defense, double Recovery, int Level,
+    double AttackRating = 0, double Armor = 0, double Evasion = 0, double CritChance = 0,
+    double LifeMax = 0, double ManaMax = 0)
 {
     public static CombatantStats FromRealtime(double offense, double defense, double recovery, int level)
         => new(Math.Max(0, offense), Math.Max(0, defense), Math.Max(0, recovery), Math.Max(1, level));
+
+    // Recovered ratings take precedence; fall back to the provisional Offense/Defense while a
+    // character has no synthesised attribute map yet.
+    public double EffectiveAttackRating => AttackRating > 0 ? AttackRating : Offense;
+    public double EffectiveArmor => Armor > 0 ? Armor : Defense;
+    public double EffectiveEvasion => Evasion > 0 ? Evasion : Defense;
+    public double EffectiveLifeMax => LifeMax > 0 ? LifeMax : 150.0 + 50.0 * Math.Max(1, Level);
 }
 
 /// <summary>One attack's tunable inputs (weapon/skill multiplier, crit).</summary>
@@ -85,7 +94,7 @@ public static class CombatModel
 {
     /// <summary>Provisional health curve: 100 at level 1, growing 40/level.</summary>
     public static double MaxHealth(CombatantStats stats, RuleConfidence confidence = RuleConfidence.Provisional)
-        => 150.0 + 50.0 * Math.Max(1, stats.Level);
+        => stats.EffectiveLifeMax;
 
     /// <summary>Constant from <c>Game.Calculator.CalculatePhysicalDamageReduction</c>
     /// (the client computes <c>armor / (armor + 50 * damage)</c>).</summary>
@@ -184,11 +193,12 @@ public static class CombatModel
             AssumedMinDamage: true);
 
         // ClientVerified order: roll to hit, then crit, then mitigate and apply variance.
-        var hit = RollChance(ChanceToHit(attacker.Offense, defender.Defense), rng);
-        var critical = RollChance(profile.CritChance, rng);
+        var hit = RollChance(ChanceToHit(attacker.EffectiveAttackRating, defender.EffectiveEvasion), rng);
+        var critChance = attacker.CritChance > 0 ? attacker.CritChance : profile.CritChance;
+        var critical = RollChance(critChance, rng);
         if (!hit) return new DamageResult(0.0, false, confidence, false);
         var raw = Math.Max(0, attacker.Offense) * Math.Max(0, profile.SkillMultiplier);
-        var mitigated = raw * (1.0 - PhysicalDamageReduction(defender.Defense, raw));
+        var mitigated = raw * (1.0 - PhysicalDamageReduction(defender.EffectiveArmor, raw));
         var variance = 1.0 + (rng.NextDouble() * 2.0 - 1.0) * Math.Max(0, profile.Variance);
         var critFactor = critical ? Math.Max(1.0, profile.CritMultiplier) : 1.0;
         var damage = Math.Max(1.0, mitigated * Math.Max(0.05, variance) * critFactor);

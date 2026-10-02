@@ -6,7 +6,9 @@
 > **分层标注**：代码不再把整条伤害管线标成单一 `ClientVerified`。`DamageResult.Confidence` 现为
 > `DamageConfidence`，分 `Formula`（命中/暴击/减伤公式，ClientVerified）、`Inputs`（属性来源，当前 Provisional）、
 > `Execution`（合成/顺序，当前 Inferred）三层，并带 `AssumedReductionCap`/`AssumedVariance`/`AssumedMinDamage`
-> 标记；`Overall` 取最弱一层。属性引擎（226 条公式作为实际来源）尚未实现。
+> 标记；`Overall` 取最弱一层。属性引擎已实现并接入：`Nordicandia.Simulation.CharacterAttributeEngine` 用嵌入的
+308 条公式+常量对角色属性表求值，`CharacterRatings.Apply` 把 AttackRating/Armor/Evasion/CritChance/Life_Max/Mana_Max
+喂给 `CombatantStats`，战斗按真实评级结算（无地图/物品时回退到临时值）。
 
 生成物（`tools/web-content/generated/`）：
 

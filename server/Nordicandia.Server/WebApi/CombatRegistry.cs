@@ -71,11 +71,13 @@ public sealed class CombatRegistry
             var persisted = store.ProjectWebSnapshot(owner, characterId);
             var items = store.GetItems(owner, characterId);
             var (equipOffense, equipDefense, equipRecovery) = LootTable.EquipmentBonus(items);
-            var stats = CombatantStats.FromRealtime(
-                persisted.Offense + equipOffense,
-                persisted.Defense + equipDefense,
-                persisted.Recovery + equipRecovery,
-                (int)persisted.Level);
+            var stats = CharacterRatings.Apply(
+                CombatantStats.FromRealtime(
+                    persisted.Offense + equipOffense,
+                    persisted.Defense + equipDefense,
+                    persisted.Recovery + equipRecovery,
+                    (int)persisted.Level),
+                store.GetAttributeMap(owner, characterId));
             var seed = (ulong)(uint)characterId.GetHashCode() << 32 | (uint)characterId.GetHashCode();
             var basePowers = PowerCatalog.ForClass(persisted.Class);
             var ranks = store.GetMasteryRanks(owner, characterId);
@@ -313,11 +315,13 @@ public sealed class CombatRegistry
     private void RecomputeStats(Guid owner, Guid characterId, Entry entry)
     {
         var (offense, defense, recovery) = LootTable.EquipmentBonus(store.GetItems(owner, characterId));
-        entry.Instance.UpdateStats(CombatantStats.FromRealtime(
-            entry.Instance.Offense - entry.EquipOffense + offense,
-            entry.Instance.Defense - entry.EquipDefense + defense,
-            entry.Instance.Recovery - entry.EquipRecovery + recovery,
-            entry.Instance.PlayerLevel));
+        entry.Instance.UpdateStats(CharacterRatings.Apply(
+            CombatantStats.FromRealtime(
+                entry.Instance.Offense - entry.EquipOffense + offense,
+                entry.Instance.Defense - entry.EquipDefense + defense,
+                entry.Instance.Recovery - entry.EquipRecovery + recovery,
+                entry.Instance.PlayerLevel),
+            store.GetAttributeMap(owner, characterId)));
         entry.EquipOffense = offense;
         entry.EquipDefense = defense;
         entry.EquipRecovery = recovery;

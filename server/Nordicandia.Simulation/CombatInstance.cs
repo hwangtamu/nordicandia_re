@@ -134,6 +134,13 @@ public sealed class CombatInstance
     public double Offense { get; private set; }
     public double Defense { get; private set; }
     public double Recovery { get; private set; }
+    // Recovered ratings (0 when a character has no synthesised attribute map yet).
+    public double AttackRating { get; private set; }
+    public double Armor { get; private set; }
+    public double Evasion { get; private set; }
+    public double CritChance { get; private set; }
+    public double LifeMax { get; private set; }
+    public double ManaMax { get; private set; }
     public int PlayerLevel { get; private set; }
     public double Experience { get; private set; }
     public int Silver { get; private set; }
@@ -161,6 +168,7 @@ public sealed class CombatInstance
         Offense = stats.Offense;
         Defense = stats.Defense;
         Recovery = stats.Recovery;
+        ApplyRatings(stats);
         Experience = experience;
         Silver = silver;
         Opals = opals;
@@ -185,11 +193,24 @@ public sealed class CombatInstance
         Version = Math.Max(1, initialVersion);
     }
 
-    private double EffectiveMaxHealth() => CombatModel.MaxHealth(new CombatantStats(Offense, Defense, Recovery, PlayerLevel))
+    private void ApplyRatings(CombatantStats stats)
+    {
+        AttackRating = stats.AttackRating;
+        Armor = stats.Armor;
+        Evasion = stats.Evasion;
+        CritChance = stats.CritChance;
+        LifeMax = stats.LifeMax;
+        ManaMax = stats.ManaMax;
+    }
+
+    private CombatantStats PlayerStats() => new(EffectiveOffense(), Defense, Recovery, PlayerLevel,
+        AttackRating, Armor, Evasion, CritChance, LifeMax, ManaMax);
+
+    private double EffectiveMaxHealth() => CombatModel.MaxHealth(PlayerStats())
         * (1 + passive.HealthBonus);
 
-    /// <summary>Provisional mana pool: 40 + 10/level, unaffected by the client's mana attributes yet.</summary>
-    private double EffectiveMaxMana() => 40 + 10 * Math.Max(1, PlayerLevel);
+    /// <summary>Mana pool: the recovered Mana_Max_Total when available, else 40 + 10/level.</summary>
+    private double EffectiveMaxMana() => ManaMax > 0 ? ManaMax : 40 + 10 * Math.Max(1, PlayerLevel);
 
     private double EffectiveOffense() => Offense * (1 + passive.OffenseBonus + (offenseBuffTimer > 0 ? offenseBuffBonus : 0));
 
@@ -210,6 +231,7 @@ public sealed class CombatInstance
         Offense = stats.Offense;
         Defense = stats.Defense;
         Recovery = stats.Recovery;
+        ApplyRatings(stats);
         PlayerMaxHp = EffectiveMaxHealth();
         PlayerHp = Math.Min(PlayerHp, PlayerMaxHp);
         PlayerMaxMana = EffectiveMaxMana();
@@ -346,7 +368,7 @@ public sealed class CombatInstance
         {
             attackCooldown = PlayerAttackInterval;
             var hit = CombatModel.ResolveHit(
-                new CombatantStats(EffectiveOffense(), Defense, Recovery, PlayerLevel),
+                PlayerStats(),
                 new CombatantStats(target.Offense, target.Defense, 0, target.Level),
                 new AttackProfile(1.0, 0.08, 1.6, 0.12),
                 rng);
@@ -397,7 +419,7 @@ public sealed class CombatInstance
                 monster.AttackCooldown = monster.AttackInterval;
                 var hit = CombatModel.ResolveHit(
                     new CombatantStats(monster.Offense, monster.Defense, 0, monster.Level),
-                    new CombatantStats(Offense, Defense, Recovery, PlayerLevel),
+                    PlayerStats(),
                     new AttackProfile(1.0, 0.03, 1.5, 0.12),
                     rng);
                 var incoming = hit.Damage;
@@ -682,7 +704,7 @@ public sealed class CombatInstance
 
     private DamageResult ResolveSkill(CombatMonster target, double multiplier)
         => CombatModel.ResolveHit(
-            new CombatantStats(EffectiveOffense(), Defense, Recovery, PlayerLevel),
+            PlayerStats(),
             new CombatantStats(target.Offense, target.Defense, 0, target.Level),
             new AttackProfile(multiplier, 0.15, 2.0, 0.08),
             rng);

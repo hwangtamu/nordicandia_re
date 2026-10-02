@@ -419,6 +419,10 @@ public sealed class GameStore : IDisposable
             var data = Unpack<SerializedCharacterData.SerializedData>(Pack(req.Data.Data));
             data.CharacterId = id; data.AccountId = owner.ToString();
             SetLastActiveEpoch(data);
+            // Seed the client's global Base_* attribute defaults so the recovered attribute
+            // synthesis engine has its inputs. Any client-provided value wins.
+            foreach (var (attrId, value) in CharacterBaseline.BaseAttributes)
+                if (GetAttribute(data, attrId) is null) SetAttribute(data, attrId, value);
             var isSeason = IsSeasonMode(req.CharacterGameMode);
             if (isSeason) { EnsureSeasonExperienceBuff(data); ApplySeasonExperienceBonus(data); }
             var experience = GetAttribute(data, AttrExperience) ?? 0;
@@ -736,6 +740,31 @@ public sealed class GameStore : IDisposable
             Console.WriteLine($"[CONSUME] character={characterId} item={itemId} requested={amount} consumed={consumed} remaining={Math.Max(0, remaining)}");
             return (consumed, remaining <= 0);
         });
+
+    /// <summary>Aggregated attribute map for a character: Character-origin attributes plus each
+    /// item's Item-origin attributes (id -> summed value). Feeds the attribute synthesis engine.</summary>
+    public Dictionary<int, double> GetAttributeMap(Guid owner, Guid id)
+    {
+        lock (gate)
+        {
+            var result = new Dictionary<int, double>();
+            var data = Unpack<SerializedCharacterData.SerializedData>(Owned(state, owner, id).Data);
+            void Add(SerializedAttributes attributes)
+            {
+                if (attributes?.Values == null) return;
+                foreach (var map in attributes.Values.Values)
+                {
+                    if (map == null) continue;
+                    foreach (var (attrId, value) in map)
+                        result[attrId] = result.GetValueOrDefault(attrId) + value.ValueD;
+                }
+            }
+            Add(data?.Attributes);
+            if (data?.Items?.Items != null)
+                foreach (var item in data.Items.Items) Add(item?.Attributes);
+            return result;
+        }
+    }
 
     /// <summary>Reads the item list currently persisted for a character (used by tests).</summary>
     public List<SerializedItem> GetItems(Guid owner, Guid id)
