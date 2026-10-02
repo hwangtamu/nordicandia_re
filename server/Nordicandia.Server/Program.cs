@@ -3,6 +3,7 @@ using MagicOnion.Serialization;
 using MessagePack;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Nordicandia.Server.Services;
+using Nordicandia.Server.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddGrpc();
@@ -23,6 +24,8 @@ var h2cPort = int.TryParse(Environment.GetEnvironmentVariable("NORD_H2C_PORT"), 
 var plainPort = int.TryParse(Environment.GetEnvironmentVariable("NORD_PLAIN_PORT"), out var pp) ? pp : 8081;
 var cloudRun = int.TryParse(Environment.GetEnvironmentVariable("PORT"), out var cloudPort);
 var listenAny = Environment.GetEnvironmentVariable("NORD_LISTEN_ANY") == "1";
+// Loopback HTTP/1.1 port used by the browser dev client (Vite proxies /api/web here).
+var webPort = int.TryParse(Environment.GetEnvironmentVariable("NORD_WEB_PORT"), out var wp) ? wp : 5080;
 
 if (!cloudRun && listenAny && (string.IsNullOrEmpty(certPfx) || !File.Exists(certPfx)))
     throw new InvalidOperationException("NORD_LISTEN_ANY requires an existing NORD_CERT_PFX certificate.");
@@ -39,6 +42,11 @@ builder.WebHost.ConfigureKestrel(o =>
 
     // plaintext HTTP/2 (dev / test client)
     o.ListenLocalhost(h2cPort, l => l.Protocols = HttpProtocols.Http2);
+
+    // Loopback HTTP/1.1 for the browser dev client's /api/web requests. Loopback-only,
+    // so it does not widen the public attack surface.
+    if (webPort > 0 && webPort != h2cPort && webPort != plainPort)
+        o.ListenLocalhost(webPort, l => l.Protocols = HttpProtocols.Http1);
 
     // Plain HTTP/1.1 JSON feed for the patched mobile client.
     if (listenAny && plainPort > 0) o.ListenAnyIP(plainPort, l => l.Protocols = HttpProtocols.Http1);
@@ -84,6 +92,7 @@ app.MapPowersJson();
 app.MapMakeOfferingJson();
 app.MapPetUnlockJson();
 app.MapExpandJson();
+app.MapWebApi();
 app.MapGet("/", () => "Nordicandia private server (MagicOnion 5.1.8)");
 app.MapGet("/healthz", () => Results.Ok(new { status = "ok" }));
 

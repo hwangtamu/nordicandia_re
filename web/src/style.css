@@ -1,0 +1,141 @@
+:root {
+  --gold: #c9a24a;
+  --panel: rgba(12, 14, 16, 0.82);
+  --panel-border: rgba(201, 162, 74, 0.35);
+}
+
+* { box-sizing: border-box; }
+
+html, body, #app {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: #05070a;
+  color: #e8e2d4;
+  font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+}
+
+#game { width: 100%; height: 100%; display: block; outline: none; }
+
+#overlay { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+
+.floater {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-weight: 700;
+  font-size: 15px;
+  text-shadow: 0 1px 2px #000, 0 0 6px rgba(0, 0, 0, 0.8);
+  will-change: transform, opacity;
+}
+
+.panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, 92vw);
+  padding: 24px 26px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+.panel h1 { margin: 0 0 4px; font-size: 26px; letter-spacing: 2px; color: var(--gold); }
+.panel h1 span { font-size: 12px; color: #8fa3a8; letter-spacing: 0; }
+.panel .sub { margin: 0 0 18px; font-size: 12px; color: #9aa6a8; }
+
+.panel label { display: block; text-align: left; font-size: 12px; color: #b8c2c4; margin-bottom: 10px; }
+.panel input, .panel select {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 10px;
+  background: #0a0d10;
+  border: 1px solid #2a3338;
+  border-radius: 6px;
+  color: #e8e2d4;
+  font-size: 14px;
+}
+.panel .row { display: flex; gap: 10px; }
+.panel .row label { flex: 1; }
+.panel button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 11px;
+  background: linear-gradient(#3a5a24, #24400f);
+  border: 1px solid #6f9a3f;
+  border-radius: 6px;
+  color: #eaf5dc;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.panel button:hover { filter: brightness(1.15); }
+.panel button:disabled { opacity: 0.6; cursor: default; }
+.status { margin-top: 12px; font-size: 12px; color: #9aa6a8; min-height: 16px; }
+.status.error { color: #ff8a7a; }
+
+#hud { position: fixed; inset: 0; pointer-events: none; user-select: none; }
+#hud button { pointer-events: auto; }
+
+.hud-top-left { position: absolute; top: 14px; left: 14px; width: 280px; }
+.name-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; }
+.name-row #hud-name { font-weight: 700; color: var(--gold); }
+.name-row #hud-class { font-size: 11px; color: #9aa6a8; }
+
+.bar {
+  position: relative;
+  height: 18px;
+  margin-top: 6px;
+  background: #0a0d10;
+  border: 1px solid #263036;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.bar > div { height: 100%; width: 0; transition: width 0.12s linear; }
+.bar span {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; text-shadow: 0 1px 2px #000;
+}
+.bar.hp > div { background: linear-gradient(#b3402f, #6f1d14); }
+.bar.xp > div { background: linear-gradient(#3f7fbf, #1d3f6f); }
+
+.hud-top-right {
+  position: absolute; top: 14px; right: 14px;
+  text-align: right; font-size: 12px; line-height: 1.6; color: #cdd6d8;
+}
+.hud-top-right b { color: var(--gold); }
+.hud-top-right .source { font-size: 10px; color: #6d7a7e; }
+
+.hud-bottom {
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 10px;
+}
+.skill {
+  min-width: 130px;
+  padding: 10px 14px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  color: #e8e2d4;
+  font-size: 13px;
+  cursor: pointer;
+}
+.skill small { display: block; font-size: 10px; color: #8fa3a8; }
+.skill:hover { filter: brightness(1.2); }
+.skill.alt { border-color: rgba(90, 140, 180, 0.4); }
+
+.toast {
+  position: absolute; bottom: 82px; left: 50%; transform: translateX(-50%);
+  padding: 6px 14px;
+  background: rgba(10, 12, 14, 0.8);
+  border: 1px solid rgba(201, 162, 74, 0.25);
+  border-radius: 6px;
+  font-size: 12px; color: #e8e2d4;
+  opacity: 0; transition: opacity 0.25s;
+}
+.toast.show { opacity: 1; }

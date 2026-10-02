@@ -1,0 +1,1566 @@
+{
+  "contentVersion": "m0-1",
+  "sourceApk": "UnityDataAssetPack.apk",
+  "kit": {
+    "bundle": "assets/aa/Android/world_dungeon_theme_default_assets_all_d61acd6667a269368b0a821f3523245b.bundle",
+    "bundleSha256": "87f27b74432dbedf0050747900d95252eb48f4aa6ca648ee1d0843f39dc66a0f",
+    "meshes": [
+      {
+        "name": "CliffEdge_Straight",
+        "file": "kit/dungeon_default/CliffEdge_Straight.glb",
+        "vertices": 96,
+        "triangles": 48,
+        "bytes": 5140
+      },
+      {
+        "name": "Door",
+        "file": "kit/dungeon_default/Door.glb",
+        "vertices": 413,
+        "triangles": 158,
+        "bytes": 16704
+      },
+      {
+        "name": "Door",
+        "file": "kit/dungeon_default/Door.glb",
+        "vertices": 318,
+        "triangles": 164,
+        "bytes": 13688
+      },
+      {
+        "name": "DoorOneWay",
+        "file": "kit/dungeon_default/DoorOneWay.glb",
+        "vertices": 490,
+        "triangles": 186,
+        "bytes": 19536
+      },
+      {
+        "name": "DoorSlabL",
+        "file": "kit/dungeon_default/DoorSlabL.glb",
+        "vertices": 144,
+        "triangles": 58,
+        "bytes": 6920
+      },
+      {
+        "name": "DoorSlabR",
+        "file": "kit/dungeon_default/DoorSlabR.glb",
+        "vertices": 140,
+        "triangles": 58,
+        "bytes": 6804
+      },
+      {
+        "name": "Floor_Slab_lrg",
+        "file": "kit/dungeon_default/Floor_Slab_lrg.glb",
+        "vertices": 381,
+        "triangles": 152,
+        "bytes": 15640
+      },
+      {
+        "name": "Floor_Slab_sml",
+        "file": "kit/dungeon_default/Floor_Slab_sml.glb",
+        "vertices": 363,
+        "triangles": 138,
+        "bytes": 14904
+      },
+      {
+        "name": "Flor_Slab_md",
+        "file": "kit/dungeon_default/Flor_Slab_md.glb",
+        "vertices": 346,
+        "triangles": 135,
+        "bytes": 14324
+      },
+      {
+        "name": "MOD_Column_01_base",
+        "file": "kit/dungeon_default/MOD_Column_01_base.glb",
+        "vertices": 64,
+        "triangles": 32,
+        "bytes": 4068
+      },
+      {
+        "name": "MOD_Column_01_capital",
+        "file": "kit/dungeon_default/MOD_Column_01_capital.glb",
+        "vertices": 44,
+        "triangles": 22,
+        "bytes": 3304
+      },
+      {
+        "name": "MOD_Column_01_large",
+        "file": "kit/dungeon_default/MOD_Column_01_large.glb",
+        "vertices": 188,
+        "triangles": 130,
+        "bytes": 9236
+      },
+      {
+        "name": "MOD_Column_01_small",
+        "file": "kit/dungeon_default/MOD_Column_01_small.glb",
+        "vertices": 52,
+        "triangles": 34,
+        "bytes": 3724
+      },
+      {
+        "name": "MOD_Floor_01_O_straight_med",
+        "file": "kit/dungeon_default/MOD_Floor_01_O_straight_med.glb",
+        "vertices": 4,
+        "triangles": 2,
+        "bytes": 1592
+      },
+      {
+        "name": "MOD_Floor_01_O_straight_tiny",
+        "file": "kit/dungeon_default/MOD_Floor_01_O_straight_tiny.glb",
+        "vertices": 4,
+        "triangles": 2,
+        "bytes": 1620
+      },
+      {
+        "name": "MOD_Railing_01_column",
+        "file": "kit/dungeon_default/MOD_Railing_01_column.glb",
+        "vertices": 104,
+        "triangles": 52,
+        "bytes": 5592
+      },
+      {
+        "name": "MOD_Railing_01_straight",
+        "file": "kit/dungeon_default/MOD_Railing_01_straight.glb",
+        "vertices": 264,
+        "triangles": 148,
+        "bytes": 11796
+      },
+      {
+        "name": "MOD_Railing_01_straight_half",
+        "file": "kit/dungeon_default/MOD_Railing_01_straight_half.glb",
+        "vertices": 138,
+        "triangles": 76,
+        "bytes": 6896
+      },
+      {
+        "name": "MOD_Wall_01_O_straight_large",
+        "file": "kit/dungeon_default/MOD_Wall_01_O_straight_large.glb",
+        "vertices": 4,
+        "triangles": 2,
+        "bytes": 1756
+      },
+      {
+        "name": "SM_PROP_brazier_dungeon_02",
+        "file": "kit/dungeon_default/SM_PROP_brazier_dungeon_02.glb",
+        "vertices": 584,
+        "triangles": 544,
+        "bytes": 26872
+      },
+      {
+        "name": "SM_PROP_debris_stones_dungeon_01",
+        "file": "kit/dungeon_default/SM_PROP_debris_stones_dungeon_01.glb",
+        "vertices": 60,
+        "triangles": 66,
+        "bytes": 4384
+      },
+      {
+        "name": "SM_PROP_debris_stones_dungeon_04",
+        "file": "kit/dungeon_default/SM_PROP_debris_stones_dungeon_04.glb",
+        "vertices": 85,
+        "triangles": 100,
+        "bytes": 5580
+      },
+      {
+        "name": "SM_PROP_planks_dungeon_05",
+        "file": "kit/dungeon_default/SM_PROP_planks_dungeon_05.glb",
+        "vertices": 128,
+        "triangles": 68,
+        "bytes": 6584
+      },
+      {
+        "name": "SM_PROP_torch_standing_dungeon",
+        "file": "kit/dungeon_default/SM_PROP_torch_standing_dungeon.glb",
+        "vertices": 971,
+        "triangles": 796,
+        "bytes": 42288
+      },
+      {
+        "name": "SM_PROP_wallshelf_dungeon_03",
+        "file": "kit/dungeon_default/SM_PROP_wallshelf_dungeon_03.glb",
+        "vertices": 96,
+        "triangles": 60,
+        "bytes": 5432
+      }
+    ]
+  },
+  "avatars": [
+    {
+      "name": "Badge_warrior",
+      "file": "avatars/Badge_warrior.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 68834
+    },
+    {
+      "name": "Human2",
+      "file": "avatars/Human2.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 91909
+    },
+    {
+      "name": "Human_02_nobg 1",
+      "file": "avatars/Human_02_nobg_1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 61969
+    },
+    {
+      "name": "Human_03_nobg",
+      "file": "avatars/Human_03_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46494
+    },
+    {
+      "name": "Human_03_nobg - Copy",
+      "file": "avatars/Human_03_nobg_-_Copy.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54339
+    },
+    {
+      "name": "Human_04_nobg",
+      "file": "avatars/Human_04_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55686
+    },
+    {
+      "name": "Human_05_nobg",
+      "file": "avatars/Human_05_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59884
+    },
+    {
+      "name": "Human_07_nobg",
+      "file": "avatars/Human_07_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55065
+    },
+    {
+      "name": "Human_08_nobg",
+      "file": "avatars/Human_08_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52736
+    },
+    {
+      "name": "Human_08_nobg - Copy",
+      "file": "avatars/Human_08_nobg_-_Copy.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 58551
+    },
+    {
+      "name": "Human_08_nobg - Copy - Copy",
+      "file": "avatars/Human_08_nobg_-_Copy_-_Copy.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59899
+    },
+    {
+      "name": "Human_09_nobg",
+      "file": "avatars/Human_09_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 63276
+    },
+    {
+      "name": "Human_09_nobg - Copy",
+      "file": "avatars/Human_09_nobg_-_Copy.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 47432
+    },
+    {
+      "name": "Human_10_nobg",
+      "file": "avatars/Human_10_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 47182
+    },
+    {
+      "name": "Human_10_nobg - Copy",
+      "file": "avatars/Human_10_nobg_-_Copy.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 77010
+    },
+    {
+      "name": "Human_11_nobg - Copy",
+      "file": "avatars/Human_11_nobg_-_Copy.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59377
+    },
+    {
+      "name": "Human_12_nobg - Copy",
+      "file": "avatars/Human_12_nobg_-_Copy.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 53764
+    },
+    {
+      "name": "Human_13_nobg",
+      "file": "avatars/Human_13_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 65551
+    },
+    {
+      "name": "Human_14_nobg",
+      "file": "avatars/Human_14_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 58877
+    },
+    {
+      "name": "Human_18_nobg",
+      "file": "avatars/Human_18_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 47105
+    },
+    {
+      "name": "Human_19_nobg",
+      "file": "avatars/Human_19_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 61596
+    },
+    {
+      "name": "Human_20_nobg - Copy",
+      "file": "avatars/Human_20_nobg_-_Copy.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48850
+    },
+    {
+      "name": "Human_22_nobg",
+      "file": "avatars/Human_22_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49876
+    },
+    {
+      "name": "Human_22_nobg - Copy",
+      "file": "avatars/Human_22_nobg_-_Copy.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 51718
+    },
+    {
+      "name": "Human_23_nobg",
+      "file": "avatars/Human_23_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48359
+    },
+    {
+      "name": "Human_24_nobg",
+      "file": "avatars/Human_24_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52478
+    },
+    {
+      "name": "Human_25_nobg",
+      "file": "avatars/Human_25_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 36195
+    },
+    {
+      "name": "Human_26_nobg",
+      "file": "avatars/Human_26_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59604
+    },
+    {
+      "name": "Human_27_nobg",
+      "file": "avatars/Human_27_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 71509
+    },
+    {
+      "name": "Human_28_nobg",
+      "file": "avatars/Human_28_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52728
+    },
+    {
+      "name": "Human_30_nobg",
+      "file": "avatars/Human_30_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54976
+    },
+    {
+      "name": "Human_31_nobg",
+      "file": "avatars/Human_31_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52929
+    },
+    {
+      "name": "Human_33_nobg",
+      "file": "avatars/Human_33_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50991
+    },
+    {
+      "name": "Human_36_nobg",
+      "file": "avatars/Human_36_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59250
+    },
+    {
+      "name": "Human_38_nobg",
+      "file": "avatars/Human_38_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54841
+    },
+    {
+      "name": "Human_39_nobg",
+      "file": "avatars/Human_39_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55097
+    },
+    {
+      "name": "Human_41_nobg",
+      "file": "avatars/Human_41_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55478
+    },
+    {
+      "name": "Human_41_nobg - Copy",
+      "file": "avatars/Human_41_nobg_-_Copy.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 47312
+    },
+    {
+      "name": "Human_42_nobg",
+      "file": "avatars/Human_42_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52388
+    },
+    {
+      "name": "Human_43_nobg",
+      "file": "avatars/Human_43_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50506
+    },
+    {
+      "name": "Human_44_nobg",
+      "file": "avatars/Human_44_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52380
+    },
+    {
+      "name": "Human_48_nobg",
+      "file": "avatars/Human_48_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 61824
+    },
+    {
+      "name": "Human_54_nobg",
+      "file": "avatars/Human_54_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49590
+    },
+    {
+      "name": "Human_57_nobg",
+      "file": "avatars/Human_57_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 60203
+    },
+    {
+      "name": "Human_61_nobg",
+      "file": "avatars/Human_61_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 44739
+    },
+    {
+      "name": "Mobs_Plant_Monster_01",
+      "file": "avatars/Mobs_Plant_Monster_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 72067
+    },
+    {
+      "name": "Mobs_addons_091",
+      "file": "avatars/Mobs_addons_091.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 65091
+    },
+    {
+      "name": "Mobs_addons_095",
+      "file": "avatars/Mobs_addons_095.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 47664
+    },
+    {
+      "name": "Mobs_addons_096",
+      "file": "avatars/Mobs_addons_096.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 61212
+    },
+    {
+      "name": "Mobs_ancient_vampire",
+      "file": "avatars/Mobs_ancient_vampire.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 47886
+    },
+    {
+      "name": "Mobs_ash_zombies",
+      "file": "avatars/Mobs_ash_zombies.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 47108
+    },
+    {
+      "name": "Mobs_beest_03",
+      "file": "avatars/Mobs_beest_03.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 40748
+    },
+    {
+      "name": "Mobs_bird_01",
+      "file": "avatars/Mobs_bird_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49745
+    },
+    {
+      "name": "Mobs_bogard",
+      "file": "avatars/Mobs_bogard.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 62974
+    },
+    {
+      "name": "Mobs_buddy",
+      "file": "avatars/Mobs_buddy.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50805
+    },
+    {
+      "name": "Mobs_bug",
+      "file": "avatars/Mobs_bug.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 56601
+    },
+    {
+      "name": "Mobs_crocodile_01",
+      "file": "avatars/Mobs_crocodile_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59880
+    },
+    {
+      "name": "Mobs_crow_01",
+      "file": "avatars/Mobs_crow_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 31655
+    },
+    {
+      "name": "Mobs_crystal_golem_01",
+      "file": "avatars/Mobs_crystal_golem_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 41502
+    },
+    {
+      "name": "Mobs_cyclop_01",
+      "file": "avatars/Mobs_cyclop_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 57082
+    },
+    {
+      "name": "Mobs_dark_knight_03",
+      "file": "avatars/Mobs_dark_knight_03.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46439
+    },
+    {
+      "name": "Mobs_demon_04",
+      "file": "avatars/Mobs_demon_04.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54968
+    },
+    {
+      "name": "Mobs_demon_05",
+      "file": "avatars/Mobs_demon_05.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 51340
+    },
+    {
+      "name": "Mobs_diver_01",
+      "file": "avatars/Mobs_diver_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 62067
+    },
+    {
+      "name": "Mobs_dog_01",
+      "file": "avatars/Mobs_dog_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 39208
+    },
+    {
+      "name": "Mobs_doll_01",
+      "file": "avatars/Mobs_doll_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50174
+    },
+    {
+      "name": "Mobs_dragon_02",
+      "file": "avatars/Mobs_dragon_02.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 40860
+    },
+    {
+      "name": "Mobs_dragon_03",
+      "file": "avatars/Mobs_dragon_03.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 43853
+    },
+    {
+      "name": "Mobs_dragon_04",
+      "file": "avatars/Mobs_dragon_04.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52550
+    },
+    {
+      "name": "Mobs_dragon_05",
+      "file": "avatars/Mobs_dragon_05.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48206
+    },
+    {
+      "name": "Mobs_dragon_06",
+      "file": "avatars/Mobs_dragon_06.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 37922
+    },
+    {
+      "name": "Mobs_dragon_07",
+      "file": "avatars/Mobs_dragon_07.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49965
+    },
+    {
+      "name": "Mobs_dragon_08",
+      "file": "avatars/Mobs_dragon_08.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 53224
+    },
+    {
+      "name": "Mobs_dragon_10",
+      "file": "avatars/Mobs_dragon_10.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49113
+    },
+    {
+      "name": "Mobs_dragon_11",
+      "file": "avatars/Mobs_dragon_11.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48282
+    },
+    {
+      "name": "Mobs_dragon_12",
+      "file": "avatars/Mobs_dragon_12.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 35060
+    },
+    {
+      "name": "Mobs_dummy_01",
+      "file": "avatars/Mobs_dummy_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 34249
+    },
+    {
+      "name": "Mobs_eye_02",
+      "file": "avatars/Mobs_eye_02.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 58205
+    },
+    {
+      "name": "Mobs_frost_giant_01",
+      "file": "avatars/Mobs_frost_giant_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 62164
+    },
+    {
+      "name": "Mobs_ghost_01",
+      "file": "avatars/Mobs_ghost_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 37093
+    },
+    {
+      "name": "Mobs_ghoul_01",
+      "file": "avatars/Mobs_ghoul_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 60032
+    },
+    {
+      "name": "Mobs_goat_01",
+      "file": "avatars/Mobs_goat_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52978
+    },
+    {
+      "name": "Mobs_goblin_01",
+      "file": "avatars/Mobs_goblin_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46385
+    },
+    {
+      "name": "Mobs_golem_01",
+      "file": "avatars/Mobs_golem_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 42172
+    },
+    {
+      "name": "Mobs_golem_03",
+      "file": "avatars/Mobs_golem_03.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46026
+    },
+    {
+      "name": "Mobs_golem_04",
+      "file": "avatars/Mobs_golem_04.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46730
+    },
+    {
+      "name": "Mobs_gremlin_01",
+      "file": "avatars/Mobs_gremlin_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46804
+    },
+    {
+      "name": "Mobs_hound",
+      "file": "avatars/Mobs_hound.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 51091
+    },
+    {
+      "name": "Mobs_insect_01",
+      "file": "avatars/Mobs_insect_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 47383
+    },
+    {
+      "name": "Mobs_insect_02",
+      "file": "avatars/Mobs_insect_02.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50180
+    },
+    {
+      "name": "Mobs_insect_03",
+      "file": "avatars/Mobs_insect_03.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 62392
+    },
+    {
+      "name": "Mobs_jin",
+      "file": "avatars/Mobs_jin.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 60772
+    },
+    {
+      "name": "Mobs_l_03",
+      "file": "avatars/Mobs_l_03.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 45362
+    },
+    {
+      "name": "Mobs_lion_01",
+      "file": "avatars/Mobs_lion_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59573
+    },
+    {
+      "name": "Mobs_living_armor_01",
+      "file": "avatars/Mobs_living_armor_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 45232
+    },
+    {
+      "name": "Mobs_living_armor_02",
+      "file": "avatars/Mobs_living_armor_02.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55369
+    },
+    {
+      "name": "Mobs_living_armor_04",
+      "file": "avatars/Mobs_living_armor_04.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49733
+    },
+    {
+      "name": "Mobs_lizardman_01",
+      "file": "avatars/Mobs_lizardman_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 43059
+    },
+    {
+      "name": "Mobs_madman",
+      "file": "avatars/Mobs_madman.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48821
+    },
+    {
+      "name": "Mobs_mummy_01",
+      "file": "avatars/Mobs_mummy_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 44101
+    },
+    {
+      "name": "Mobs_parasit_01",
+      "file": "avatars/Mobs_parasit_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 63033
+    },
+    {
+      "name": "Mobs_phoenix_01",
+      "file": "avatars/Mobs_phoenix_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 37954
+    },
+    {
+      "name": "Mobs_pumpkin",
+      "file": "avatars/Mobs_pumpkin.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 62279
+    },
+    {
+      "name": "Mobs_rat_01",
+      "file": "avatars/Mobs_rat_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49672
+    },
+    {
+      "name": "Mobs_red_ghoul_01",
+      "file": "avatars/Mobs_red_ghoul_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48833
+    },
+    {
+      "name": "Mobs_robot_01",
+      "file": "avatars/Mobs_robot_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 43737
+    },
+    {
+      "name": "Mobs_robot_02",
+      "file": "avatars/Mobs_robot_02.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49222
+    },
+    {
+      "name": "Mobs_robot_03",
+      "file": "avatars/Mobs_robot_03.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48708
+    },
+    {
+      "name": "Mobs_robot_04",
+      "file": "avatars/Mobs_robot_04.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 41172
+    },
+    {
+      "name": "Mobs_robot_05",
+      "file": "avatars/Mobs_robot_05.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 36234
+    },
+    {
+      "name": "Mobs_skeleton_02",
+      "file": "avatars/Mobs_skeleton_02.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48482
+    },
+    {
+      "name": "Mobs_snail_01",
+      "file": "avatars/Mobs_snail_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 61488
+    },
+    {
+      "name": "Mobs_snail_02",
+      "file": "avatars/Mobs_snail_02.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46265
+    },
+    {
+      "name": "Mobs_snake_01",
+      "file": "avatars/Mobs_snake_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46828
+    },
+    {
+      "name": "Mobs_tentacle_01",
+      "file": "avatars/Mobs_tentacle_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 45737
+    },
+    {
+      "name": "Mobs_turtle_01",
+      "file": "avatars/Mobs_turtle_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 57725
+    },
+    {
+      "name": "Mobs_werewolf_01",
+      "file": "avatars/Mobs_werewolf_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 56945
+    },
+    {
+      "name": "Mobs_yeti_01",
+      "file": "avatars/Mobs_yeti_01.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 57024
+    },
+    {
+      "name": "Mobs_zombie_02",
+      "file": "avatars/Mobs_zombie_02.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46790
+    },
+    {
+      "name": "MonstersAvatarIcons_101",
+      "file": "avatars/MonstersAvatarIcons_101.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 58181
+    },
+    {
+      "name": "MonstersAvatarIcons_102",
+      "file": "avatars/MonstersAvatarIcons_102.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59493
+    },
+    {
+      "name": "MonstersAvatarIcons_105",
+      "file": "avatars/MonstersAvatarIcons_105.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 60154
+    },
+    {
+      "name": "MonstersAvatarIcons_106",
+      "file": "avatars/MonstersAvatarIcons_106.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48034
+    },
+    {
+      "name": "MonstersAvatarIcons_107",
+      "file": "avatars/MonstersAvatarIcons_107.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 65558
+    },
+    {
+      "name": "MonstersAvatarIcons_44",
+      "file": "avatars/MonstersAvatarIcons_44.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 44850
+    },
+    {
+      "name": "MonstersAvatarIcons_45",
+      "file": "avatars/MonstersAvatarIcons_45.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 43617
+    },
+    {
+      "name": "MonstersAvatarIcons_46",
+      "file": "avatars/MonstersAvatarIcons_46.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46190
+    },
+    {
+      "name": "MonstersAvatarIcons_48",
+      "file": "avatars/MonstersAvatarIcons_48.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 70301
+    },
+    {
+      "name": "MonstersAvatarIcons_51",
+      "file": "avatars/MonstersAvatarIcons_51.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55360
+    },
+    {
+      "name": "MonstersAvatarIcons_52",
+      "file": "avatars/MonstersAvatarIcons_52.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 58119
+    },
+    {
+      "name": "MonstersAvatarIcons_53",
+      "file": "avatars/MonstersAvatarIcons_53.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 45264
+    },
+    {
+      "name": "MonstersAvatarIcons_54",
+      "file": "avatars/MonstersAvatarIcons_54.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48378
+    },
+    {
+      "name": "MonstersAvatarIcons_55",
+      "file": "avatars/MonstersAvatarIcons_55.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 41798
+    },
+    {
+      "name": "MonstersAvatarIcons_58",
+      "file": "avatars/MonstersAvatarIcons_58.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46430
+    },
+    {
+      "name": "MonstersAvatarIcons_62",
+      "file": "avatars/MonstersAvatarIcons_62.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48380
+    },
+    {
+      "name": "MonstersAvatarIcons_63",
+      "file": "avatars/MonstersAvatarIcons_63.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48110
+    },
+    {
+      "name": "MonstersAvatarIcons_64",
+      "file": "avatars/MonstersAvatarIcons_64.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54436
+    },
+    {
+      "name": "MonstersAvatarIcons_67",
+      "file": "avatars/MonstersAvatarIcons_67.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 57440
+    },
+    {
+      "name": "MonstersAvatarIcons_68",
+      "file": "avatars/MonstersAvatarIcons_68.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 51275
+    },
+    {
+      "name": "MonstersAvatarIcons_69",
+      "file": "avatars/MonstersAvatarIcons_69.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 172864
+    },
+    {
+      "name": "MonstersAvatarIcons_70",
+      "file": "avatars/MonstersAvatarIcons_70.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49331
+    },
+    {
+      "name": "MonstersAvatarIcons_71",
+      "file": "avatars/MonstersAvatarIcons_71.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 43237
+    },
+    {
+      "name": "MonstersAvatarIcons_73",
+      "file": "avatars/MonstersAvatarIcons_73.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 113860
+    },
+    {
+      "name": "MonstersAvatarIcons_74",
+      "file": "avatars/MonstersAvatarIcons_74.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50781
+    },
+    {
+      "name": "MonstersAvatarIcons_75",
+      "file": "avatars/MonstersAvatarIcons_75.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 123222
+    },
+    {
+      "name": "MonstersAvatarIcons_76",
+      "file": "avatars/MonstersAvatarIcons_76.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 38067
+    },
+    {
+      "name": "MonstersAvatarIcons_78",
+      "file": "avatars/MonstersAvatarIcons_78.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 65524
+    },
+    {
+      "name": "MonstersAvatarIcons_80",
+      "file": "avatars/MonstersAvatarIcons_80.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52961
+    },
+    {
+      "name": "MonstersAvatarIcons_82",
+      "file": "avatars/MonstersAvatarIcons_82.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 56678
+    },
+    {
+      "name": "MonstersAvatarIcons_83",
+      "file": "avatars/MonstersAvatarIcons_83.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 39953
+    },
+    {
+      "name": "MonstersAvatarIcons_85",
+      "file": "avatars/MonstersAvatarIcons_85.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 37245
+    },
+    {
+      "name": "MonstersAvatarIcons_87",
+      "file": "avatars/MonstersAvatarIcons_87.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 111789
+    },
+    {
+      "name": "MonstersAvatarIcons_89",
+      "file": "avatars/MonstersAvatarIcons_89.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 117869
+    },
+    {
+      "name": "MonstersAvatarIcons_90",
+      "file": "avatars/MonstersAvatarIcons_90.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 119207
+    },
+    {
+      "name": "MonstersAvatarIcons_91",
+      "file": "avatars/MonstersAvatarIcons_91.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 132650
+    },
+    {
+      "name": "MonstersAvatarIcons_93",
+      "file": "avatars/MonstersAvatarIcons_93.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46000
+    },
+    {
+      "name": "MonstersAvatarIcons_94",
+      "file": "avatars/MonstersAvatarIcons_94.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 33995
+    },
+    {
+      "name": "MonstersAvatarIcons_95",
+      "file": "avatars/MonstersAvatarIcons_95.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46009
+    },
+    {
+      "name": "MonstersAvatarIcons_96",
+      "file": "avatars/MonstersAvatarIcons_96.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 51150
+    },
+    {
+      "name": "MonstersAvatarIcons_99",
+      "file": "avatars/MonstersAvatarIcons_99.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 44310
+    },
+    {
+      "name": "Monsters_01_nobg",
+      "file": "avatars/Monsters_01_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46598
+    },
+    {
+      "name": "Monsters_02_nobg",
+      "file": "avatars/Monsters_02_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59232
+    },
+    {
+      "name": "Monsters_03_nobg",
+      "file": "avatars/Monsters_03_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 63946
+    },
+    {
+      "name": "Monsters_04_nobg",
+      "file": "avatars/Monsters_04_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 51540
+    },
+    {
+      "name": "Monsters_21_nobg",
+      "file": "avatars/Monsters_21_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 61180
+    },
+    {
+      "name": "Monsters_28_nobg",
+      "file": "avatars/Monsters_28_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59889
+    },
+    {
+      "name": "Monsters_29_nobg",
+      "file": "avatars/Monsters_29_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55333
+    },
+    {
+      "name": "Monsters_30_nobg",
+      "file": "avatars/Monsters_30_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54537
+    },
+    {
+      "name": "Monsters_46_nobg",
+      "file": "avatars/Monsters_46_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52358
+    },
+    {
+      "name": "Monsters_48_nobg",
+      "file": "avatars/Monsters_48_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46554
+    },
+    {
+      "name": "Monsters_49_nobg",
+      "file": "avatars/Monsters_49_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55165
+    },
+    {
+      "name": "Monsters_51_nobg",
+      "file": "avatars/Monsters_51_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48804
+    },
+    {
+      "name": "Monsters_54_nobg",
+      "file": "avatars/Monsters_54_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 56847
+    },
+    {
+      "name": "Monsters_55_nobg",
+      "file": "avatars/Monsters_55_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54018
+    },
+    {
+      "name": "Monsters_56_nobg",
+      "file": "avatars/Monsters_56_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48561
+    },
+    {
+      "name": "Monsters_59_nobg",
+      "file": "avatars/Monsters_59_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 63086
+    },
+    {
+      "name": "Monsters_60_nobg",
+      "file": "avatars/Monsters_60_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 56238
+    },
+    {
+      "name": "Monsters_61_nobg",
+      "file": "avatars/Monsters_61_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59228
+    },
+    {
+      "name": "Monsters_62_nobg",
+      "file": "avatars/Monsters_62_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 56586
+    },
+    {
+      "name": "Orcwarrior_1",
+      "file": "avatars/Orcwarrior_1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 70280
+    },
+    {
+      "name": "Orcwarrior_1(Grey)",
+      "file": "avatars/Orcwarrior_1_Grey_.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 71586
+    },
+    {
+      "name": "Orcwarrior_1(Red)",
+      "file": "avatars/Orcwarrior_1_Red_.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 73273
+    },
+    {
+      "name": "Orcwarrior_2(Grey)",
+      "file": "avatars/Orcwarrior_2_Grey_.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 69237
+    },
+    {
+      "name": "Orcwarrior_2(Red)",
+      "file": "avatars/Orcwarrior_2_Red_.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 70221
+    },
+    {
+      "name": "Orcwarrior_3",
+      "file": "avatars/Orcwarrior_3.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 68857
+    },
+    {
+      "name": "Orcwarrior_3(Grey)",
+      "file": "avatars/Orcwarrior_3_Grey_.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 66270
+    },
+    {
+      "name": "Orcwarrior_3(Red)",
+      "file": "avatars/Orcwarrior_3_Red_.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 66271
+    },
+    {
+      "name": "RaceDemon",
+      "file": "avatars/RaceDemon.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 57274
+    },
+    {
+      "name": "RaceDwarf",
+      "file": "avatars/RaceDwarf.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 58648
+    },
+    {
+      "name": "RaceHighElf",
+      "file": "avatars/RaceHighElf.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 60729
+    },
+    {
+      "name": "RaceHuman",
+      "file": "avatars/RaceHuman.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59472
+    },
+    {
+      "name": "RaceOrc",
+      "file": "avatars/RaceOrc.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 71075
+    },
+    {
+      "name": "RaceSatyr",
+      "file": "avatars/RaceSatyr.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 77315
+    },
+    {
+      "name": "RaceUndead",
+      "file": "avatars/RaceUndead.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 61190
+    },
+    {
+      "name": "RaceWoodElf",
+      "file": "avatars/RaceWoodElf.png",
+      "w": 136,
+      "h": 136,
+      "bytes": 24270
+    },
+    {
+      "name": "Warrior_1",
+      "file": "avatars/Warrior_1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 78984
+    },
+    {
+      "name": "Warrior_2",
+      "file": "avatars/Warrior_2.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 77054
+    }
+  ]
+}

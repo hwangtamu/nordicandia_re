@@ -3,6 +3,7 @@ using System.Text.Json;
 using Game;
 using Grpc.Core;
 using MessagePack;
+using Nordicandia.Server.WebApi;
 using SharedNet.Api;
 using SharedNet.Constants;
 using SharedNet.Dto;
@@ -1599,6 +1600,65 @@ public sealed class GameStore : IDisposable
             c.Data = Pack(data);
             return data;
         });
+
+    /// <summary>
+    /// Builds the compact, authoritative snapshot the browser client consumes. Unlike the
+    /// full character blob this exposes only what the web UI needs, keeps the internal
+    /// MessagePack shape out of the HTTP contract, and never mutates persisted state.
+    /// </summary>
+    public WebSnapshot ProjectWebSnapshot(Guid owner, Guid id)
+    {
+        lock (gate)
+        {
+            var c = Owned(state, owner, id);
+            var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+            var header = Unpack<CharacterHeaderDto>(c.Header);
+            var level = Progression.LevelForExperience(c.Experience);
+
+            var attributes = new SortedDictionary<int, double>();
+            if (data.Attributes?.Values != null)
+                foreach (var origin in data.Attributes.Values.Values)
+                    foreach (var kv in origin)
+                        attributes[kv.Key] = attributes.TryGetValue(kv.Key, out var existing)
+                            ? existing + kv.Value.ValueD
+                            : kv.Value.ValueD;
+
+            var items = data.Items?.Items ?? new List<SerializedItem>();
+            var equipped = items
+                .Where(i => (int)i.Slot is >= 0 and <= 13)
+                .Select(i => new WebItem(i.Id, i.Name, (int)i.Slot, i.DefinitionIntegerId, (int)i.BaseRarity))
+                .ToList();
+            var inventoryCount = items.Count(i => (int)i.Slot < 0 || (int)i.Slot >= 20);
+
+            var skills = (data.Skills?.Skills ?? new List<SerializedCharacterData.SerializedSkill>())
+                .OrderBy(s => (int)s.Slot).ThenBy(s => s.Column).ThenBy(s => s.Row)
+                .Select(s => s.PowerHashSafe)
+                .ToList();
+
+            var combat = data.CombatStats;
+            return new WebSnapshot(
+                header.CharacterId,
+                header.DisplayName,
+                (int)header.Class,
+                (int)header.Race,
+                (int)header.GameMode,
+                level,
+                c.Experience,
+                Progression.ExperienceForLevel((int)level),
+                Progression.ExperienceForLevel((int)level + 1),
+                c.Silver,
+                c.Opals,
+                combat?.Offense ?? 0,
+                combat?.Defense ?? 0,
+                combat?.Recovery ?? 0,
+                combat?.MonsterKills ?? 0,
+                attributes,
+                equipped,
+                inventoryCount,
+                skills,
+                DateTime.UtcNow);
+        }
+    }
 
     public bool OwnsCharacter(Guid owner, Guid id)
     {

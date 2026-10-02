@@ -10,5 +10,6 @@
     <PackageReference Include="MessagePack" Version="2.5.192" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.60.0" />
     <ProjectReference Include="../Nordicandia.Contracts/Nordicandia.Contracts.csproj" />
+    <ProjectReference Include="../Nordicandia.Simulation/Nordicandia.Simulation.csproj" />
   </ItemGroup>
 </Project>

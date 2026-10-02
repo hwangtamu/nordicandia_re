@@ -33,6 +33,11 @@
 [Bb]in/
 [Oo]bj/
 
+# Web client build outputs (source + exported assets are committed)
+web/node_modules/
+web/dist/
+node_modules/
+
 # secrets / TLS material (regenerate with server/gen_cert.sh)
 server/certs/
 *.pfx

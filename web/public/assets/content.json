@@ -1,0 +1,1147 @@
+{
+  "contentVersion": "m0-1",
+  "races": [
+    {
+      "integerId": 0,
+      "name": "Human",
+      "nameKey": "RaceHuman",
+      "icon": "RaceHuman",
+      "attackPower": 5,
+      "magicPower": 5,
+      "defensePower": 5,
+      "thiefPower": 5,
+      "stamina": 5
+    },
+    {
+      "integerId": 1,
+      "name": "High Elf",
+      "nameKey": "RaceHighElf",
+      "icon": "RaceHighElf",
+      "attackPower": 4,
+      "magicPower": 9,
+      "defensePower": 2,
+      "thiefPower": 7,
+      "stamina": 3
+    },
+    {
+      "integerId": 2,
+      "name": "Dwarf",
+      "nameKey": "RaceDwarf",
+      "icon": "RaceDwarf",
+      "attackPower": 5,
+      "magicPower": 2,
+      "defensePower": 9,
+      "thiefPower": 2,
+      "stamina": 7
+    },
+    {
+      "integerId": 3,
+      "name": "Wood Elf",
+      "nameKey": "RaceWoodElf",
+      "icon": null,
+      "attackPower": 7,
+      "magicPower": 5,
+      "defensePower": 4,
+      "thiefPower": 6,
+      "stamina": 3
+    },
+    {
+      "integerId": 4,
+      "name": "Satyr",
+      "nameKey": "RaceSatyr",
+      "icon": null,
+      "attackPower": 4,
+      "magicPower": 5,
+      "defensePower": 3,
+      "thiefPower": 3,
+      "stamina": 10
+    },
+    {
+      "integerId": 5,
+      "name": "Demon",
+      "nameKey": "RaceDemon",
+      "icon": "RaceDemon",
+      "attackPower": 2,
+      "magicPower": 6,
+      "defensePower": 10,
+      "thiefPower": 3,
+      "stamina": 4
+    },
+    {
+      "integerId": 6,
+      "name": "Undead",
+      "nameKey": "RaceUndead",
+      "icon": "RaceUndead",
+      "attackPower": 7,
+      "magicPower": 7,
+      "defensePower": 3,
+      "thiefPower": 6,
+      "stamina": 2
+    },
+    {
+      "integerId": 7,
+      "name": "Orc",
+      "nameKey": "RaceOrc",
+      "icon": "RaceOrc",
+      "attackPower": 10,
+      "magicPower": 4,
+      "defensePower": 5,
+      "thiefPower": 2,
+      "stamina": 4
+    }
+  ],
+  "classes": [
+    {
+      "integerId": 0,
+      "name": "Warrior",
+      "nameKey": "ClassWarrior",
+      "hidden": false
+    },
+    {
+      "integerId": 1,
+      "name": "Paladin",
+      "nameKey": "ClassPaladin",
+      "hidden": true
+    },
+    {
+      "integerId": 2,
+      "name": "Assassin",
+      "nameKey": "ClassAssassin",
+      "hidden": true
+    },
+    {
+      "integerId": 3,
+      "name": "Barbarian",
+      "nameKey": "ClassBarbarian",
+      "hidden": true
+    },
+    {
+      "integerId": 4,
+      "name": "Hunter",
+      "nameKey": "ClassHunter",
+      "hidden": false
+    },
+    {
+      "integerId": 5,
+      "name": "Mage",
+      "nameKey": "ClassMage",
+      "hidden": false
+    },
+    {
+      "integerId": 6,
+      "name": "Necromancer",
+      "nameKey": "ClassNecromancer",
+      "hidden": false
+    },
+    {
+      "integerId": 7,
+      "name": "Priest",
+      "nameKey": "ClassPriest",
+      "hidden": true
+    }
+  ],
+  "monsters": [
+    {
+      "integerId": 0,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "Bat",
+      "nameKey": "Monster_Bat",
+      "portrait": null
+    },
+    {
+      "integerId": 1,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "DemonOrc",
+      "nameKey": "Monster_DemonOrc",
+      "portrait": null
+    },
+    {
+      "integerId": 2,
+      "typeId": "87d585c2-d767-4780-a5e6-63a36bdf2bef",
+      "name": "Goblin1",
+      "nameKey": "Monster_Goblin1",
+      "portrait": null
+    },
+    {
+      "integerId": 3,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "Skeleton1",
+      "nameKey": "Monster_Skeleton1",
+      "portrait": null
+    },
+    {
+      "integerId": 4,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "ArmoredSkeleton1",
+      "nameKey": "Monster_ArmoredSkeleton1",
+      "portrait": null
+    },
+    {
+      "integerId": 5,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "Boss_Bolomahl",
+      "nameKey": "Monster_Boss_Bolomahl",
+      "portrait": null
+    },
+    {
+      "integerId": 6,
+      "typeId": "c34903ec-2638-4238-9d3c-083dc1eb3c5c",
+      "name": "FireGolem",
+      "nameKey": "Monster_FireGolem",
+      "portrait": null
+    },
+    {
+      "integerId": 7,
+      "typeId": "c34903ec-2638-4238-9d3c-083dc1eb3c5c",
+      "name": "StoneGolem",
+      "nameKey": "Monster_StoneGolem",
+      "portrait": null
+    },
+    {
+      "integerId": 8,
+      "typeId": "c34903ec-2638-4238-9d3c-083dc1eb3c5c",
+      "name": "CrystalGolem",
+      "nameKey": "Monster_CrystalGolem",
+      "portrait": null
+    },
+    {
+      "integerId": 9,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "SpittingParasite",
+      "nameKey": "Monster_SpittingParasite",
+      "portrait": null
+    },
+    {
+      "integerId": 10,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "SkeletonArcher1",
+      "nameKey": "Monster_SkeletonArcher1",
+      "portrait": null
+    },
+    {
+      "integerId": 11,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "Banshee",
+      "nameKey": "Monster_Banshee",
+      "portrait": null
+    },
+    {
+      "integerId": 12,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "SkeletonCommander",
+      "nameKey": "Monster_SkeletonCommander",
+      "portrait": null
+    },
+    {
+      "integerId": 13,
+      "typeId": "87d585c2-d767-4780-a5e6-63a36bdf2bef",
+      "name": "GoblinArcher1",
+      "nameKey": "Monster_GoblinArcher1",
+      "portrait": null
+    },
+    {
+      "integerId": 14,
+      "typeId": "d5d180cd-cf30-47d1-ad56-6a024dd07376",
+      "name": "Troll1",
+      "nameKey": "Monster_Troll1",
+      "portrait": null
+    },
+    {
+      "integerId": 15,
+      "typeId": "d5d180cd-cf30-47d1-ad56-6a024dd07376",
+      "name": "Orc1",
+      "nameKey": "Monster_Orc1",
+      "portrait": null
+    },
+    {
+      "integerId": 16,
+      "typeId": "d5d180cd-cf30-47d1-ad56-6a024dd07376",
+      "name": "Boss_TheWarchief",
+      "nameKey": "Monster_Boss_TheWarchief",
+      "portrait": null
+    },
+    {
+      "integerId": 17,
+      "typeId": "d129cc7f-0936-4ca2-b35f-d4c01e455c59",
+      "name": "Boss_BoneDragon",
+      "nameKey": "Monster_Boss_BoneDragon",
+      "portrait": null
+    },
+    {
+      "integerId": 18,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "Boss_WolfKing",
+      "nameKey": "Monster_Boss_WolfKing",
+      "portrait": null
+    },
+    {
+      "integerId": 19,
+      "typeId": "d129cc7f-0936-4ca2-b35f-d4c01e455c59",
+      "name": "Boss_AncientDragon",
+      "nameKey": "Monster_Boss_AncientDragon",
+      "portrait": null
+    },
+    {
+      "integerId": 20,
+      "typeId": "d5d180cd-cf30-47d1-ad56-6a024dd07376",
+      "name": "WildShaman",
+      "nameKey": "Monster_WildShaman",
+      "portrait": null
+    },
+    {
+      "integerId": 21,
+      "typeId": "d5d180cd-cf30-47d1-ad56-6a024dd07376",
+      "name": "Orc2",
+      "nameKey": "Monster_Orc2",
+      "portrait": null
+    },
+    {
+      "integerId": 22,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "VoidSpawn",
+      "nameKey": "Monster_VoidSpawn",
+      "portrait": null
+    },
+    {
+      "integerId": 23,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "Succubus",
+      "nameKey": "Monster_Succubus",
+      "portrait": null
+    },
+    {
+      "integerId": 24,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "EvilEye",
+      "nameKey": "Monster_EvilEye",
+      "portrait": null
+    },
+    {
+      "integerId": 25,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "ArcticWolf",
+      "nameKey": "Monster_ArcticWolf",
+      "portrait": null
+    },
+    {
+      "integerId": 26,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "BrownBear",
+      "nameKey": "Monster_BrownBear",
+      "portrait": null
+    },
+    {
+      "integerId": 27,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "GrayWolf",
+      "nameKey": "Monster_GrayWolf",
+      "portrait": null
+    },
+    {
+      "integerId": 28,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "IceBear",
+      "nameKey": "Monster_IceBear",
+      "portrait": null
+    },
+    {
+      "integerId": 29,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "RabidRat",
+      "nameKey": "Monster_RabidRat",
+      "portrait": null
+    },
+    {
+      "integerId": 30,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "Spider",
+      "nameKey": "Monster_Spider",
+      "portrait": null
+    },
+    {
+      "integerId": 31,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "Spiderling",
+      "nameKey": "Monster_Spiderling",
+      "portrait": null
+    },
+    {
+      "integerId": 32,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "BlackHawk",
+      "nameKey": "Monster_BlackHawk",
+      "portrait": null
+    },
+    {
+      "integerId": 33,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "SpiderQueen",
+      "nameKey": "Monster_SpiderQueen",
+      "portrait": null
+    },
+    {
+      "integerId": 34,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "Demon1",
+      "nameKey": "Monster_Demon1",
+      "portrait": null
+    },
+    {
+      "integerId": 35,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "Demon2",
+      "nameKey": "Monster_Demon2",
+      "portrait": null
+    },
+    {
+      "integerId": 36,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "CasterDemon1",
+      "nameKey": "Monster_CasterDemon1",
+      "portrait": null
+    },
+    {
+      "integerId": 37,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "CasterDemon2",
+      "nameKey": "Monster_CasterDemon2",
+      "portrait": null
+    },
+    {
+      "integerId": 38,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "CasterDemon3",
+      "nameKey": "Monster_CasterDemon3",
+      "portrait": null
+    },
+    {
+      "integerId": 39,
+      "typeId": "87d585c2-d767-4780-a5e6-63a36bdf2bef",
+      "name": "Goblin2",
+      "nameKey": "Monster_Goblin2",
+      "portrait": null
+    },
+    {
+      "integerId": 40,
+      "typeId": "d5d180cd-cf30-47d1-ad56-6a024dd07376",
+      "name": "Ogre",
+      "nameKey": "Monster_Ogre",
+      "portrait": null
+    },
+    {
+      "integerId": 41,
+      "typeId": "d5d180cd-cf30-47d1-ad56-6a024dd07376",
+      "name": "Orc3",
+      "nameKey": "Monster_CasterOrc",
+      "portrait": null
+    },
+    {
+      "integerId": 42,
+      "typeId": "87d585c2-d767-4780-a5e6-63a36bdf2bef",
+      "name": "Goblin3",
+      "nameKey": "Monster_Goblin3",
+      "portrait": null
+    },
+    {
+      "integerId": 43,
+      "typeId": "d5d180cd-cf30-47d1-ad56-6a024dd07376",
+      "name": "Orc4",
+      "nameKey": "Monster_Orc4",
+      "portrait": null
+    },
+    {
+      "integerId": 44,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "UndeadBear",
+      "nameKey": "Monster_UndeadBear",
+      "portrait": null
+    },
+    {
+      "integerId": 45,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "BoneBeast",
+      "nameKey": "Monster_BoneBeast",
+      "portrait": null
+    },
+    {
+      "integerId": 46,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "SkeletonMage",
+      "nameKey": "Monster_SkeletonMage",
+      "portrait": null
+    },
+    {
+      "integerId": 47,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "DeathKnight",
+      "nameKey": "Monster_DeathKnight",
+      "portrait": null
+    },
+    {
+      "integerId": 48,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "Boss_Knight1",
+      "nameKey": "Monster_Boss_Knight1",
+      "portrait": null
+    },
+    {
+      "integerId": 49,
+      "typeId": "048b58f3-359f-442d-9041-12f075ca3663",
+      "name": "FireGolemTrigger",
+      "nameKey": "Monster_FireGolemTrigger",
+      "portrait": null
+    },
+    {
+      "integerId": 50,
+      "typeId": "048b58f3-359f-442d-9041-12f075ca3663",
+      "name": "StoneGolemTrigger",
+      "nameKey": "Monster_StoneGolemTrigger",
+      "portrait": null
+    },
+    {
+      "integerId": 51,
+      "typeId": "048b58f3-359f-442d-9041-12f075ca3663",
+      "name": "CrystalGolemTrigger",
+      "nameKey": "Monster_CrystalGolemTrigger",
+      "portrait": null
+    },
+    {
+      "integerId": 52,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "Demon3",
+      "nameKey": "Monster_Demon3",
+      "portrait": null
+    },
+    {
+      "integerId": 53,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "Demon4",
+      "nameKey": "Monster_Demon4",
+      "portrait": null
+    },
+    {
+      "integerId": 54,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "Demon5",
+      "nameKey": "Monster_Demon5",
+      "portrait": null
+    },
+    {
+      "integerId": 55,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "RangedDemon1",
+      "nameKey": "Monster_RangedDemon1",
+      "portrait": null
+    },
+    {
+      "integerId": 56,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "BigBiter",
+      "nameKey": "Monster_BigBiter",
+      "portrait": null
+    },
+    {
+      "integerId": 57,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "BrownSpider",
+      "nameKey": "Monster_BrownSpider",
+      "portrait": null
+    },
+    {
+      "integerId": 58,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "EvilPlant",
+      "nameKey": "Monster_EvilPlant",
+      "portrait": null
+    },
+    {
+      "integerId": 59,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "ArmoredLarva",
+      "nameKey": "Monster_ArmoredLarva",
+      "portrait": null
+    },
+    {
+      "integerId": 60,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "MagicalInsect",
+      "nameKey": "Monster_MagicalInsect",
+      "portrait": null
+    },
+    {
+      "integerId": 61,
+      "typeId": "efabc1be-fa20-405e-9a19-6a68f1acc029",
+      "name": "MagicalOwl",
+      "nameKey": "Monster_MagicalOwl",
+      "portrait": null
+    },
+    {
+      "integerId": 62,
+      "typeId": "d5d180cd-cf30-47d1-ad56-6a024dd07376",
+      "name": "EnragedOrc",
+      "nameKey": "Monster_EnragedOrc",
+      "portrait": null
+    },
+    {
+      "integerId": 63,
+      "typeId": "d5d180cd-cf30-47d1-ad56-6a024dd07376",
+      "name": "WiseOrc",
+      "nameKey": "Monster_WiseOrc",
+      "portrait": null
+    },
+    {
+      "integerId": 64,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "SkeletonCleric",
+      "nameKey": "Monster_SkeletonCleric",
+      "portrait": null
+    },
+    {
+      "integerId": 65,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "DarkKnight",
+      "nameKey": "Monster_DarkKnight",
+      "portrait": null
+    },
+    {
+      "integerId": 66,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "SkeletonArcher2",
+      "nameKey": "Monster_SkeletonArcher2",
+      "portrait": null
+    },
+    {
+      "integerId": 67,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "Ghoul",
+      "nameKey": "Monster_Ghoul",
+      "portrait": null
+    },
+    {
+      "integerId": 68,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "Ghoul2",
+      "nameKey": "Monster_Ghoul2",
+      "portrait": null
+    },
+    {
+      "integerId": 69,
+      "typeId": "bf94eb7f-87c9-4d3b-8a37-e1154ba4e7a0",
+      "name": "Blacksmith",
+      "nameKey": "Npc_Blacksmith",
+      "portrait": null
+    },
+    {
+      "integerId": 71,
+      "typeId": "04c52809-a45d-4e8b-96e2-72fc86a99ed0",
+      "name": "Elder",
+      "nameKey": "Npc_Elder",
+      "portrait": null
+    },
+    {
+      "integerId": 75,
+      "typeId": "f44cc906-4567-427a-ab2f-46838880f6e3",
+      "name": "Tutorial",
+      "nameKey": "Npc_Tutorial",
+      "portrait": null
+    },
+    {
+      "integerId": 79,
+      "typeId": "d454fa90-9181-428e-a3bc-0b7a7616c9cd",
+      "name": "EvilChest",
+      "nameKey": "Monster_EvilChest",
+      "portrait": "MonstersAvatarIcons_102"
+    },
+    {
+      "integerId": 81,
+      "typeId": "b5f09dbe-fb30-445c-ae72-376b4827c5b3",
+      "name": "Disassembler",
+      "nameKey": "Npc_Disassembler",
+      "portrait": null
+    },
+    {
+      "integerId": 83,
+      "typeId": "d129cc7f-0936-4ca2-b35f-d4c01e455c59",
+      "name": "Boss_VileDragon",
+      "nameKey": "Monster_Boss_VileDragon",
+      "portrait": null
+    },
+    {
+      "integerId": 85,
+      "typeId": "043fdf68-3f4e-4a42-a2d2-f311a2f322a9",
+      "name": "Merchant",
+      "nameKey": "Npc_Merchant",
+      "portrait": null
+    },
+    {
+      "integerId": 86,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "SummonWolfMinion",
+      "nameKey": "Minion_SummonWolfMinion",
+      "portrait": null
+    },
+    {
+      "integerId": 87,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "WolfKingMinion",
+      "nameKey": "Minion_WolfKingMinion",
+      "portrait": null
+    },
+    {
+      "integerId": 88,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "HunterMirrorImageMinion",
+      "nameKey": "Minion_HunterMirrorImageMinion",
+      "portrait": null
+    },
+    {
+      "integerId": 89,
+      "typeId": "9bfa45a4-9be6-46d4-b502-53b5c4545421",
+      "name": "PetDog",
+      "nameKey": "Minion_PetDog",
+      "portrait": "Mobs_dog_01"
+    },
+    {
+      "integerId": 90,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "BoneDragonSkeleton",
+      "nameKey": "Minon_BoneDragonSkeleton",
+      "portrait": null
+    },
+    {
+      "integerId": 92,
+      "typeId": "ae107eba-4412-428a-8431-e86623fb879d",
+      "name": "Changer",
+      "nameKey": "Npc_Changer",
+      "portrait": null
+    },
+    {
+      "integerId": 94,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "SummonWolfSpiritMinion",
+      "nameKey": "Minion_SummonWolfSpiritMinion",
+      "portrait": null
+    },
+    {
+      "integerId": 96,
+      "typeId": "9bfa45a4-9be6-46d4-b502-53b5c4545421",
+      "name": "PetSnowOxe",
+      "nameKey": "Minion_PetSnowOxe",
+      "portrait": "MonstersAvatarIcons_107"
+    },
+    {
+      "integerId": 98,
+      "typeId": "9bfa45a4-9be6-46d4-b502-53b5c4545421",
+      "name": "PetCrow",
+      "nameKey": "Minion_PetCrow",
+      "portrait": "Mobs_crow_01"
+    },
+    {
+      "integerId": 100,
+      "typeId": "9bfa45a4-9be6-46d4-b502-53b5c4545421",
+      "name": "PetTurtle",
+      "nameKey": "Minion_PetTurtle",
+      "portrait": "Mobs_addons_096"
+    },
+    {
+      "integerId": 102,
+      "typeId": "13133596-e0d5-44bb-8833-9fb721d9df71",
+      "name": "Petkeeper",
+      "nameKey": "Npc_Petkeeper",
+      "portrait": null
+    },
+    {
+      "integerId": 104,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "Boss_Hel",
+      "nameKey": "Monster_Hel",
+      "portrait": null
+    },
+    {
+      "integerId": 106,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "HelMinion",
+      "nameKey": "Minion_HelMinion",
+      "portrait": null
+    },
+    {
+      "integerId": 108,
+      "typeId": "7f21b565-f072-4102-860d-2da7821e39d0",
+      "name": "PortalMaster",
+      "nameKey": "Npc_PortalMaster",
+      "portrait": null
+    },
+    {
+      "integerId": 112,
+      "typeId": "e3da95f8-f7a5-4e0e-b3d6-e57223da9faa",
+      "name": "Offering",
+      "nameKey": "Npc_Offering",
+      "portrait": null
+    },
+    {
+      "integerId": 114,
+      "typeId": "586420e6-c5b8-46e8-bec7-2ad46dffce1d",
+      "name": "Boss_Odr",
+      "nameKey": "Monster_Odr",
+      "portrait": null
+    },
+    {
+      "integerId": 116,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "OdrTotem",
+      "nameKey": "Monster_OdrTotem",
+      "portrait": null
+    },
+    {
+      "integerId": 118,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "SummonHuginnMinion",
+      "nameKey": "Minion_SummonHuginnMinion",
+      "portrait": null
+    },
+    {
+      "integerId": 120,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "SummonMuninnMinion",
+      "nameKey": "Minion_SummonMuninnMinion",
+      "portrait": null
+    },
+    {
+      "integerId": 122,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "ArrowstreamMinion",
+      "nameKey": "Minion_Arrowstream",
+      "portrait": null
+    },
+    {
+      "integerId": 124,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "UniqueBearMinion",
+      "nameKey": "Monster_BrownBear",
+      "portrait": null
+    },
+    {
+      "integerId": 126,
+      "typeId": "2c75bcfe-251b-46f6-9aff-b050cd4a92c1",
+      "name": "GuildDefenseMaster",
+      "nameKey": "Npc_GuildDefenseMaster",
+      "portrait": null
+    },
+    {
+      "integerId": 128,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "GuidSiegeRunestone",
+      "nameKey": "Minion_GuidSiegeRunestone",
+      "portrait": null
+    },
+    {
+      "integerId": 130,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "SummonSkeletonMinion",
+      "nameKey": "Minion_SummonSkeletonMinion",
+      "portrait": null
+    },
+    {
+      "integerId": 132,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "SummonDemonMinion",
+      "nameKey": "Minion_SummonDemonMinion",
+      "portrait": null
+    },
+    {
+      "integerId": 134,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "SummonDeathMinion",
+      "nameKey": "Minion_SummonDeathMinion",
+      "portrait": null
+    },
+    {
+      "integerId": 156,
+      "typeId": "9bfa45a4-9be6-46d4-b502-53b5c4545421",
+      "name": "PetEagle",
+      "nameKey": "Minion_PetEagle",
+      "portrait": null
+    },
+    {
+      "integerId": 158,
+      "typeId": "9bfa45a4-9be6-46d4-b502-53b5c4545421",
+      "name": "PetBabyDragon",
+      "nameKey": "Minion_PetBabyDragon",
+      "portrait": "Mobs_dragon_10"
+    },
+    {
+      "integerId": 160,
+      "typeId": "9bfa45a4-9be6-46d4-b502-53b5c4545421",
+      "name": "PetLarva",
+      "nameKey": "Minion_PetLarva",
+      "portrait": "Mobs_l_03"
+    },
+    {
+      "integerId": 162,
+      "typeId": "9bfa45a4-9be6-46d4-b502-53b5c4545421",
+      "name": "PetSnake",
+      "nameKey": "Minion_PetSnake",
+      "portrait": "Monsters_59_nobg"
+    },
+    {
+      "integerId": 166,
+      "typeId": "4ec0f21c-321b-4c56-9ce0-802d5e3b3f3c",
+      "name": "SetItemMerchant",
+      "nameKey": "Npc_SetItemMerchant",
+      "portrait": null
+    },
+    {
+      "integerId": 168,
+      "typeId": "9d5fde8e-13ec-4574-ada1-efcdca1850c0",
+      "name": "Boss_Kibu",
+      "nameKey": "Monster_Boss_Kibu",
+      "portrait": null
+    },
+    {
+      "integerId": 170,
+      "typeId": "ae2330de-cc50-4a2d-bcbf-8613234a5a37",
+      "name": "KibuElemental",
+      "nameKey": "Minion_KibuElemental",
+      "portrait": null
+    },
+    {
+      "integerId": 174,
+      "typeId": "985a77f0-68f4-40d7-8ffc-d4ea15e83e20",
+      "name": "HeavySnowman",
+      "nameKey": "Monster_HeavySnowman",
+      "portrait": null
+    },
+    {
+      "integerId": 176,
+      "typeId": "985a77f0-68f4-40d7-8ffc-d4ea15e83e20",
+      "name": "LegendarySnowman",
+      "nameKey": "Monster_LegendarySnowman",
+      "portrait": null
+    },
+    {
+      "integerId": 178,
+      "typeId": "985a77f0-68f4-40d7-8ffc-d4ea15e83e20",
+      "name": "Snowman",
+      "nameKey": "Monster_Snowman",
+      "portrait": null
+    },
+    {
+      "integerId": 179,
+      "typeId": "03989908-6d7f-40cc-aab1-b1c5caf9a390",
+      "name": "Boar",
+      "nameKey": "Monster_FreyaBoar",
+      "portrait": null
+    },
+    {
+      "integerId": 180,
+      "typeId": "03989908-6d7f-40cc-aab1-b1c5caf9a390",
+      "name": "LegendaryBoar",
+      "nameKey": "Monster_LegendaryFreyaBoar",
+      "portrait": null
+    },
+    {
+      "integerId": 181,
+      "typeId": "03989908-6d7f-40cc-aab1-b1c5caf9a390",
+      "name": "HeavyBoar",
+      "nameKey": "Monster_HeavyFreyaBoar",
+      "portrait": null
+    },
+    {
+      "integerId": 186,
+      "typeId": "d7b34046-32ec-409c-8269-b69aa644496b",
+      "name": "Pesta",
+      "nameKey": "Monster_Pesta",
+      "portrait": null
+    },
+    {
+      "integerId": 187,
+      "typeId": "d7b34046-32ec-409c-8269-b69aa644496b",
+      "name": "Draugr",
+      "nameKey": "Monster_Draugr",
+      "portrait": null
+    },
+    {
+      "integerId": 188,
+      "typeId": "d7b34046-32ec-409c-8269-b69aa644496b",
+      "name": "Nokken",
+      "nameKey": "Monster_Nokken",
+      "portrait": null
+    },
+    {
+      "integerId": 189,
+      "typeId": "d7b34046-32ec-409c-8269-b69aa644496b",
+      "name": "Huldra",
+      "nameKey": "Monster_huldra",
+      "portrait": null
+    },
+    {
+      "integerId": 190,
+      "typeId": "d7b34046-32ec-409c-8269-b69aa644496b",
+      "name": "Bergsra",
+      "nameKey": "Monster_Bergsra",
+      "portrait": null
+    },
+    {
+      "integerId": 186,
+      "typeId": "29aade2b-4788-426a-a618-687489e24b79",
+      "name": "CombatPetDurnir",
+      "nameKey": "Minion_CombatPetDurnir",
+      "portrait": null
+    },
+    {
+      "integerId": 187,
+      "typeId": "c41b1c06-343f-45b6-a311-512a36540f43",
+      "name": "CombatPetkeeper",
+      "nameKey": "Npc_CombatPetkeeper",
+      "portrait": null
+    },
+    {
+      "integerId": 188,
+      "typeId": "29aade2b-4788-426a-a618-687489e24b79",
+      "name": "CombatPetHala",
+      "nameKey": "Minion_CombatPetHala",
+      "portrait": null
+    },
+    {
+      "integerId": 189,
+      "typeId": "29aade2b-4788-426a-a618-687489e24b79",
+      "name": "CombatPetEggther",
+      "nameKey": "Minion_CombatPetEggther",
+      "portrait": null
+    },
+    {
+      "integerId": 190,
+      "typeId": "29aade2b-4788-426a-a618-687489e24b79",
+      "name": "CombatPetHraesvelgr",
+      "nameKey": "Minion_CombatPetHraesvelgr",
+      "portrait": null
+    },
+    {
+      "integerId": 191,
+      "typeId": "29aade2b-4788-426a-a618-687489e24b79",
+      "name": "CombatPetFossegrim",
+      "nameKey": "Minion_CombatPetFossegrim",
+      "portrait": null
+    },
+    {
+      "integerId": 193,
+      "typeId": "03989908-6d7f-40cc-aab1-b1c5caf9a390",
+      "name": "Eirwyn_1",
+      "nameKey": "Monster_Eirwyn",
+      "portrait": null
+    },
+    {
+      "integerId": 195,
+      "typeId": "03989908-6d7f-40cc-aab1-b1c5caf9a390",
+      "name": "Karnyx_1",
+      "nameKey": "Monster_Karnyx",
+      "portrait": null
+    },
+    {
+      "integerId": 197,
+      "typeId": "03989908-6d7f-40cc-aab1-b1c5caf9a390",
+      "name": "Vyrmuld_1",
+      "nameKey": "Monster_Vyrmuld",
+      "portrait": null
+    },
+    {
+      "integerId": 199,
+      "typeId": "03989908-6d7f-40cc-aab1-b1c5caf9a390",
+      "name": "Eirwyn_3",
+      "nameKey": "Monster_Eirwyn",
+      "portrait": null
+    },
+    {
+      "integerId": 201,
+      "typeId": "03989908-6d7f-40cc-aab1-b1c5caf9a390",
+      "name": "Karnyx_3",
+      "nameKey": "Monster_Karnyx",
+      "portrait": null
+    },
+    {
+      "integerId": 203,
+      "typeId": "03989908-6d7f-40cc-aab1-b1c5caf9a390",
+      "name": "Vyrmuld_3",
+      "nameKey": "Monster_Vyrmuld",
+      "portrait": null
+    },
+    {
+      "integerId": 205,
+      "typeId": "03989908-6d7f-40cc-aab1-b1c5caf9a390",
+      "name": "Eirwyn_5",
+      "nameKey": "Monster_Eirwyn",
+      "portrait": null
+    },
+    {
+      "integerId": 207,
+      "typeId": "03989908-6d7f-40cc-aab1-b1c5caf9a390",
+      "name": "Karnyx_5",
+      "nameKey": "Monster_Karnyx",
+      "portrait": null
+    },
+    {
+      "integerId": 209,
+      "typeId": "03989908-6d7f-40cc-aab1-b1c5caf9a390",
+      "name": "Vyrmuld_5",
+      "nameKey": "Monster_Vyrmuld",
+      "portrait": null
+    },
+    {
+      "integerId": 210,
+      "typeId": "e357bb42-af68-48b1-bfcc-969140be9bbc",
+      "name": "GiftStatue",
+      "nameKey": "Npc_GiftStatue",
+      "portrait": null
+    }
+  ],
+  "monsterIcons": [
+    "MonstersAvatarIcons_101",
+    "MonstersAvatarIcons_102",
+    "MonstersAvatarIcons_105",
+    "MonstersAvatarIcons_106",
+    "MonstersAvatarIcons_107",
+    "MonstersAvatarIcons_44",
+    "MonstersAvatarIcons_45",
+    "MonstersAvatarIcons_46",
+    "MonstersAvatarIcons_48",
+    "MonstersAvatarIcons_51",
+    "MonstersAvatarIcons_52",
+    "MonstersAvatarIcons_53",
+    "MonstersAvatarIcons_54",
+    "MonstersAvatarIcons_55",
+    "MonstersAvatarIcons_58",
+    "MonstersAvatarIcons_62",
+    "MonstersAvatarIcons_63",
+    "MonstersAvatarIcons_64",
+    "MonstersAvatarIcons_67",
+    "MonstersAvatarIcons_68",
+    "MonstersAvatarIcons_69",
+    "MonstersAvatarIcons_70",
+    "MonstersAvatarIcons_71",
+    "MonstersAvatarIcons_73",
+    "MonstersAvatarIcons_74",
+    "MonstersAvatarIcons_75",
+    "MonstersAvatarIcons_76",
+    "MonstersAvatarIcons_78",
+    "MonstersAvatarIcons_80",
+    "MonstersAvatarIcons_82",
+    "MonstersAvatarIcons_83",
+    "MonstersAvatarIcons_85",
+    "MonstersAvatarIcons_87",
+    "MonstersAvatarIcons_89",
+    "MonstersAvatarIcons_90",
+    "MonstersAvatarIcons_91",
+    "MonstersAvatarIcons_93",
+    "MonstersAvatarIcons_94",
+    "MonstersAvatarIcons_95",
+    "MonstersAvatarIcons_96",
+    "MonstersAvatarIcons_99"
+  ],
+  "check": {
+    "avatarsAvailable": 197,
+    "iconReferencesMissing": [
+      "race Wood Elf: Human_02_nobg 1",
+      "race Satyr: 69"
+    ]
+  }
+}
