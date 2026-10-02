@@ -32,3 +32,34 @@
 3. 之后即可把每条指令引用的令牌映射回字符串，完成"条件 → `CraftingReason_*`"。
 
 在上述完成前，制作系统的**规则集合与公式已还原**（见 `CRAFTING_EXTRACTED.md`），但**逐条件映射尚未完成**。
+
+## 成功：Cpp2IL 支持 v39
+
+- 源码：`git clone https://github.com/SamboyCoding/Cpp2IL`（master，`TargetFrameworks=net10.0`），
+  `dotnet build Cpp2IL/Cpp2IL.csproj -c Release`（内置 `LibCpp2IL`）。
+- 运行：
+  ```
+  dotnet tmp/cpp2il-build/Cpp2IL.dll \
+    --force-binary-path tmp/apk-libil2cpp.so \
+    --force-metadata-path tmp/global-metadata.dat \
+    --force-unity-version 6000.0.0 \
+    --output-as <格式> --output-to <目录> [--use-processor callanalyzer]
+  ```
+- 结果：**成功解析 metadata v39**。关键布局（来自 `Cpp2IL.Plugin.Mfuscator` 的 `MetadataLayout`）：
+  - v38+ 每个 section 头字段 **12 字节**（offset, size, count）；头部 = `8 + sectionCount*12` = `0x17C`。
+  - v35+ `Il2CppStringLiteral` 记录 **4 字节**（不再含 length）。
+- 产出（已生成）：
+  - `tmp/cpp2il-dll/*.dll`：**92,421 个方法 100% 还原**的托管程序集。
+  - `tmp/cpp2il-isil/IsilDump/**`：每个方法的**带符号原始 ARM64 反汇编** + ISIL（方法/调用名已解析）。
+    - 例如制作操作在 `Assembly-CSharp/Game/Items/Implementations/*.txt`（`Artifact`、`AddAffix`、
+      `ReRollAffixTypes`、`HeatingStone`、`Reinforcement`、`RelicOfBlessing`…）。
+    - 校验入口：`Artifact.CanCraft(sourceItems, essence, targetItem, quality, overheat,
+      ref reasonText, ref confirmReasonWarning, allowOnImbued)`（`0x02CC1188`），
+      子类 `CanCraft` 先调用它再追加自身条件。
+
+## 仍缺：字符串字面量 → 指令
+- Cpp2IL 的 ARM64 lifter **不产出 `ldstr`**（ISIL 里字符串未解析），`diffable-cs` 在本包上崩溃。
+- `Artifact.CanCraft` 的 `reasonText` 是通过**静态字符串字段**（`ADRP 0x28DD000; LDR X8,[X8+0xA60]` 等）
+  赋值的；这些字段由某 cctor 从字符串字面量初始化。要逐条映射 `reasonText → CraftingReason_*`，
+  需继续：定位初始化这些字段的 cctor，并解析其字符串字面量加载。
+- 下一步可写一个小工具直接引用内置 `LibCpp2IL.dll`，遍历方法指令、解析字符串字面量操作数（比修 IL 输出更直接）。
