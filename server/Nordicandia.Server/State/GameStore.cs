@@ -776,6 +776,103 @@ public sealed class GameStore : IDisposable
         }
     }
 
+    // Recovered item integer ids (gamedata_decrypted/Items.json).
+    private const int ItemIronId = 63;
+    private const int ItemSteelId = 589;
+
+    /// <summary>Essence->steel smelting coefficient by rarity, recovered from
+    /// CraftingUtils.GetEssenceToSteelSmeltingValueFromRarity (0x02C834FC / its cctor).</summary>
+    private static double EssenceToSteel(int rarity) => rarity switch
+    {
+        2 => 0.05, 3 => 0.1, 4 => 0.15, 5 => 0.2, 6 => 0.25,
+        7 => 0.5, 8 => 1.0, 9 => 3.0, >= 10 => 10.0, _ => 0.0,
+    };
+
+    private static SerializedItem CloneItem(SerializedItem item) => Unpack<SerializedItem>(Pack(item));
+
+    /// <summary>Creates a stackable material stack (Iron/Steel/...). The web slice does not carry
+    /// the client's item definitions, so these reuse the persisted item shape with the client's
+    /// stack attributes (18 max stack, 19 stack) and the recovered item integer ids.</summary>
+    private static SerializedItem CreateMaterial(int definitionIntegerId, string name, int count)
+    {
+        var item = new SerializedItem
+        {
+            Id = Guid.NewGuid(), Name = name, Slot = SharedNet.Constants.Game.ItemSlotTypes.Inventory,
+            DefinitionIntegerId = definitionIntegerId, BaseRarity = 0,
+            Location = new SerializedItemInventoryLocation { Page = 1, Row = 0, Column = 0 },
+        };
+        SetItemAttribute(item, SharedNet.Constants.Game.AttributeOrigin.Item, ItemMaxStackAttributeId, 1000);
+        SetItemAttribute(item, SharedNet.Constants.Game.AttributeOrigin.Item, ItemStackAttributeId, count);
+        return item;
+    }
+
+    /// <summary>Smelts the items the client placed in the Blacksmith source slot: the output is the
+    /// recovered essence->steel sum (floored, at least 1) and the sources are consumed.</summary>
+    public (bool Successful, SerializedItems SourceItems, SerializedItems Result) SmeltItems(Guid owner, Guid characterId) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        data.Items ??= new SerializedItems { Items = new List<SerializedItem>() };
+        data.Items.Items ??= new List<SerializedItem>();
+        var sources = data.Items.Items.Where(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem).ToList();
+        var sourceSnapshot = new SerializedItems { Items = sources.Select(CloneItem).ToList() };
+        if (sources.Count == 0) return (false, sourceSnapshot, new SerializedItems { Items = new List<SerializedItem>() });
+
+        var output = Math.Max(1, (int)Math.Floor(sources.Sum(i => EssenceToSteel((int)i.BaseRarity))));
+        data.Items.Items.RemoveAll(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem);
+        var steel = CreateMaterial(ItemSteelId, "Steel", output);
+        data.Items.Items.Add(steel);
+        c.Data = Pack(data);
+        return (true, new SerializedItems { Items = new List<SerializedItem>() }, new SerializedItems { Items = new List<SerializedItem> { steel } });
+    });
+
+    /// <summary>Disassembles the Blacksmith source items. The client's rule is "not unique and not a
+    /// set item" (web items carry neither), so every source qualifies; the source is consumed and
+    /// Iron is granted. The material amount is Provisional until the client's disassemble output
+    /// formula is recovered.</summary>
+    public (bool Successful, SerializedItems SourceItems, SerializedItems Result) DisassembleItems(Guid owner, Guid characterId) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        data.Items ??= new SerializedItems { Items = new List<SerializedItem>() };
+        data.Items.Items ??= new List<SerializedItem>();
+        var sources = data.Items.Items.Where(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem).ToList();
+        var sourceSnapshot = new SerializedItems { Items = sources.Select(CloneItem).ToList() };
+        if (sources.Count == 0) return (false, sourceSnapshot, new SerializedItems { Items = new List<SerializedItem>() });
+
+        var output = Math.Max(1, (int)Math.Floor(sources.Sum(i => 1 + (int)i.BaseRarity * 0.5)));
+        data.Items.Items.RemoveAll(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem);
+        var iron = CreateMaterial(ItemIronId, "Iron", output);
+        data.Items.Items.Add(iron);
+        c.Data = Pack(data);
+        return (true, new SerializedItems { Items = new List<SerializedItem>() }, new SerializedItems { Items = new List<SerializedItem> { iron } });
+    });
+
+    /// <summary>Merchant barter (TradeWithMerchant): consumes the items the client placed in the
+    /// YourTrade slot (ItemSlotTypes.YourTrade = 31) and grants the requested product stacks. The
+    /// client owns the value maths (PlayerOfferValue/TradePercentage); the server only requires a
+    /// non-empty offer and never trusts an unbounded stack count.</summary>
+    public (bool Applied, SerializedItems YourOfferItems, SerializedItems InventoryItems) TradeWithMerchant(
+        Guid owner, Guid characterId, int productDefinitionIntegerId, string productName, int stacks) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        data.Items ??= new SerializedItems { Items = new List<SerializedItem>() };
+        data.Items.Items ??= new List<SerializedItem>();
+        var offer = data.Items.Items
+            .Where(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.YourTrade).ToList();
+        if (offer.Count == 0)
+            return (false, new SerializedItems { Items = new List<SerializedItem>() },
+                new SerializedItems { Items = data.Items.Items.ToList() });
+
+        data.Items.Items.RemoveAll(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.YourTrade);
+        var product = CreateMaterial(productDefinitionIntegerId, productName, Math.Clamp(stacks, 1, 100));
+        data.Items.Items.Add(product);
+        c.Data = Pack(data);
+        return (true, new SerializedItems { Items = offer.Select(CloneItem).ToList() },
+            new SerializedItems { Items = data.Items.Items.ToList() });
+    });
+
     /// <summary>Allocated mastery ranks for a character (mastery integerId -> rank).</summary>
     public Dictionary<int, int> GetMasteryRanks(Guid owner, Guid id)
     {

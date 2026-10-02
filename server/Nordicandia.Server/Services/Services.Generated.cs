@@ -92,10 +92,8 @@ public sealed partial class InventoryServiceApiImpl : ServiceBase<IInventoryServ
     public MagicOnion.UnaryResult<SharedNet.Api.CraftRelicItemResponse> CraftRelicItem(SharedNet.Api.CraftRelicItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CraftRelicItemResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.CraftEssenceItemResponse> CraftEssenceItem(SharedNet.Api.CraftEssenceItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CraftEssenceItemResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.CraftEssenceItemResponse2> CraftEssenceItem2(SharedNet.Api.CraftEssenceItemRequest2 req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.CraftEssenceItemResponse2>());
-    public MagicOnion.UnaryResult<SharedNet.Api.DisassembleItemsResponse> DisassembleItems(SharedNet.Api.DisassembleItemsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.DisassembleItemsResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.MergePortalsResponse> MergePortals(SharedNet.Api.MergePortalsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.MergePortalsResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.LockItemsResponse> LockItems(SharedNet.Api.LockItemsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.LockItemsResponse>());
-    public MagicOnion.UnaryResult<SharedNet.Api.SmeltItemsResponse> SmeltItems(SharedNet.Api.SmeltItemsRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.SmeltItemsResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.SocketItemResponse> SocketItem(SharedNet.Api.SocketItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.SocketItemResponse>());
     public MagicOnion.UnaryResult<SharedNet.Api.AddSocketItemResponse> ItemAddNewSocket(SharedNet.Api.AddSocketItemRequest req) => UnaryResult.FromResult(Defaults.Create<SharedNet.Api.AddSocketItemResponse>());
 }

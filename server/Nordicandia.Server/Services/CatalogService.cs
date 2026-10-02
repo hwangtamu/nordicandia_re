@@ -251,8 +251,27 @@ public sealed class CatalogServiceApiImpl : ServiceBase<ICatalogServiceApi>, ICa
     };
 
     // The item-trade merchants are separate systems; keep their previous harmless empty responses.
+    /// <summary>Barter trade: consumes the items in the client's YourTrade slot and grants the
+    /// requested catalog product stacks. The client drives the value (PlayerOfferValue/
+    /// TradePercentage); the server validates the product and bounds the stack count.</summary>
     public UnaryResult<TradeWithMerchantResponse> TradeWithMerchant(TradeWithMerchantRequest req)
-        => UnaryResult.FromResult(Defaults.Create<TradeWithMerchantResponse>());
+    {
+        if (req == null || req.CharacterId is not { } characterId || characterId == Guid.Empty)
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Missing character"));
+        var catalog = Catalogs.Values.FirstOrDefault(c => c.Id == req.CatalogId);
+        var product = catalog?.Products.FirstOrDefault(p => p.ItemId == req.CatalogItemId);
+        if (product is null) throw new RpcException(new Status(StatusCode.NotFound, "Catalog item not found"));
+
+        var stacks = Math.Clamp(req.ExpectedNumProductStacks <= 0 ? 1 : req.ExpectedNumProductStacks, 1, 100);
+        var (applied, yourOffer, inventory) = GameStore.Instance.TradeWithMerchant(
+            Owner, characterId, product.DefinitionIntegerId, product.Name, stacks);
+        if (!applied) throw new RpcException(new Status(StatusCode.FailedPrecondition, "Put items in the trade window first"));
+        return UnaryResult.FromResult(new TradeWithMerchantResponse
+        {
+            YourOfferItems = yourOffer,
+            InventoryItems = inventory,
+        });
+    }
     public UnaryResult<GenerateSetItemMerchantOffersResponse> ViewSetItemMerchantOffers(GenerateSetItemMerchantOffersRequest req)
         => UnaryResult.FromResult(Defaults.Create<GenerateSetItemMerchantOffersResponse>());
     public UnaryResult<TradeWithSetItemMerchantResponse> TradeWithSetItemMerchant(TradeWithSetItemMerchantRequest req)

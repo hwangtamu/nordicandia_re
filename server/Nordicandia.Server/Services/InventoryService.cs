@@ -32,4 +32,34 @@ public sealed partial class InventoryServiceApiImpl
             req.ConsumedItem.ItemId, req.ConsumedItem.ConsumeStackAmount);
         return UnaryResult.FromResult(new ConsumeItemResponse { ConsumedStackAmount = consumed, ConsumedAllStacks = allStacks });
     }
+
+    /// <summary>Smelts the items the client placed in the Blacksmith source slot into Steel,
+    /// using the recovered essence->steel coefficients.</summary>
+    public UnaryResult<SmeltItemsResponse> SmeltItems(SmeltItemsRequest req)
+    {
+        if (req == null || req.CharacterId == Guid.Empty)
+            throw new Grpc.Core.RpcException(new Grpc.Core.Status(Grpc.Core.StatusCode.InvalidArgument, "Missing character"));
+        var (successful, sourceItems, result) = GameStore.Instance.SmeltItems(Owner, req.CharacterId);
+        return UnaryResult.FromResult(new SmeltItemsResponse
+        {
+            Successful = successful,
+            SourceItems = sourceItems,
+            SmeltingResult = result,
+        });
+    }
+
+    /// <summary>Disassembles the Blacksmith source items into Iron. The selection rule matches the
+    /// client (not unique, not a set item); the material amount is Provisional.</summary>
+    public UnaryResult<DisassembleItemsResponse> DisassembleItems(DisassembleItemsRequest req)
+    {
+        if (req == null || req.CharacterId == Guid.Empty)
+            throw new Grpc.Core.RpcException(new Grpc.Core.Status(Grpc.Core.StatusCode.InvalidArgument, "Missing character"));
+        var (successful, sourceItems, result) = GameStore.Instance.DisassembleItems(Owner, req.CharacterId);
+        return UnaryResult.FromResult(new DisassembleItemsResponse
+        {
+            Successful = successful,
+            SourceItems = sourceItems,
+            DisassembleResult = result,
+        });
+    }
 }

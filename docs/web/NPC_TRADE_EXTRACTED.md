@@ -16,9 +16,16 @@
 | `SmeltItems` | `CharacterId` | `SmeltItemsResponse` |
 | `SocketItem` / `ItemAddNewSocket` | （见 `dump.cs:58192/58223`） | — |
 
-服务端现状：`TradeWithMerchant`/`TradeWithSetItemMerchant`/`CraftRelicItem`/`CraftEssenceItem(2)`/
-`DisassembleItems`/`SmeltItems`/`SocketItem`/`ItemAddNewSocket` 仍是 **`Defaults.Create` 空桩**；
-只有 `BuyMerchantItem`（银币/蛋白石购买）与 `OfferingService`（祝福）已实现。
+服务端现状：**`SmeltItems`、`DisassembleItems`、`TradeWithMerchant` 已实现**（`GameStore` + `InventoryService`/
+`CatalogService`）；`BuyMerchantItem` 与 `OfferingService` 已实现。仍未实现：`TradeWithSetItemMerchant`、
+`CraftRelicItem`、`CraftEssenceItem(2)`、`SocketItem`、`ItemAddNewSocket`（需更多还原）。
+
+### 已实现的服务端逻辑
+- `SmeltItems`：读取 `Blacksmith_SourceItem`(23) 槽的物品，输出 = `floor(Σ 精华→钢系数)`（≥1），产出
+  `Steel`(589) 并把源物品消耗。
+- `DisassembleItems`：规则=非唯一/非套装（网页物品都满足）；消耗源物品产出 `Iron`(63)（产出量为 Provisional）。
+- `TradeWithMerchant`：消耗 `YourTrade`(31) 槽的报价物品，授予目录商品的 `ExpectedNumProductStacks` 栈
+  （数值校验由客户端负责，服务端只要求报价非空并封顶栈数）。
 
 ## 客户端流程
 

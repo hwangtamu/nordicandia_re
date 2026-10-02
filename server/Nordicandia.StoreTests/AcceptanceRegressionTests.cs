@@ -22,6 +22,7 @@ static class AcceptanceRegressionTests
         CombatVersionSurvivesRestart();
         WebCharacterGetsRecoveredRatings();
         EquippedWeaponFeedsWeaponDamage();
+        SmeltAndDisassembleConsumeSources();
         FailedCommandRetryKeepsFailure();
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
@@ -286,6 +287,43 @@ static class AcceptanceRegressionTests
             Check(instance.CritChance >= 0 && !double.IsNaN(instance.CritChance), "ratings: CritChance is resolved (0 without a weapon)");
             Check(instance.LifeMax > 0, "ratings: fresh character has recovered Life_Max");
             Check(instance.ManaMax > 0, "ratings: fresh character has recovered Mana_Max");
+        }
+    }
+
+    private static void SmeltAndDisassembleConsumeSources()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        var (store, registry, owner, characterId, _) = Create("r9", 100);
+        using (store)
+        {
+            var a = LootTable.CreateItem(new LootDrop(3, 5, 10, false, 1));
+            var b = LootTable.CreateItem(new LootDrop(3, 6, 10, false, 2));
+            a.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            b.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            store.GrantItems(owner, characterId, new List<SerializedItem> { a, b });
+
+            var (ok, _, result) = store.SmeltItems(owner, characterId);
+            Check(ok, "smelt: succeeds with source items");
+            Check(store.GetItems(owner, characterId).All(i => i.Slot != ItemSlotTypes.Blacksmith_SourceItem),
+                "smelt: the source items are consumed");
+            Check(result.Items.Count == 1 && result.Items[0].Name == "Steel" && result.Items[0].DefinitionIntegerId == 589,
+                "smelt: produces a Steel stack");
+
+            var c = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 3));
+            c.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            store.GrantItems(owner, characterId, new List<SerializedItem> { c });
+            var (dOk, _, dResult) = store.DisassembleItems(owner, characterId);
+            Check(dOk, "disassemble: succeeds with source items");
+            Check(dResult.Items.Count == 1 && dResult.Items[0].Name == "Iron", "disassemble: produces Iron");
+
+            var offer = LootTable.CreateItem(new LootDrop(3, 5, 10, false, 4));
+            offer.Slot = ItemSlotTypes.YourTrade;
+            store.GrantItems(owner, characterId, new List<SerializedItem> { offer });
+            var (tOk, tConsumed, tInventory) = store.TradeWithMerchant(owner, characterId, 606, "GreatElixirOfKnowledge", 2);
+            Check(tOk, "trade: applies with items in the YourTrade slot");
+            Check(tConsumed.Items.Count == 1, "trade: consumes the offered items");
+            Check(tInventory.Items.Any(i => i.DefinitionIntegerId == 606), "trade: grants the product stack");
+            Check(store.GetItems(owner, characterId).All(i => i.Slot != ItemSlotTypes.YourTrade), "trade: empties the trade window");
         }
     }
 
