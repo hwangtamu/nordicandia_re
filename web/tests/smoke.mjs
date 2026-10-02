@@ -17,7 +17,7 @@ import { chromium } from "playwright";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "..", "..");
 const url = process.env.WEB_URL ?? "http://127.0.0.1:5173/";
-const out = process.env.OUT ?? path.join(repoRoot, "tmp", "web-m1", "smoke.png");
+const out = process.env.OUT ?? path.join(repoRoot, "tmp", "web-m2", "smoke.png");
 
 function resolveChrome() {
   if (process.env.CHROME_PATH) return process.env.CHROME_PATH;
@@ -60,9 +60,21 @@ try {
   await page.waitForSelector("#boot-enter", { timeout: 15000 });
   await page.click("#boot-enter");
   await page.waitForSelector("#hud:not([hidden])", { timeout: 20000 });
-  await page.waitForTimeout(3000);
+  await page.waitForTimeout(6000);
   await page.click("#hud-skill");
-  await page.waitForTimeout(5000);
+  await page.waitForTimeout(8000);
+
+  // M2: open the bag, equip the first unequipped item, and confirm the server marked it.
+  await page.click("#hud-bag");
+  await page.waitForTimeout(1000);
+  await page.waitForSelector(".inv-row", { timeout: 10000 });
+  const equipButtons = await page.$$(".inv-row:not(.equipped) .inv-btn");
+  if (equipButtons.length > 0) {
+    await equipButtons[0].click();
+    await page.waitForTimeout(1500);
+  }
+  const equippedRows = await page.$$eval(".inv-row.equipped", (rows) => rows.length);
+  const lootRows = await page.$$eval(".loot-item", (rows) => rows.length);
 
   const status = await page.textContent("#boot-status").catch(() => "");
   const level = await page.textContent("#hud-level").catch(() => "");
@@ -70,16 +82,20 @@ try {
   const hp = await page.textContent("#hud-hp-text").catch(() => "");
   const kills = await page.textContent("#hud-kills").catch(() => "");
   const xp = await page.textContent("#hud-xp-text").catch(() => "");
+  const stats = await page.textContent("#hud-stats").catch(() => "");
   await page.screenshot({ path: out });
 
   const realErrors = errors.filter((e) => !e.includes("favicon"));
   console.log(`status: ${status}`);
   console.log(`level: ${level}  monsters: ${monsters}  hp: ${hp}  kills: ${kills}`);
   console.log(`xp: ${xp}`);
+  console.log(`stats: ${stats}`);
+  console.log(`equipped rows: ${equippedRows}  loot feed: ${lootRows}`);
   console.log(`screenshot: ${out}`);
   if (!level || monsters === "0") throw new Error("HUD did not report a populated world");
+  if (equippedRows < 1) throw new Error("M2 equip did not mark an item equipped");
   if (realErrors.length) throw new Error("browser errors:\n" + realErrors.join("\n"));
-  console.log("PASS m1 smoke");
+  console.log("PASS m2 smoke");
 } finally {
   await browser.close();
 }

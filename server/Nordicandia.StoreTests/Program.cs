@@ -49,3 +49,5 @@ ConsumeItemTests.Run();
 WebM0Tests.Run();
 
 CombatInstanceTests.Run();
+
+LootEquipmentTests.Run();

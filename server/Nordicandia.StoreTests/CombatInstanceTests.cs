@@ -68,32 +68,32 @@ static class CombatInstanceTests
 
             var registry = new CombatRegistry(store, clock);
             var initial = registry.Advance(owner, characterId);
-            Check(initial.Version > 0, "m1 command: state seeds a versioned instance");
+            Check(initial.Combat.Version > 0, "m1 command: state seeds a versioned instance");
 
-            var first = registry.ApplyCommand(owner, characterId, "cmd-skill-1", initial.Version,
+            var first = registry.ApplyCommand(owner, characterId, "cmd-skill-1", initial.Combat.Version,
                 new WebCommandRequest("skill"));
-            var duplicate = registry.ApplyCommand(owner, characterId, "cmd-skill-1", initial.Version,
+            var duplicate = registry.ApplyCommand(owner, characterId, "cmd-skill-1", initial.Combat.Version,
                 new WebCommandRequest("skill"));
             Check(first.Applied && first.Reason == "ok", "m1 command: skill applies");
             Check(duplicate.Reason == "duplicate", "m1 command: retried command id is not reapplied");
-            Check(duplicate.Snapshot.Version == first.Snapshot.Version, "m1 command: duplicate returns same version");
+            Check(duplicate.State.Combat.Version == first.State.Combat.Version, "m1 command: duplicate returns same version");
 
             // Advance the fake clock so the lazy simulation actually runs, then poll.
             clock.Advance(TimeSpan.FromSeconds(25));
             var progressed = registry.Advance(owner, characterId);
-            Check(progressed.Kills > 0, "m1 command: kills accrue over simulated time");
-            Check(progressed.Experience > 0, "m1 command: experience accrues");
+            Check(progressed.Combat.Kills > 0, "m1 command: kills accrue over simulated time");
+            Check(progressed.Combat.Experience > 0, "m1 command: experience accrues");
 
             var persisted = store.ProjectWebSnapshot(owner, characterId);
-            Check(Math.Abs(persisted.Experience - progressed.Experience) < 0.001, "m1 command: experience flushed to store");
+            Check(Math.Abs(persisted.Experience - progressed.Combat.Experience) < 0.001, "m1 command: experience flushed to store");
 
             // Simulate a server restart: drop in-memory combat and re-seed from the store.
             registry.Reset();
             var restored = registry.Advance(owner, characterId);
-            Check(restored.Experience >= progressed.Experience, "m1 command: refresh restores experience");
-            Check((int)persisted.MonsterKills == progressed.Kills, "m1 command: kill count persisted");
+            Check(restored.Combat.Experience >= progressed.Combat.Experience, "m1 command: refresh restores experience");
+            Check((int)persisted.MonsterKills == progressed.Combat.Kills, "m1 command: kill count persisted");
 
-            var stale = registry.ApplyCommand(owner, characterId, "cmd-future", restored.Version + 1000,
+            var stale = registry.ApplyCommand(owner, characterId, "cmd-future", restored.Combat.Version + 1000,
                 new WebCommandRequest("move", 1, 1));
             Check(!stale.Applied && stale.Reason == "future_version", "m1 command: future version rejected");
         }

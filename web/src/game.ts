@@ -24,7 +24,7 @@ import {
 } from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
 
-import { CombatState, MonsterState } from "./api";
+import { CombatEnvelope, CombatSnapshot, LootDrop, MonsterState } from "./api";
 import { ContentManifest, monsterIcon, raceIcon } from "./content";
 
 export interface HudState {
@@ -38,6 +38,9 @@ export interface HudState {
   opals: number;
   monsterKills: number;
   monstersAlive: number;
+  dungeonsCleared: number;
+  bossAlive: boolean;
+  bossKillsRemaining: number;
   autoMove: boolean;
   skillReady: boolean;
   message: string;
@@ -45,8 +48,9 @@ export interface HudState {
 
 export interface WorldHooks {
   onHud: (hud: HudState) => void;
+  onLoot: (loot: LootDrop[]) => void;
   /** Returns the latest authoritative state, or null while offline. */
-  pollState: () => Promise<CombatState | null>;
+  pollState: () => Promise<CombatEnvelope | null>;
   moveTo: (x: number, z: number) => void;
   castSkill: () => void;
 }
@@ -79,7 +83,7 @@ export class World {
   private ground: Nullable<Mesh> = null;
   private player!: Entity;
   private floaters: { el: HTMLDivElement; world: Vector3; born: number; ttl: number }[] = [];
-  private latest: CombatState | null = null;
+  private latest: CombatSnapshot | null = null;
   private version = 0;
   private pollTimer = 0;
   private polling = false;
@@ -126,11 +130,11 @@ export class World {
 
   private readonly playerRace: number;
 
-  async start(initial: CombatState): Promise<void> {
+  async start(initial: CombatEnvelope): Promise<void> {
     await this.loadKit();
     this.buildRoom();
     this.buildPlayer();
-    this.buildMonsters(initial);
+    this.buildMonsters(initial.combat);
     this.pushState(initial);
     this.bindInput();
     this.scene.onBeforeRenderObservable.add(() => this.update(this.engine.getDeltaTime() / 1000));
@@ -276,10 +280,14 @@ export class World {
     this.player = { root, target: Vector3.Zero(), lastHp: 0, alive: true, moving: false, stepPhase: 0, level: 1 };
   }
 
-  private buildMonsters(initial: CombatState): void {
+  private buildMonsters(initial: CombatSnapshot): void {
     for (const monster of initial.monsters) {
       const root = new TransformNode(`monster_${monster.index}`, this.scene);
-      this.addToken(root, monsterIcon(this.content, this.content.monsters[monster.index % this.content.monsters.length]), new Color3(0.9, 0.25, 0.2));
+      const icon = monster.isBoss
+        ? monsterIcon(this.content, this.content.monsters[0])
+        : monsterIcon(this.content, this.content.monsters[monster.index % this.content.monsters.length]);
+      this.addToken(root, icon, monster.isBoss ? new Color3(0.95, 0.75, 0.2) : new Color3(0.9, 0.25, 0.2));
+      if (monster.isBoss) root.scaling = new Vector3(1.6, 1.6, 1.6);
       this.monsterEntities.set(monster.index, {
         root,
         target: new Vector3(monster.x, 0, monster.z),
@@ -313,7 +321,8 @@ export class World {
     return this.version;
   }
 
-  pushState(state: CombatState): void {
+  pushState(envelope: CombatEnvelope): void {
+    const state = envelope.combat;
     // Commands return the latest snapshot; a slower in-flight poll must not roll it back.
     if (state.version < this.version) return;
     const previous = this.latest;
@@ -327,6 +336,13 @@ export class World {
     if (previous && previous.playerLevel < state.playerLevel) {
       this.say(`Level up! Level ${state.playerLevel}`);
     }
+    if (previous && previous.bossKillsRemaining > 0 && state.bossAlive && !previous.bossAlive) {
+      this.say("A boss has appeared!");
+    }
+    if (previous && previous.dungeonsCleared < state.dungeonsCleared) {
+      this.say(`Dungeon cleared! (${state.dungeonsCleared})`);
+    }
+    if (envelope.loot.length > 0) this.hooks.onLoot(envelope.loot);
 
     for (const monster of state.monsters) {
       const entity = this.monsterEntities.get(monster.index);
@@ -339,8 +355,7 @@ export class World {
           this.addFloater(entity.root.position, `-${Math.round(before.hp - monster.hp)}`, "#ffe9c7");
         }
         if (before && before.alive && !monster.alive) {
-          // Kill confirmed by the server.
-          this.addFloater(entity.root.position, "KILL", "#9be36b");
+          this.addFloater(entity.root.position, monster.isBoss ? "BOSS DOWN" : "KILL", "#9be36b");
         }
       }
       entity.lastHp = monster.hp;
@@ -457,6 +472,9 @@ export class World {
       opals: state.opals,
       monsterKills: state.kills,
       monstersAlive,
+      dungeonsCleared: state.dungeonsCleared,
+      bossAlive: state.bossAlive,
+      bossKillsRemaining: state.bossKillsRemaining,
       autoMove: this.autoMove,
       skillReady: state.skillCooldown <= 0,
       message: this.elapsed < this.messageUntil ? this.message : "",

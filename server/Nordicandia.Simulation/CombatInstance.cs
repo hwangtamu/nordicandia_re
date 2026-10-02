@@ -6,6 +6,7 @@ public sealed class CombatMonster
     public int Index { get; init; }
     public string Name { get; init; } = "Monster";
     public int Level { get; init; }
+    public bool IsBoss { get; init; }
     public double X { get; set; }
     public double Z { get; set; }
     public double Hp { get; set; }
@@ -22,9 +23,13 @@ public sealed class CombatMonster
     public double TargetZ { get; set; }
 }
 
+/// <summary>A drop rolled on a kill. Slot/rarity/level are resolved into a concrete item by
+/// the host's loot table so this layer stays content-free and deterministic.</summary>
+public readonly record struct LootDrop(int Slot, int Rarity, int Level, bool Boss);
+
 /// <summary>Read-only projection of an <see cref="CombatInstance"/> handed to callers/tests.</summary>
 public readonly record struct MonsterSnapshot(
-    int Index, string Name, int Level, double X, double Z, double Hp, double MaxHp, bool Alive);
+    int Index, string Name, int Level, bool IsBoss, double X, double Z, double Hp, double MaxHp, bool Alive);
 
 public readonly record struct CombatSnapshot(
     long Version,
@@ -38,6 +43,9 @@ public readonly record struct CombatSnapshot(
     int Opals,
     int Kills,
     double SkillCooldown,
+    int DungeonsCleared,
+    int BossKillsRemaining,
+    bool BossAlive,
     IReadOnlyList<MonsterSnapshot> Monsters);
 
 /// <summary>Result of a skill command.</summary>
@@ -48,8 +56,9 @@ public readonly record struct SkillOutcome(bool Cast, double Damage, int TargetI
 /// sequence of <see cref="Advance"/> calls is split into a fixed timestep, so the same
 /// inputs and seed always produce the same outcome regardless of caller frame rate.
 ///
-/// Progression is written back through the host (see the server's CombatRegistry); this
-/// class only tracks in-memory combat + the totals that need persisting.
+/// The dungeon loop: kill <see cref="BossKillGoal"/> trash monsters to summon a boss;
+/// killing the boss clears the dungeon, grants a reward, and starts the next cycle.
+/// Progression is written back through the host (see the server's CombatRegistry).
 /// </summary>
 public sealed class CombatInstance
 {
@@ -65,6 +74,19 @@ public sealed class CombatInstance
     public const double MonsterRespawnSeconds = 6.0;
     public const double PlayerRespawnSeconds = 3.0;
     public const double ArenaHalf = 20.0;
+    public const int BossKillGoal = 8;
+    public const int BossIndex = 100;
+    public const double TrashDropChance = 0.45;
+
+    private static readonly int[] DropSlots =
+    {
+        12, 13, // weapons
+        0, 2, 3, 4, 5, 6, 7, 8, 9, 1, // armor / neck
+        10, 11, // rings
+    };
+
+    // Provisional rarity weights (F..SS). Documented in docs/web/M2_STATUS.md.
+    private static readonly int[] RarityWeights = { 1000, 700, 450, 250, 120, 60, 25, 10, 4, 1, 1, 1 };
 
     private readonly CombatRandom rng;
     private readonly double playerSpeed = 6.5;
@@ -76,20 +98,23 @@ public sealed class CombatInstance
     private double attackCooldown;
     private double skillCooldown;
     private double playerRespawnTimer;
-    private double simulationTime;
+    private int dungeonKills;
+    private CombatMonster boss;
+    private readonly List<LootDrop> pendingDrops = new();
 
     public double PlayerX { get; private set; }
     public double PlayerZ { get; private set; }
     public double PlayerHp { get; private set; }
-    public double PlayerMaxHp { get; }
+    public double PlayerMaxHp { get; private set; }
     public double Offense { get; private set; }
-    public double Defense { get; }
-    public double Recovery { get; }
+    public double Defense { get; private set; }
+    public double Recovery { get; private set; }
     public int PlayerLevel { get; private set; }
     public double Experience { get; private set; }
     public int Silver { get; private set; }
     public int Opals { get; private set; }
     public int Kills { get; private set; }
+    public int DungeonsCleared { get; private set; }
     public long Version { get; private set; }
 
     public IReadOnlyList<CombatMonster> Monsters => monsters;
@@ -118,6 +143,26 @@ public sealed class CombatInstance
         rng = new CombatRandom(seed == 0 ? 0x9E3779B97F4A7C15UL : seed);
         SpawnMonsters();
         Version = 1;
+    }
+
+    /// <summary>Replace the player's combat stats (e.g. after equipping an item). Level stays
+    /// experience-derived and is not changed here.</summary>
+    public void UpdateStats(CombatantStats stats)
+    {
+        Offense = stats.Offense;
+        Defense = stats.Defense;
+        Recovery = stats.Recovery;
+        PlayerMaxHp = CombatModel.MaxHealth(new CombatantStats(Offense, Defense, Recovery, PlayerLevel));
+        PlayerHp = Math.Min(PlayerHp, PlayerMaxHp);
+        Version++;
+    }
+
+    public List<LootDrop> DrainDrops()
+    {
+        if (pendingDrops.Count == 0) return new List<LootDrop>();
+        var copy = new List<LootDrop>(pendingDrops);
+        pendingDrops.Clear();
+        return copy;
     }
 
     private int MonsterLevel => Math.Max(1, PlayerLevel + (int)(rng.NextDouble() * 3) - 1);
@@ -149,8 +194,30 @@ public sealed class CombatInstance
             Offense = 4 + level * 1.5,
             Defense = 2 + level * 1.5,
             Alive = alive,
-            AttackCooldown = rng.NextDouble() * 1.4,
+            AttackCooldown = rng.NextDouble() * 1.6,
             WanderTimer = rng.NextDouble() * 2,
+        };
+    }
+
+    private CombatMonster CreateBoss()
+    {
+        var level = PlayerLevel + 3;
+        return new CombatMonster
+        {
+            Index = BossIndex,
+            Name = "Frostbound Jarl",
+            Level = level,
+            IsBoss = true,
+            X = 0,
+            Z = -12,
+            MaxHp = 300 + level * 120,
+            Hp = 300 + level * 120,
+            Offense = 10 + level * 4,
+            Defense = 20 + level * 8,
+            Speed = 2.0,
+            AttackInterval = 2.0,
+            Alive = true,
+            AttackCooldown = 1.5,
         };
     }
 
@@ -170,7 +237,6 @@ public sealed class CombatInstance
 
     private void Step(double dt)
     {
-        simulationTime += dt;
         if (playerRespawnTimer > 0)
         {
             playerRespawnTimer -= dt;
@@ -185,6 +251,7 @@ public sealed class CombatInstance
 
         if (PlayerHp > 0) UpdatePlayer(dt);
         UpdateMonsters(dt);
+        if (boss is { Alive: true } && PlayerHp > 0) UpdateBoss(dt);
         Version++;
     }
 
@@ -200,10 +267,7 @@ public sealed class CombatInstance
             var dx = targetX - PlayerX;
             var dz = targetZ - PlayerZ;
             var distance = Math.Sqrt(dx * dx + dz * dz);
-            if (distance < 0.15)
-            {
-                hasTarget = false;
-            }
+            if (distance < 0.15) hasTarget = false;
             else
             {
                 var step = Math.Min(distance, playerSpeed * dt);
@@ -244,66 +308,69 @@ public sealed class CombatInstance
                 }
                 continue;
             }
+            ChaseAndAttack(monster, dt, onPlayerDeath: () => { playerRespawnTimer = PlayerRespawnSeconds; hasTarget = false; });
+        }
+    }
 
-            monster.AttackCooldown -= dt;
-            var dx = PlayerX - monster.X;
-            var dz = PlayerZ - monster.Z;
-            var distance = Math.Sqrt(dx * dx + dz * dz);
+    private void UpdateBoss(double dt)
+    {
+        ChaseAndAttack(boss, dt, onPlayerDeath: () => { playerRespawnTimer = PlayerRespawnSeconds; hasTarget = false; });
+    }
 
-            if (PlayerHp > 0 && distance <= MonsterAttackRange)
-            {
-                if (monster.AttackCooldown <= 0)
-                {
-                    monster.AttackCooldown = monster.AttackInterval;
-                    var hit = CombatModel.ResolveHit(
-                        new CombatantStats(monster.Offense, monster.Defense, 0, monster.Level),
-                        new CombatantStats(Offense, Defense, Recovery, PlayerLevel),
-                        new AttackProfile(1.0, 0.03, 1.5, 0.12),
-                        rng);
-                    PlayerHp = Math.Max(0, PlayerHp - hit.Damage);
-                    if (PlayerHp <= 0)
-                    {
-                        playerRespawnTimer = PlayerRespawnSeconds;
-                        hasTarget = false;
-                        break;
-                    }
-                }
-                continue;
-            }
+    private void ChaseAndAttack(CombatMonster monster, double dt, Action onPlayerDeath)
+    {
+        monster.AttackCooldown -= dt;
+        var dx = PlayerX - monster.X;
+        var dz = PlayerZ - monster.Z;
+        var distance = Math.Sqrt(dx * dx + dz * dz);
 
-            // Chase the player when aggroed, otherwise wander.
-            double goalX, goalZ;
-            if (PlayerHp > 0 && distance <= MonsterAggroRange)
+        if (distance <= MonsterAttackRange)
+        {
+            if (monster.AttackCooldown <= 0)
             {
-                goalX = PlayerX;
-                goalZ = PlayerZ;
+                monster.AttackCooldown = monster.AttackInterval;
+                var hit = CombatModel.ResolveHit(
+                    new CombatantStats(monster.Offense, monster.Defense, 0, monster.Level),
+                    new CombatantStats(Offense, Defense, Recovery, PlayerLevel),
+                    new AttackProfile(1.0, 0.03, 1.5, 0.12),
+                    rng);
+                PlayerHp = Math.Max(0, PlayerHp - hit.Damage);
+                if (PlayerHp <= 0) onPlayerDeath();
             }
-            else
-            {
-                monster.WanderTimer -= dt;
-                if (monster.WanderTimer <= 0)
-                {
-                    monster.WanderTimer = 2 + rng.NextDouble() * 3;
-                    var angle = rng.NextDouble() * Math.PI * 2;
-                    var radius = 4 + rng.NextDouble() * 12;
-                    monster.TargetX = Math.Cos(angle) * radius;
-                    monster.TargetZ = Math.Sin(angle) * radius;
-                }
-                goalX = monster.TargetX;
-                goalZ = monster.TargetZ;
-            }
+            return;
+        }
 
-            var gx = goalX - monster.X;
-            var gz = goalZ - monster.Z;
-            var gdist = Math.Sqrt(gx * gx + gz * gz);
-            if (gdist > 0.3)
+        double goalX, goalZ;
+        if (distance <= MonsterAggroRange)
+        {
+            goalX = PlayerX;
+            goalZ = PlayerZ;
+        }
+        else
+        {
+            monster.WanderTimer -= dt;
+            if (monster.WanderTimer <= 0)
             {
-                var step = Math.Min(gdist, monster.Speed * dt);
-                monster.X += gx / gdist * step;
-                monster.Z += gz / gdist * step;
-                monster.X = Math.Clamp(monster.X, -ArenaHalf, ArenaHalf);
-                monster.Z = Math.Clamp(monster.Z, -ArenaHalf, ArenaHalf);
+                monster.WanderTimer = 2 + rng.NextDouble() * 3;
+                var angle = rng.NextDouble() * Math.PI * 2;
+                var radius = 4 + rng.NextDouble() * 12;
+                monster.TargetX = Math.Cos(angle) * radius;
+                monster.TargetZ = Math.Sin(angle) * radius;
             }
+            goalX = monster.TargetX;
+            goalZ = monster.TargetZ;
+        }
+
+        var gx = goalX - monster.X;
+        var gz = goalZ - monster.Z;
+        var gdist = Math.Sqrt(gx * gx + gz * gz);
+        if (gdist > 0.3)
+        {
+            var step = Math.Min(gdist, monster.Speed * dt);
+            monster.X += gx / gdist * step;
+            monster.Z += gz / gdist * step;
+            monster.X = Math.Clamp(monster.X, -ArenaHalf, ArenaHalf);
+            monster.Z = Math.Clamp(monster.Z, -ArenaHalf, ArenaHalf);
         }
     }
 
@@ -311,12 +378,19 @@ public sealed class CombatInstance
     {
         CombatMonster best = null;
         var bestDistance = range;
+        if (boss is { Alive: true })
+        {
+            var bd = Math.Sqrt(Math.Pow(boss.X - PlayerX, 2) + Math.Pow(boss.Z - PlayerZ, 2));
+            if (bd < bestDistance)
+            {
+                bestDistance = bd;
+                best = boss;
+            }
+        }
         foreach (var monster in monsters)
         {
             if (!monster.Alive) continue;
-            var dx = monster.X - PlayerX;
-            var dz = monster.Z - PlayerZ;
-            var distance = Math.Sqrt(dx * dx + dz * dz);
+            var distance = Math.Sqrt(Math.Pow(monster.X - PlayerX, 2) + Math.Pow(monster.Z - PlayerZ, 2));
             if (distance < bestDistance)
             {
                 bestDistance = distance;
@@ -328,27 +402,70 @@ public sealed class CombatInstance
 
     private void DamageMonster(CombatMonster monster, double damage)
     {
+        if (!monster.Alive) return;
         monster.Hp -= damage;
         if (monster.Hp > 0) return;
         monster.Alive = false;
         monster.Hp = 0;
-        monster.RespawnTimer = MonsterRespawnSeconds;
         Kills++;
-        var gained = CombatModel.ExperienceReward(monster.Level);
-        Experience += gained;
-        var newLevel = Progression.LevelForExperience(Experience);
-        if (newLevel > PlayerLevel)
+        Experience += CombatModel.ExperienceReward(monster.Level);
+        LevelUpIfNeeded();
+
+        if (monster.IsBoss)
         {
-            var gainedLevels = newLevel - PlayerLevel;
-            PlayerLevel = newLevel;
-            Offense += 1.5 * gainedLevels;
-            PlayerHp = PlayerMaxHp;
+            boss = null;
+            DungeonsCleared++;
+            Silver += 50 + monster.Level * 25;
+            // Guaranteed reward: two items, at least B rarity.
+            pendingDrops.Add(RollDrop(monster.Level, minRarity: 4));
+            pendingDrops.Add(RollDrop(monster.Level + 2, minRarity: 5));
+            dungeonKills = 0;
+            return;
         }
+
+        if (rng.NextDouble() < TrashDropChance)
+            pendingDrops.Add(RollDrop(monster.Level, minRarity: 0));
+
+        dungeonKills++;
+        if (dungeonKills >= BossKillGoal && boss is null)
+            boss = CreateBoss();
+
+        monster.RespawnTimer = MonsterRespawnSeconds;
+    }
+
+    private LootDrop RollDrop(int level, int minRarity)
+    {
+        var slot = DropSlots[(int)(rng.NextDouble() * DropSlots.Length) % DropSlots.Length];
+        var rarity = RollRarity(minRarity);
+        return new LootDrop(slot, rarity, Math.Max(1, level), false);
+    }
+
+    private int RollRarity(int minRarity)
+    {
+        var total = 0;
+        for (var i = minRarity; i < RarityWeights.Length; i++) total += RarityWeights[i];
+        var roll = rng.NextDouble() * total;
+        for (var i = minRarity; i < RarityWeights.Length; i++)
+        {
+            roll -= RarityWeights[i];
+            if (roll <= 0) return i;
+        }
+        return RarityWeights.Length - 1;
+    }
+
+    private void LevelUpIfNeeded()
+    {
+        var newLevel = Progression.LevelForExperience(Experience);
+        if (newLevel <= PlayerLevel) return;
+        var gained = newLevel - PlayerLevel;
+        PlayerLevel = newLevel;
+        Offense += 1.5 * gained;
+        PlayerMaxHp = CombatModel.MaxHealth(new CombatantStats(Offense, Defense, Recovery, PlayerLevel));
+        PlayerHp = PlayerMaxHp;
     }
 
     // ------------------------------------------------------------------ commands
 
-    /// <summary>Move the player toward a point. Clamped to the arena.</summary>
     public void MoveTo(double x, double z)
     {
         targetX = Math.Clamp(x, -ArenaHalf, ArenaHalf);
@@ -357,7 +474,6 @@ public sealed class CombatInstance
         Version++;
     }
 
-    /// <summary>Instant skill on the nearest monster in range.</summary>
     public SkillOutcome UseSkill()
     {
         if (PlayerHp <= 0) return new SkillOutcome(false, 0, -1, "dead");
@@ -377,15 +493,18 @@ public sealed class CombatInstance
 
     public CombatSnapshot Snapshot()
     {
-        var rows = new List<MonsterSnapshot>(monsters.Count);
+        var rows = new List<MonsterSnapshot>(monsters.Count + 1);
         foreach (var monster in monsters)
-        {
-            rows.Add(new MonsterSnapshot(monster.Index, monster.Name, monster.Level,
-                monster.X, monster.Z, Math.Round(monster.Hp, 2), Math.Round(monster.MaxHp, 2), monster.Alive));
-        }
+            rows.Add(new MonsterSnapshot(monster.Index, monster.Name, monster.Level, false,
+                Math.Round(monster.X, 3), Math.Round(monster.Z, 3), Math.Round(monster.Hp, 2), Math.Round(monster.MaxHp, 2), monster.Alive));
+        if (boss is { Alive: true })
+            rows.Add(new MonsterSnapshot(boss.Index, boss.Name, boss.Level, true,
+                Math.Round(boss.X, 3), Math.Round(boss.Z, 3), Math.Round(boss.Hp, 2), Math.Round(boss.MaxHp, 2), true));
+
         return new CombatSnapshot(Version, Math.Round(PlayerX, 3), Math.Round(PlayerZ, 3),
             Math.Round(PlayerHp, 2), Math.Round(PlayerMaxHp, 2), PlayerLevel, Experience, Silver, Opals,
-            Kills, Math.Round(skillCooldown, 2), rows);
+            Kills, Math.Round(skillCooldown, 2), DungeonsCleared,
+            Math.Max(0, BossKillGoal - dungeonKills), boss is { Alive: true }, rows);
     }
 
     private void ClampToArena()

@@ -5,8 +5,9 @@
 > **进度（2026-10-02）**：
 > - M0 可行性验证完成：原作没有骨骼角色/怪物模型，战斗角色/怪物是 2D 头像 token，环境是 3D 网格；网页采用「3D 环境 + 头像 token」。
 > - M1 服务端权威战斗切片完成：固定步长模拟、命令幂等、经验落盘并在刷新后恢复，浏览器只发送意图并渲染状态。
+> - M2 装备与成长循环完成：掉落/背包/穿戴、Boss 与地下城循环、奖励不重复；装备实时改变战斗数值。
 >
-> 详见 [`docs/web/M0_STATUS.md`](web/M0_STATUS.md)、[`M0_ASSET_AUDIT.md`](web/M0_ASSET_AUDIT.md)、[`M0_RULES.md`](web/M0_RULES.md)、[`M1_STATUS.md`](web/M1_STATUS.md)。
+> 详见 [`docs/web/M0_STATUS.md`](web/M0_STATUS.md)、[`M0_ASSET_AUDIT.md`](web/M0_ASSET_AUDIT.md)、[`M0_RULES.md`](web/M0_RULES.md)、[`M1_STATUS.md`](web/M1_STATUS.md)、[`M2_STATUS.md`](web/M2_STATUS.md)。
 
 ## 1. 推荐路线
 
@@ -145,4 +146,6 @@ docs/web/                         机制可信度、素材审计与验收记录
 
 **M0 完成情况（2026-10-02）**：已导出 25 个地城环境 GLB 与 197 张头像 token，Babylon 客户端可运行俯视地城、点击移动、自动战斗与伤害飘字；`/api/web/v1` 已可登录、创建角色并读取权威快照；经验曲线为 ClientVerified，伤害为 Provisional 并附固定回归样本。M0 出口条件全部满足，未出现骨骼资源阻塞。
 
-**M1 完成情况（2026-10-02）**：服务端 `CombatInstance` 以固定步长权威模拟战斗，`/api/web/v1/characters/{id}/state` 与 `/commands` 支持唯一命令 ID 与预期版本、重复请求返回原结果；经验/击杀原子落盘并在刷新后恢复；浏览器改为发送意图、渲染并插值服务端状态。M1 出口条件全部满足。下一步 M2 装备与成长循环。
+**M1 完成情况（2026-10-02）**：服务端 `CombatInstance` 以固定步长权威模拟战斗，`/api/web/v1/characters/{id}/state` 与 `/commands` 支持唯一命令 ID 与预期版本、重复请求返回原结果；经验/击杀原子落盘并在刷新后恢复；浏览器改为发送意图、渲染并插值服务端状态。M1 出口条件全部满足。
+
+**M2 完成情况（2026-10-02）**：击杀掉落并持久化物品、背包/穿戴 UI、装备实时改变 Offense/Defense/Recovery；8 杀召唤 Boss，击杀後清除地下城并给保底奖励；掉落与命令幂等。M2 出口条件全部满足。下一步 M3 持久化与特殊流程。

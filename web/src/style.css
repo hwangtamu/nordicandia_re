@@ -130,6 +130,48 @@ html, body, #app {
 .skill.alt { border-color: rgba(90, 140, 180, 0.4); }
 .skill.disabled { opacity: 0.5; cursor: default; }
 
+.hidden { display: none !important; }
+
+.stats { margin-top: 6px; font-size: 11px; color: #9fb2b6; }
+.hud-top-right .boss { color: #e0b45a; font-weight: 700; }
+
+.loot-feed {
+  position: absolute; top: 120px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 12px; text-shadow: 0 1px 2px #000;
+}
+.loot-item { transition: opacity 0.9s; opacity: 0.95; }
+.loot-item.fade { opacity: 0; }
+
+.inventory {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: min(520px, 94vw); max-height: 68vh;
+  background: var(--panel); border: 1px solid var(--panel-border); border-radius: 10px;
+  display: flex; flex-direction: column; pointer-events: auto;
+}
+.inv-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px; border-bottom: 1px solid rgba(201, 162, 74, 0.2);
+  font-weight: 700; color: var(--gold);
+}
+.icon-btn {
+  background: none; border: none; color: #cdd6d8; font-size: 18px; cursor: pointer; line-height: 1;
+}
+.inv-items { overflow-y: auto; padding: 6px; }
+.inv-empty { padding: 20px; text-align: center; color: #8fa3a8; font-size: 13px; }
+.inv-row {
+  display: grid; grid-template-columns: 34px 1fr auto auto; align-items: center; gap: 8px;
+  padding: 7px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.inv-row.equipped { background: rgba(201, 162, 74, 0.09); }
+.inv-name { font-size: 13px; }
+.inv-stats { font-size: 11px; color: #9fb2b6; }
+.inv-btn {
+  background: linear-gradient(#3a5a24, #24400f); border: 1px solid #6f9a3f; border-radius: 5px;
+  color: #eaf5dc; font-size: 12px; padding: 4px 10px; cursor: pointer;
+}
+.inv-row.equipped .inv-btn { background: linear-gradient(#5a3a24, #40240f); border-color: #9a6f3f; }
+
 .toast {
   position: absolute; bottom: 82px; left: 50%; transform: translateX(-50%);
   padding: 6px 14px;

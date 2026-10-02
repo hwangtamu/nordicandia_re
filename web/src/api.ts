@@ -48,6 +48,7 @@ export interface MonsterState {
   index: number;
   name: string;
   level: number;
+  isBoss: boolean;
   x: number;
   z: number;
   hp: number;
@@ -55,7 +56,7 @@ export interface MonsterState {
   alive: boolean;
 }
 
-export interface CombatState {
+export interface CombatSnapshot {
   version: number;
   playerX: number;
   playerZ: number;
@@ -67,7 +68,45 @@ export interface CombatState {
   opals: number;
   kills: number;
   skillCooldown: number;
+  dungeonsCleared: number;
+  bossKillsRemaining: number;
+  bossAlive: boolean;
   monsters: MonsterState[];
+}
+
+export interface LootDrop {
+  name: string;
+  slot: number;
+  rarity: number;
+  level: number;
+  offense: number;
+  defense: number;
+  recovery: number;
+}
+
+/** Authoritative combat snapshot plus loot generated since the previous call. */
+export interface CombatEnvelope {
+  combat: CombatSnapshot;
+  loot: LootDrop[];
+}
+
+export interface WebItemDetail {
+  id: string;
+  name: string;
+  slot: number;
+  rarity: number;
+  equipSlot: number;
+  equipped: boolean;
+  offense: number;
+  defense: number;
+  recovery: number;
+}
+
+export interface WebInventory {
+  items: WebItemDetail[];
+  offense: number;
+  defense: number;
+  recovery: number;
 }
 
 let commandCounter = 0;
@@ -128,19 +167,27 @@ export const api = {
 
   snapshot: (characterId: string) => request<Snapshot>(`/characters/${characterId}/snapshot`),
 
-  state: (characterId: string) => request<CombatState>(`/characters/${characterId}/state`),
+  state: (characterId: string) => request<CombatEnvelope>(`/characters/${characterId}/state`),
+
+  inventory: (characterId: string) => request<WebInventory>(`/characters/${characterId}/inventory`),
 
   command: (
     characterId: string,
     commandId: string,
     expectedVersion: number,
-    type: "move" | "skill",
-    x = 0,
-    z = 0,
+    type: "move" | "skill" | "equip" | "unequip",
+    options: { x?: number; z?: number; itemId?: string } = {},
   ) =>
-    request<{ applied: boolean; reason: string; snapshot: CombatState }>(`/characters/${characterId}/commands`, {
+    request<{ applied: boolean; reason: string; state: CombatEnvelope }>(`/characters/${characterId}/commands`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ commandId, expectedVersion, type, x, z }),
+      body: JSON.stringify({
+        commandId,
+        expectedVersion,
+        type,
+        x: options.x ?? 0,
+        z: options.z ?? 0,
+        itemId: options.itemId ?? "00000000-0000-0000-0000-000000000000",
+      }),
     }),
 };

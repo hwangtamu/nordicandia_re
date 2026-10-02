@@ -10,6 +10,22 @@ public sealed record WebCharacterSummary(
 
 public sealed record WebItem(Guid Id, string Name, int Slot, int DefinitionIntegerId, int Rarity);
 
+/// <summary>Inventory row with resolved equipment stats.</summary>
+public sealed record WebItemDetail(
+    Guid Id, string Name, int Slot, int Rarity, int EquipSlot, bool Equipped,
+    double Offense, double Defense, double Recovery);
+
+public sealed record WebInventory(
+    IReadOnlyList<WebItemDetail> Items, double Offense, double Defense, double Recovery);
+
+/// <summary>A drop rolled by combat, resolved into display/testable stats.</summary>
+public sealed record LootDropView(
+    string Name, int Slot, int Rarity, int Level, double Offense, double Defense, double Recovery);
+
+/// <summary>Authoritative combat snapshot plus the loot generated since the previous call.</summary>
+public sealed record WebCombatState(
+    Nordicandia.Simulation.CombatSnapshot Combat, IReadOnlyList<LootDropView> Loot);
+
 /// <summary>
 /// Compact, authoritative snapshot for the web client. Deliberately not the full internal
 /// character blob: only the fields the browser needs to render and to reconcile.

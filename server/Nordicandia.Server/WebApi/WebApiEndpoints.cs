@@ -156,10 +156,19 @@ public static class WebApiEndpoints
             if (envelope is null)
                 return Results.BadRequest(new { error = "invalid_command" });
 
-            var command = new WebCommandRequest(envelope.Type, envelope.X, envelope.Z);
-            var (applied, reason, snapshot) = CombatRegistry.Instance.ApplyCommand(
+            var command = new WebCommandRequest(envelope.Type, envelope.X, envelope.Z, envelope.ItemId);
+            var (applied, reason, state) = CombatRegistry.Instance.ApplyCommand(
                 user.UserId, id, envelope.CommandId, envelope.ExpectedVersion, command);
-            return Results.Ok(new { applied, reason, snapshot });
+            return Results.Ok(new { applied, reason, state });
+        });
+
+        // Inventory + effective equipment stats (does not advance combat).
+        group.MapGet("/characters/{id:guid}/inventory", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(CombatRegistry.Instance.Inventory(user.UserId, id));
         });
     }
 
@@ -217,4 +226,5 @@ public sealed record DevSessionRequest(string Name);
 
 public sealed record WebCreateCharacterRequest(string DisplayName, int Class, int Race, int GameMode);
 
-public sealed record WebCommandEnvelope(string CommandId, long ExpectedVersion, string Type, double X = 0, double Z = 0);
+public sealed record WebCommandEnvelope(
+    string CommandId, long ExpectedVersion, string Type, double X = 0, double Z = 0, Guid ItemId = default);

@@ -1,5 +1,8 @@
+using Game;
 using Nordicandia.Server.State;
 using Nordicandia.Simulation;
+using SharedNet.Api;
+using SharedNet.Constants.Game;
 
 namespace Nordicandia.Server.WebApi;
 
@@ -9,8 +12,9 @@ namespace Nordicandia.Server.WebApi;
 /// each request (no background timer needed), and flushed back through
 /// <see cref="GameStore.SaveRealtimeProgress"/> so experience survives refresh/restart.
 ///
-/// Command idempotency lives here: each processed command id maps to the snapshot that was
-/// returned, so a retried request replays the original result instead of double-applying.
+/// Loot is generated on the server when a monster dies, persisted through
+/// <see cref="GameStore.GrantItems"/>, and handed to the caller once. Commands carry a
+/// unique command id; a retry replays the original snapshot instead of double-applying.
 /// </summary>
 public sealed class CombatRegistry
 {
@@ -35,57 +39,65 @@ public sealed class CombatRegistry
     {
         public CombatInstance Instance = null!;
         public DateTime LastAdvanceUtc;
+        // Equipment bonus currently folded into the instance, so a recompute can swap it
+        // out without discarding the level-up growth that lives only in the instance.
+        public double EquipOffense;
+        public double EquipDefense;
+        public double EquipRecovery;
         public double FlushedExperience;
         public int FlushedSilver;
         public int FlushedOpals;
         public int FlushedKills;
-        public readonly Dictionary<string, CombatSnapshot> ProcessedCommands = new();
+        public readonly List<LootDropView> RecentLoot = new();
+        public readonly Dictionary<string, WebCombatState> ProcessedCommands = new();
         public readonly Queue<string> CommandOrder = new();
     }
 
-    /// <summary>Get (or lazily create) the character's instance, seeded from persisted state.</summary>
     public CombatInstance GetOrCreate(Guid owner, Guid characterId)
     {
         lock (gate)
         {
             if (entries.TryGetValue(characterId, out var existing)) return existing.Instance;
             var persisted = store.ProjectWebSnapshot(owner, characterId);
-            var stats = CombatantStats.FromRealtime(persisted.Offense, persisted.Defense, persisted.Recovery, (int)persisted.Level);
-            // Stable seed from the character id keeps fixed scenarios reproducible.
-            var seed = (ulong)characterId.GetHashCode() << 32 | (uint)characterId.GetHashCode();
+            var items = store.GetItems(owner, characterId);
+            var (equipOffense, equipDefense, equipRecovery) = LootTable.EquipmentBonus(items);
+            var stats = CombatantStats.FromRealtime(
+                persisted.Offense + equipOffense,
+                persisted.Defense + equipDefense,
+                persisted.Recovery + equipRecovery,
+                (int)persisted.Level);
+            var seed = (ulong)(uint)characterId.GetHashCode() << 32 | (uint)characterId.GetHashCode();
             var instance = new CombatInstance(stats, persisted.Experience, persisted.Silver, persisted.Opals,
                 (int)persisted.MonsterKills, seed);
-            var entry = new Entry
+            entries[characterId] = new Entry
             {
                 Instance = instance,
                 LastAdvanceUtc = Now,
+                EquipOffense = equipOffense,
+                EquipDefense = equipDefense,
+                EquipRecovery = equipRecovery,
                 FlushedExperience = persisted.Experience,
                 FlushedSilver = persisted.Silver,
                 FlushedOpals = persisted.Opals,
                 FlushedKills = (int)persisted.MonsterKills,
             };
-            entries[characterId] = entry;
             return instance;
         }
     }
 
-    /// <summary>Advance the instance by the real elapsed time since the last request, then persist changes.</summary>
-    public CombatSnapshot Advance(Guid owner, Guid characterId)
+    public WebCombatState Advance(Guid owner, Guid characterId)
     {
         lock (gate)
         {
             var entry = GetEntry(owner, characterId);
-            var now = Now;
-            var delta = (now - entry.LastAdvanceUtc).TotalSeconds;
-            entry.LastAdvanceUtc = now;
-            entry.Instance.Advance(delta);
+            AdvanceLocked(entry);
+            CollectLootLocked(owner, characterId, entry);
             FlushLocked(owner, characterId, entry);
-            return entry.Instance.Snapshot();
+            return TakeState(entry);
         }
     }
 
-    /// <summary>Apply a command exactly once. Returns the snapshot to send back.</summary>
-    public (bool Applied, string Reason, CombatSnapshot Snapshot) ApplyCommand(
+    public (bool Applied, string Reason, WebCombatState State) ApplyCommand(
         Guid owner, Guid characterId, string commandId, long expectedVersion, WebCommandRequest command)
     {
         lock (gate)
@@ -94,7 +106,7 @@ public sealed class CombatRegistry
             if (!string.IsNullOrEmpty(commandId) && entry.ProcessedCommands.TryGetValue(commandId, out var previous))
                 return (true, "duplicate", previous);
             if (expectedVersion > entry.Instance.Version)
-                return (false, "future_version", entry.Instance.Snapshot());
+                return (false, "future_version", TakeState(entry));
 
             AdvanceLocked(entry);
 
@@ -110,25 +122,74 @@ public sealed class CombatRegistry
                     applied = outcome.Cast;
                     reason = outcome.Reason;
                     break;
+                case "equip":
+                    (applied, reason) = Equip(owner, characterId, entry, command.ItemId, equip: true);
+                    break;
+                case "unequip":
+                    (applied, reason) = Equip(owner, characterId, entry, command.ItemId, equip: false);
+                    break;
                 default:
                     applied = false;
                     reason = "unknown_type";
                     break;
             }
 
-            // A short advance so the immediate result already reflects movement/attacks.
             entry.Instance.Advance(CombatInstance.StepSeconds);
+            CollectLootLocked(owner, characterId, entry);
             FlushLocked(owner, characterId, entry);
-            var snapshot = entry.Instance.Snapshot();
-            RememberCommand(entry, commandId, snapshot);
-            return (applied, reason, snapshot);
+            var state = TakeState(entry);
+            RememberCommand(entry, commandId, state);
+            return (applied, reason, state);
         }
+    }
+
+    /// <summary>Read the character's items with computed equipment stats (does not advance combat).</summary>
+    public WebInventory Inventory(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            var items = store.GetItems(owner, characterId);
+            var rows = items.Where(i => i != null).Select(ToItemDetail).ToList();
+            return new WebInventory(rows, entry.Instance.Offense, entry.Instance.Defense, entry.Instance.Recovery);
+        }
+    }
+
+    private (bool, string) Equip(Guid owner, Guid characterId, Entry entry, Guid itemId, bool equip)
+    {
+        var item = store.GetItems(owner, characterId).FirstOrDefault(i => i != null && i.Id == itemId);
+        if (item is null) return (false, "no_item");
+        var target = ItemSlotTypes.Inventory;
+        if (equip)
+        {
+            var slot = LootTable.EquipSlotOf(item);
+            if (slot is < 0 or > 13) return (false, "not_equippable");
+            target = (ItemSlotTypes)slot;
+        }
+        store.ApplyItemOperations(owner, characterId, new List<ItemOperationEntry>
+        {
+            new MoveItemOperationEntry { ItemId = itemId, ToSlot = target, ToLocation = item.Location },
+        });
+        RecomputeStats(owner, characterId, entry);
+        return (true, "ok");
+    }
+
+    private void RecomputeStats(Guid owner, Guid characterId, Entry entry)
+    {
+        var (offense, defense, recovery) = LootTable.EquipmentBonus(store.GetItems(owner, characterId));
+        entry.Instance.UpdateStats(CombatantStats.FromRealtime(
+            entry.Instance.Offense - entry.EquipOffense + offense,
+            entry.Instance.Defense - entry.EquipDefense + defense,
+            entry.Instance.Recovery - entry.EquipRecovery + recovery,
+            entry.Instance.PlayerLevel));
+        entry.EquipOffense = offense;
+        entry.EquipDefense = defense;
+        entry.EquipRecovery = recovery;
     }
 
     private Entry GetEntry(Guid owner, Guid characterId)
     {
         if (entries.TryGetValue(characterId, out var entry)) return entry;
-        // Reuse GetOrCreate's seeding logic by calling it then looking up.
         GetOrCreate(owner, characterId);
         return entries[characterId];
     }
@@ -138,6 +199,22 @@ public sealed class CombatRegistry
         var now = Now;
         entry.Instance.Advance((now - entry.LastAdvanceUtc).TotalSeconds);
         entry.LastAdvanceUtc = now;
+    }
+
+    private void CollectLootLocked(Guid owner, Guid characterId, Entry entry)
+    {
+        var drops = entry.Instance.DrainDrops();
+        if (drops.Count == 0) return;
+        var items = drops.Select(LootTable.CreateItem).ToList();
+        store.GrantItems(owner, characterId, items);
+        foreach (var item in items)
+        {
+            var slot = LootTable.EquipSlotOf(item);
+            entry.RecentLoot.Add(new LootDropView(item.Name, slot, (int)item.BaseRarity, 0,
+                LootTable.AttributeOf(item, LootTable.AttrOffense),
+                LootTable.AttributeOf(item, LootTable.AttrDefense),
+                LootTable.AttributeOf(item, LootTable.AttrRecovery)));
+        }
     }
 
     private void FlushLocked(Guid owner, Guid characterId, Entry entry)
@@ -156,11 +233,33 @@ public sealed class CombatRegistry
         entry.FlushedKills = instance.Kills;
     }
 
-    private static void RememberCommand(Entry entry, string commandId, CombatSnapshot snapshot)
+    private static WebCombatState TakeState(Entry entry)
+    {
+        var loot = entry.RecentLoot.ToList();
+        entry.RecentLoot.Clear();
+        return new WebCombatState(entry.Instance.Snapshot(), loot);
+    }
+
+    private static WebItemDetail ToItemDetail(SerializedItem item)
+    {
+        var equipped = LootTable.IsEquipped(item);
+        return new WebItemDetail(
+            item.Id,
+            item.Name,
+            (int)item.Slot,
+            (int)item.BaseRarity,
+            LootTable.EquipSlotOf(item),
+            equipped,
+            LootTable.AttributeOf(item, LootTable.AttrOffense),
+            LootTable.AttributeOf(item, LootTable.AttrDefense),
+            LootTable.AttributeOf(item, LootTable.AttrRecovery));
+    }
+
+    private static void RememberCommand(Entry entry, string commandId, WebCombatState state)
     {
         if (string.IsNullOrEmpty(commandId)) return;
         if (entry.ProcessedCommands.ContainsKey(commandId)) return;
-        entry.ProcessedCommands[commandId] = snapshot;
+        entry.ProcessedCommands[commandId] = state;
         entry.CommandOrder.Enqueue(commandId);
         while (entry.CommandOrder.Count > MaxRememberedCommands)
         {
@@ -176,4 +275,4 @@ public sealed class CombatRegistry
     }
 }
 
-public sealed record WebCommandRequest(string Type, double X = 0, double Z = 0);
+public sealed record WebCommandRequest(string Type, double X = 0, double Z = 0, Guid ItemId = default);
