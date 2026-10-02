@@ -63,6 +63,22 @@ CalculateChance(chance) = chance > 0 && Shared.Core.Rand.Value <= chance
 
 网页端 `CombatModel.ChanceToHit` / `RollChance` / `ResolveHit` 已按此实现（先判定命中，再判定暴击，再做减伤与浮动）。
 
+## 1c. 闪避 / 格挡 / 被命中（ClientVerified）
+
+`HitPayload` 的其余布尔字段同样走 `CalculateChance`：
+
+```
+IsDodged  = CalculateChance( Dodge_Chance_Total | Dodge_Chance_Spell_Total )
+IsBlocked = CalculateChance( Block_Chance_Total | Block_Chance_Spell_Total )
+IsEvaded  = 攻击方命中失败（见 CalculateChanceToHit）
+IsCriticalHit = CalculateChance( Crit_Chance_{CurrentHand|AttackSpell}_Total * CritChanceMultiplier )
+```
+
+（属性偏移 `0x1310/0x1338`（闪避）、`0x1278/0x1298`（格挡）已从反汇编确认。）
+格挡后的伤害乘 `Blocked_Damage_Taken_Multiplier_Total`。
+网页端暂未接入闪避/格挡，因为网页角色的属性表只有 Offense/Defense/Recovery（缺少闪避/格挡来源）；
+接入需要先还原 `Character.CalculateCombatAttributes` 的完整属性合成。
+
 ## 2. 武器伤害合成（ClientVerified，来自属性脚本）
 
 物理武器伤害（每手）：
