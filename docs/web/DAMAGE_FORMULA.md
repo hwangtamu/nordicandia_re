@@ -6,6 +6,24 @@
 
 ## 1. 减伤（ClientVerified）
 
+反汇编 `Game.Calculator.CalculatePhysicalDamageReduction(double armor, double damage, double bonus, double cap)`：
+
+```asm
+mov x8, #0x4049000000000000   ; 50.0
+fmul d0, damage, d0           ; damage * 50
+fadd d0, d0, armor            ; armor + 50*damage
+fdiv d0, armor, d0            ; armor / (armor + 50*damage)
+fadd d0, d0, bonus
+b Math.Min                    ; min(result, cap)
+```
+
+```
+CalculatePhysicalDamageReduction(armor, damage, bonus, cap)
+    = min( armor / (armor + 50 * damage) + bonus, cap )
+```
+
+`cap` 取自 `Physical_Damage_Reduction_Max`（默认 0，由难度/区域数据设置）。网页端 `CombatModel.PhysicalDamageReduction` 已按此实现，默认 cap 0.9。
+
 反汇编 `GameCalculator.ApplyDamageReduction(double reduction, double damage)`：
 
 ```asm

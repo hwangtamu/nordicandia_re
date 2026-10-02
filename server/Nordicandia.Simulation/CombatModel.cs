@@ -67,22 +67,38 @@ public static class CombatModel
     public static double MaxHealth(CombatantStats stats, RuleConfidence confidence = RuleConfidence.Provisional)
         => 150.0 + 50.0 * Math.Max(1, stats.Level);
 
+    /// <summary>Constant from <c>Game.Calculator.CalculatePhysicalDamageReduction</c>
+    /// (the client computes <c>armor / (armor + 50 * damage)</c>).</summary>
+    public const double ReductionConstant = 50.0;
+
+    /// <summary>Assumed cap for <c>Physical_Damage_Reduction_Max</c> when the attribute is unset.
+    /// (The client attribute defaults to 0 and is set through difficulty/area data.)</summary>
+    public const double DefaultReductionCap = 0.9;
+
     /// <summary>
-    /// Provisional mitigation: armor scales against an attacker-level baseline so low
-    /// level attackers are not fully walled by end-game defense.
+    /// ClientVerified port of <c>Game.Calculator.CalculatePhysicalDamageReduction(armor, damage,
+    /// damageReductionBonus, cap)</c>: <c>min(armor / (armor + 50*damage) + bonus, cap)</c>.
+    /// The client's second argument is the incoming weapon damage, so armour mitigates
+    /// proportionally less against large hits.
     /// </summary>
-    public static double Mitigation(double defense, int attackerLevel)
+    public static double PhysicalDamageReduction(double armor, double damage, double bonus = 0.0,
+        double cap = DefaultReductionCap)
     {
-        var scale = 50.0 + 10.0 * Math.Max(1, attackerLevel);
-        var d = Math.Max(0, defense);
-        return d / (d + scale);
+        var a = Math.Max(0.0, armor);
+        var d = Math.Max(1e-6, damage);
+        return Math.Min(a / (a + ReductionConstant * d) + bonus, cap);
     }
+
+    /// <summary>Backwards-compatible alias used by older callers; now delegates to the
+    /// recovered formula with <paramref name="defense"/> as armour and a reference damage.</summary>
+    public static double Mitigation(double defense, int attackerLevel)
+        => PhysicalDamageReduction(defense, Math.Max(1, attackerLevel));
 
     /// <summary>Expected damage before variance, useful for balancing and tests.</summary>
     public static double ExpectedDamage(CombatantStats attacker, CombatantStats defender, AttackProfile profile)
     {
         var raw = Math.Max(0, attacker.Offense) * Math.Max(0, profile.SkillMultiplier);
-        var mitigated = raw * (1.0 - Mitigation(defender.Defense, attacker.Level));
+        var mitigated = raw * (1.0 - PhysicalDamageReduction(defender.Defense, raw));
         var critFactor = 1.0 + profile.CritChance * (Math.Max(1.0, profile.CritMultiplier) - 1.0);
         return Math.Max(1.0, mitigated) * critFactor;
     }
@@ -98,7 +114,7 @@ public static class CombatModel
         CombatRandom rng)
     {
         var raw = Math.Max(0, attacker.Offense) * Math.Max(0, profile.SkillMultiplier);
-        var mitigated = raw * (1.0 - Mitigation(defender.Defense, attacker.Level));
+        var mitigated = raw * (1.0 - PhysicalDamageReduction(defender.Defense, raw));
         var variance = 1.0 + (rng.NextDouble() * 2.0 - 1.0) * Math.Max(0, profile.Variance);
         var critical = rng.NextDouble() < Math.Clamp(profile.CritChance, 0.0, 1.0);
         var critFactor = critical ? Math.Max(1.0, profile.CritMultiplier) : 1.0;

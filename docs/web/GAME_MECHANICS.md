@@ -49,7 +49,7 @@ block/dodge/resistance 均有对应的 Total 公式（见 attribute_scripts.json
 
 | 机制 | 现状 | 需做什么 |
 |---|---|---|
-| **护甲→减伤曲线** | 只有 `ApplyDamageReduction` 的应用方式；曲线被内联（无直接调用点） | 反汇编引用 `Physical_Damage_Reduction_Max` 的伤害结算函数 |
+| ~~护甲→减伤曲线~~ | ✅ 已还原 `CalculatePhysicalDamageReduction = min(armor/(armor+50·damage)+bonus, cap)` | — |
 | **命中/暴击/格挡/闪避判定** | 属性公式已还原，判定与随机范围未还原 | 反汇编 `HitPayload`/`Actor.ApplyDamage` 的 RNG 与阈值 |
 | **元素抗性与穿透** | 属性 getter 已定位，应用未还原 | 反汇编 `InternalApplyDamageConversion` |
 | **怪物属性/AI** | 5 类原型为占位 | 反汇编 `Monster.CalculateAttributes` / `Brain` |

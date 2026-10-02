@@ -21,6 +21,19 @@ static class AcceptanceRegressionTests
         RegistrationPolicyIsShared();
         FreshCharacterClearsBoss();
         SkillSemanticsMatchClientClasses();
+        DamageReductionMatchesClient();
+    }
+
+    private static void DamageReductionMatchesClient()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        // Game.Calculator.CalculatePhysicalDamageReduction: armor/(armor + 50*damage)
+        Check(Math.Abs(Nordicandia.Simulation.CombatModel.PhysicalDamageReduction(100, 1) - 100.0 / 150.0) < 1e-9,
+            "formula: reduction = armor/(armor + 50*damage)");
+        Check(Math.Abs(Nordicandia.Simulation.CombatModel.PhysicalDamageReduction(100, 0.01)) <= 0.9,
+            "formula: reduction is capped");
+        Check(Math.Abs(Nordicandia.Simulation.CombatModel.PhysicalDamageReduction(0, 100)) < 1e-9,
+            "formula: no armor -> no reduction");
     }
 
     private static void SkillSemanticsMatchClientClasses()
