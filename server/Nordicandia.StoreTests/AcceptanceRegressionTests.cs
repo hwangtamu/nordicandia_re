@@ -41,6 +41,8 @@ static class AcceptanceRegressionTests
             "resistance: reduction above 1 floors at 0");
         Check(Math.Abs(Nordicandia.Simulation.CombatModel.EffectiveElementalDamage(100, 1.5)) < 1e-9,
             "resistance: elemental resistance is capped at 1.0");
+        Check(Math.Abs(Nordicandia.Simulation.CombatModel.EffectiveElementalDamage(100, -0.5) - 150) < 1e-9,
+            "resistance: a negative resistance (weakness) increases damage");
 
         // Full bundle: physical through armour, each element through its resistance.
         var bundle = new Nordicandia.Simulation.DamageBundle(Physical: 100, Fire: 100);
@@ -298,6 +300,8 @@ static class AcceptanceRegressionTests
             var instance = registry.GetOrCreate(owner, characterId);
             Console.WriteLine($"INFO weapon: bundle={instance.Damage.Total:F1} physical={instance.Damage.Physical:F1}");
             Check(instance.Damage.Total > 0, "weapon: equipped main-hand feeds the weapon-damage bundle");
+            Check(instance.Damage.Total > instance.Damage.Physical,
+                "weapon: the bundle carries elemental damage as well as physical");
         }
     }
 

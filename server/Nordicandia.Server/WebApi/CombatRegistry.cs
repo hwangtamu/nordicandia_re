@@ -38,11 +38,16 @@ public sealed class CombatRegistry
     // client can resolve their portrait icons). The boss is spawned separately.
     private static readonly MonsterProfile[] MonsterProfiles =
     {
-        new("Bat", HpMult: 0.7, OffenseMult: 1.0, DefenseMult: 0.7, Speed: 3.2),
-        new("DemonOrc", HpMult: 1.3, OffenseMult: 1.2, DefenseMult: 1.0, Speed: 2.4),
-        new("Skeleton", HpMult: 1.0, OffenseMult: 0.9, DefenseMult: 1.1, Speed: 2.2),
-        new("BloodHound", HpMult: 0.8, OffenseMult: 1.4, DefenseMult: 0.6, Speed: 3.0),
-        new("StoneGolem", HpMult: 1.8, OffenseMult: 0.8, DefenseMult: 1.6, Speed: 1.6),
+        new("Bat", HpMult: 0.7, OffenseMult: 1.0, DefenseMult: 0.7, Speed: 3.2,
+            Resistances: new ResistanceBundle(Fire: -0.2)),
+        new("DemonOrc", HpMult: 1.3, OffenseMult: 1.2, DefenseMult: 1.0, Speed: 2.4,
+            Damage: new DamageBundle(Fire: 0.5), Resistances: new ResistanceBundle(Fire: 0.3, Cold: -0.2)),
+        new("Skeleton", HpMult: 1.0, OffenseMult: 0.9, DefenseMult: 1.1, Speed: 2.2,
+            Damage: new DamageBundle(Cold: 0.4), Resistances: new ResistanceBundle(Poison: 0.5, Fire: -0.3)),
+        new("BloodHound", HpMult: 0.8, OffenseMult: 1.4, DefenseMult: 0.6, Speed: 3.0,
+            Damage: new DamageBundle(Poison: 0.5), Resistances: new ResistanceBundle(Poison: 0.4)),
+        new("StoneGolem", HpMult: 1.8, OffenseMult: 0.8, DefenseMult: 1.6, Speed: 1.6,
+            Resistances: new ResistanceBundle(Lightning: -0.2, Fire: 0.2)),
     };
 
     private sealed class Entry

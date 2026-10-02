@@ -2,7 +2,8 @@ namespace Nordicandia.Simulation;
 
 /// <summary>Per-archetype monster tuning so an instance can spawn several kinds of enemy.</summary>
 public readonly record struct MonsterProfile(
-    string Name, double HpMult = 1.0, double OffenseMult = 1.0, double DefenseMult = 1.0, double Speed = 2.4);
+    string Name, double HpMult = 1.0, double OffenseMult = 1.0, double DefenseMult = 1.0, double Speed = 2.4,
+    DamageBundle Damage = default, ResistanceBundle Resistances = default);
 
 /// <summary>One monster inside an authoritative combat instance.</summary>
 public sealed class CombatMonster
@@ -17,6 +18,8 @@ public sealed class CombatMonster
     public double MaxHp { get; set; }
     public double Offense { get; set; }
     public double Defense { get; set; }
+    public DamageBundle Damage { get; set; }
+    public ResistanceBundle Resistances { get; set; }
     public double Speed { get; set; } = 2.4;
     public double AttackInterval { get; set; } = 1.6;
     public double AttackCooldown { get; set; }
@@ -210,6 +213,17 @@ public sealed class CombatInstance
     private CombatantStats PlayerStats() => new(EffectiveOffense(), Defense, Recovery, PlayerLevel,
         AttackRating, Armor, Evasion, CritChance, LifeMax, ManaMax, Damage, Resistances);
 
+    /// <summary>The player's typed damage (weapon bundle, or a physical bundle from the
+    /// provisional Offense when no weapon attributes are present), including the passive/buff bonus.</summary>
+    private DamageBundle PlayerDamageBundle()
+    {
+        var baseBundle = Damage.Total > 0 ? Damage : new DamageBundle(Offense);
+        return baseBundle.Scale(1 + passive.OffenseBonus + (offenseBuffTimer > 0 ? offenseBuffBonus : 0));
+    }
+
+    private static CombatantStats MonsterStats(CombatMonster monster)
+        => new(monster.Offense, monster.Defense, 0, monster.Level, Resistances: monster.Resistances);
+
     private double EffectiveMaxHealth() => CombatModel.MaxHealth(PlayerStats())
         * (1 + passive.HealthBonus);
 
@@ -270,6 +284,9 @@ public sealed class CombatInstance
         var level = MonsterLevel;
         var profile = profiles[index % profiles.Length];
         var maxHp = (30 + level * 16) * profile.HpMult;
+        var offense = (3 + level * 1.2) * profile.OffenseMult;
+        // A profile's Damage is a distribution (fractions); scale it by this spawn's offence.
+        var damage = profile.Damage.Total > 0 ? profile.Damage.Scale(offense) : new DamageBundle(offense);
         return new CombatMonster
         {
             Index = index,
@@ -279,8 +296,10 @@ public sealed class CombatInstance
             Z = z,
             Hp = alive ? maxHp : 0,
             MaxHp = maxHp,
-            Offense = (3 + level * 1.2) * profile.OffenseMult,
+            Offense = offense,
             Defense = (2 + level * 1.5) * profile.DefenseMult,
+            Damage = damage,
+            Resistances = profile.Resistances,
             Speed = profile.Speed,
             Alive = alive,
             AttackCooldown = rng.NextDouble() * 1.6,
@@ -303,6 +322,8 @@ public sealed class CombatInstance
             Hp = 200 + level * 80,
             Offense = 8 + level * 3,
             Defense = 20 + level * 8,
+            Damage = new DamageBundle(Physical: 0.5, Cold: 0.5).Scale(8 + level * 3),
+            Resistances = new ResistanceBundle(Fire: 0.2, Cold: 0.5, Lightning: 0.2, Poison: 0.2),
             Speed = 2.0,
             AttackInterval = 2.0,
             Alive = true,
@@ -372,9 +393,8 @@ public sealed class CombatInstance
         if (target is not null && attackCooldown <= 0)
         {
             attackCooldown = PlayerAttackInterval;
-            var hit = CombatModel.ResolveHit(
-                PlayerStats(),
-                new CombatantStats(target.Offense, target.Defense, 0, target.Level),
+            var hit = CombatModel.ResolveBundleAttack(
+                PlayerStats(), PlayerDamageBundle(), MonsterStats(target), target.Resistances,
                 new AttackProfile(1.0, 0.08, 1.6, 0.12),
                 rng);
             DamageMonster(target, hit.Damage);
@@ -422,9 +442,9 @@ public sealed class CombatInstance
             if (monster.AttackCooldown <= 0)
             {
                 monster.AttackCooldown = monster.AttackInterval;
-                var hit = CombatModel.ResolveHit(
-                    new CombatantStats(monster.Offense, monster.Defense, 0, monster.Level),
-                    PlayerStats(),
+                var monsterDamage = monster.Damage.Total > 0 ? monster.Damage : new DamageBundle(monster.Offense);
+                var hit = CombatModel.ResolveBundleAttack(
+                    MonsterStats(monster), monsterDamage, PlayerStats(), Resistances,
                     new AttackProfile(1.0, 0.03, 1.5, 0.12),
                     rng);
                 var incoming = hit.Damage;
@@ -708,9 +728,8 @@ public sealed class CombatInstance
     }
 
     private DamageResult ResolveSkill(CombatMonster target, double multiplier)
-        => CombatModel.ResolveHit(
-            PlayerStats(),
-            new CombatantStats(target.Offense, target.Defense, 0, target.Level),
+        => CombatModel.ResolveBundleAttack(
+            PlayerStats(), PlayerDamageBundle(), MonsterStats(target), target.Resistances,
             new AttackProfile(multiplier, 0.15, 2.0, 0.08),
             rng);
 

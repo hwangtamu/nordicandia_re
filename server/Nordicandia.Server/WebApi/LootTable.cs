@@ -101,6 +101,15 @@ public static class LootTable
         {
             itemAttributes[507] = Value(Math.Round(offense * 0.8));
             itemAttributes[508] = Value(Math.Round(offense * 0.4));
+            // One random elemental damage type (recovered Item_Weapon_<element>_Damage_Min/Delta).
+            var element = new[] { 1407, 1507, 1607, 1707 }[(int)(rng.NextDouble() * 4) & 3];
+            itemAttributes[element] = Value(Math.Round(offense * 0.35));
+            itemAttributes[element + 1] = Value(Math.Round(offense * 0.2));
+        }
+        else if (drop.Slot != 13)
+        {
+            // Armour and accessories carry a small all-resistance (Resistance_All = 1002).
+            itemAttributes[1002] = Value(Math.Round(defense * 0.0006, 4));
         }
         var item = new SerializedItem
         {

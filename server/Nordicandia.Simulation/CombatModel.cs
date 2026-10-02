@@ -129,9 +129,10 @@ public static class CombatModel
     /// resistance application.</summary>
     public static double ApplyDamageReduction(double damageReduction, double rawDamage)
     {
+        // Faithful to the client: only the *result* is floored at 0, so a negative reduction
+        // (an elemental weakness) increases the damage.
         var raw = Math.Max(0.0, rawDamage);
-        var reduction = Math.Clamp(damageReduction, 0.0, 1.0);
-        return Math.Max(0.0, raw * (1.0 - reduction));
+        return Math.Max(0.0, raw * (1.0 - damageReduction));
     }
 
     /// <summary>Elemental resistance is capped at 1.0 before application
@@ -141,7 +142,7 @@ public static class CombatModel
     /// <summary>ClientVerified elemental damage after resistance: cap the resistance at 1.0, then
     /// <see cref="ApplyDamageReduction"/>.</summary>
     public static double EffectiveElementalDamage(double rawDamage, double resistance)
-        => ApplyDamageReduction(Math.Min(ResistanceCap, Math.Max(0.0, resistance)), rawDamage);
+        => ApplyDamageReduction(Math.Min(ResistanceCap, resistance), rawDamage);
 
     /// <summary>ClientVerified full damage pipeline: physical damage goes through armour
     /// (<see cref="PhysicalDamageReduction"/>), each element through its capped resistance
@@ -217,6 +218,36 @@ public static class CombatModel
         var variance = 1.0 + (rng.NextDouble() * 2.0 - 1.0) * Math.Max(0, profile.Variance);
         var critFactor = critical ? Math.Max(1.0, profile.CritMultiplier) : 1.0;
         var damage = Math.Max(1.0, mitigated * Math.Max(0.05, variance) * critFactor);
+        return new DamageResult(damage, critical, confidence, true);
+    }
+
+    /// <summary>
+    /// ClientVerified typed-damage attack: rolls to hit/crit like <see cref="ResolveHit"/>, then
+    /// scales the typed <paramref name="bundle"/> by the skill multiplier and crit factor and
+    /// mitigates it with <see cref="MitigateDamage"/> (physical through armour, each element
+    /// through the defender's capped resistance).
+    /// </summary>
+    public static DamageResult ResolveBundleAttack(
+        CombatantStats attacker, DamageBundle bundle, CombatantStats defender,
+        ResistanceBundle defenderResistances, AttackProfile profile, CombatRandom rng)
+    {
+        var confidence = new DamageConfidence(
+            Formula: RuleConfidence.ClientVerified,
+            Inputs: RuleConfidence.Provisional,
+            Execution: RuleConfidence.Inferred,
+            AssumedReductionCap: true,
+            AssumedVariance: profile.Variance > 0,
+            AssumedMinDamage: true);
+
+        var hit = RollChance(ChanceToHit(attacker.EffectiveAttackRating, defender.EffectiveEvasion), rng);
+        var critChance = attacker.CritChance > 0 ? attacker.CritChance : profile.CritChance;
+        var critical = RollChance(critChance, rng);
+        if (!hit) return new DamageResult(0.0, false, confidence, false);
+
+        var scale = Math.Max(0, profile.SkillMultiplier) * (critical ? Math.Max(1.0, profile.CritMultiplier) : 1.0);
+        var mitigated = MitigateDamage(bundle.Scale(scale), defender.EffectiveArmor, defenderResistances);
+        var variance = 1.0 + (rng.NextDouble() * 2.0 - 1.0) * Math.Max(0, profile.Variance);
+        var damage = Math.Max(1.0, mitigated * Math.Max(0.05, variance));
         return new DamageResult(damage, critical, confidence, true);
     }
 

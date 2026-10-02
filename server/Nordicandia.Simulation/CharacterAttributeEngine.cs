@@ -17,6 +17,8 @@ public readonly record struct DamageBundle(double Physical = 0, double Fire = 0,
     double Lightning = 0, double Poison = 0)
 {
     public double Total => Physical + Fire + Cold + Lightning + Poison;
+    public DamageBundle Scale(double factor)
+        => new(Physical * factor, Fire * factor, Cold * factor, Lightning * factor, Poison * factor);
 }
 
 /// <summary>Per-element resistance, already capped by Resistance_Max_Total (<= 0.95).</summary>
