@@ -1,0 +1,588 @@
+{
+ "AFKExperincePotion": [
+  "Potion"
+ ],
+ "AddAffix": [
+  "Artifact"
+ ],
+ "AddOpenAffix": [
+  "Artifact"
+ ],
+ "AlgizRune": [],
+ "AllResistancePotion": [
+  "Potion"
+ ],
+ "Amulet": [
+  "Amulet",
+  "Jewelry"
+ ],
+ "AnsuzRune": [],
+ "Armor": [
+  "Armor"
+ ],
+ "Arrows": [
+  "Arrows",
+  "OneHand"
+ ],
+ "Artifact": [
+  "Artifact"
+ ],
+ "AttackSpeedPotion": [
+  "Potion"
+ ],
+ "AttackSpell": [],
+ "AttributeRespec": [
+  "Artifact"
+ ],
+ "AttributeRespecLarge": [
+  "Artifact"
+ ],
+ "AttributeRespecSmall": [
+  "Artifact"
+ ],
+ "AutoFightPotion": [
+  "Potion"
+ ],
+ "Axe1H": [
+  "Axe",
+  "OneHand",
+  "OneHandWeapon",
+  "Physical",
+  "Weapon"
+ ],
+ "Axe2H": [
+  "Axe",
+  "Physical",
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "Belt": [
+  "Armor",
+  "Belt"
+ ],
+ "BerkananRune": [],
+ "BlacksmithReagent": [
+  "Artifact"
+ ],
+ "BlacksmithTool": [
+  "Artifact"
+ ],
+ "Bless": [
+  "Artifact"
+ ],
+ "Boots": [
+  "Armor",
+  "Boots"
+ ],
+ "Bow": [
+  "Bow",
+  "Physical",
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "BowReinforcement": [
+  "Artifact"
+ ],
+ "Bracers": [
+  "Armor",
+  "Bracers"
+ ],
+ "Chest": [
+  "Armor",
+  "BodyArmor"
+ ],
+ "Cloak": [
+  "Armor",
+  "Cloak"
+ ],
+ "ColdStaff2H": [
+  "Cold",
+  "Staff",
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "ColdWand1H": [
+  "Cold",
+  "OneHand",
+  "OneHandWeapon",
+  "Wand",
+  "Weapon"
+ ],
+ "Consumable": [],
+ "Crossbow1H": [
+  "Crossbow",
+  "OneHand",
+  "OneHandWeapon",
+  "Physical",
+  "Weapon"
+ ],
+ "DagazRune": [],
+ "Dagger": [
+  "Dagger",
+  "OneHand",
+  "OneHandWeapon",
+  "Physical",
+  "Weapon"
+ ],
+ "DecursingPotion": [
+  "Potion"
+ ],
+ "DefensePotion": [
+  "Potion"
+ ],
+ "EhwazRune": [],
+ "ElementalStaff2H": [
+  "Cold",
+  "Elemental",
+  "Fire",
+  "Lightning",
+  "Poison",
+  "Staff",
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "ElementalWand1H": [
+  "Cold",
+  "Elemental",
+  "Fire",
+  "Lightning",
+  "OneHand",
+  "OneHandWeapon",
+  "Poison",
+  "Wand",
+  "Weapon"
+ ],
+ "EnchantedAnvil": [
+  "Artifact"
+ ],
+ "Essence": [],
+ "ExperiencePotion": [
+  "Potion"
+ ],
+ "FehuRune": [],
+ "FireStaff2H": [
+  "Fire",
+  "Staff",
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "FireWand1H": [
+  "Fire",
+  "OneHand",
+  "OneHandWeapon",
+  "Wand",
+  "Weapon"
+ ],
+ "Fists": [
+  "Physical",
+  "Weapon"
+ ],
+ "GeboRune": [],
+ "Gloves": [
+  "Armor",
+  "Gloves"
+ ],
+ "GuildSiegeRunestone": [],
+ "HagalazRune": [],
+ "HealSpell": [],
+ "HealthPotion": [
+  "Potion"
+ ],
+ "HeatingStone": [
+  "Artifact"
+ ],
+ "HeavyBoots": [
+  "Armor",
+  "Boots",
+  "HeavyArmor",
+  "HeavyBoots"
+ ],
+ "HeavyBracers": [
+  "Armor",
+  "Bracers",
+  "HeavyArmor",
+  "HeavyBracers"
+ ],
+ "HeavyChest": [
+  "Armor",
+  "BodyArmor",
+  "HeavyArmor",
+  "HeavyBodyArmor"
+ ],
+ "HeavyGloves": [
+  "Armor",
+  "Gloves",
+  "HeavyArmor",
+  "HeavyGloves"
+ ],
+ "HeavyHelmet": [
+  "Armor",
+  "HeavyArmor",
+  "HeavyHelmet",
+  "Helmet"
+ ],
+ "HeavyLeggings": [
+  "Armor",
+  "HeavyArmor",
+  "HeavyLeggings",
+  "Leggings"
+ ],
+ "HeavyReinforcement": [
+  "Artifact"
+ ],
+ "HeavyShoulders": [
+  "Armor",
+  "HeavyArmor",
+  "HeavyShoulders",
+  "Shoulders"
+ ],
+ "HelheimKey": [],
+ "HelheimPortal": [
+  "Portal"
+ ],
+ "Helmet": [
+  "Armor",
+  "Helmet"
+ ],
+ "Idol": [],
+ "IdolOfCrafting": [],
+ "IdolOfExperience": [],
+ "ImbuingEssence": [
+  "Artifact"
+ ],
+ "ImbuingEssenceEnchanted": [
+  "Artifact"
+ ],
+ "Ingot": [
+  "Artifact"
+ ],
+ "IngwazRune": [],
+ "InsureCraft": [
+  "Artifact"
+ ],
+ "Iron": [
+  "Artifact"
+ ],
+ "IsazRune": [],
+ "ItemQuantityPotion": [
+  "Potion"
+ ],
+ "ItemType": [],
+ "IwazRune": [],
+ "JeraRune": [],
+ "Jewelry": [
+  "Jewelry"
+ ],
+ "JewelryReinforcement": [
+  "Artifact"
+ ],
+ "Junk": [],
+ "KaunanRune": [],
+ "Key": [],
+ "LaukazRune": [],
+ "Leggings": [
+  "Armor",
+  "Leggings"
+ ],
+ "LightBoots": [
+  "Armor",
+  "Boots",
+  "LightArmor"
+ ],
+ "LightBracers": [
+  "Armor",
+  "Bracers",
+  "LightArmor"
+ ],
+ "LightChest": [
+  "Armor",
+  "BodyArmor",
+  "LightArmor"
+ ],
+ "LightGloves": [
+  "Armor",
+  "Gloves",
+  "LightArmor"
+ ],
+ "LightHelmet": [
+  "Armor",
+  "Helmet",
+  "LightArmor"
+ ],
+ "LightLeggings": [
+  "Armor",
+  "Leggings",
+  "LightArmor"
+ ],
+ "LightReinforcement": [
+  "Artifact"
+ ],
+ "LightShoulders": [
+  "Armor",
+  "LightArmor",
+  "Shoulders"
+ ],
+ "LightningStaff2H": [
+  "Lightning",
+  "Staff",
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "LightningWand1H": [
+  "Lightning",
+  "OneHand",
+  "OneHandWeapon",
+  "Wand",
+  "Weapon"
+ ],
+ "Link": [
+  "Artifact"
+ ],
+ "Lootbox": [],
+ "Mace1H": [
+  "Mace",
+  "OneHand",
+  "OneHandWeapon",
+  "Physical",
+  "Weapon"
+ ],
+ "Mace2H": [
+  "Mace",
+  "Physical",
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "MagicFindPotion": [
+  "Potion"
+ ],
+ "ManaPotion": [
+  "Potion"
+ ],
+ "MannazRune": [],
+ "MediumBoots": [
+  "Armor",
+  "Boots",
+  "MediumArmor"
+ ],
+ "MediumBracers": [
+  "Armor",
+  "Bracers",
+  "MediumArmor"
+ ],
+ "MediumChest": [
+  "Armor",
+  "BodyArmor",
+  "MediumArmor"
+ ],
+ "MediumGloves": [
+  "Armor",
+  "Gloves",
+  "MediumArmor"
+ ],
+ "MediumHelmet": [
+  "Armor",
+  "Helmet",
+  "MediumArmor"
+ ],
+ "MediumLeggings": [
+  "Armor",
+  "Leggings",
+  "MediumArmor"
+ ],
+ "MediumReinforcement": [
+  "Artifact"
+ ],
+ "MediumShoulders": [
+  "Armor",
+  "MediumArmor",
+  "Shoulders"
+ ],
+ "MeleeReinforcement": [
+  "Artifact"
+ ],
+ "MovementSpeedPotion": [
+  "Potion"
+ ],
+ "NaudizRune": [],
+ "NiflheimPortal": [
+  "Portal"
+ ],
+ "OdrsTrailPortal": [
+  "Portal"
+ ],
+ "OffHand": [
+  "OneHand"
+ ],
+ "OneHandWeapon": [
+  "OneHand",
+  "OneHandWeapon",
+  "Weapon"
+ ],
+ "Opal": [
+  "Opal"
+ ],
+ "PerthoRune": [],
+ "PetExperiencePotion": [
+  "Potion"
+ ],
+ "PetResurrectionPotion": [
+  "Potion"
+ ],
+ "PoisonStaff2H": [
+  "Poison",
+  "Staff",
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "PoisonWand1H": [
+  "OneHand",
+  "OneHandWeapon",
+  "Poison",
+  "Wand",
+  "Weapon"
+ ],
+ "Portal": [
+  "Portal"
+ ],
+ "Potion": [
+  "Potion"
+ ],
+ "RaidoRune": [],
+ "ReRollAffixTypes": [
+  "Artifact"
+ ],
+ "ReRollExplicitAffixValues": [
+  "Artifact"
+ ],
+ "ReRollImplicitAffixValues": [
+  "Artifact"
+ ],
+ "ReRollNumAffixes": [
+  "Artifact"
+ ],
+ "ReRollNumAffixesEnchanted": [
+  "Artifact"
+ ],
+ "ReinforcedAnvil": [
+  "Artifact"
+ ],
+ "Reinforcement": [
+  "Artifact"
+ ],
+ "RejuvenationPotion": [
+  "Potion"
+ ],
+ "Relic": [
+  "Artifact"
+ ],
+ "RemoveAffix": [
+  "Artifact"
+ ],
+ "RepairDurability": [
+  "Artifact"
+ ],
+ "ResetItem": [
+  "Artifact"
+ ],
+ "ResurrectionPotion": [
+  "Potion"
+ ],
+ "Ring": [
+  "Jewelry",
+  "Ring"
+ ],
+ "Rune": [],
+ "Scroll": [
+  "Artifact"
+ ],
+ "Shield": [
+  "OneHand",
+  "Shield"
+ ],
+ "ShieldReinforcement": [
+  "Artifact"
+ ],
+ "Shoulders": [
+  "Armor",
+  "Shoulders"
+ ],
+ "SowiloRune": [],
+ "Spear2H": [
+  "Physical",
+  "Spear",
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "Spell": [],
+ "Staff2H": [
+  "Staff",
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "StaffReinforcement": [
+  "Artifact"
+ ],
+ "Steel": [
+  "Artifact"
+ ],
+ "Sword1H": [
+  "OneHand",
+  "OneHandWeapon",
+  "Physical",
+  "Sword",
+  "Weapon"
+ ],
+ "Sword2H": [
+  "Physical",
+  "Sword",
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "ThurisazRune": [],
+ "TitaniumOre": [
+  "Artifact"
+ ],
+ "Titansteel": [
+  "Artifact"
+ ],
+ "TiwazRune": [],
+ "Tome": [
+  "OneHand",
+  "Tome"
+ ],
+ "TwoHandMeleeWeapon": [
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "TwoHandWeapon": [
+  "TwoHand",
+  "TwoHandWeapon",
+  "Weapon"
+ ],
+ "UruzRune": [],
+ "VanaheimPortal": [
+  "Portal"
+ ],
+ "Wand1H": [
+  "OneHand",
+  "OneHandWeapon",
+  "Wand",
+  "Weapon"
+ ],
+ "Weapon": [
+  "Weapon"
+ ],
+ "WunjoRune": []
+}

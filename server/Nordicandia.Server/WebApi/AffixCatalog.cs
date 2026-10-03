@@ -26,6 +26,29 @@ public static class AffixCatalog
         /// TagIds/AffixIds with parent inheritance). An empty list means no restriction is known.</summary>
         public bool EligibleFor(string? itemType)
             => EligibleTypes.Count == 0 || itemType is null || EligibleTypes.Contains(itemType);
+
+        /// <summary>E02: the affix's TagData spawn weight for the item type's tags (best matching
+        /// tag). Interim: the exact client aggregation (GetSpawnWeightsFor...ByTag) is not fully
+        /// decoded; falls back to 1000 when no tag matches.</summary>
+        public double SpawnWeight(IReadOnlyCollection<string> typeTags)
+        {
+            double best = 0;
+            foreach (var tag in Tags)
+                if (tag.Tag is not null && typeTags.Contains(tag.Tag) && (tag.Weight ?? 0) > best)
+                    best = tag.Weight ?? 0;
+            return best > 0 ? best : 1000;
+        }
+
+        /// <summary>E02: the TagData ValueMultiplier for the item type's tags (max of matching
+        /// tags). Interim.</summary>
+        public double ValueMultiplier(IReadOnlyCollection<string> typeTags)
+        {
+            double mult = 1;
+            foreach (var tag in Tags)
+                if (tag.Tag is not null && typeTags.Contains(tag.Tag))
+                    mult = Math.Max(mult, tag.ValueMultiplier);
+            return mult;
+        }
         /// <summary>Client AffixType: Prefix=0, Suffix=1, Implicit=2, Set=3, Unique=4.</summary>
         public bool IsPrefixOrSuffix => IsRandomAffixType(GenerationType);
         /// <summary>Primary attribute (the first), kept for single-attribute callers.</summary>
@@ -63,6 +86,23 @@ public static class AffixCatalog
         foreach (var attribute in affix.Attributes)
             result.Add((attribute, Roll(attribute, itemRarity, rng)));
         return result;
+    }
+
+    private static readonly Lazy<IReadOnlyDictionary<string, IReadOnlyCollection<string>>> TypeTags = new(LoadTypeTags);
+
+    /// <summary>The inherited tag names for an item type (ItemTypes.json TagIds).</summary>
+    public static IReadOnlyCollection<string> TagsForType(string? itemType)
+        => itemType is not null && TypeTags.Value.TryGetValue(itemType, out var tags)
+            ? tags : Array.Empty<string>();
+
+    private static IReadOnlyDictionary<string, IReadOnlyCollection<string>> LoadTypeTags()
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        var resource = assembly.GetManifestResourceNames()
+            .First(n => n.EndsWith("GameData.item_type_tags.json", StringComparison.Ordinal));
+        using var stream = assembly.GetManifestResourceStream(resource)!;
+        var raw = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(stream)!;
+        return raw.ToDictionary(kv => kv.Key, kv => (IReadOnlyCollection<string>)kv.Value);
     }
 
     private static IReadOnlyList<Affix> Load()

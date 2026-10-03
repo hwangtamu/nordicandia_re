@@ -75,6 +75,7 @@ RunSuite("CombatInstance", CombatInstanceTests.Run);
 RunSuite("LootEquipment", LootEquipmentTests.Run);
 RunSuite("AffixGeneration", AffixGenerationTests.Run);
 RunSuite("E01AffixCatalog", E01AffixCatalogTests.Run);
+RunSuite("E02DropPipeline", E02DropPipelineTests.Run);
 RunSuite("PowerParameter", PowerParameterTests.Run);
 RunSuite("PowerPool", PowerPoolTests.Run);
 RunSuite("ManaMastery", ManaMasteryTests.Run);

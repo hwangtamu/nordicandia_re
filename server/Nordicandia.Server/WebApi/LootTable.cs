@@ -136,16 +136,27 @@ public static class LootTable
         // the full client catalog filtered to item-domain (0) random Prefix/Suffix affixes.
         // E01: only affixes whose item-type tags match the chosen definition (ItemTypes TagIds/
         // AffixIds with parent inheritance). A null definition falls back to the whole item pool.
+        var typeTags = AffixCatalog.TagsForType(definition?.Type);
         var pool = AffixCatalog.Entries
             .Where(a => a.IsPrefixOrSuffix && a.Domain == AffixCatalog.DomainItem && a.EligibleFor(definition?.Type))
             .DistinctBy(a => a.Name).ToList();
+        // E02: weighted by TagData spawn weight; values scaled by TagData ValueMultiplier.
+        var weights = pool.Select(a => a.SpawnWeight(typeTags)).ToList();
         var chosen = new List<(AffixCatalog.Affix Affix, List<(AffixCatalog.AffixAttribute Attribute, double Value)> Values)>();
         for (var i = 0; i < affixCount && pool.Count > 0; i++)
         {
-            var index = (int)(affixRng.NextDouble() * pool.Count);
+            var total = 0.0;
+            foreach (var w in weights) total += w;
+            var roll = affixRng.NextDouble() * total;
+            var index = 0;
+            while (index < pool.Count - 1 && roll >= weights[index]) { roll -= weights[index]; index++; }
             var affix = pool[index];
             pool.RemoveAt(index);
-            chosen.Add((affix, AffixCatalog.RollAll(affix, drop.Rarity, affixRng)));
+            weights.RemoveAt(index);
+            var values = AffixCatalog.RollAll(affix, drop.Rarity, affixRng);
+            var mult = affix.ValueMultiplier(typeTags);
+            if (mult != 1.0) values = values.Select(v => (v.Attribute, v.Value * mult)).ToList();
+            chosen.Add((affix, values));
         }
 
         var suffix = string.Concat(chosen.Select(a => " " + a.Affix.Name));

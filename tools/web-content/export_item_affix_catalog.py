@@ -24,6 +24,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 GAMEDATA = ROOT / "gamedata_decrypted"
 GENERATED = ROOT / "tools" / "web-content" / "generated"
 OUT = ROOT / "server" / "Nordicandia.Server" / "GameData" / "affix_catalog.json"
+TYPE_TAGS_OUT = ROOT / "server" / "Nordicandia.Server" / "GameData" / "item_type_tags.json"
 REPORT = GENERATED / "affix_catalog_report.json"
 
 RANDOM_TYPES = (0, 1)  # Prefix, Suffix
@@ -143,8 +144,25 @@ def main() -> int:
         by_domain[e["domain"]] = by_domain.get(e["domain"], 0) + 1
         by_type[e["generationType"]] = by_type.get(e["generationType"], 0) + 1
 
+    # Droprates.json side tables (affix rarity pool + class item-type multipliers).
+    droprates = json.loads((GAMEDATA / "Droprates.json").read_text())
+    (GENERATED / "affix_rarity.json").write_text(json.dumps({
+        "baseline": "android-1.9.3 (versionCode 507033)",
+        "source": "gamedata_decrypted/Droprates.json",
+        "affixRarityRatio": droprates.get("AffixRarityRatio"),
+        "itemTypeCharacterClassWeightMultipliers": droprates.get("ItemTypeCharacterClassWeightMultipliers"),
+        "lootTableItemTypeWeights": [
+            {"name": inner(t).get("Name"), "itemTypeWeights": inner(t).get("ItemTypeWeights")}
+            for t in (droprates.get("LootTables") or [])
+        ],
+    }, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(catalog, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+    # Item-type -> inherited tag names, so loot can weight affixes by the item type's tags.
+    TYPE_TAGS_OUT.write_text(json.dumps(
+        {name: sorted(names) for name, (names, _guids) in type_tags.items()},
+        ensure_ascii=False, indent=1, sort_keys=True) + "\n")
     REPORT.write_text(json.dumps({
         "baseline": "android-1.9.3 (versionCode 507033)",
         "source": "gamedata_decrypted/ItemAffixes.json",
