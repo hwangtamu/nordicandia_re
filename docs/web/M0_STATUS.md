@@ -39,6 +39,22 @@ npm install        # 首次
 npm run dev        # http://127.0.0.1:5173/
 ```
 
+### 3. 局域网试玩（手机 / 另一台电脑）
+
+保持服务端不变（网页 API 仍只监听 loopback，由 Vite 代理访问）：
+
+```bash
+cd web
+npm run dev:lan    # vite --host 0.0.0.0，监听所有网卡
+```
+
+然后在手机/另一台电脑的浏览器打开 `http://<主机局域网IP>:5173/`（例如本机 `http://192.168.1.241:5173/`）。
+
+* Vite 把 `/api/web` 反向代理到 `http://127.0.0.1:5080`，所以服务端不需要对外监听；
+* `/dev/session` 要求调用方是回环地址——经 Vite 代理后服务端看到的是 127.0.0.1，因此局域网设备也能用免密登录；
+* 若要关闭免密登录，去掉 `NORD_WEB_DEV=1`，改用 `npm run dev` 之外的正式 `/session`（注册默认开启，可用 `NORD_ALLOW_REGISTRATION=0` 关闭）；
+* 需要跨主机部署（服务端与 Vite 不在同一台机器）时，才需要 `NORD_LISTEN_ANY=1` + `NORD_CERT_PFX`，并同步修改 Vite 的代理目标为服务端地址。
+
 Vite 把 `/api/web` 代理到 `http://127.0.0.1:5080`，会话使用 HttpOnly Cookie（同源），无需 CORS。
 
 ### 3. 重新导出资源（改了 gamedata 或需要复现时）
