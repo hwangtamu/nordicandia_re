@@ -87,5 +87,12 @@ static class PowerParameterTests
         var fireTotal = eval.Resolve("Resistance_Fire_Total");
         Check(fireTotal >= 0.49,
             $"power attributes: Resistance_Fire bonus flows into Resistance_Fire_Total ({fireTotal:F3})");
+
+        // With the character default Resistance_Max=0.75 (seeded by CharacterBaseline) the bonus
+        // survives capping, unlike the 0 default which floors every resistance at 0.
+        var cappedEval = Nordicandia.Simulation.CharacterAttributeEngine.Instance.Evaluate(
+            new Dictionary<int, double> { [1000] = 0.5, [1001] = 0.75, [411] = 0.75 });
+        Check(Math.Abs(cappedEval.Resistances.Fire - 0.5) < 1e-6,
+            $"power attributes: Resistance_Fire=0.5 survives the 0.75 cap ({cappedEval.Resistances.Fire:F3})");
     }
 }

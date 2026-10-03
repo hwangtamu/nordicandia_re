@@ -65,5 +65,23 @@ static class PowerPoolTests
         var single = new CombatInstance(stats, 0, 0, 0, 0, seed: 5, classPowers: PowerCatalog.DefaultPoolFor(0));
         Check(loaded.PlayerMaxHp >= single.PlayerMaxHp,
             "power pools: equipped passives contribute without reducing the health pool");
+
+        // Loot luck: magic find boosts the rare weights, item quantity adds capped extra rolls.
+        var plain = 0;
+        var lucky = 0;
+        var rngPlain = new CombatRandom(20261003);
+        var rngLucky = new CombatRandom(20261003);
+        for (var i = 0; i < 100000; i++)
+        {
+            if (ItemCatalog.RollRarityType(rngPlain) != ItemCatalog.RarityType.Normal) plain++;
+            if (ItemCatalog.RollRarityType(rngLucky, 10.0) != ItemCatalog.RarityType.Normal) lucky++;
+        }
+        Check(lucky > plain * 5, $"loot: magic find raises rare drops ({plain} -> {lucky})");
+
+        // Base_Magic_Find is an identity multiplier: a recovered +0.3 bonus is +30% total.
+        var mf = CharacterAttributeEngine.Instance.Evaluate(new Dictionary<int, double> { [355] = 1.3 });
+        var mfTotal = mf.Resolve("Magic_Find_Percent_Total");
+        Check(Math.Abs(mfTotal - 0.3) < 1e-6,
+            $"loot: Base_Magic_Find 1.3 resolves to +30% ({mfTotal:F3})");
     }
 }

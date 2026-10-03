@@ -97,7 +97,8 @@ public static class LootTable
     public static string RarityName(int rarity)
         => rarity >= 0 && rarity < RarityNames.Length ? RarityNames[rarity] : "?";
 
-    public static SerializedItem CreateItem(LootDrop drop, ItemCatalog.RarityType? forceRarityType = null)
+    public static SerializedItem CreateItem(LootDrop drop, ItemCatalog.RarityType? forceRarityType = null,
+        double magicFind = 0)
     {
         var rng = new CombatRandom(drop.Seed == 0 ? 0x2545F4914F6CDD1DUL : drop.Seed);
         // A separate stream for affix generation, so the count/values don't shift the base item's
@@ -105,7 +106,7 @@ public static class LootTable
         var affixRng = new CombatRandom((drop.Seed == 0 ? 0x2545F4914F6CDD1DUL : drop.Seed) ^ 0xA24BAED4963EE407UL);
         // Roll Normal/Unique/Set using the client weights (or use the forced type, e.g. a set
         // merchant offer or a pity-guaranteed unique), then pick a matching definition.
-        var rarityType = forceRarityType ?? ItemCatalog.RollRarityType(rng);
+        var rarityType = forceRarityType ?? ItemCatalog.RollRarityType(rng, magicFind);
         var definition = ItemCatalog.Pick(drop.Slot, rarityType, rng);
         var fallbackNames = SlotNames.TryGetValue(drop.Slot, out var list) ? list : new[] { "Trinket" };
         var name = definition?.Name ?? fallbackNames[Math.Abs(Hash(drop.Level, drop.Slot)) % fallbackNames.Length];

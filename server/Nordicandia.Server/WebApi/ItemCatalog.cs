@@ -51,10 +51,16 @@ public static class ItemCatalog
     /// <summary>Item rarity-type roll weights from Droprates.json.ItemRarityTypeWeights.</summary>
     public static IReadOnlyDictionary<string, double> RarityTypeWeights { get; private set; } = new Dictionary<string, double>();
 
-    /// <summary>Rolls Normal/Unique/Set using the client weights.</summary>
-    public static RarityType RollRarityType(CombatRandom rng)
+    /// <summary>Rolls Normal/Unique/Set using the client weights. <paramref name="magicFind"/> (a
+    /// fraction, e.g. 0.3 for +30%) raises the Unique/Set weights. The client's exact magic-find
+    /// curve (ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes) is not fully recovered, so
+    /// this linear boost is a documented Interim rule; the base weights are ClientVerified.</summary>
+    public static RarityType RollRarityType(CombatRandom rng, double magicFind = 0)
     {
         double normal = RarityTypeWeights.GetValueOrDefault("Normal", 1), unique = RarityTypeWeights.GetValueOrDefault("Unique", 0), set = RarityTypeWeights.GetValueOrDefault("Set", 0);
+        var boost = 1 + Math.Max(0, magicFind);
+        unique *= boost;
+        set *= boost;
         var total = normal + unique + set;
         if (total <= 0) return RarityType.Normal;
         var roll = rng.NextDouble() * total;

@@ -32,6 +32,7 @@ public sealed class CombatRegistry
 
     /// <summary>Guaranteed unique/set after this many drops without one (a web pity rule).</summary>
     private const int UniquePityDrops = 120;
+    private const int MaxQuantityFromMagicFindMultiplier = 5; // GameParameters.MaxQuantityFromMagicFindMultiplier
 
     public CombatRegistry(GameStore store, TimeProvider clock = null)
     {
@@ -417,16 +418,25 @@ public sealed class CombatRegistry
     {
         var drops = entry.Instance.DrainDrops();
         if (drops.Count == 0) return;
+        // Magic find raises the rare weights (Interim linear curve; the client's exact curve is not
+        // recovered); item quantity adds extra rolls, capped at GameParameters'
+        // MaxQuantityFromMagicFindMultiplier = 5.
+        var (magicFind, itemQuantity) = LootLuck(owner, characterId, entry);
+        var rollsPerDrop = Math.Clamp(1 + (int)Math.Floor(itemQuantity), 1, MaxQuantityFromMagicFindMultiplier);
         // Drop pity: force a unique once enough drops have gone by without one, so the rarest
         // tier is reachable in a session. Set items also reset the counter.
         var items = new List<SerializedItem>();
         foreach (var drop in drops)
         {
-            entry.UniquePity++;
-            var force = entry.UniquePity >= UniquePityDrops ? ItemCatalog.RarityType.Unique : (ItemCatalog.RarityType?)null;
-            var item = LootTable.CreateItem(drop, force);
-            if (LootTable.IsUniqueOrSet(item)) entry.UniquePity = 0;
-            items.Add(item);
+            for (var i = 0; i < rollsPerDrop; i++)
+            {
+                var current = i == 0 ? drop : drop with { Seed = drop.Seed + (ulong)i * 0x9E3779B97F4A7C15UL };
+                entry.UniquePity++;
+                var force = entry.UniquePity >= UniquePityDrops ? ItemCatalog.RarityType.Unique : (ItemCatalog.RarityType?)null;
+                var item = LootTable.CreateItem(current, force, magicFind);
+                if (LootTable.IsUniqueOrSet(item)) entry.UniquePity = 0;
+                items.Add(item);
+            }
         }
         store.GrantItems(owner, characterId, items);
         foreach (var item in items)
@@ -438,6 +448,17 @@ public sealed class CombatRegistry
                 LootTable.AttributeOf(item, LootTable.AttrRecovery),
                 AffixNames(item)));
         }
+    }
+
+    /// <summary>Character magic find (Magic_Find_Percent_Total) and item quantity
+    /// (Item_Quantity_Bonus_Percent_Total) from the recovered attribute engine, including the
+    /// equipped passives' recovered bonuses. Fractions: 0.3 = +30%.</summary>
+    private (double MagicFind, double ItemQuantity) LootLuck(Guid owner, Guid characterId, Entry entry)
+    {
+        var map = WithPassiveBonuses(store.GetAttributeMap(owner, characterId), entry.BasePowers);
+        var eval = CharacterAttributeEngine.Instance.Evaluate(map);
+        return (Math.Max(0, eval.Resolve("Magic_Find_Percent_Total")),
+            Math.Max(0, eval.Resolve("Item_Quantity_Bonus_Percent_Total")));
     }
 
     private void FlushLocked(Guid owner, Guid characterId, Entry entry)

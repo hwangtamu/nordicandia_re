@@ -147,8 +147,22 @@ ret
 `PowerParameterTests` 断言上述解析、rank 缩放、未接入项不被填零，以及
 `Resistance_Fire_Total` 确实包含 FireArmor 的 `+0.5`。
 
-仍缺：`Resistance_Max` 客户端默认为 0（难度/区域授予），网页未建模，故元素抗性在网页上被 `Min(total, 0)`
-封顶；要真正常生效需同时确定该难度默认值。魔法找到/物品数量尚未接入掉落；毒/分叉等还没进入 `CombatInstance` 结算。
+### 角色默认值与掉落运气（本轮）
+
+从 `character_attributes.json` origin 0 补齐了非 `Base_` 的角色默认值（客户端在创建时写入，属性本身默认 0）：
+`Hit_Chance_Cap=1`、`Life_Factor_Level=2`、`Mana_Bonus_Percent=0.25`、`Physical_Damage_Reduction_Max=0.75`、
+`Weapon_Physical_Damage_Strength_Coefficient=2`、`Weapon_Elemental_Damage_Intelligence_Coefficient=0.75`、
+`Resistance_Max=0.75`、`Base_Magic_Find=1.0`（恒等乘数：`Magic_Find_Percent_Total = Base_Magic_Find*… − 1`）。
+因此元素抗性现在按 `Min(total, 0.75)` 封顶：FireArmor 的 +0.5 可真正生效。
+
+掉落运气已接入 `CollectLootLocked`：
+- 魔法找到 = `Magic_Find_Percent_Total`（含被动恢复加成）→ `ItemCatalog.RollRarityType(rng, magicFind)`，
+  Unique/Set 权重 `*(1+MF)`。**Interim**：客户端 `InternalInitializeSetOrUniqueItemRarityTypes` 的精确曲线
+  （常量 225/150/0.01/0.6）尚未解码，基础权重仍是 ClientVerified；
+- 物品数量 = `Item_Quantity_Bonus_Percent_Total` → 每堆掉落额外重抽，封顶
+  `GameParameters.MaxQuantityFromMagicFindMultiplier = 5`。
+
+仍缺：毒/分叉等还没进入 `CombatInstance` 结算；魔法找到的精确曲线要等反汇编解码。
 
 `Affixes.json` 与 `ItemAffixes.json` 的取舍补充证据：Items.json/ItemTypes.json 的 `AffixIds` 共引用
 1388/210 个 Guid，**全部存在于 `Affixes.json`**，仅子集在 `ItemAffixes.json`；例如 `FireResistance` 被引用的是

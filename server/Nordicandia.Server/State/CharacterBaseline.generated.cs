@@ -46,5 +46,15 @@ internal static class CharacterBaseline
         [3100] = 1.25, // Base_ForceField_Multiplier
         [3105] = 0.2, // Base_ForceField_Regen_Percent
         [3109] = 3, // Base_ForceField_Regen_Delay
+        // Non-`Base_` character defaults from the same origin 0 (the client seeds these at
+        // character creation; the attribute ctor itself defaults them to 0).
+        [226] = 1, // Hit_Chance_Cap
+        [301] = 2, // Life_Factor_Level
+        [327] = 0.25, // Mana_Bonus_Percent
+        [355] = 1.0, // Base_Magic_Find (identity multiplier; Magic_Find_Percent_Total = value-1)
+        [411] = 0.75, // Physical_Damage_Reduction_Max
+        [517] = 2, // Weapon_Physical_Damage_Strength_Coefficient
+        [520] = 0.75, // Weapon_Elemental_Damage_Intelligence_Coefficient
+        [1001] = 0.75, // Resistance_Max
     };
 }
