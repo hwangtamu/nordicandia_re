@@ -1,6 +1,1276 @@
 {
-  "contentVersion": "m0-1",
+  "contentVersion": "v01-1",
   "sourceApk": "UnityDataAssetPack.apk",
+  "kits": {
+    "dungeon_default": {
+      "bundle": "assets/aa/Android/world_dungeon_theme_default_assets_all_d61acd6667a269368b0a821f3523245b.bundle",
+      "bundleSha256": "87f27b74432dbedf0050747900d95252eb48f4aa6ca648ee1d0843f39dc66a0f",
+      "meshes": [
+        {
+          "name": "CliffEdge_Straight",
+          "file": "kit/dungeon_default/CliffEdge_Straight.glb",
+          "vertices": 96,
+          "triangles": 48,
+          "bytes": 5140,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Door",
+          "file": "kit/dungeon_default/Door.glb",
+          "vertices": 413,
+          "triangles": 158,
+          "bytes": 16704,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Door",
+          "file": "kit/dungeon_default/Door.glb",
+          "vertices": 318,
+          "triangles": 164,
+          "bytes": 13688,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorOneWay",
+          "file": "kit/dungeon_default/DoorOneWay.glb",
+          "vertices": 490,
+          "triangles": 186,
+          "bytes": 19536,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabL",
+          "file": "kit/dungeon_default/DoorSlabL.glb",
+          "vertices": 144,
+          "triangles": 58,
+          "bytes": 6920,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabR",
+          "file": "kit/dungeon_default/DoorSlabR.glb",
+          "vertices": 140,
+          "triangles": 58,
+          "bytes": 6804,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Floor_Slab_lrg",
+          "file": "kit/dungeon_default/Floor_Slab_lrg.glb",
+          "vertices": 381,
+          "triangles": 152,
+          "bytes": 15640,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Floor_Slab_sml",
+          "file": "kit/dungeon_default/Floor_Slab_sml.glb",
+          "vertices": 363,
+          "triangles": 138,
+          "bytes": 14904,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Flor_Slab_md",
+          "file": "kit/dungeon_default/Flor_Slab_md.glb",
+          "vertices": 346,
+          "triangles": 135,
+          "bytes": 14324,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Column_01_base",
+          "file": "kit/dungeon_default/MOD_Column_01_base.glb",
+          "vertices": 64,
+          "triangles": 32,
+          "bytes": 4068,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "MOD_Column_01_capital",
+          "file": "kit/dungeon_default/MOD_Column_01_capital.glb",
+          "vertices": 44,
+          "triangles": 22,
+          "bytes": 3304,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "MOD_Column_01_large",
+          "file": "kit/dungeon_default/MOD_Column_01_large.glb",
+          "vertices": 188,
+          "triangles": 130,
+          "bytes": 9236,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "MOD_Column_01_small",
+          "file": "kit/dungeon_default/MOD_Column_01_small.glb",
+          "vertices": 52,
+          "triangles": 34,
+          "bytes": 3724,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "MOD_Floor_01_O_straight_med",
+          "file": "kit/dungeon_default/MOD_Floor_01_O_straight_med.glb",
+          "vertices": 4,
+          "triangles": 2,
+          "bytes": 1592,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Floor_01_O_straight_tiny",
+          "file": "kit/dungeon_default/MOD_Floor_01_O_straight_tiny.glb",
+          "vertices": 4,
+          "triangles": 2,
+          "bytes": 1620,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Railing_01_column",
+          "file": "kit/dungeon_default/MOD_Railing_01_column.glb",
+          "vertices": 104,
+          "triangles": 52,
+          "bytes": 5592,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "MOD_Railing_01_straight",
+          "file": "kit/dungeon_default/MOD_Railing_01_straight.glb",
+          "vertices": 264,
+          "triangles": 148,
+          "bytes": 11796,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "MOD_Railing_01_straight_half",
+          "file": "kit/dungeon_default/MOD_Railing_01_straight_half.glb",
+          "vertices": 138,
+          "triangles": 76,
+          "bytes": 6896,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "MOD_Wall_01_O_straight_large",
+          "file": "kit/dungeon_default/MOD_Wall_01_O_straight_large.glb",
+          "vertices": 4,
+          "triangles": 2,
+          "bytes": 1756,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "SM_PROP_brazier_dungeon_02",
+          "file": "kit/dungeon_default/SM_PROP_brazier_dungeon_02.glb",
+          "vertices": 584,
+          "triangles": 544,
+          "bytes": 26872,
+          "texture": "T_metal_dungeon_01_BC"
+        },
+        {
+          "name": "SM_PROP_debris_stones_dungeon_01",
+          "file": "kit/dungeon_default/SM_PROP_debris_stones_dungeon_01.glb",
+          "vertices": 60,
+          "triangles": 66,
+          "bytes": 4384,
+          "texture": "T_PROP_orevein_dungeon_BC"
+        },
+        {
+          "name": "SM_PROP_debris_stones_dungeon_04",
+          "file": "kit/dungeon_default/SM_PROP_debris_stones_dungeon_04.glb",
+          "vertices": 85,
+          "triangles": 100,
+          "bytes": 5580,
+          "texture": "T_PROP_orevein_dungeon_BC"
+        },
+        {
+          "name": "SM_PROP_planks_dungeon_05",
+          "file": "kit/dungeon_default/SM_PROP_planks_dungeon_05.glb",
+          "vertices": 128,
+          "triangles": 68,
+          "bytes": 6584,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "SM_PROP_torch_standing_dungeon",
+          "file": "kit/dungeon_default/SM_PROP_torch_standing_dungeon.glb",
+          "vertices": 971,
+          "triangles": 796,
+          "bytes": 42288,
+          "texture": "T_metal_dungeon_01_BC"
+        },
+        {
+          "name": "SM_PROP_wallshelf_dungeon_03",
+          "file": "kit/dungeon_default/SM_PROP_wallshelf_dungeon_03.glb",
+          "vertices": 96,
+          "triangles": 60,
+          "bytes": 5432,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "WallHalf",
+          "file": "kit/dungeon_default/WallHalf.glb",
+          "vertices": 24,
+          "triangles": 12,
+          "bytes": 2444,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        }
+      ],
+      "textures": [
+        {
+          "name": "Stone_Base_Color",
+          "file": "kit/dungeon_default/textures/Stone_Base_Color.png",
+          "bytes": 334798
+        },
+        {
+          "name": "T_ENV_MOD_Floor_01_v3_BC",
+          "file": "kit/dungeon_default/textures/T_ENV_MOD_Floor_01_v3_BC.png",
+          "bytes": 404431
+        },
+        {
+          "name": "T_ENV_MOD_StoneStack_01_v3_BC",
+          "file": "kit/dungeon_default/textures/T_ENV_MOD_StoneStack_01_v3_BC.png",
+          "bytes": 320014
+        },
+        {
+          "name": "T_ENV_MOD_StoneStack_01_v3_BC_Blue",
+          "file": "kit/dungeon_default/textures/T_ENV_MOD_StoneStack_01_v3_BC_Blue.png",
+          "bytes": 317065
+        },
+        {
+          "name": "T_ENV_MOD_Wall_01_v3_BC_Blue",
+          "file": "kit/dungeon_default/textures/T_ENV_MOD_Wall_01_v3_BC_Blue.png",
+          "bytes": 444222
+        },
+        {
+          "name": "T_FX_sprite_fire_dungeon_BC",
+          "file": "kit/dungeon_default/textures/T_FX_sprite_fire_dungeon_BC.png",
+          "bytes": 15984
+        },
+        {
+          "name": "T_PROP_orevein_dungeon_BC",
+          "file": "kit/dungeon_default/textures/T_PROP_orevein_dungeon_BC.png",
+          "bytes": 277474
+        },
+        {
+          "name": "T_metal_dungeon_01_BC",
+          "file": "kit/dungeon_default/textures/T_metal_dungeon_01_BC.png",
+          "bytes": 96225
+        },
+        {
+          "name": "T_wood_planks_dungeon_03_BC",
+          "file": "kit/dungeon_default/textures/T_wood_planks_dungeon_03_BC.png",
+          "bytes": 22514
+        },
+        {
+          "name": "T_wood_planks_dungeon_04_BC",
+          "file": "kit/dungeon_default/textures/T_wood_planks_dungeon_04_BC.png",
+          "bytes": 14808
+        }
+      ]
+    },
+    "dungeon_grass": {
+      "bundle": "assets/aa/Android/world_dungeon_theme_grass_assets_all_aa6389b1308d9006a0a73e866130529a.bundle",
+      "bundleSha256": "bb0c6319cca82ffdcbc817f54b0807d27f331f26f38db99c3ff8c599d19f88d4",
+      "meshes": [
+        {
+          "name": "CliffEdge_Straight",
+          "file": "kit/dungeon_grass/CliffEdge_Straight.glb",
+          "vertices": 96,
+          "triangles": 48,
+          "bytes": 5140,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Door",
+          "file": "kit/dungeon_grass/Door.glb",
+          "vertices": 413,
+          "triangles": 158,
+          "bytes": 16704,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Door",
+          "file": "kit/dungeon_grass/Door.glb",
+          "vertices": 318,
+          "triangles": 164,
+          "bytes": 13688,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorOneWay",
+          "file": "kit/dungeon_grass/DoorOneWay.glb",
+          "vertices": 490,
+          "triangles": 186,
+          "bytes": 19536,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabL",
+          "file": "kit/dungeon_grass/DoorSlabL.glb",
+          "vertices": 144,
+          "triangles": 58,
+          "bytes": 6920,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabR",
+          "file": "kit/dungeon_grass/DoorSlabR.glb",
+          "vertices": 140,
+          "triangles": 58,
+          "bytes": 6804,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "MOD_Floor_01_O_singlestone_1",
+          "file": "kit/dungeon_grass/MOD_Floor_01_O_singlestone_1.glb",
+          "vertices": 11,
+          "triangles": 10,
+          "bytes": 2036,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Floor_01_O_singlestone_2",
+          "file": "kit/dungeon_grass/MOD_Floor_01_O_singlestone_2.glb",
+          "vertices": 13,
+          "triangles": 17,
+          "bytes": 2220,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Floor_01_O_singlestone_3",
+          "file": "kit/dungeon_grass/MOD_Floor_01_O_singlestone_3.glb",
+          "vertices": 10,
+          "triangles": 14,
+          "bytes": 2092,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Floor_01_O_straight_med",
+          "file": "kit/dungeon_grass/MOD_Floor_01_O_straight_med.glb",
+          "vertices": 4,
+          "triangles": 2,
+          "bytes": 1592,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Tree_cut_01_green",
+          "file": "kit/dungeon_grass/Tree_cut_01_green.glb",
+          "vertices": 242,
+          "triangles": 253,
+          "bytes": 12452,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Tree_cut_02_blue",
+          "file": "kit/dungeon_grass/Tree_cut_02_blue.glb",
+          "vertices": 231,
+          "triangles": 198,
+          "bytes": 11440,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Tree_fall_01_blue",
+          "file": "kit/dungeon_grass/Tree_fall_01_blue.glb",
+          "vertices": 389,
+          "triangles": 380,
+          "bytes": 18688,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "WallHalf",
+          "file": "kit/dungeon_grass/WallHalf.glb",
+          "vertices": 24,
+          "triangles": 12,
+          "bytes": 2444,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        }
+      ],
+      "textures": [
+        {
+          "name": "Stone_Base_Color",
+          "file": "kit/dungeon_grass/textures/Stone_Base_Color.png",
+          "bytes": 334798
+        },
+        {
+          "name": "T_ENV_MOD_Floor_01_v2_BC",
+          "file": "kit/dungeon_grass/textures/T_ENV_MOD_Floor_01_v2_BC.png",
+          "bytes": 290931
+        },
+        {
+          "name": "T_PROP_bonepile_dungeon_BC",
+          "file": "kit/dungeon_grass/textures/T_PROP_bonepile_dungeon_BC.png",
+          "bytes": 565727
+        },
+        {
+          "name": "T_PROP_dirtpile_dungeon_BC",
+          "file": "kit/dungeon_grass/textures/T_PROP_dirtpile_dungeon_BC.png",
+          "bytes": 375121
+        }
+      ]
+    },
+    "dungeon_sand": {
+      "bundle": "assets/aa/Android/world_dungeon_theme_sand_assets_all_4a5e01d9c70ee117c6007fe435bd625a.bundle",
+      "bundleSha256": "962665908b11f3a834bd1a6d78baed1f272d8cdb66d16ca981f5b3496b3f4cd5",
+      "meshes": [
+        {
+          "name": "CliffEdge_Straight",
+          "file": "kit/dungeon_sand/CliffEdge_Straight.glb",
+          "vertices": 96,
+          "triangles": 48,
+          "bytes": 5140,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Door",
+          "file": "kit/dungeon_sand/Door.glb",
+          "vertices": 413,
+          "triangles": 158,
+          "bytes": 16704,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Door",
+          "file": "kit/dungeon_sand/Door.glb",
+          "vertices": 318,
+          "triangles": 164,
+          "bytes": 13688,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorOneWay",
+          "file": "kit/dungeon_sand/DoorOneWay.glb",
+          "vertices": 490,
+          "triangles": 186,
+          "bytes": 19536,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabL",
+          "file": "kit/dungeon_sand/DoorSlabL.glb",
+          "vertices": 144,
+          "triangles": 58,
+          "bytes": 6920,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabR",
+          "file": "kit/dungeon_sand/DoorSlabR.glb",
+          "vertices": 140,
+          "triangles": 58,
+          "bytes": 6804,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "MOD_Floor_01_O_singlestone_1",
+          "file": "kit/dungeon_sand/MOD_Floor_01_O_singlestone_1.glb",
+          "vertices": 11,
+          "triangles": 10,
+          "bytes": 2036,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Floor_01_O_singlestone_2",
+          "file": "kit/dungeon_sand/MOD_Floor_01_O_singlestone_2.glb",
+          "vertices": 13,
+          "triangles": 17,
+          "bytes": 2220,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Floor_01_O_singlestone_3",
+          "file": "kit/dungeon_sand/MOD_Floor_01_O_singlestone_3.glb",
+          "vertices": 10,
+          "triangles": 14,
+          "bytes": 2092,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "WallHalf",
+          "file": "kit/dungeon_sand/WallHalf.glb",
+          "vertices": 24,
+          "triangles": 12,
+          "bytes": 2444,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        }
+      ],
+      "textures": [
+        {
+          "name": "T_ENV_MOD_Floor_01_v3_BC",
+          "file": "kit/dungeon_sand/textures/T_ENV_MOD_Floor_01_v3_BC.png",
+          "bytes": 404431
+        }
+      ]
+    },
+    "dungeon_undead": {
+      "bundle": "assets/aa/Android/world_dungeon_theme_undead_assets_all_7e05784235d15c53c116588ff7f058f3.bundle",
+      "bundleSha256": "8b1d8c51f026a7e92d38901a896f0e64f8637df0b0c2be89d34c0b6947f7107c",
+      "meshes": [
+        {
+          "name": "CliffEdge_Straight",
+          "file": "kit/dungeon_undead/CliffEdge_Straight.glb",
+          "vertices": 96,
+          "triangles": 48,
+          "bytes": 5140,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Door",
+          "file": "kit/dungeon_undead/Door.glb",
+          "vertices": 413,
+          "triangles": 158,
+          "bytes": 16704,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Door",
+          "file": "kit/dungeon_undead/Door.glb",
+          "vertices": 318,
+          "triangles": 164,
+          "bytes": 13688,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorOneWay",
+          "file": "kit/dungeon_undead/DoorOneWay.glb",
+          "vertices": 490,
+          "triangles": 186,
+          "bytes": 19536,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabL",
+          "file": "kit/dungeon_undead/DoorSlabL.glb",
+          "vertices": 144,
+          "triangles": 58,
+          "bytes": 6920,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabR",
+          "file": "kit/dungeon_undead/DoorSlabR.glb",
+          "vertices": 140,
+          "triangles": 58,
+          "bytes": 6804,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Gate_el1",
+          "file": "kit/dungeon_undead/Gate_el1.glb",
+          "vertices": 334,
+          "triangles": 148,
+          "bytes": 14112,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Gate_el2",
+          "file": "kit/dungeon_undead/Gate_el2.glb",
+          "vertices": 84,
+          "triangles": 56,
+          "bytes": 4944,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Floor_01_O_singlestone_1",
+          "file": "kit/dungeon_undead/MOD_Floor_01_O_singlestone_1.glb",
+          "vertices": 11,
+          "triangles": 10,
+          "bytes": 2036,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Floor_01_O_singlestone_2",
+          "file": "kit/dungeon_undead/MOD_Floor_01_O_singlestone_2.glb",
+          "vertices": 13,
+          "triangles": 17,
+          "bytes": 2220,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Floor_01_O_singlestone_3",
+          "file": "kit/dungeon_undead/MOD_Floor_01_O_singlestone_3.glb",
+          "vertices": 10,
+          "triangles": 14,
+          "bytes": 2092,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Floor_01_O_straight_med",
+          "file": "kit/dungeon_undead/MOD_Floor_01_O_straight_med.glb",
+          "vertices": 4,
+          "triangles": 2,
+          "bytes": 1592,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "WallHalf",
+          "file": "kit/dungeon_undead/WallHalf.glb",
+          "vertices": 24,
+          "triangles": 12,
+          "bytes": 2444,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        }
+      ],
+      "textures": [
+        {
+          "name": "T_ENV_MOD_Floor_01_v2_BC",
+          "file": "kit/dungeon_undead/textures/T_ENV_MOD_Floor_01_v2_BC.png",
+          "bytes": 290931
+        },
+        {
+          "name": "T_PROP_bonepile_dungeon_BC",
+          "file": "kit/dungeon_undead/textures/T_PROP_bonepile_dungeon_BC.png",
+          "bytes": 565727
+        }
+      ]
+    },
+    "dungeon": {
+      "bundle": "assets/aa/Android/world_dungeon_assets_all_c264b6980899af766683e5738f472325.bundle",
+      "bundleSha256": "1530d066f0c0ebae66bdf6053d9c4e2ac7ac64043c61697ad5d7f1ad6a46231d",
+      "meshes": [],
+      "textures": []
+    },
+    "town": {
+      "bundle": "assets/aa/Android/world_town_assets_all_8247f861a9d24226e9b30fd45b4e7b78.bundle",
+      "bundleSha256": "3a4d5f4afa3ed14827ead452014c53b25396aa5b6c7c611fc208786e4d85e3f8",
+      "meshes": [],
+      "textures": []
+    },
+    "tutorial": {
+      "bundle": "assets/aa/Android/world_tutorial_assets_all_3398b76ea523065f89d39f506fc78023.bundle",
+      "bundleSha256": "029a54ca86eafc6c1d4bc02221350e983d3c57220e825137ec08e139dfbf3168",
+      "meshes": [],
+      "textures": []
+    },
+    "golem": {
+      "bundle": "assets/aa/Android/world_golem_assets_all_d29970048e5e3b96940fb646d08dd1cb.bundle",
+      "bundleSha256": "f9d223c8bd75f83511edb859e825b54239f956f7474879266a604dd25cf5812a",
+      "meshes": [
+        {
+          "name": "CliffEdge_CornerInner",
+          "file": "kit/golem/CliffEdge_CornerInner.glb",
+          "vertices": 159,
+          "triangles": 83,
+          "bytes": 7620,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "CliffEdge_CornerOuter",
+          "file": "kit/golem/CliffEdge_CornerOuter.glb",
+          "vertices": 221,
+          "triangles": 115,
+          "bytes": 9988,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "CliffEdge_Straight",
+          "file": "kit/golem/CliffEdge_Straight.glb",
+          "vertices": 96,
+          "triangles": 48,
+          "bytes": 5140,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Door",
+          "file": "kit/golem/Door.glb",
+          "vertices": 413,
+          "triangles": 158,
+          "bytes": 16704,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Door",
+          "file": "kit/golem/Door.glb",
+          "vertices": 318,
+          "triangles": 164,
+          "bytes": 13688,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorOneWay",
+          "file": "kit/golem/DoorOneWay.glb",
+          "vertices": 490,
+          "triangles": 186,
+          "bytes": 19536,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabL",
+          "file": "kit/golem/DoorSlabL.glb",
+          "vertices": 144,
+          "triangles": 58,
+          "bytes": 6920,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabR",
+          "file": "kit/golem/DoorSlabR.glb",
+          "vertices": 140,
+          "triangles": 58,
+          "bytes": 6804,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Floor_Sand_lrg",
+          "file": "kit/golem/Floor_Sand_lrg.glb",
+          "vertices": 470,
+          "triangles": 179,
+          "bytes": 18800,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Floor_Slab_sml",
+          "file": "kit/golem/Floor_Slab_sml.glb",
+          "vertices": 363,
+          "triangles": 138,
+          "bytes": 14904,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "RockColumn1",
+          "file": "kit/golem/RockColumn1.glb",
+          "vertices": 518,
+          "triangles": 184,
+          "bytes": 20420,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "RockColumn2",
+          "file": "kit/golem/RockColumn2.glb",
+          "vertices": 522,
+          "triangles": 186,
+          "bytes": 20576,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "WallHalf",
+          "file": "kit/golem/WallHalf.glb",
+          "vertices": 24,
+          "triangles": 12,
+          "bytes": 2444,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        }
+      ],
+      "textures": []
+    },
+    "helheim": {
+      "bundle": "assets/aa/Android/world_helheim_assets_all_5a1d1550e2c063022da7a01fca521b73.bundle",
+      "bundleSha256": "0492db5ecb3e0b2363fc8fb370bc0b1502af6fffdc5b40c8f4ed600dec4af77d",
+      "meshes": [
+        {
+          "name": "Barrels_Preset_01_Collider_01",
+          "file": "kit/helheim/Barrels_Preset_01_Collider_01.glb",
+          "vertices": 38,
+          "triangles": 20,
+          "bytes": 3024,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Barrels_Preset_01_Mesh",
+          "file": "kit/helheim/Barrels_Preset_01_Mesh.glb",
+          "vertices": 352,
+          "triangles": 368,
+          "bytes": 17328,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Barrels_Preset_02_Collider_01",
+          "file": "kit/helheim/Barrels_Preset_02_Collider_01.glb",
+          "vertices": 30,
+          "triangles": 16,
+          "bytes": 2704,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Barrels_Preset_02_Mesh",
+          "file": "kit/helheim/Barrels_Preset_02_Mesh.glb",
+          "vertices": 528,
+          "triangles": 552,
+          "bytes": 25168,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "CliffEdge_Straight",
+          "file": "kit/helheim/CliffEdge_Straight.glb",
+          "vertices": 96,
+          "triangles": 48,
+          "bytes": 5140,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Door",
+          "file": "kit/helheim/Door.glb",
+          "vertices": 413,
+          "triangles": 158,
+          "bytes": 16704,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Door",
+          "file": "kit/helheim/Door.glb",
+          "vertices": 318,
+          "triangles": 164,
+          "bytes": 13688,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorOneWay",
+          "file": "kit/helheim/DoorOneWay.glb",
+          "vertices": 490,
+          "triangles": 186,
+          "bytes": 19536,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabL",
+          "file": "kit/helheim/DoorSlabL.glb",
+          "vertices": 144,
+          "triangles": 58,
+          "bytes": 6920,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabR",
+          "file": "kit/helheim/DoorSlabR.glb",
+          "vertices": 140,
+          "triangles": 58,
+          "bytes": 6804,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "WallHalf",
+          "file": "kit/helheim/WallHalf.glb",
+          "vertices": 24,
+          "triangles": 12,
+          "bytes": 2444,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        }
+      ],
+      "textures": []
+    },
+    "niflheim": {
+      "bundle": "assets/aa/Android/world_niflheim_assets_all_1c7bd7026e0631d0c48f70d1921cef5a.bundle",
+      "bundleSha256": "7dd581f5ae0f8e1dcd2eda5a339bcab171c7f177af9bc5d428a7b4b8d03f3588",
+      "meshes": [
+        {
+          "name": "CliffEdge_Straight",
+          "file": "kit/niflheim/CliffEdge_Straight.glb",
+          "vertices": 96,
+          "triangles": 48,
+          "bytes": 5140,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Door",
+          "file": "kit/niflheim/Door.glb",
+          "vertices": 413,
+          "triangles": 158,
+          "bytes": 16704,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Door",
+          "file": "kit/niflheim/Door.glb",
+          "vertices": 318,
+          "triangles": 164,
+          "bytes": 13688,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorOneWay",
+          "file": "kit/niflheim/DoorOneWay.glb",
+          "vertices": 490,
+          "triangles": 186,
+          "bytes": 19536,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabL",
+          "file": "kit/niflheim/DoorSlabL.glb",
+          "vertices": 144,
+          "triangles": 58,
+          "bytes": 6920,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabR",
+          "file": "kit/niflheim/DoorSlabR.glb",
+          "vertices": 140,
+          "triangles": 58,
+          "bytes": 6804,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Floor_Sand_lrg",
+          "file": "kit/niflheim/Floor_Sand_lrg.glb",
+          "vertices": 470,
+          "triangles": 179,
+          "bytes": 18800,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Floor_Sand_md",
+          "file": "kit/niflheim/Floor_Sand_md.glb",
+          "vertices": 380,
+          "triangles": 128,
+          "bytes": 15292,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Floor_Sand_sml",
+          "file": "kit/niflheim/Floor_Sand_sml.glb",
+          "vertices": 103,
+          "triangles": 37,
+          "bytes": 5412,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "WallHalf",
+          "file": "kit/niflheim/WallHalf.glb",
+          "vertices": 24,
+          "triangles": 12,
+          "bytes": 2444,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        }
+      ],
+      "textures": []
+    },
+    "odrstrail": {
+      "bundle": "assets/aa/Android/world_odrstrail_assets_all_2a0649445db6fc5ef56fd1a7c7769c9e.bundle",
+      "bundleSha256": "4ae5036de5d712a5ae067aab14bbbeb540ec15fb01415cebbaedc11e7c55a109",
+      "meshes": [
+        {
+          "name": "CliffEdge_Straight",
+          "file": "kit/odrstrail/CliffEdge_Straight.glb",
+          "vertices": 96,
+          "triangles": 48,
+          "bytes": 5140,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Door",
+          "file": "kit/odrstrail/Door.glb",
+          "vertices": 413,
+          "triangles": 158,
+          "bytes": 16704,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Door",
+          "file": "kit/odrstrail/Door.glb",
+          "vertices": 318,
+          "triangles": 164,
+          "bytes": 13688,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorOneWay",
+          "file": "kit/odrstrail/DoorOneWay.glb",
+          "vertices": 490,
+          "triangles": 186,
+          "bytes": 19536,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabL",
+          "file": "kit/odrstrail/DoorSlabL.glb",
+          "vertices": 144,
+          "triangles": 58,
+          "bytes": 6920,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabR",
+          "file": "kit/odrstrail/DoorSlabR.glb",
+          "vertices": 140,
+          "triangles": 58,
+          "bytes": 6804,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Floor_Slab_lrg",
+          "file": "kit/odrstrail/Floor_Slab_lrg.glb",
+          "vertices": 381,
+          "triangles": 152,
+          "bytes": 15640,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Floor_Slab_sml",
+          "file": "kit/odrstrail/Floor_Slab_sml.glb",
+          "vertices": 363,
+          "triangles": 138,
+          "bytes": 14904,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Flor_Slab_md",
+          "file": "kit/odrstrail/Flor_Slab_md.glb",
+          "vertices": 346,
+          "triangles": 135,
+          "bytes": 14324,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Floor_01_O_straight_med",
+          "file": "kit/odrstrail/MOD_Floor_01_O_straight_med.glb",
+          "vertices": 4,
+          "triangles": 2,
+          "bytes": 1592,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "WallHalf",
+          "file": "kit/odrstrail/WallHalf.glb",
+          "vertices": 24,
+          "triangles": 12,
+          "bytes": 2444,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        }
+      ],
+      "textures": [
+        {
+          "name": "Stone_Base_Color",
+          "file": "kit/odrstrail/textures/Stone_Base_Color.png",
+          "bytes": 334798
+        }
+      ]
+    },
+    "vanaheim": {
+      "bundle": "assets/aa/Android/world_vanaheim_assets_all_4f9b73bc4c9f5473f44f336409dd4c6e.bundle",
+      "bundleSha256": "7a236347656abf49ac2f73d79f5035b9c33b2eea73bcbb4b086b149fbca2f5d7",
+      "meshes": [
+        {
+          "name": "CliffEdge_Straight",
+          "file": "kit/vanaheim/CliffEdge_Straight.glb",
+          "vertices": 96,
+          "triangles": 48,
+          "bytes": 5140,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Door",
+          "file": "kit/vanaheim/Door.glb",
+          "vertices": 413,
+          "triangles": 158,
+          "bytes": 16704,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Door",
+          "file": "kit/vanaheim/Door.glb",
+          "vertices": 318,
+          "triangles": 164,
+          "bytes": 13688,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorOneWay",
+          "file": "kit/vanaheim/DoorOneWay.glb",
+          "vertices": 490,
+          "triangles": 186,
+          "bytes": 19536,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabL",
+          "file": "kit/vanaheim/DoorSlabL.glb",
+          "vertices": 144,
+          "triangles": 58,
+          "bytes": 6920,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabR",
+          "file": "kit/vanaheim/DoorSlabR.glb",
+          "vertices": 140,
+          "triangles": 58,
+          "bytes": 6804,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Floor_Slab_lrg",
+          "file": "kit/vanaheim/Floor_Slab_lrg.glb",
+          "vertices": 381,
+          "triangles": 152,
+          "bytes": 15640,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Floor_Slab_sml",
+          "file": "kit/vanaheim/Floor_Slab_sml.glb",
+          "vertices": 363,
+          "triangles": 138,
+          "bytes": 14904,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "Flor_Slab_md",
+          "file": "kit/vanaheim/Flor_Slab_md.glb",
+          "vertices": 346,
+          "triangles": 135,
+          "bytes": 14324,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Column_01_base",
+          "file": "kit/vanaheim/MOD_Column_01_base.glb",
+          "vertices": 64,
+          "triangles": 32,
+          "bytes": 4068,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "MOD_Column_01_capital",
+          "file": "kit/vanaheim/MOD_Column_01_capital.glb",
+          "vertices": 44,
+          "triangles": 22,
+          "bytes": 3304,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "MOD_Column_01_large",
+          "file": "kit/vanaheim/MOD_Column_01_large.glb",
+          "vertices": 188,
+          "triangles": 130,
+          "bytes": 9236,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "MOD_Column_01_small",
+          "file": "kit/vanaheim/MOD_Column_01_small.glb",
+          "vertices": 52,
+          "triangles": 34,
+          "bytes": 3724,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "MOD_Floor_01_O_straight_med",
+          "file": "kit/vanaheim/MOD_Floor_01_O_straight_med.glb",
+          "vertices": 4,
+          "triangles": 2,
+          "bytes": 1592,
+          "texture": "Stone_Base_Color"
+        },
+        {
+          "name": "MOD_Railing_01_straight",
+          "file": "kit/vanaheim/MOD_Railing_01_straight.glb",
+          "vertices": 264,
+          "triangles": 148,
+          "bytes": 11796,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "MOD_Wall_01_O_straight_large",
+          "file": "kit/vanaheim/MOD_Wall_01_O_straight_large.glb",
+          "vertices": 4,
+          "triangles": 2,
+          "bytes": 1756,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "WallHalf",
+          "file": "kit/vanaheim/WallHalf.glb",
+          "vertices": 24,
+          "triangles": 12,
+          "bytes": 2444,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        }
+      ],
+      "textures": [
+        {
+          "name": "Stone_Base_Color",
+          "file": "kit/vanaheim/textures/Stone_Base_Color.png",
+          "bytes": 334798
+        },
+        {
+          "name": "T_ENV_MOD_StoneStack_01_v3_BC",
+          "file": "kit/vanaheim/textures/T_ENV_MOD_StoneStack_01_v3_BC.png",
+          "bytes": 320014
+        },
+        {
+          "name": "T_ENV_MOD_StoneStack_01_v3_BC_Blue",
+          "file": "kit/vanaheim/textures/T_ENV_MOD_StoneStack_01_v3_BC_Blue.png",
+          "bytes": 317065
+        },
+        {
+          "name": "T_ENV_MOD_Wall_01_v3_BC_Blue",
+          "file": "kit/vanaheim/textures/T_ENV_MOD_Wall_01_v3_BC_Blue.png",
+          "bytes": 444222
+        }
+      ]
+    },
+    "guilddefense": {
+      "bundle": "assets/aa/Android/world_guilddefense_assets_all_9aae5496b46bdf21d07f33a7bd012fc2.bundle",
+      "bundleSha256": "a003aa388f7631489a795ca3dc86f520d25dadc91bc2a33228c42f0255c47c68",
+      "meshes": [
+        {
+          "name": "Door",
+          "file": "kit/guilddefense/Door.glb",
+          "vertices": 413,
+          "triangles": 158,
+          "bytes": 16704,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "Door",
+          "file": "kit/guilddefense/Door.glb",
+          "vertices": 318,
+          "triangles": 164,
+          "bytes": 13688,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorOneWay",
+          "file": "kit/guilddefense/DoorOneWay.glb",
+          "vertices": 490,
+          "triangles": 186,
+          "bytes": 19536,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabL",
+          "file": "kit/guilddefense/DoorSlabL.glb",
+          "vertices": 144,
+          "triangles": 58,
+          "bytes": 6920,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "DoorSlabR",
+          "file": "kit/guilddefense/DoorSlabR.glb",
+          "vertices": 140,
+          "triangles": 58,
+          "bytes": 6804,
+          "texture": "T_wood_planks_dungeon_04_BC"
+        },
+        {
+          "name": "WallHalf",
+          "file": "kit/guilddefense/WallHalf.glb",
+          "vertices": 24,
+          "triangles": 12,
+          "bytes": 2444,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "Wall_Plane1_LP_Group49160",
+          "file": "kit/guilddefense/Wall_Plane1_LP_Group49160.glb",
+          "vertices": 362,
+          "triangles": 667,
+          "bytes": 21268,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        },
+        {
+          "name": "Wall_Plane2_LP_Group36177",
+          "file": "kit/guilddefense/Wall_Plane2_LP_Group36177.glb",
+          "vertices": 388,
+          "triangles": 714,
+          "bytes": 22660,
+          "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+        }
+      ],
+      "textures": []
+    }
+  },
   "kit": {
     "bundle": "assets/aa/Android/world_dungeon_theme_default_assets_all_d61acd6667a269368b0a821f3523245b.bundle",
     "bundleSha256": "87f27b74432dbedf0050747900d95252eb48f4aa6ca648ee1d0843f39dc66a0f",
@@ -204,6 +1474,14 @@
         "triangles": 60,
         "bytes": 5432,
         "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
+      },
+      {
+        "name": "WallHalf",
+        "file": "kit/dungeon_default/WallHalf.glb",
+        "vertices": 24,
+        "triangles": 12,
+        "bytes": 2444,
+        "texture": "T_ENV_MOD_Wall_01_v3_BC_Blue"
       }
     ],
     "textures": [
@@ -261,11 +1539,473 @@
   },
   "avatars": [
     {
+      "name": "1",
+      "file": "avatars/1.png",
+      "w": 150,
+      "h": 150,
+      "bytes": 17201
+    },
+    {
+      "name": "69",
+      "file": "avatars/69.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 72544
+    },
+    {
+      "name": "ArcticWolf",
+      "file": "avatars/ArcticWolf.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 62109
+    },
+    {
+      "name": "ArmoredLarva",
+      "file": "avatars/ArmoredLarva.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 51222
+    },
+    {
+      "name": "ArmoredSkeleton1",
+      "file": "avatars/ArmoredSkeleton1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 40395
+    },
+    {
+      "name": "Arrowstream",
+      "file": "avatars/Arrowstream.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46164
+    },
+    {
       "name": "Badge_warrior",
       "file": "avatars/Badge_warrior.png",
       "w": 256,
       "h": 256,
       "bytes": 68834
+    },
+    {
+      "name": "Banshee",
+      "file": "avatars/Banshee.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 51091
+    },
+    {
+      "name": "Bat",
+      "file": "avatars/Bat.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49689
+    },
+    {
+      "name": "Bergsra",
+      "file": "avatars/Bergsra.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 176750
+    },
+    {
+      "name": "BigBiter",
+      "file": "avatars/BigBiter.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52994
+    },
+    {
+      "name": "BlackHawk",
+      "file": "avatars/BlackHawk.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48388
+    },
+    {
+      "name": "Blacksmith",
+      "file": "avatars/Blacksmith.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 45660
+    },
+    {
+      "name": "BoneBeast",
+      "file": "avatars/BoneBeast.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49363
+    },
+    {
+      "name": "BoneDragonSkeleton",
+      "file": "avatars/BoneDragonSkeleton.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 38112
+    },
+    {
+      "name": "Boss_AncientDragon",
+      "file": "avatars/Boss_AncientDragon.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50709
+    },
+    {
+      "name": "Boss_Bolomahl",
+      "file": "avatars/Boss_Bolomahl.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 73846
+    },
+    {
+      "name": "Boss_BoneDragon",
+      "file": "avatars/Boss_BoneDragon.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55341
+    },
+    {
+      "name": "Boss_Kibu",
+      "file": "avatars/Boss_Kibu.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 66854
+    },
+    {
+      "name": "Boss_Knight1",
+      "file": "avatars/Boss_Knight1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50627
+    },
+    {
+      "name": "Boss_Odr",
+      "file": "avatars/Boss_Odr.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54815
+    },
+    {
+      "name": "Boss_OdrTotem",
+      "file": "avatars/Boss_OdrTotem.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 43430
+    },
+    {
+      "name": "Boss_VileDragon",
+      "file": "avatars/Boss_VileDragon.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 58291
+    },
+    {
+      "name": "BrownBear",
+      "file": "avatars/BrownBear.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 58600
+    },
+    {
+      "name": "BrownSpider",
+      "file": "avatars/BrownSpider.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50907
+    },
+    {
+      "name": "CasterDemon1",
+      "file": "avatars/CasterDemon1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54725
+    },
+    {
+      "name": "CasterDemon2",
+      "file": "avatars/CasterDemon2.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 37620
+    },
+    {
+      "name": "CasterDemon3",
+      "file": "avatars/CasterDemon3.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 45589
+    },
+    {
+      "name": "Changer",
+      "file": "avatars/Changer.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50535
+    },
+    {
+      "name": "CombatPetKeeper",
+      "file": "avatars/CombatPetKeeper.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 211088
+    },
+    {
+      "name": "Creatures_03_nobg",
+      "file": "avatars/Creatures_03_nobg.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 65297
+    },
+    {
+      "name": "CrystalGolem",
+      "file": "avatars/CrystalGolem.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46785
+    },
+    {
+      "name": "DarkKnight",
+      "file": "avatars/DarkKnight.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49198
+    },
+    {
+      "name": "Deathknight",
+      "file": "avatars/Deathknight.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54148
+    },
+    {
+      "name": "Demon1",
+      "file": "avatars/Demon1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54607
+    },
+    {
+      "name": "Demon2",
+      "file": "avatars/Demon2.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49535
+    },
+    {
+      "name": "Demon3",
+      "file": "avatars/Demon3.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50624
+    },
+    {
+      "name": "Demon4",
+      "file": "avatars/Demon4.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 51359
+    },
+    {
+      "name": "Demon5",
+      "file": "avatars/Demon5.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50534
+    },
+    {
+      "name": "DemonOrc",
+      "file": "avatars/DemonOrc.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 67531
+    },
+    {
+      "name": "Disassembler",
+      "file": "avatars/Disassembler.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52261
+    },
+    {
+      "name": "Draugr",
+      "file": "avatars/Draugr.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 152756
+    },
+    {
+      "name": "Durnir_1",
+      "file": "avatars/Durnir_1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46319
+    },
+    {
+      "name": "Eggther_1",
+      "file": "avatars/Eggther_1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 47888
+    },
+    {
+      "name": "Eirwyn_1",
+      "file": "avatars/Eirwyn_1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 68214
+    },
+    {
+      "name": "Eirwyn_3",
+      "file": "avatars/Eirwyn_3.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 92552
+    },
+    {
+      "name": "Eirwyn_5",
+      "file": "avatars/Eirwyn_5.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 107183
+    },
+    {
+      "name": "Elder",
+      "file": "avatars/Elder.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55403
+    },
+    {
+      "name": "EnragedOrc",
+      "file": "avatars/EnragedOrc.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 53775
+    },
+    {
+      "name": "EvilEye",
+      "file": "avatars/EvilEye.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 42301
+    },
+    {
+      "name": "EvilPlant",
+      "file": "avatars/EvilPlant.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49451
+    },
+    {
+      "name": "FireGolem",
+      "file": "avatars/FireGolem.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 45963
+    },
+    {
+      "name": "Fossegrim_1",
+      "file": "avatars/Fossegrim_1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 75963
+    },
+    {
+      "name": "Ghoul",
+      "file": "avatars/Ghoul.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46833
+    },
+    {
+      "name": "Ghoul2",
+      "file": "avatars/Ghoul2.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 47628
+    },
+    {
+      "name": "Goblin1",
+      "file": "avatars/Goblin1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50113
+    },
+    {
+      "name": "Goblin2",
+      "file": "avatars/Goblin2.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 47996
+    },
+    {
+      "name": "Goblin3",
+      "file": "avatars/Goblin3.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 57144
+    },
+    {
+      "name": "GoblinArcher1",
+      "file": "avatars/GoblinArcher1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 57074
+    },
+    {
+      "name": "GrayWolf",
+      "file": "avatars/GrayWolf.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54567
+    },
+    {
+      "name": "GuildDefenseMaster",
+      "file": "avatars/GuildDefenseMaster.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 60752
+    },
+    {
+      "name": "Hala_1",
+      "file": "avatars/Hala_1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 41578
+    },
+    {
+      "name": "HeavySnowman",
+      "file": "avatars/HeavySnowman.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 71403
+    },
+    {
+      "name": "HelMinion",
+      "file": "avatars/HelMinion.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 49372
+    },
+    {
+      "name": "Hraesvelgr_1",
+      "file": "avatars/Hraesvelgr_1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 32167
+    },
+    {
+      "name": "Huginn",
+      "file": "avatars/Huginn.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 149801
+    },
+    {
+      "name": "Huldra",
+      "file": "avatars/Huldra.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 173775
     },
     {
       "name": "Human2",
@@ -574,6 +2314,76 @@
       "w": 256,
       "h": 256,
       "bytes": 44739
+    },
+    {
+      "name": "HunterSpiritWolf",
+      "file": "avatars/HunterSpiritWolf.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 61590
+    },
+    {
+      "name": "IceBear",
+      "file": "avatars/IceBear.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 50259
+    },
+    {
+      "name": "Karnyx_1",
+      "file": "avatars/Karnyx_1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55818
+    },
+    {
+      "name": "Karnyx_3",
+      "file": "avatars/Karnyx_3.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 73049
+    },
+    {
+      "name": "Karnyx_5",
+      "file": "avatars/Karnyx_5.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 79753
+    },
+    {
+      "name": "KibuMinion",
+      "file": "avatars/KibuMinion.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 131988
+    },
+    {
+      "name": "LegendSnowman",
+      "file": "avatars/LegendSnowman.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 58252
+    },
+    {
+      "name": "MagicalInsect",
+      "file": "avatars/MagicalInsect.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54722
+    },
+    {
+      "name": "MagicalOwl",
+      "file": "avatars/MagicalOwl.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 38390
+    },
+    {
+      "name": "Merchant",
+      "file": "avatars/Merchant.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54684
     },
     {
       "name": "Mobs_Plant_Monster_01",
@@ -1514,6 +3324,83 @@
       "bytes": 56586
     },
     {
+      "name": "Muninn",
+      "file": "avatars/Muninn.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 149150
+    },
+    {
+      "name": "NecromancerDeath",
+      "file": "avatars/NecromancerDeath.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 64568
+    },
+    {
+      "name": "NecromancerDemon",
+      "file": "avatars/NecromancerDemon.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 69400
+    },
+    {
+      "name": "NecromancerSkeleton",
+      "file": "avatars/NecromancerSkeleton.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 69486
+    },
+    {
+      "name": "NormalSnowman",
+      "file": "avatars/NormalSnowman.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 71650
+    },
+    {
+      "name": "Offering",
+      "file": "avatars/Offering.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 66785
+    },
+    {
+      "name": "Ogre",
+      "file": "avatars/Ogre.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 63055
+    },
+    {
+      "name": "Orc1",
+      "file": "avatars/Orc1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 57923
+    },
+    {
+      "name": "Orc2",
+      "file": "avatars/Orc2.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 56412
+    },
+    {
+      "name": "Orc3",
+      "file": "avatars/Orc3.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55529
+    },
+    {
+      "name": "Orc4",
+      "file": "avatars/Orc4.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 60606
+    },
+    {
       "name": "Orcwarrior_1",
       "file": "avatars/Orcwarrior_1.png",
       "w": 256,
@@ -1568,6 +3455,34 @@
       "w": 256,
       "h": 256,
       "bytes": 66271
+    },
+    {
+      "name": "Pesta",
+      "file": "avatars/Pesta.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 251853
+    },
+    {
+      "name": "Petkeeper",
+      "file": "avatars/Petkeeper.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 53603
+    },
+    {
+      "name": "PortalMaster",
+      "file": "avatars/PortalMaster.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 53337
+    },
+    {
+      "name": "RabidRat",
+      "file": "avatars/RabidRat.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55452
     },
     {
       "name": "RaceDemon",
@@ -1626,6 +3541,174 @@
       "bytes": 24270
     },
     {
+      "name": "RangedDemon1",
+      "file": "avatars/RangedDemon1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 42720
+    },
+    {
+      "name": "SetMerchant",
+      "file": "avatars/SetMerchant.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 137215
+    },
+    {
+      "name": "Shaman",
+      "file": "avatars/Shaman.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 58167
+    },
+    {
+      "name": "Skeleton1",
+      "file": "avatars/Skeleton1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 38112
+    },
+    {
+      "name": "SkeletonArcher1",
+      "file": "avatars/SkeletonArcher1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 45607
+    },
+    {
+      "name": "SkeletonArcher2",
+      "file": "avatars/SkeletonArcher2.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 35084
+    },
+    {
+      "name": "SkeletonCleric",
+      "file": "avatars/SkeletonCleric.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 33796
+    },
+    {
+      "name": "SkeletonCommander",
+      "file": "avatars/SkeletonCommander.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 52209
+    },
+    {
+      "name": "SkeletonMage",
+      "file": "avatars/SkeletonMage.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 47715
+    },
+    {
+      "name": "Spider",
+      "file": "avatars/Spider.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48267
+    },
+    {
+      "name": "SpiderQueen",
+      "file": "avatars/SpiderQueen.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 56338
+    },
+    {
+      "name": "Spiderling",
+      "file": "avatars/Spiderling.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 45448
+    },
+    {
+      "name": "SpittingParasite",
+      "file": "avatars/SpittingParasite.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 62803
+    },
+    {
+      "name": "StoneGolem",
+      "file": "avatars/StoneGolem.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48418
+    },
+    {
+      "name": "Succubus",
+      "file": "avatars/Succubus.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 42525
+    },
+    {
+      "name": "TheWarchief",
+      "file": "avatars/TheWarchief.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55884
+    },
+    {
+      "name": "Troll",
+      "file": "avatars/Troll.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 55276
+    },
+    {
+      "name": "Tutorial",
+      "file": "avatars/Tutorial.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 57602
+    },
+    {
+      "name": "UndeadBear",
+      "file": "avatars/UndeadBear.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59202
+    },
+    {
+      "name": "Undead_01_nobg - Copy",
+      "file": "avatars/Undead_01_nobg_-_Copy.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54155
+    },
+    {
+      "name": "VoidSpawn",
+      "file": "avatars/VoidSpawn.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 54428
+    },
+    {
+      "name": "Vyrmuld_1",
+      "file": "avatars/Vyrmuld_1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 65997
+    },
+    {
+      "name": "Vyrmuld_3",
+      "file": "avatars/Vyrmuld_3.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 82266
+    },
+    {
+      "name": "Vyrmuld_5",
+      "file": "avatars/Vyrmuld_5.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 93917
+    },
+    {
       "name": "Warrior_1",
       "file": "avatars/Warrior_1.png",
       "w": 256,
@@ -1638,6 +3721,68 @@
       "w": 256,
       "h": 256,
       "bytes": 77054
+    },
+    {
+      "name": "WiseOrc",
+      "file": "avatars/WiseOrc.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 46539
+    },
+    {
+      "name": "WolfKing",
+      "file": "avatars/WolfKing.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 48554
+    },
+    {
+      "name": "WolfKingMinion",
+      "file": "avatars/WolfKingMinion.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 62109
+    },
+    {
+      "name": "boar_1",
+      "file": "avatars/boar_1.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 57119
+    },
+    {
+      "name": "boar_2",
+      "file": "avatars/boar_2.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 62731
+    },
+    {
+      "name": "boar_3",
+      "file": "avatars/boar_3.png",
+      "w": 256,
+      "h": 256,
+      "bytes": 59186
+    },
+    {
+      "name": "nokken",
+      "file": "avatars/nokken.png",
+      "w": 512,
+      "h": 512,
+      "bytes": 135365
+    },
+    {
+      "name": "transparent",
+      "file": "avatars/transparent.png",
+      "w": 1000,
+      "h": 1000,
+      "bytes": 3957
     }
-  ]
+  ],
+  "missingAssets": {
+    "referenced": 138,
+    "exported": 320,
+    "missing": {},
+    "missingCount": 0
+  }
 }

@@ -37,7 +37,7 @@ APK = ROOT / "dist/android-arm64-src/UnityDataAssetPack.apk"
 OUT = ROOT / "web/public/assets"
 
 # Content-version tag. Bump when the export rules change so clients can invalidate.
-CONTENT_VERSION = "m0-1"
+CONTENT_VERSION = "v01-1"
 
 DUNGEON_BUNDLE = "world_dungeon_theme_default_assets_all_"
 # Meshes that make up a usable room kit. Names come from the bundle inventory.
@@ -99,13 +99,37 @@ def bundle_name(z: zipfile.ZipFile, contains: str) -> str:
     raise SystemExit(f"no bundle matching {contains!r}")
 
 
-def export_kit(z: zipfile.ZipFile, manifest: dict) -> None:
-    name = bundle_name(z, DUNGEON_BUNDLE)
+# V01: every shipped world kit (themes + special worlds). Names are the bundle stems.
+WORLD_BUNDLES = [
+    ("world_dungeon_theme_default_assets_all_", "dungeon_default"),
+    ("world_dungeon_theme_grass_assets_all_", "dungeon_grass"),
+    ("world_dungeon_theme_sand_assets_all_", "dungeon_sand"),
+    ("world_dungeon_theme_undead_assets_all_", "dungeon_undead"),
+    ("world_dungeon_assets_all_", "dungeon"),
+    ("world_town_assets_all_", "town"),
+    ("world_tutorial_assets_all_", "tutorial"),
+    ("world_golem_assets_all_", "golem"),
+    ("world_helheim_assets_all_", "helheim"),
+    ("world_niflheim_assets_all_", "niflheim"),
+    ("world_odrstrail_assets_all_", "odrstrail"),
+    ("world_vanaheim_assets_all_", "vanaheim"),
+    ("world_guilddefense_assets_all_", "guilddefense"),
+]
+
+# A broad mesh filter for the world kits (dungeon kit patterns + common environment prefixes).
+WORLD_MESH_PATTERNS = KIT_PATTERNS + [
+    r"^(SM_|MOD_|T_|MOD_|Bld|Building|Rock|Tree|Grass|Cliff|Floor|Wall|Column|Prop|Bridge|Fence|Crate|Barrel|Tent|Statue|Gate|Arch)",
+]
+
+
+def export_bundle_kit(z: zipfile.ZipFile, contains: str, out_name: str) -> dict:
+    """Export the meshes and base-colour textures of one world bundle into kit/<out_name>."""
+    name = bundle_name(z, contains)
     raw = z.read(name)
     env = UnityPy.load(raw)
-    out_dir = OUT / "kit/dungeon_default"
+    out_dir = OUT / f"kit/{out_name}"
     out_dir.mkdir(parents=True, exist_ok=True)
-    pats = [re.compile(p) for p in KIT_PATTERNS]
+    pats = [re.compile(p) for p in WORLD_MESH_PATTERNS]
     exported = []
     for obj in env.objects:
         if obj.type.name != "Mesh":
@@ -115,8 +139,7 @@ def export_kit(z: zipfile.ZipFile, manifest: dict) -> None:
         if not any(p.search(mname) for p in pats):
             continue
         try:
-            obj_text = mesh.export()
-            tm = trimesh.load(io.StringIO(obj_text), file_type="obj", process=False)
+            tm = trimesh.load(io.StringIO(mesh.export()), file_type="obj", process=False)
             glb = tm.export(file_type="glb")
         except Exception as exc:  # noqa: BLE001
             print(f"  ! skip {mname}: {exc}")
@@ -125,12 +148,12 @@ def export_kit(z: zipfile.ZipFile, manifest: dict) -> None:
         (out_dir / fname).write_bytes(glb)
         exported.append({
             "name": mname,
-            "file": f"kit/dungeon_default/{fname}",
+            "file": f"kit/{out_name}/{fname}",
             "vertices": int(len(tm.vertices)),
             "triangles": int(len(tm.faces)),
             "bytes": len(glb),
+            "texture": texture_for_mesh(mname),
         })
-    # Base-colour textures for the kit.
     tex_dir = out_dir / "textures"
     tex_dir.mkdir(parents=True, exist_ok=True)
     tex_pats = [re.compile(p) for p in DUNGEON_TEXTURE_PATTERNS]
@@ -153,23 +176,54 @@ def export_kit(z: zipfile.ZipFile, manifest: dict) -> None:
             continue
         fname = re.sub(r"[^A-Za-z0-9_.-]", "_", tname) + ".png"
         (tex_dir / fname).write_bytes(buf.getvalue())
-        textures.append({"name": tname, "file": f"kit/dungeon_default/textures/{fname}", "bytes": len(buf.getvalue())})
-    for mesh in exported:
-        mesh["texture"] = texture_for_mesh(mesh["name"])
-    manifest["kit"] = {
+        textures.append({"name": tname, "file": f"kit/{out_name}/textures/{fname}", "bytes": len(buf.getvalue())})
+    total = sum(m["bytes"] for m in exported)
+    print(f"kit {out_name}: {len(exported)} meshes, {len(textures)} textures, {total/1024:.0f} KiB")
+    return {
         "bundle": name,
         "bundleSha256": sha256(raw),
         "meshes": sorted(exported, key=lambda m: m["name"]),
         "textures": sorted(textures, key=lambda t: t["name"]),
     }
-    total = sum(m["bytes"] for m in exported)
-    print(f"kit: {len(exported)} meshes, {len(textures)} textures, {total/1024:.0f} KiB")
+
+
+def export_kits(z: zipfile.ZipFile, manifest: dict) -> None:
+    kits = {}
+    for contains, out_name in WORLD_BUNDLES:
+        try:
+            kits[out_name] = export_bundle_kit(z, contains, out_name)
+        except SystemExit as exc:
+            print(f"  ! kit {out_name}: {exc}")
+    manifest["kits"] = kits
+    # Back-compat: the client reads manifest.kit for the default dungeon kit.
+    if "dungeon_default" in kits:
+        manifest["kit"] = kits["dungeon_default"]
+
+
+def referenced_icon_names() -> set[str]:
+    """The image stems gamedata references (Monsters.Image / CharacterRaces.ActorImage)."""
+    GAMEDATA = ROOT / "gamedata_decrypted"
+    names: set[str] = set()
+    for fname, key in (("Monsters.json", "Image"), ("CharacterRaces.json", "ActorImage")):
+        path = GAMEDATA / fname
+        if not path.exists():
+            continue
+        for entry in json.loads(path.read_text()):
+            data = entry.get("SerializedData")
+            if isinstance(data, str):
+                data = json.loads(data)
+            data = data or entry
+            value = data.get(key)
+            if value:
+                names.add(value.replace("\\", "/").rsplit("/", 1)[-1].rsplit(".", 1)[0])
+    return names
 
 
 def export_avatars(z: zipfile.ZipFile, manifest: dict) -> None:
     out_dir = OUT / "avatars"
     out_dir.mkdir(parents=True, exist_ok=True)
     pats = [re.compile(p) for p in AVATAR_TEXTURE_PATTERNS]
+    referenced = referenced_icon_names()
     exported: dict[str, dict] = {}
     for bundle in AVATAR_BUNDLES:
         name = bundle_name(z, bundle)
@@ -180,7 +234,7 @@ def export_avatars(z: zipfile.ZipFile, manifest: dict) -> None:
                 continue
             tex = obj.read()
             tname = tex.m_Name or f"tex_{obj.path_id}"
-            if not any(p.search(tname) for p in pats):
+            if tname not in referenced and not any(p.search(tname) for p in pats):
                 continue
             if tname in exported:
                 continue
@@ -206,6 +260,40 @@ def export_avatars(z: zipfile.ZipFile, manifest: dict) -> None:
     print(f"avatars: {len(exported)} textures")
 
 
+def write_missing_report(manifest: dict) -> dict:
+    """V01: compare the images the gamedata references to the exported sprite set."""
+    GAMEDATA = ROOT / "gamedata_decrypted"
+    exported = {a["name"]: a for a in manifest.get("avatars", [])}
+    referenced: dict[str, set] = {}
+
+    def icon(path: str) -> str:
+        return path.replace("\\", "/").rsplit("/", 1)[-1].rsplit(".", 1)[0]
+
+    for fname, key in (("Monsters.json", "Image"), ("CharacterRaces.json", "ActorImage")):
+        path = GAMEDATA / fname
+        if not path.exists():
+            continue
+        for entry in json.loads(path.read_text()):
+            data = entry.get("SerializedData")
+            if isinstance(data, str):
+                data = json.loads(data)
+            data = data or entry
+            value = data.get(key)
+            if value:
+                referenced.setdefault(icon(value), set()).add(fname)
+
+    missing = {k: sorted(v) for k, v in referenced.items() if k not in exported}
+    report = {
+        "referenced": len(referenced),
+        "exported": len(exported),
+        "missing": missing,
+        "missingCount": len(missing),
+    }
+    (OUT / "missing-assets.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+    print(f"missing-assets: {report['missingCount']} of {report['referenced']} referenced icons")
+    return report
+
+
 def main() -> int:
     if not APK.exists():
         print(f"missing {APK}", file=sys.stderr)
@@ -213,8 +301,9 @@ def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     manifest: dict = {"contentVersion": CONTENT_VERSION, "sourceApk": APK.name}
     z = zipfile.ZipFile(APK)
-    export_kit(z, manifest)
+    export_kits(z, manifest)
     export_avatars(z, manifest)
+    manifest["missingAssets"] = write_missing_report(manifest)
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=2))
     print(f"wrote {OUT / 'manifest.json'}")
     return 0
