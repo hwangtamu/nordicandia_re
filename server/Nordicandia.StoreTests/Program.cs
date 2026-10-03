@@ -60,42 +60,30 @@ try
 }
 finally { Directory.Delete(directory, true); }
 
-SlotPersistenceTests.Run();
-
-BlessingPersistenceTests.Run();
-
-M3Tests.Run();
-
-ConsumeItemTests.Run();
-
-WebM0Tests.Run();
-
-CombatInstanceTests.Run();
-
-LootEquipmentTests.Run();
-
-AffixGenerationTests.Run();
-
-PowerParameterTests.Run();
-
-PowerPoolTests.Run();
-
-ManaMasteryTests.Run();
-
-AcceptanceRegressionTests.Run();
-
-AttributeFormulaTests.Run();
-
-CharacterAttributeChainTests.Run();
-
-SkillSpecTests.Run();
-
-C05SkillTests.Run();
-
-C06SkillTests.Run();
-
-C06Batch2Tests.Run();
-
-C06Batch3Tests.Run();
-
-C07MasteryTests.Run();
+int suiteFailures = 0;
+void RunSuite(string name, Action action)
+{
+    try { action(); }
+    catch (Exception ex) { suiteFailures++; Console.WriteLine($"FAILSUITE {name}: {ex.Message}"); }
+}
+RunSuite("SlotPersistence", SlotPersistenceTests.Run);
+RunSuite("BlessingPersistence", BlessingPersistenceTests.Run);
+RunSuite("M3", M3Tests.Run);
+RunSuite("ConsumeItem", ConsumeItemTests.Run);
+RunSuite("WebM0", WebM0Tests.Run);
+RunSuite("CombatInstance", CombatInstanceTests.Run);
+RunSuite("LootEquipment", LootEquipmentTests.Run);
+RunSuite("AffixGeneration", AffixGenerationTests.Run);
+RunSuite("PowerParameter", PowerParameterTests.Run);
+RunSuite("PowerPool", PowerPoolTests.Run);
+RunSuite("ManaMastery", ManaMasteryTests.Run);
+RunSuite("AcceptanceRegression", AcceptanceRegressionTests.Run);
+RunSuite("AttributeFormula", AttributeFormulaTests.Run);
+RunSuite("CharacterAttributeChain", CharacterAttributeChainTests.Run);
+RunSuite("SkillSpec", SkillSpecTests.Run);
+RunSuite("C05Skill", C05SkillTests.Run);
+RunSuite("C06Skill", C06SkillTests.Run);
+RunSuite("C06Batch2", C06Batch2Tests.Run);
+RunSuite("C06Batch3", C06Batch3Tests.Run);
+RunSuite("C07Mastery", C07MasteryTests.Run);
+if (suiteFailures > 0) throw new Exception($"{suiteFailures} suite(s) failed");

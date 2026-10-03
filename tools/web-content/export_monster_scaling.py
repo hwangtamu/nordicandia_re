@@ -89,14 +89,21 @@ def main() -> None:
         "formulas": {n: {k: v for k, v in f.items()} for n, f in FORMULAS.items()},
         "expMult": {"default": 1.0, "status": "Provisional",
                     "note": "world/global difficulty multiplier; config field not statically resolved"},
-        "rarityCoefficients": {
-            "status": "Inferred",
-            "note": "CalculateAttributes sets v531/v532 min/max multipliers per Rarity; branch->rarity mapping and "
-                    "which attribute each pair drives are not confirmed, so NOT wired to gameplay",
+        "rarityFinalMult": {
+            "status": "ClientVerified",
+            "note": "CalculateAttributes 0x02A6D0FC-0x02A6D128 selects finalMult by rarity",
+            "normalMagicRare": 0.8,   # table[0] @0x1385BA0 = get_FinalStatsMult()
+            "champion": 0.88,         # table[1] @0x1385BA8
+            "boss": 1.2,              # @0x13880D8
+        },
+        "attackIntervalCoefficients": {
+            "status": "Interim (decoded, not wired)",
+            "note": "CalculateAttributes sets v531/v532 min/max multipliers per Rarity feeding "
+                    "Item_Attack_Speed_MainHand (interval seconds); rarity->value read from the pool",
             "byRarity": {
                 "0": {"v531": 1.4},
                 "2": {"v531": 1.6, "v532": 3.4},
-                "4": {"v531": 1.8, "casterHalved": True},
+                "4": {"v531": 1.8},
                 "6": {"v531": 1.2},
             },
             "tierScaling": "min=max(v531*(1+(tier-1)*0.005),1); max=min(v532*(1+(tier-1)*0.04),16)",

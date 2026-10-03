@@ -35,6 +35,9 @@ static class CombatInstanceTests
             Damage = new DamageBundle(Poison: 25),
         };
         var instance = new CombatInstance(stats, 0, 0, 0, 0, seed: 99, monsterCount: 4);
+        // D04: real monster curves are much weaker; make the pack tanky so the snapshot still
+        // shows several simultaneously-damaged targets while fork/chain spread.
+        foreach (var m in instance.Monsters) { m.Hp = m.MaxHp = 400; m.Evasion = 0; }
         Check(instance.PoisonChance == 1.0 && instance.ForkChance == 1.0 && instance.ChainChance == 1.0,
             "on-hit: recovered poison/fork/chain chances reach the instance");
         for (var i = 0; i < 600; i++) instance.Advance(0.05);

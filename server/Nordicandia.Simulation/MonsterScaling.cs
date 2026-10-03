@@ -25,6 +25,18 @@ public static class MonsterScaling
     /// <summary>Monster.GetMaxPhysicalDamageReduction() — physical damage-reduction cap.</summary>
     public const double MaxPhysicalDamageReduction = 0.9;
 
+    /// <summary>
+    /// Rarity -> finalMult. Read from the client's rarity table (CalculateAttributes
+    /// 0x02A6D0FC-0x02A6D128): non-Champion table[0] @0x1385BA0 = 0.8, Champion table[1]
+    /// @0x1385BA8 = 0.88, Boss @0x13880D8 = 1.2. ClientVerified.
+    /// </summary>
+    public static double RarityFinalMult(int rarity) => rarity switch
+    {
+        6 => 1.2,  // Boss
+        4 => 0.88, // Champion
+        _ => FinalStatsMult, // Normal / Magic / Rare (= get_FinalStatsMult 0.8)
+    };
+
     /// <summary>GetBaseLife. varianceMult is the client's Rand(0.99, 1.01) roll (1 = average).</summary>
     public static double Life(double level, double expMult = 1, double finalMult = FinalStatsMult, double varianceMult = 1)
         => varianceMult * (level * 0.41 + Math.Pow(level, 1.315 * expMult) * 0.12 + 8) * 2 * finalMult;

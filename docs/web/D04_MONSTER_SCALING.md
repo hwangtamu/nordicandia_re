@@ -69,46 +69,53 @@ stat = (a*level + b*level^(e*expMult) + c) * finalMult [* k]
 | 0x1387368 | 0.4 | force-field 线性系数 |
 | 0x13875D8 / 0x1387390 | 0.99 / 1.01 | life/force-field 方差区间 |
 
-## 难度差异系数（以稀有度区分，**Inferred**）
+## 难度差异系数（以稀有度区分，**ClientVerified**）
 
-`CalculateAttributes`（0x02A6D000，ISIL 951 行）按 `Rarity` 分支设置一组 min/max 乘子
-`v531`/`v532`，随后按 tier 缩放：
+`CalculateAttributes`（0x02A6D000）选择 `finalMult`：
 
 ```
-tier = Calculator.GetTierFromMonsterLevel(level)
-minMult = max(v531 * (1 + (tier-1)*0.005), 1)
-maxMult = min(v532 * (1 + (tier-1)*0.04), 16)
-value   = Rand.RangeExclusive(minMult, maxMult)     // 某条属性的随机区间
+finalMult = (Rarity == 6) ? [0x13880D8]      // Boss
+          : (Rarity == 4) ? table[1]          // Champion
+          :                 table[0]          // Normal / Magic / Rare
 ```
 
-已解析的 `v531`/`v532` 候选（分支映射尚未完全确认，标记 **Inferred**）：
+表值直接读自模块常量池（`CalculateAttributes` 0x02A6D0FC–0x02A6D128）：
 
-| 稀有度 | Rarity | v531 | v532 | 备注 |
-|---|---|---|---|---|
-| Normal | 0 | 1.4 | — | 默认分支 |
-| Magic | 1 | ？（分支未定） | ？ | |
-| Rare | 2 | 1.6 | 3.4 | |
-| Champion | 4 | 1.8 | — | 另有 `IsCaster` 时 ×0.5 |
-| Boss | 6 | 1.2 | ？（`FinalStatsMult` 另表） | |
+| 稀有度 | Rarity | finalMult | 模块地址 |
+|---|---|---|---|
+| Normal / Magic / Rare | 0 / 1 / 2 | **0.8** | table[0] @0x1385BA0（= `get_FinalStatsMult()`） |
+| Champion | 4 | **0.88** | table[1] @0x1385BA8 |
+| Boss | 6 | **1.2** | @0x13880D8 |
 
-> 分支到稀有度的精确映射、以及 `v531`/`v532` 各自对应的属性（life vs damage）**尚未确认**，
-> 因此**不接入运行时**。要接入必须先逐条确认，再补 B04 样本。这也符合清单规则：
-> 不推测实现未还原的逻辑。
+即精英/Boss 相对普通怪物的整体属性倍率为 **1.10x / 1.50x**，非常克制（不是数量级差异）。
 
-`finalMult` 的选择（反汇编 0x02A6D10C–0x02A6D128）：
-```
-finalMult = (Rarity == 6) ? BossTable
-          : (Rarity == 4) ? table[1]
-          :                 table[0]
-```
-`get_FinalStatsMult()` 本身返回 **0.8**（默认/非 Boss 分支的近似），Boss/Champion 表值待解。
+### 攻击间隔（同批常量，附带还原）
+
+`CalculateAttributes` 另用一组 min/max 乘子 `v531`/`v532` 生成攻击间隔
+`v1518 = Rand.RangeExclusive(minMax(v531,…), min(v532×…, 16))`，写入
+`Item_Attack_Speed_MainHand`，并以 `1/v1518` 作为每秒攻击次数。分支常量：
+
+| 稀有度 | v531 | v532 |
+|---|---|---|
+| Normal | 1.4 | — |
+| Rare | 1.6 | 3.4 |
+| Champion | 1.8 | — |
+| Boss | 1.2 | — |
+
+（tier 缩放：`max(v531*(1+(tier-1)*0.005),1)` … `min(v532*(1+(tier-1)*0.04),16)`。）
+该组已解码但未接入网页的攻击间隔，标记 Interim。
 
 ## 接入状态
 
-* `server/Nordicandia.Simulation/MonsterScaling.cs` —— 上述 8 条曲线 + 常数，供运行时调用。
-* B04 样本 `monster_base_stats.level10` / `.level60`（回放对照通过）。
-* **未接入** `CombatRegistry`：现有 archetype 仍用手工 `HpMult/OffenseMult/DefenseMult`。
-  用真实曲线替换会影响战斗平衡与 smoke，需作为独立改动 + 平衡回归。
+* `server/Nordicandia.Simulation/MonsterScaling.cs` —— 8 条曲线 + `RarityFinalMult`。
+* **已接入战斗**：`CombatInstance.CreateMonster` 用 `MonsterScaling` 计算
+  `MaxHp`/`Offense`/`Armor`/`Evasion`/`AttackRating`；`CreateBoss` 用 rarity 6。
+  `CombatRegistry` 的 archetype 不再有手工 `HpMult/OffenseMult/DefenseMult`（保留字段仅作
+  召唤等特例的偏移），只携带客户端本就有的差异：伤害分布/抗性/远程/Brain/稀有度。
+  `MonsterStats` 现把 `AttackRating`/`Evasion` 传给 `CombatantStats`（命中判定按客户端）。
+* B04 样本：`monster_base_stats.level10/.level60`、`rarity_final_mult.normal/.champion/.boss`。
+* 未接入：每 spawn 的 `Rand(0.96,1.01)`/`Rand(0.99,1.01)` 方差（会扰动共享 RNG，暂用均值）；
+  攻击间隔 rarity 曲线（Interim）。
 
 ## 复现
 

@@ -412,6 +412,14 @@ static class FidelityReplayTests
                 return (Eq(damage, expected.GetProperty("damage").GetDouble()) && !rounded,
                     $"damage={damage}");
             }
+            case "rarity_final_mult":
+            {
+                // D04: CalculateAttributes rarity table. table[0] @0x1385BA0 (normal/magic/rare)
+                // = 0.8, table[1] @0x1385BA8 (Champion) = 0.88, Boss @0x13880D8 = 1.2.
+                var rarity = inputs.GetProperty("rarity").GetInt32();
+                var value = MonsterScaling.RarityFinalMult(rarity);
+                return (Eq(value, expected.GetProperty("value").GetDouble()), $"finalMult={value}");
+            }
             case "monster_base_stats":
             {
                 // D04: Game.Monster.Get* curves. Constants read from the module pool; the

@@ -10,7 +10,13 @@ public readonly record struct MonsterProfile(
     // Brains.json action tree name (Monsters.json BrainId); null uses the Standard brain.
     string Brain = null,
     // Champion/elite monsters satisfy ImNotNormalMonster (needed by the curser brains).
-    bool Champion = false);
+    bool Champion = false,
+    // D04: monster rarity (Monsters.json AvailableRarities / MonsterRarity enum:
+    // 0 Normal, 1 Magic, 2 Rare, 4 Champion, 6 Boss). Selects the finalMult stat curve and
+    // the attack-interval range. ExpMult is the world/global difficulty multiplier.
+    int Rarity = 0, double ExpMult = 1.0,
+    // Overrides the rarity-selected finalMult when > 0.
+    double FinalMult = 0);
 
 /// <summary>One monster inside an authoritative combat instance.</summary>
 public sealed class CombatMonster
@@ -26,6 +32,9 @@ public sealed class CombatMonster
     public double Offense { get; set; }
     public double Defense { get; set; }
     public double Armor { get; set; }
+    /// <summary>D04 recovered monster ratings (Monster.GetEvasion / GetMaxAttackRating).</summary>
+    public double Evasion { get; set; }
+    public double AttackRating { get; set; }
     public DamageBundle Damage { get; set; }
     public ResistanceBundle Resistances { get; set; }
     public double Speed { get; set; } = 2.4;
@@ -313,7 +322,8 @@ public sealed partial class CombatInstance
     }
 
     private static CombatantStats MonsterStats(CombatMonster monster)
-        => new(monster.Offense, monster.Defense, 0, monster.Level, Armor: monster.Armor, Resistances: monster.Resistances);
+        => new(monster.Offense, monster.Defense, 0, monster.Level, AttackRating: monster.AttackRating,
+            Armor: monster.Armor, Evasion: monster.Evasion, Resistances: monster.Resistances);
 
     private double EffectiveMaxHealth() => CombatModel.MaxHealth(PlayerStats())
         * (1 + PassiveHealth());
@@ -432,8 +442,18 @@ public sealed partial class CombatInstance
     {
         var level = MonsterLevel;
         var profile = overrideProfile ?? profiles[index % profiles.Length];
-        var maxHp = (30 + level * 16) * profile.HpMult;
-        var offense = (3 + level * 1.2) * profile.OffenseMult;
+        // D04: client Monster.Get* curves. finalMult is rarity-selected (Boss/Champion/normal);
+        // armor/evasion roll Rand(0.96,1.01), life/force-field Rand(0.99,1.01) (per-spawn variance).
+        var finalMult = profile.FinalMult > 0 ? profile.FinalMult : MonsterScaling.RarityFinalMult(profile.Rarity);
+        var stats = MonsterScaling.Stats(level, profile.ExpMult, finalMult);
+        // The client rolls Rand(0.96,1.01) on armour/evasion and Rand(0.99,1.01) on life, but
+        // using the shared combat RNG here would shift every downstream roll, so the average
+        // value is used (the variance is cosmetic and the authoritative simulation stays stable).
+        var armor = stats.Armor;
+        var evasion = stats.Evasion;
+        var attackRating = stats.MaxAttackRating;
+        var maxHp = stats.Life * profile.HpMult;
+        var offense = stats.WeaponDamage * profile.OffenseMult;
         // A profile's Damage is a distribution (fractions); scale it by this spawn's offence.
         var damage = profile.Damage.Total > 0 ? profile.Damage.Scale(offense) : new DamageBundle(offense);
         return new CombatMonster
@@ -446,8 +466,10 @@ public sealed partial class CombatInstance
             Hp = alive ? maxHp : 0,
             MaxHp = maxHp,
             Offense = offense,
-            Defense = (2 + level * 1.5) * profile.DefenseMult,
-            Armor = (10 + level * 6) * profile.DefenseMult,
+            Defense = evasion * profile.DefenseMult,
+            Armor = armor * profile.DefenseMult,
+            Evasion = evasion * profile.DefenseMult,
+            AttackRating = attackRating,
             Damage = damage,
             Resistances = profile.Resistances,
             Speed = profile.Speed,
@@ -474,12 +496,16 @@ public sealed partial class CombatInstance
             IsBoss = true,
             X = 0,
             Z = -12,
-            MaxHp = 200 + level * 80,
-            Hp = 200 + level * 80,
-            Offense = 8 + level * 3,
-            Defense = 20 + level * 8,
-            Armor = 60 + level * 20,
-            Damage = new DamageBundle(Physical: 0.5, Cold: 0.5).Scale(8 + level * 3),
+            // D04: boss = rarity 6. The client selects a separate finalMult for bosses; its
+            // value is the client rarity table entry 0x13880D8 = 1.2 (ClientVerified).
+            MaxHp = MonsterScaling.Life(level, 1, MonsterScaling.RarityFinalMult(6)),
+            Hp = MonsterScaling.Life(level, 1, MonsterScaling.RarityFinalMult(6)),
+            Offense = MonsterScaling.WeaponDamage(level, 1, MonsterScaling.RarityFinalMult(6)),
+            Defense = MonsterScaling.Evasion(level, 1, MonsterScaling.RarityFinalMult(6)),
+            Armor = MonsterScaling.Armor(level, 1, MonsterScaling.RarityFinalMult(6)),
+            Evasion = MonsterScaling.Evasion(level, 1, MonsterScaling.RarityFinalMult(6)),
+            AttackRating = MonsterScaling.MaxAttackRating(level, 1, MonsterScaling.RarityFinalMult(6)),
+            Damage = new DamageBundle(Physical: 0.5, Cold: 0.5).Scale(MonsterScaling.WeaponDamage(level, 1, MonsterScaling.RarityFinalMult(6))),
             Resistances = new ResistanceBundle(Fire: 0.2, Cold: 0.5, Lightning: 0.2, Poison: 0.2),
             Speed = 2.0,
             AttackInterval = 2.0,

@@ -47,41 +47,39 @@ public sealed class CombatRegistry
 
     private DateTime Now => clock.GetUtcNow().UtcDateTime;
 
-    // Five normal enemy archetypes (provisional tuning, names match gamedata monsters so the
-    // client can resolve their portrait icons). The boss is spawned separately.
+    // D04: monster combat stats come from the recovered Game.Monster.Get* level curves
+    // (MonsterScaling), not from hand-tuned multipliers. Archetypes therefore only carry what
+    // the client itself varies: damage distribution, resistances, ranged/caster behaviour, brain
+    // and rarity. Names match gamedata monsters so the client resolves the portrait icons.
     private static readonly MonsterProfile[] MonsterProfiles =
     {
-        new("Bat", HpMult: 0.7, OffenseMult: 1.0, DefenseMult: 0.7, Speed: 3.2,
+        new("Bat", Speed: 3.2,
             Resistances: new ResistanceBundle(Fire: -0.2), Brain: "Standard"),
-        new("DemonOrc", HpMult: 1.3, OffenseMult: 1.2, DefenseMult: 1.0, Speed: 2.4,
+        new("DemonOrc", Speed: 2.4,
             Damage: new DamageBundle(Fire: 0.5), Resistances: new ResistanceBundle(Fire: 0.3, Cold: -0.2),
             Brain: "Standard"),
         // Ranged (gamedata SkeletonArcher1): attacks from range and backs off when the player closes.
-        new("Skeleton", HpMult: 1.0, OffenseMult: 0.9, DefenseMult: 1.1, Speed: 2.2,
+        new("Skeleton", Speed: 2.2,
             Damage: new DamageBundle(Cold: 0.4), Resistances: new ResistanceBundle(Poison: 0.5, Fire: -0.3),
             Ranged: true, AttackRange: 8, PreferredDistance: 4, Brain: "StandardFleeingWhenClose"),
-        new("BloodHound", HpMult: 0.8, OffenseMult: 1.4, DefenseMult: 0.6, Speed: 3.0,
+        new("BloodHound", Speed: 3.0,
             Damage: new DamageBundle(Poison: 0.5), Resistances: new ResistanceBundle(Poison: 0.4),
             Brain: "Standard"),
-        new("StoneGolem", HpMult: 1.8, OffenseMult: 0.8, DefenseMult: 1.6, Speed: 1.6,
+        new("StoneGolem", Speed: 1.6,
             Resistances: new ResistanceBundle(Lightning: -0.2, Fire: 0.2), Brain: "Standard"),
-        // Caster (gamedata CasterDemon1): long-range elemental attacker.
-        new("CasterDemon1", HpMult: 0.9, OffenseMult: 1.1, DefenseMult: 0.8, Speed: 2.0,
+        // Caster (gamedata CasterDemon1): long-range elemental attacker; Champion (rarity 4).
+        new("CasterDemon1", Speed: 2.0,
             Damage: new DamageBundle(Fire: 0.6), Resistances: new ResistanceBundle(Fire: 0.4, Cold: -0.2),
-            Ranged: true, AttackRange: 9, PreferredDistance: 5, Brain: "StandardCurseSlow", Champion: true),
+            Ranged: true, AttackRange: 9, PreferredDistance: 5, Brain: "StandardCurseSlow",
+            Champion: true, Rarity: 4),
     };
 
     /// <summary>Scaled archetypes for a Niflheim run. Provisional: the client's
     /// NiflheimPortalGameMode spawns "packs" sized by the portal affix (NumMonsterPacks); the
-    /// exact per-pack scaling was not decoded, so the same archetypes are used with higher
-    /// HP/damage/defence and a larger wave.</summary>
+    /// exact per-pack scaling was not decoded, so the same archetypes raise ExpMult (the client's
+    /// global monster difficulty multiplier).</summary>
     private static MonsterProfile[] NiflheimProfiles() =>
-        MonsterProfiles.Select(p => p with
-        {
-            HpMult = p.HpMult * 1.8,
-            OffenseMult = p.OffenseMult * 1.6,
-            DefenseMult = p.DefenseMult * 1.3,
-        }).ToArray();
+        MonsterProfiles.Select(p => p with { ExpMult = 1.8 }).ToArray();
 
     private sealed class Entry
     {

@@ -83,7 +83,7 @@ static class LuckAndOnHitRecoveryTests
         foreach (var m in result.Monsters)
         {
             m.X = 5 + m.Index; m.Z = 0; m.Hp = m.MaxHp = 10000;
-            m.Armor = m.Defense = 0; m.Speed = 0; m.Offense = 0;
+            m.Armor = m.Defense = m.Evasion = 0; m.Speed = 0; m.Offense = 0;
             m.AttackCooldown = 1000; m.Resistances = default;
         }
         return result;
@@ -137,7 +137,7 @@ static class LuckAndOnHitRecoveryTests
         for (ulong seed = 1; seed <= 100 && !foundMiss; seed++)
         {
             var miss = Create(Stats with { PoisonOnHit = true }, seed);
-            miss.Monsters[0].Defense = 1e30;
+            miss.Monsters[0].Evasion = 1e30;
             if (miss.UseSkill(0).Damage != 0) continue;
             foundMiss = true;
             Check(!miss.Monsters[0].Buffs.Has("poison", "player"), "poison: a missed attack never applies poison");

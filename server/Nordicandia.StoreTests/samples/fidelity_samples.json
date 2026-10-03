@@ -959,6 +959,33 @@
    },
    "source": "same Get* curves; constants read from the module constant pool",
    "status": "对照通过"
+  },
+  {
+   "id": "rarity_final_mult.normal",
+   "kind": "rarity_final_mult",
+   "rule": "CalculateAttributes rarity table[0] (Normal/Magic/Rare)",
+   "inputs": { "rarity": 0 },
+   "expected": { "value": 0.8 },
+   "source": "Monster.txt CalculateAttributes 0x02A6D120, table[0] @0x1385BA0",
+   "status": "对照通过"
+  },
+  {
+   "id": "rarity_final_mult.champion",
+   "kind": "rarity_final_mult",
+   "rule": "CalculateAttributes rarity table[1] (Champion)",
+   "inputs": { "rarity": 4 },
+   "expected": { "value": 0.88 },
+   "source": "Monster.txt CalculateAttributes 0x02A6D120, table[1] @0x1385BA8",
+   "status": "对照通过"
+  },
+  {
+   "id": "rarity_final_mult.boss",
+   "kind": "rarity_final_mult",
+   "rule": "CalculateAttributes boss finalMult",
+   "inputs": { "rarity": 6 },
+   "expected": { "value": 1.2 },
+   "source": "Monster.txt CalculateAttributes 0x02A6D110, boss @0x13880D8",
+   "status": "对照通过"
   }
  ]
 }

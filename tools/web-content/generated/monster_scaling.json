@@ -98,9 +98,16 @@
   "status": "Provisional",
   "note": "world/global difficulty multiplier; config field not statically resolved"
  },
- "rarityCoefficients": {
-  "status": "Inferred",
-  "note": "CalculateAttributes sets v531/v532 min/max multipliers per Rarity; branch->rarity mapping and which attribute each pair drives are not confirmed, so NOT wired to gameplay",
+ "rarityFinalMult": {
+  "status": "ClientVerified",
+  "note": "CalculateAttributes 0x02A6D0FC-0x02A6D128 selects finalMult by rarity",
+  "normalMagicRare": 0.8,
+  "champion": 0.88,
+  "boss": 1.2
+ },
+ "attackIntervalCoefficients": {
+  "status": "Interim (decoded, not wired)",
+  "note": "CalculateAttributes sets v531/v532 min/max multipliers per Rarity feeding Item_Attack_Speed_MainHand (interval seconds); rarity->value read from the pool",
   "byRarity": {
    "0": {
     "v531": 1.4
@@ -110,8 +117,7 @@
     "v532": 3.4
    },
    "4": {
-    "v531": 1.8,
-    "casterHalved": true
+    "v531": 1.8
    },
    "6": {
     "v531": 1.2

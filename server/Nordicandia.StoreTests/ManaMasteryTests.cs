@@ -79,7 +79,8 @@ static class ManaMasteryTests
     private static void FrostAppliesStun()
     {
         void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
-        var (store, registry, owner, characterId, clock) = CreateMage("frost", offense: 15);
+        // D04: real monster life is much lower; keep the player weak so the target survives to be frozen.
+        var (store, registry, owner, characterId, clock) = CreateMage("frost", offense: 1);
         using (store)
         {
             clock.Advance(TimeSpan.FromSeconds(4));
