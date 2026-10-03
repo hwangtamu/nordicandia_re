@@ -39,6 +39,10 @@ public sealed class CombatMonster
     public string BrainAction { get; set; }
     public double ActionTimer { get; set; }
     public bool WasInCombat { get; set; }
+    /// <summary>Seconds until the current boss power can be used again.</summary>
+    public double SpecialCooldown { get; set; }
+    /// <summary>Remaining seconds of an ongoing boss power (nova sequence / beam / charge).</summary>
+    public double SpecialTimer { get; set; }
     public double StunTimer { get; set; }
     /// <summary>Remaining poison duration; while &gt; 0 the target counts as poisoned.</summary>
     public double PoisonTimer { get; set; }
@@ -175,6 +179,8 @@ public sealed class CombatInstance
     private const double PackMemberSpawnInterval = 0.1;
     // Deferred so a pack is never cleared/respawned while an iteration over `monsters` is live.
     private bool pendingPackSpawn;
+    // Boss summon powers queue minions here; spawned after the monster loop.
+    private int pendingSummons;
 
     public int TotalPacks => totalPacks;
     public int PacksRemaining => Math.Max(0, totalPacks - packsCleared);
@@ -441,6 +447,7 @@ public sealed class CombatInstance
         {
             Index = BossIndex,
             Name = "Frostbound Jarl",
+            Brain = "Boss_WolfKing",
             Level = level,
             IsBoss = true,
             X = 0,
@@ -498,6 +505,12 @@ public sealed class CombatInstance
                 pendingPackSize--;
                 SpawnOnePackMember();
             }
+        }
+        if (pendingSummons > 0)
+        {
+            var count = pendingSummons;
+            pendingSummons = 0;
+            SummonMinions(count);
         }
         if (pendingPackSpawn)
         {
@@ -571,7 +584,12 @@ public sealed class CombatInstance
         }
     }
 
-    private void UpdateBoss(double dt) => ChaseAndAttack(boss, dt);
+    private void UpdateBoss(double dt)
+    {
+        if (boss is null) return;
+        // Bosses drive their recovered Brains.json tree (specials + DefaultAttackProxy).
+        UpdateBrain(boss, dt);
+    }
 
     /// <summary>Recovered WeightedActionBrain: pick a weighted action from the monster's
     /// Brains.json tree whose conditions hold, then execute the power's behaviour.</summary>
@@ -587,14 +605,16 @@ public sealed class CombatInstance
         var stateCombat = inCombat;
         var stateRunOut = !inCombat && monster.WasInCombat;
         var stateWander = !inCombat && !monster.WasInCombat;
+        // "Minions" are any other living non-boss monsters (the boss's summons).
+        var hasMinions = monsters.Any(m => m.Alive && !m.IsBoss && !ReferenceEquals(m, monster));
 
         bool Condition(string name) => name switch
         {
             "StateCombat" => stateCombat,
             "StateRunOutOfCombat" => stateRunOut,
             "StateWander" => stateWander,
-            "IHaveNoMinions" => true,
-            "IHaveMinions" => false,
+            "IHaveNoMinions" => !hasMinions,
+            "IHaveMinions" => hasMinions,
             "NotOnFullLife" => monster.Hp < monster.MaxHp,
             "MoreThan50PercentLife" => monster.Hp > 0.5 * monster.MaxHp,
             "LessThan50PercentLife" => monster.Hp < 0.5 * monster.MaxHp,
@@ -615,6 +635,12 @@ public sealed class CombatInstance
             monster.ActionTimer -= dt;
         }
 
+        var power = MonsterPowerCatalog.For(monster.BrainAction);
+        if (power is not null)
+        {
+            ExecuteMonsterPower(monster, power, dt);
+            return;
+        }
         switch (monster.BrainAction)
         {
             case "Wander":
@@ -624,9 +650,118 @@ public sealed class CombatInstance
             case "RunOutOfCombat":
                 FleeStep(monster, dt);
                 break;
-            default: // DefaultAttackProxy and un-modelled powers (boss specials) chase and attack.
+            default: // DefaultAttackProxy chases and attacks.
                 ChaseAndAttack(monster, dt);
                 break;
+        }
+    }
+
+    /// <summary>Executes a recovered boss power. Effects hit the player (the only hostile target)
+    /// or summon minions; the effect shape follows the client implementation classes.</summary>
+    private void ExecuteMonsterPower(CombatMonster monster, MonsterPower power, double dt)
+    {
+        monster.SpecialCooldown = Math.Max(0, monster.SpecialCooldown - dt);
+        if (monster.SpecialTimer > 0)
+        {
+            monster.SpecialTimer -= dt;
+            switch (power.Kind)
+            {
+                case MonsterPowerKind.NovaSequence:
+                case MonsterPowerKind.Beam:
+                    if (PlayerInRange(monster, power.Radius)) DamagePlayer(monster, power);
+                    break;
+                case MonsterPowerKind.Charge:
+                    if (ChargeStep(monster, dt) && PlayerInRange(monster, power.Radius))
+                        DamagePlayer(monster, power);
+                    break;
+            }
+            if (monster.SpecialTimer <= 0) monster.SpecialCooldown = power.Cooldown;
+            return;
+        }
+        if (monster.SpecialCooldown > 0)
+        {
+            ChaseAndAttack(monster, dt);
+            return;
+        }
+        switch (power.Kind)
+        {
+            case MonsterPowerKind.Nova:
+            case MonsterPowerKind.TripleStrike:
+                if (PlayerInRange(monster, power.Radius)) DamagePlayer(monster, power);
+                monster.SpecialCooldown = power.Cooldown;
+                break;
+            case MonsterPowerKind.NovaSequence:
+            case MonsterPowerKind.Beam:
+            case MonsterPowerKind.Charge:
+                monster.SpecialTimer = Math.Max(0.1, power.Duration);
+                break;
+            case MonsterPowerKind.Summon:
+                pendingSummons += Math.Max(1, power.Count);
+                monster.SpecialCooldown = power.Cooldown;
+                break;
+        }
+    }
+
+    private bool PlayerInRange(CombatMonster monster, double radius)
+        => DistanceToPlayer(monster) <= Math.Max(0.5, radius);
+
+    /// <summary>Charges the monster at the player; returns true once it is within contact range.</summary>
+    private bool ChargeStep(CombatMonster monster, double dt)
+    {
+        var dx = PlayerX - monster.X;
+        var dz = PlayerZ - monster.Z;
+        var dist = Math.Max(1e-6, Math.Sqrt(dx * dx + dz * dz));
+        if (dist <= MonsterAttackRange) return true;
+        var step = Math.Min(dist, monster.Speed * 3 * dt);
+        monster.X = Math.Clamp(monster.X + dx / dist * step, -ArenaHalf, ArenaHalf);
+        monster.Z = Math.Clamp(monster.Z + dz / dist * step, -ArenaHalf, ArenaHalf);
+        return dist - step <= MonsterAttackRange;
+    }
+
+    /// <summary>Applies one power hit to the player with the power's element and multiplier.</summary>
+    private void DamagePlayer(CombatMonster monster, MonsterPower power)
+    {
+        var element = power.Element switch
+        {
+            "Fire" => new DamageBundle(Fire: 1),
+            "Cold" => new DamageBundle(Cold: 1),
+            "Lightning" => new DamageBundle(Lightning: 1),
+            "Poison" => new DamageBundle(Poison: 1),
+            _ => new DamageBundle(Physical: 1),
+        };
+        var bundle = element.Scale(Math.Max(1e-6, monster.Offense) * Math.Max(0.1, power.DamageMultiplier));
+        var hit = CombatModel.ResolveBundleAttack(
+            MonsterStats(monster), bundle, PlayerStats(), Resistances,
+            new AttackProfile(1.0, 0.03, 1.5, 0.0), rng);
+        if (!hit.Hit) return;
+        var incoming = hit.Damage;
+        if (PlayerShield > 0)
+        {
+            var absorbed = Math.Min(PlayerShield, incoming);
+            PlayerShield -= absorbed;
+            incoming -= absorbed;
+        }
+        PlayerHp = Math.Max(0, PlayerHp - incoming);
+        if (PlayerHp <= 0)
+        {
+            playerRespawnTimer = PlayerRespawnSeconds;
+            hasTarget = false;
+        }
+    }
+
+    /// <summary>Spawns <paramref name="count"/> minions near the pack/boss origin. Deferred so
+    /// the monster list is never mutated while it is being iterated.</summary>
+    private void SummonMinions(int count)
+    {
+        if (profiles.Length == 0) return;
+        var profile = profiles[0];
+        for (var i = 0; i < count && monsters.Count < 40; i++)
+        {
+            var angle = rng.NextDouble() * Math.PI * 2;
+            var radius = 2 + rng.NextDouble() * 2;
+            monsters.Add(CreateMonster(monsters.Count,
+                Math.Clamp(packOriginX + Math.Cos(angle) * radius, -ArenaHalf, ArenaHalf),
+                Math.Clamp(packOriginZ + Math.Sin(angle) * radius, -ArenaHalf, ArenaHalf), alive: true));
         }
     }
 

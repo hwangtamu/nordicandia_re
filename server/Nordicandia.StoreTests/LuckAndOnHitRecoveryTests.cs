@@ -237,4 +237,39 @@ static class LuckAndOnHitRecoveryTests
         Check(instance.Monsters[0].BrainAction is "DefaultAttackProxy" or "Wander" or "Flee",
             $"brain: a monster selects and runs an action ({instance.Monsters[0].BrainAction})");
     }
+
+    public static void BossPowers()
+    {
+        Check(MonsterPowerCatalog.For("WolfKingSummonPack")!.Count == 3
+            && MonsterPowerCatalog.For("BoneDragonSummonSkeleton")!.Count == 1
+            && MonsterPowerCatalog.For("HelSummonPack")!.Count == 8,
+            "boss powers: recovered summon counts (3/1/8)");
+        Check(MonsterPowerCatalog.For("VileDragonNova")!.Radius == 6.0
+            && MonsterPowerCatalog.For("WolfKingRoar")!.Radius == 3.0,
+            "boss powers: recovered nova radii (6/3)");
+        // Every boss power referenced by a brain has an effect descriptor.
+        var missing = new List<string>();
+        foreach (var brain in BrainCatalog.Brains.Values)
+            foreach (var action in brain.Actions)
+                if (action.Power.EndsWith("Nova") || action.Power.EndsWith("SummonPack")
+                    || action.Power.EndsWith("Whirlwind") || action.Power.EndsWith("Charge")
+                    || action.Power is "WolfKingRoar" or "DragonFireBreath" or "FallenAngelRay"
+                        or "BolomahlTripleStrike" or "BoneDragonSummonSkeleton" or "VileDragonNova"
+                        or "HelHomingFire")
+                    if (MonsterPowerCatalog.For(action.Power) is null) missing.Add(action.Power);
+        Check(missing.Count == 0, $"boss powers: all boss powers have descriptors ({string.Join(",", missing)})");
+
+        // A Boss_WolfKing boss summons its pack and then stops (IHaveMinions).
+        var stats = CombatantStats.FromRealtime(0, 1e6, 0, 10);
+        var instance = new CombatInstance(stats, 0, 0, 0, 0, seed: 9, monsterCount: 1,
+            monsterProfiles: new[] { new MonsterProfile("Boss", HpMult: 1e6, OffenseMult: 0, Brain: "Boss_WolfKing") });
+        instance.MoveTo(0, 0);
+        var summoned = 0;
+        for (var i = 0; i < 4000 && summoned == 0; i++)
+        {
+            instance.Advance(0.05);
+            summoned = instance.Monsters.Count(m => m.Alive && !m.IsBoss) - 1;
+        }
+        Check(summoned >= 1, $"boss powers: Boss_WolfKing summons a pack ({summoned} minions)");
+    }
 }
