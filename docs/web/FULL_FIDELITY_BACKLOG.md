@@ -73,7 +73,7 @@
 | W03 | 全怪物技能与 Boss 阶段 | ⏳ 部分：`MonsterPowerCatalog` 35 技能（brain 引用 0 缺失，召唤仆从全部真实）。**待办**：各 Power 精确定量参数、Boss 阶段与清场、多敌并发 | C02–C03、W01–W02 |
 | W04 | 世界/地图生成 | ⏳ 部分：36 世界目录嵌入 `WorldCatalog`；**程序化地图生成器** `MapLayout`（房间+走廊、确定性）接入服务端刷怪锚点与客户端 kit 渲染；怪物池按世界类型生成。**待办**：碰撞/寻路、主题纹理切换、刷怪区体积/密度、真实路径约束。`W04MapLayoutTests` 7 条。见 `docs/web/W04_MAP_GENERATOR.md` | B02、W01 |
 | W05 | 城镇与完整进度 | ⏳ 部分：世界目录可按 id/tier 寻址。**待办**：城镇/地图解锁/checkpoint/WorldTier 选择、返回路径、跨重登恢复 | W04、C08 |
-| W06 | Niflheim 剩余差异 | 保留已有 pack 数量与逐个生成；补真实 DungeonMonsterSpawnArea、世界修饰符、boss 包、怪物池/缩放、完成/失败/返回规则 | W01、W03–W05 |
+| W06 | Niflheim 剩余差异 | ⏳ 部分：pack 数量/逐个生成保留；W04 后 pack 用地图房间锚点，进入/离开 Niflheim 改用世界 tier 怪物池。**待办**：真实 DungeonMonsterSpawnArea 体积、世界修饰符、boss 包、完成/失败规则 | W01、W03–W05 |
 | W07 | 离线收益精确接入 | ⏳ 部分：`GetSecondHighestReachedWorldCheckpoint` 已定位（读 `World_Tier_Unlocked` id 9，同 tier 回退一个 checkpoint，仅在刚解锁 tier 时回退上一 tier）；`OfflineRate` 已改用属性 9。**待办**：逐 tier checkpoint 进度跟踪以应用 tier 回退；多进度样本对照 | W05、E02、C08 |
 
 ## P2：宠物、召唤物与图腾
