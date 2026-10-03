@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.Json;
+using Nordicandia.Simulation;
 
 namespace Nordicandia.Server.WebApi;
 
@@ -64,6 +65,58 @@ public static class PowerParameterCatalog
 
     private static double Cap(Parameter parameter, double value)
         => parameter.CapMax is { } cap ? Math.Min(cap, value) : value;
+
+    /// <summary>Recovered instance fields whose target client attribute is identified by name
+    /// (Inferred from the field name and the available client attributes; the raw field is written
+    /// by the power's own Apply, so this mapping is a web-side interpretation).</summary>
+    private static readonly Dictionary<string, int> FieldAttributeIds = new()
+    {
+        ["_MagicFindIncrease"] = 355,             // Base_Magic_Find
+        ["_ItemQuantityIncrease"] = 367,          // Item_Quantity_Bonus_Percent
+        ["_IncreasedMaximumResistances"] = 1019,  // Resistance_Max_Bonus
+        ["_IncreasedMaximumPhysReduction"] = 271, // Base_Physical_Damage_Reduction_Bonus
+        ["_MinionMagicFindIncrease"] = 765,       // Minion_Kill_Magic_Find_Bonus_Percent
+        ["_AdditionalIronDropChance"] = 2005,     // Set_Chance_To_Find_Additional_Iron_On_Drop
+        ["_MinionLifeBonus"] = 734,               // Minion_Inheritance_Life_Bonus_Percent
+        ["_MinionDamageBonus"] = 738,             // Minion_Inheritance_Weapon_Damage_Bonus_Percent
+        ["_MorePoisonDamage"] = 1704,             // Weapon_Poison_Damage_Bonus_Percent
+        ["_PoisonChanceOnHit"] = 428,             // Poison_Chance_On_Hit
+    };
+
+    /// <summary>The element resistance attribute granted by <c>_ResistanceBonus</c> per armor power.</summary>
+    private static readonly Dictionary<string, int> ElementResistanceByPower = new()
+    {
+        ["FireArmor"] = 1000, ["ColdArmor"] = 1011, ["LightningArmor"] = 1012,
+    };
+
+    /// <summary>Recovered numeric parameters of a passive resolved to client attribute ids
+    /// (attributeId -&gt; total value at <paramref name="rank"/>). <c>attributes.*</c> names are the
+    /// client attribute names; <c>fields.*</c> use <see cref="FieldAttributeIds"/> and the element
+    /// armor mapping. Unmapped runtime/expression entries are skipped, not zero-filled.</summary>
+    public static IReadOnlyDictionary<int, double> AttributeBonuses(string powerName, int rank = 1)
+    {
+        var result = new Dictionary<int, double>();
+        var elementResistance = ElementResistanceByPower.GetValueOrDefault(powerName);
+        foreach (var (name, parameter) in ForPower(powerName))
+        {
+            if (!parameter.IsScalar) continue;
+            var value = Evaluate(parameter, rank);
+            if (name == "_ResistanceBonus" && elementResistance != 0)
+            {
+                result[elementResistance] = result.GetValueOrDefault(elementResistance) + value;
+                continue;
+            }
+            if (name == "_DamageTakenAsElement") continue; // damage conversion not wired yet
+            if (FieldAttributeIds.TryGetValue(name, out var fieldId))
+            {
+                result[fieldId] = result.GetValueOrDefault(fieldId) + value;
+                continue;
+            }
+            if (CharacterAttributeEngine.Instance.TryGetId(name, out var id))
+                result[id] = result.GetValueOrDefault(id) + value;
+        }
+        return result;
+    }
 
     private static IReadOnlyDictionary<string, IReadOnlyDictionary<string, Parameter>> Load()
     {

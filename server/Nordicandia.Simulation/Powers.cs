@@ -22,7 +22,9 @@ public sealed record SkillProfile(
     string Confidence,
     IReadOnlyDictionary<string, double> Values); // client-verified | provisional-behaviour
 
-/// <summary>A real passive skill; <see cref="Effect"/> is a provisional category.</summary>
+/// <summary>A real passive skill; <see cref="Effect"/> is a provisional category.
+/// <paramref name="AttributeBonuses"/> carries recovered client attributes (attributeId -> value)
+/// the passive grants to the character's attribute map.</summary>
 public sealed record PassiveProfile(
     string Name,
     string Description,
@@ -30,7 +32,8 @@ public sealed record PassiveProfile(
     string Effect,      // might | warding | haste | fortune
     double OffenseBonus,
     double HealthBonus,
-    string Confidence);
+    string Confidence,
+    IReadOnlyDictionary<int, double>? AttributeBonuses = null);
 
 public sealed record ClassPowers(string ClassName, IReadOnlyList<SkillProfile> Active, PassiveProfile Passive);
 

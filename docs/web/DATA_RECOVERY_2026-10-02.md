@@ -127,6 +127,29 @@ ret
 `GET/POST /api/web/v1/characters/{id}/loadout`。网页新增 Loadout 窗口（HUD 键 `L`）与 6 个技能按钮（4–6 按需显示）；
 未设置装具时返回职业起始套件（3 主动 + 1 被动）。
 
+### 恢复公式 → 角色属性（本轮）
+
+`PowerParameterCatalog.AttributeBonuses(power, rank=1)` 把恢复出的标量参数解析为客户端属性 id，
+`PowerCatalog.BuildPool` 将其附到被选被动上，`CombatRegistry` 在 `CharacterRatings.Apply` 前合并进
+`GetAttributeMap`（因此走属性引擎的 `*_Total` 公式）。映射：
+
+| 参数 | 属性 id | 属性名 | 置信度 |
+|---|---:|---|---|
+| `attributes.*`（DeadlyPoison 的 428/429、Solitary 的 427、Fork 的 431 等） | 按名解析 | 客户端同名属性 | ClientVerified 名 + 公式 |
+| `_ResistanceBonus`（Fire/Cold/LightningArmor） | 1000/1011/1012 | `Resistance_Fire/Cold/Lightning` | Inferred（按 armor 元素） |
+| `_MagicFindIncrease` / `_ItemQuantityIncrease` | 355 / 367 | `Base_Magic_Find` / `Item_Quantity_Bonus_Percent` | Inferred |
+| `_IncreasedMaximumResistances` / `_IncreasedMaximumPhysReduction` | 1019 / 271 | `Resistance_Max_Bonus` / `Base_Physical_Damage_Reduction_Bonus` | Inferred |
+| `_MinionLifeBonus` / `_MinionDamageBonus` | 734 / 738 | `Minion_Inheritance_*` | Inferred |
+| `_MorePoisonDamage` / `_PoisonChanceOnHit` | 1704 / 428 | `Weapon_Poison_Damage_Bonus_Percent` / `Poison_Chance_On_Hit` | Inferred |
+| `_MinionMagicFindIncrease` / `_AdditionalIronDropChance` | 765 / 2005 | Minion kill MF / additional iron | Inferred |
+| `_DamageTakenAsElement`、`call`/`field`/`expression`/`inherited` | — | 仍不接入（不虚构） | — |
+
+`PowerParameterTests` 断言上述解析、rank 缩放、未接入项不被填零，以及
+`Resistance_Fire_Total` 确实包含 FireArmor 的 `+0.5`。
+
+仍缺：`Resistance_Max` 客户端默认为 0（难度/区域授予），网页未建模，故元素抗性在网页上被 `Min(total, 0)`
+封顶；要真正常生效需同时确定该难度默认值。魔法找到/物品数量尚未接入掉落；毒/分叉等还没进入 `CombatInstance` 结算。
+
 `Affixes.json` 与 `ItemAffixes.json` 的取舍补充证据：Items.json/ItemTypes.json 的 `AffixIds` 共引用
 1388/210 个 Guid，**全部存在于 `Affixes.json`**，仅子集在 `ItemAffixes.json`；例如 `FireResistance` 被引用的是
 四个 GenerationType=4 的 Guid，而 gen=1 的那条未被任何物品类型引用。故当前精选目录（取自 `Affixes.json`）

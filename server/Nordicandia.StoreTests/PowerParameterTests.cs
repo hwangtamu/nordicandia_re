@@ -44,5 +44,48 @@ static class PowerParameterTests
         Check(PowerParameterCatalog.EvaluatePower("TreasureHunter", 1)
                 .OrderBy(kv => kv.Key).Select(kv => kv.Value).SequenceEqual(new[] { 0.10, 0.30 }),
             "power parameters: EvaluatePower returns scalar entries only");
+
+        // Recovered passives resolve to client attribute ids for the loadout bonus map.
+        void Bonus(string power, int attributeId, double expected)
+        {
+            var bonuses = PowerParameterCatalog.AttributeBonuses(power);
+            Check(bonuses.TryGetValue(attributeId, out var value) && Math.Abs(value - expected) < 1e-9,
+                $"power attributes: {power} -> {attributeId} = {expected}");
+        }
+        Bonus("FireArmor", 1000, 0.5);       // Resistance_Fire
+        Bonus("ColdArmor", 1011, 0.5);       // Resistance_Cold
+        Bonus("LightningArmor", 1012, 0.5);  // Resistance_Lightning
+        Bonus("DeadlyPoison", 428, 0.15);    // Poison_Chance_On_Hit
+        Bonus("DeadlyPoison", 429, 0.80);    // Double_Damage_..._Poisoned_Target
+        Bonus("Solitary", 427, 0.10);        // Power_More_Weapon_Damage_...
+        Bonus("Fork", 431, 0.10);            // Projectile_Auto_Attacks_Fork_Chance
+        Bonus("TreasureHunter", 355, 0.30);  // Base_Magic_Find
+        Bonus("TreasureHunter", 367, 0.10);  // Item_Quantity_Bonus_Percent
+        Bonus("RepelMagic", 1019, 0.03);     // Resistance_Max_Bonus
+        Bonus("RepelMagic", 271, 0.03);      // Base_Physical_Damage_Reduction_Bonus
+        Bonus("MasterSummoner", 734, 0.10);  // Minion_Inheritance_Life_Bonus_Percent
+        Bonus("MasterSummoner", 738, 0.05);  // Minion_Inheritance_Weapon_Damage_Bonus_Percent
+        Bonus("VileTouch", 428, 0.60);       // _PoisonChanceOnHit
+        Bonus("VileTouch", 1704, 0.20);      // _MorePoisonDamage -> Weapon_Poison_Damage_Bonus_Percent
+        Bonus("ShootExplodingFireArrow", 230, 0.0); // Power_Projectile_Pierce_Chance
+        Bonus("ShootExplodingFireArrow", 432, 0.0); // Power_Projectile_Fork_Chance
+
+        // Rank scaling and the un-wired damage-conversion entry (not zero-invented).
+        Check(Math.Abs(PowerParameterCatalog.AttributeBonuses("FireArmor", 3)[1000] - 0.7) < 1e-9,
+            "power attributes: rank 3 FireArmor resistance = 0.5 + 0.1*2");
+        Check(!PowerParameterCatalog.AttributeBonuses("FireArmor").ContainsKey(575),
+            "power attributes: un-wired damage conversion is not invented");
+
+        // BuildPool attaches the recovered bonuses to the selected passive.
+        var magePool = PowerCatalog.BuildPool(5, new[] { "IceNova" }, new[] { "FireArmor" });
+        Check(magePool.Passive[0].AttributeBonuses?.GetValueOrDefault(1000) == 0.5,
+            "power attributes: BuildPool attaches FireArmor's resistance bonus");
+
+        // The attribute engine turns the bonus into the resistance total.
+        var eval = Nordicandia.Simulation.CharacterAttributeEngine.Instance.Evaluate(
+            new Dictionary<int, double> { [1000] = 0.5 });
+        var fireTotal = eval.Resolve("Resistance_Fire_Total");
+        Check(fireTotal >= 0.49,
+            $"power attributes: Resistance_Fire bonus flows into Resistance_Fire_Total ({fireTotal:F3})");
     }
 }

@@ -85,17 +85,17 @@ public sealed class CombatRegistry
             var persisted = store.ProjectWebSnapshot(owner, characterId);
             var items = store.GetItems(owner, characterId);
             var (equipOffense, equipDefense, equipRecovery) = LootTable.EquipmentBonus(items);
+            var seed = (ulong)(uint)characterId.GetHashCode() << 32 | (uint)characterId.GetHashCode();
+            var loadout = store.GetLoadout(owner, characterId);
+            var basePowers = PowerCatalog.BuildPool(persisted.Class, loadout.Active, loadout.Passive);
+            var ranks = store.GetMasteryRanks(owner, characterId);
             var stats = CharacterRatings.Apply(
                 CombatantStats.FromRealtime(
                     persisted.Offense + equipOffense,
                     persisted.Defense + equipDefense,
                     persisted.Recovery + equipRecovery,
                     (int)persisted.Level),
-                store.GetAttributeMap(owner, characterId));
-            var seed = (ulong)(uint)characterId.GetHashCode() << 32 | (uint)characterId.GetHashCode();
-            var loadout = store.GetLoadout(owner, characterId);
-            var basePowers = PowerCatalog.BuildPool(persisted.Class, loadout.Active, loadout.Passive);
-            var ranks = store.GetMasteryRanks(owner, characterId);
+                WithPassiveBonuses(store.GetAttributeMap(owner, characterId), basePowers));
             // P1: seed the instance's version from the persisted counter so it never resets
             // to 1 across a restart (which would make the command log boundary reject fresh
             // commands from a client that already saw a higher version).
@@ -380,10 +380,23 @@ public sealed class CombatRegistry
                 entry.Instance.Defense - entry.EquipDefense + defense,
                 entry.Instance.Recovery - entry.EquipRecovery + recovery,
                 entry.Instance.PlayerLevel),
-            store.GetAttributeMap(owner, characterId)));
+            WithPassiveBonuses(store.GetAttributeMap(owner, characterId), entry.BasePowers)));
         entry.EquipOffense = offense;
         entry.EquipDefense = defense;
         entry.EquipRecovery = recovery;
+    }
+
+    /// <summary>Merges the recovered passives' client attribute bonuses into a character attribute
+    /// map so the attribute engine's totals (resistances, magic find, ...) include them.</summary>
+    private static Dictionary<int, double> WithPassiveBonuses(Dictionary<int, double> map, ClassPowerPool pool)
+    {
+        foreach (var passive in pool.Passive)
+        {
+            if (passive.AttributeBonuses is null) continue;
+            foreach (var (id, value) in passive.AttributeBonuses)
+                map[id] = map.GetValueOrDefault(id) + value;
+        }
+        return map;
     }
 
     private Entry GetEntry(Guid owner, Guid characterId)

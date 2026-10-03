@@ -47,7 +47,8 @@ public static partial class PowerCatalog
         foreach (var name in passiveNames ?? Array.Empty<string>())
         {
             var passive = pool.Passive.FirstOrDefault(x => x.Name == name);
-            if (passive is not null && passives.Count < MaxPassiveSkills) passives.Add(passive);
+            if (passive is not null && passives.Count < MaxPassiveSkills)
+                passives.Add(passive with { AttributeBonuses = PowerParameterCatalog.AttributeBonuses(passive.Name) });
         }
         if (active.Count == 0) active = kit.Active.ToList();
         if (passives.Count == 0) passives = kit.Passive.ToList();
