@@ -45,6 +45,10 @@ static class M3Tests
                 Check(claimed.Experience == offline.Experience, "m3 offline: claim grants the previewed experience");
                 var second = registry.ClaimOffline(owner, id);
                 Check(second.Experience == 0 && !second.Claimable, "m3 offline: a second claim grants nothing");
+                // Recovered rate: truncate(efficiency * clamp(1.5*tier, 10, 45)); efficiency 1.5.
+                Check(OfflineRewards.KillsPerMinute(1.5, 1) == 15, "m3 offline: tier 1 clamps the rate to 10*1.5");
+                Check(OfflineRewards.KillsPerMinute(1.5, 10) == 22, "m3 offline: tier 10 truncates 22.5");
+                Check(OfflineRewards.KillsPerMinute(1.5, 30) == 67, "m3 offline: tier 30 clamps at 45*1.5 and truncates");
 
                 // ----- blessings -----
                 var before = registry.ActiveBlessings(owner, id);

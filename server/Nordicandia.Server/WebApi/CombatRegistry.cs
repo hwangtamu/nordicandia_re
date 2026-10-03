@@ -172,7 +172,8 @@ public sealed class CombatRegistry
         lock (gate)
         {
             var entry = GetEntry(owner, characterId);
-            var (experience, seconds) = OfflineRewards.Compute(entry.Instance.PlayerLevel, entry.PendingOfflineSeconds);
+            var (efficiency, tier) = OfflineRate(owner, characterId, entry);
+            var (experience, seconds) = OfflineRewards.Compute(entry.Instance.PlayerLevel, entry.PendingOfflineSeconds, efficiency, tier);
             return new OfflineView(entry.PendingOfflineSeconds, seconds, experience, experience > 0);
         }
     }
@@ -184,7 +185,8 @@ public sealed class CombatRegistry
         lock (gate)
         {
             var entry = GetEntry(owner, characterId);
-            var (experience, seconds) = OfflineRewards.Compute(entry.Instance.PlayerLevel, entry.PendingOfflineSeconds);
+            var (efficiency, tier) = OfflineRate(owner, characterId, entry);
+            var (experience, seconds) = OfflineRewards.Compute(entry.Instance.PlayerLevel, entry.PendingOfflineSeconds, efficiency, tier);
             if (experience > 0)
             {
                 entry.Instance.GrantExperience(experience);
@@ -193,6 +195,18 @@ public sealed class CombatRegistry
             entry.PendingOfflineSeconds = 0;
             return new OfflineView(0, seconds, experience, false);
         }
+    }
+
+    /// <summary>Recovered offline inputs: Offline_Battle_Efficiency_Multiplier (attribute 565,
+    /// which resolves to Base_Stamina_Multiplier) and the character's world tier (attribute 8,
+    /// default 1). The web slice does not track the client's second-highest reached world
+    /// checkpoint history, so tier is an approximation while the scaling/clamp are recovered.</summary>
+    private (double Efficiency, int Tier) OfflineRate(Guid owner, Guid characterId, Entry entry)
+    {
+        var map = CharacterAttributeMap(owner, characterId, entry.BasePowers);
+        var eval = CharacterAttributeEngine.Instance.Evaluate(map);
+        var tier = (int)map.GetValueOrDefault(8);
+        return (eval.Resolve("Offline_Battle_Efficiency_Multiplier"), Math.Max(1, tier));
     }
 
     // ----- Aesir blessings (M3) -----
