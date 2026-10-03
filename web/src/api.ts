@@ -152,6 +152,21 @@ export interface SkillMasteryView {
   masteries: MasteryView[];
 }
 
+export interface PowerPoolOption {
+  name: string;
+  description: string;
+  icon: string;
+}
+
+export interface Loadout {
+  active: string[];
+  passive: string[];
+  maxActive: number;
+  maxPassive: number;
+  poolActive: PowerPoolOption[];
+  poolPassive: PowerPoolOption[];
+}
+
 let commandCounter = 0;
 export function newCommandId(): string {
   commandCounter += 1;
@@ -237,6 +252,15 @@ export const api = {
     }),
 
   powers: (characterId: string) => request<SkillMasteryView[]>(`/characters/${characterId}/powers`),
+
+  loadout: (characterId: string) => request<Loadout>(`/characters/${characterId}/loadout`),
+
+  setLoadout: (characterId: string, active: string[], passive: string[]) =>
+    request<{ applied: boolean; reason: string }>(`/characters/${characterId}/loadout`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ active, passive }),
+    }),
 
   merchantCatalog: () => request<MerchantProduct[]>("/merchant/catalog"),
 

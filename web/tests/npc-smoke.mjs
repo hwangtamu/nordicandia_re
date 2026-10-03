@@ -79,6 +79,19 @@ try {
   await page.waitForTimeout(1000);
   const attrRows = await page.$$eval("#attrs-items .inv-row", (rows) => rows.length);
   const attrPoints = await page.textContent("#attrs-points");
+  await page.click("#attrs-close");
+
+  // Loadout window: choose up to 6 active / 3 passive from the class pool, then save.
+  await page.click("#hud-loadout");
+  await page.waitForSelector("#loadout:not([hidden])", { timeout: 5000 });
+  await page.waitForSelector("#loadout-items .loadout-row", { timeout: 5000 });
+  const loadoutRows = await page.$$eval("#loadout-items .loadout-row", (rows) => rows.length);
+  const loadoutPoints = await page.textContent("#loadout-points");
+  const equipButton = await page.$("#loadout-items .loadout-row .inv-btn:not([disabled])");
+  if (equipButton) await equipButton.click();
+  await page.click("#loadout-save");
+  await page.waitForTimeout(1000);
+  const loadoutStatus = await page.textContent("#loadout-status");
 
   await page.screenshot({ path: out });
 
@@ -86,6 +99,7 @@ try {
   console.log(`add-socket hint: ${addSocketHint}`);
   console.log(`merchant: ${merchantTitle} tabs=[${merchantTabs.join(", ")}] products=${merchantRows} buyButtons=${buyButtons}`);
   console.log(`attributes: rows=${attrRows} points=${attrPoints}`);
+  console.log(`loadout: rows=${loadoutRows} points=${loadoutPoints} status=${loadoutStatus}`);
   console.log(`screenshot: ${out}`);
   const realErrors = errors.filter((e) => !e.includes("favicon"));
   if (smithTabs.length < 6) throw new Error("Blacksmith should expose its six tabs");
@@ -93,6 +107,8 @@ try {
   if (buyButtons < 2) throw new Error("Merchant Buy tab should offer silver and opal purchases");
   if (merchantTabs.length < 3) throw new Error("Merchant should expose Buy/Trade/Set tabs");
   if (attrRows !== 7) throw new Error("Attribute panel should list the seven attributes");
+  if (loadoutRows < 6) throw new Error("Loadout should offer at least six active skills");
+  if (loadoutStatus !== "Saved") throw new Error(`Loadout save did not apply (status: ${loadoutStatus})`);
   if (realErrors.length) throw new Error("browser errors:\n" + realErrors.join("\n"));
   console.log("PASS npc smoke");
 } finally {

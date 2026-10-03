@@ -213,7 +213,21 @@ public static class WebApiEndpoints
             if (user is null) return Results.Unauthorized();
             if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
             var (active, passive) = GameStore.Instance.GetLoadout(user.UserId, id);
-            return Results.Ok(new { active, passive, maxActive = PowerCatalog.MaxActiveSkills, maxPassive = PowerCatalog.MaxPassiveSkills });
+            var snapshot = GameStore.Instance.ProjectWebSnapshot(user.UserId, id);
+            // An unset loadout still equips the class starter kit, so report that as selected.
+            var starter = PowerCatalog.DefaultPoolFor(snapshot.Class);
+            if (active.Count == 0) active = starter.Active.Select(s => s.Name).ToList();
+            if (passive.Count == 0) passive = starter.Passive.Select(p => p.Name).ToList();
+            var pool = PowerCatalog.PoolFor(snapshot.Class);
+            return Results.Ok(new
+            {
+                active,
+                passive,
+                maxActive = PowerCatalog.MaxActiveSkills,
+                maxPassive = PowerCatalog.MaxPassiveSkills,
+                poolActive = pool.Active.Select(p => new { p.Name, p.Description, p.Icon }),
+                poolPassive = pool.Passive.Select(p => new { p.Name, p.Description, p.Icon }),
+            });
         });
 
         group.MapPost("/characters/{id:guid}/loadout", (HttpContext ctx, Guid id, WebLoadoutRequest req) =>

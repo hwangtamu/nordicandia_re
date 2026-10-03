@@ -121,7 +121,11 @@ ret
   Pillaging/VileTouch）。
 
 `PowerPoolTests` 断言 4 职业池均 ≥6 主动/≥3 被动、条目带 id/name、恢复被动可按名解析。
-下一步是把当前固定的「3 主动 + 1 被动」套件改为从该池中选择的 6/3 装具，并让战斗使用所选被动。
+
+已接入 6/3 装具：`CombatInstance` 接受 `ClassPowerPool`（最多 6 主动、3 被动，加成求和）；`GameStore`
+持久化 `LoadoutActive`/`LoadoutPassive`；`CombatRegistry.SetLoadout` 校验职业池并重建实例；
+`GET/POST /api/web/v1/characters/{id}/loadout`。网页新增 Loadout 窗口（HUD 键 `L`）与 6 个技能按钮（4–6 按需显示）；
+未设置装具时返回职业起始套件（3 主动 + 1 被动）。
 
 `Affixes.json` 与 `ItemAffixes.json` 的取舍补充证据：Items.json/ItemTypes.json 的 `AffixIds` 共引用
 1388/210 个 Guid，**全部存在于 `Affixes.json`**，仅子集在 `ItemAffixes.json`；例如 `FireResistance` 被引用的是

@@ -1,5 +1,5 @@
 import "./style.css";
-import { api, AttributeKey, CharacterSummary, CombatEnvelope, LootDrop, MerchantProduct, newCommandId, NpcResult, SkillMasteryView, Snapshot, WebAttributes, WebInventory } from "./api";
+import { api, AttributeKey, CharacterSummary, CombatEnvelope, Loadout, LootDrop, MerchantProduct, newCommandId, NpcResult, PowerPoolOption, SkillMasteryView, Snapshot, WebAttributes, WebInventory } from "./api";
 import { loadContent, loadPowers, ContentManifest, ClassPowers, className } from "./content";
 import { HudState, World } from "./game";
 
@@ -52,6 +52,18 @@ app.innerHTML = `
       </div>
       <div id="powers-items" class="inv-items"></div>
     </div>
+    <div id="loadout" class="inventory hidden">
+      <div class="inv-head">
+        <span>Loadout <small id="loadout-points"></small></span>
+        <button id="loadout-close" class="icon-btn">×</button>
+      </div>
+      <div class="npc-hint">Equip up to 6 active skills and 3 masteries from your class pool.</div>
+      <div id="loadout-items" class="inv-items"></div>
+      <div class="npc-foot">
+        <button id="loadout-save" class="npc-action">Save loadout</button>
+        <span id="loadout-status" class="npc-status"></span>
+      </div>
+    </div>
     <div id="attrs" class="inventory hidden">
       <div class="inv-head">
         <span>Attributes <small id="attrs-points"></small></span>
@@ -76,6 +88,10 @@ app.innerHTML = `
       <button id="hud-skill" class="skill">Skill 1 <small>1</small></button>
       <button id="hud-skill-2" class="skill">Skill 2 <small>2</small></button>
       <button id="hud-skill-3" class="skill">Skill 3 <small>3</small></button>
+      <button id="hud-skill-4" class="skill hidden">Skill 4 <small>4</small></button>
+      <button id="hud-skill-5" class="skill hidden">Skill 5 <small>5</small></button>
+      <button id="hud-skill-6" class="skill hidden">Skill 6 <small>6</small></button>
+      <button id="hud-loadout" class="skill alt">Loadout <small>L</small></button>
       <button id="hud-auto" class="skill alt">Auto-move: ON <small>Tab</small></button>
       <button id="hud-bag" class="skill alt">Bag <small>B</small></button>
       <button id="hud-powers" class="skill alt">Skills <small>P</small></button>
@@ -98,6 +114,10 @@ const invItemsEl = document.getElementById("inv-items") as HTMLDivElement;
 const powersEl = document.getElementById("powers") as HTMLDivElement;
 const powersItemsEl = document.getElementById("powers-items") as HTMLDivElement;
 const powersPointsEl = document.getElementById("powers-points") as HTMLElement;
+const loadoutEl = document.getElementById("loadout") as HTMLDivElement;
+const loadoutItemsEl = document.getElementById("loadout-items") as HTMLDivElement;
+const loadoutPointsEl = document.getElementById("loadout-points") as HTMLElement;
+const loadoutStatusEl = document.getElementById("loadout-status") as HTMLElement;
 const lootFeedEl = document.getElementById("loot-feed") as HTMLDivElement;
 
 let content: ContentManifest;
@@ -269,9 +289,40 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
     ["hud-skill", 0],
     ["hud-skill-2", 1],
     ["hud-skill-3", 2],
+    ["hud-skill-4", 3],
+    ["hud-skill-5", 4],
+    ["hud-skill-6", 5],
   ];
   for (const [id, skillId] of skillButtons)
     document.getElementById(id)!.addEventListener("click", () => void sendCommand("skill", { skillId }));
+  loadoutRefreshHandler = async (): Promise<void> => {
+    try {
+      const data = await api.loadout(characterId);
+      loadoutCache = data;
+      loadoutSelection = { active: new Set(data.active), passive: new Set(data.passive) };
+      poolByName.clear();
+      for (const option of [...data.poolActive, ...data.poolPassive]) poolByName.set(option.name, option);
+      renderLoadout();
+    } catch (error) {
+      console.warn("loadout failed", error);
+    }
+  };
+  loadoutSaveHandler = async (): Promise<void> => {
+    loadoutStatusEl.textContent = "Saving…";
+    try {
+      const result = await api.setLoadout(characterId, [...loadoutSelection.active], [...loadoutSelection.passive]);
+      loadoutStatusEl.textContent = result.applied ? "Saved" : `Rejected: ${result.reason}`;
+      if (result.applied) {
+        await refreshPowers();
+        await loadoutRefreshHandler?.();
+      }
+    } catch (error) {
+      loadoutStatusEl.textContent = `Failed: ${error instanceof Error ? error.message : String(error)}`;
+    }
+  };
+  document.getElementById("hud-loadout")!.addEventListener("click", () => toggleLoadout());
+  document.getElementById("loadout-close")!.addEventListener("click", () => toggleLoadout(false));
+  document.getElementById("loadout-save")!.addEventListener("click", () => void loadoutSaveHandler?.());
   const autoButton = document.getElementById("hud-auto") as HTMLButtonElement;
   autoButton.addEventListener("click", () => {
     const on = world?.toggleAutoMove() ?? false;
@@ -301,7 +352,10 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
       console.warn("allocate failed", error);
     }
   };
-  const keyToSkill: Record<string, number> = { Digit1: 0, Digit2: 1, Digit3: 2, Numpad1: 0, Numpad2: 1, Numpad3: 2 };
+  const keyToSkill: Record<string, number> = {
+    Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, Digit5: 4, Digit6: 5,
+    Numpad1: 0, Numpad2: 1, Numpad3: 2, Numpad4: 3, Numpad5: 4, Numpad6: 5,
+  };
   window.addEventListener("keydown", (event) => {
     if (event.code === "Space") {
       event.preventDefault();
@@ -328,6 +382,9 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
     } else if (event.code === "KeyC") {
       event.preventDefault();
       toggleAttrs();
+    } else if (event.code === "KeyL") {
+      event.preventDefault();
+      toggleLoadout();
     } else if (event.code === "Escape") {
       closeNpc();
     }
@@ -336,13 +393,13 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
 
 function toggleBag(force?: boolean): void {
   const show = force ?? inventoryEl.classList.contains("hidden");
-  if (show) { powersEl.classList.add("hidden"); closeNpc(); attrsEl.classList.add("hidden"); }
+  if (show) { powersEl.classList.add("hidden"); closeNpc(); attrsEl.classList.add("hidden"); loadoutEl.classList.add("hidden"); }
   inventoryEl.classList.toggle("hidden", !show);
 }
 
 function togglePowers(force?: boolean): void {
   const show = force ?? powersEl.classList.contains("hidden");
-  if (show) { inventoryEl.classList.add("hidden"); closeNpc(); attrsEl.classList.add("hidden"); }
+  if (show) { inventoryEl.classList.add("hidden"); closeNpc(); attrsEl.classList.add("hidden"); loadoutEl.classList.add("hidden"); }
   powersEl.classList.toggle("hidden", !show);
 }
 
@@ -440,7 +497,7 @@ const ATTR_LABELS: [AttributeKey, string][] = [
 
 function toggleAttrs(force?: boolean): void {
   const show = force ?? attrsEl.classList.contains("hidden");
-  if (show) { inventoryEl.classList.add("hidden"); powersEl.classList.add("hidden"); closeNpc(); void attrsRefreshHandler?.(); }
+  if (show) { inventoryEl.classList.add("hidden"); powersEl.classList.add("hidden"); loadoutEl.classList.add("hidden"); closeNpc(); void attrsRefreshHandler?.(); }
   attrsEl.classList.toggle("hidden", !show);
 }
 
@@ -464,6 +521,61 @@ function renderAttrs(): void {
     row.appendChild(button);
     attrsItemsEl.appendChild(row);
   }
+}
+
+let loadoutCache: Loadout | null = null;
+let loadoutSelection: { active: Set<string>; passive: Set<string> } = { active: new Set(), passive: new Set() };
+let loadoutRefreshHandler: (() => Promise<void>) | null = null;
+let loadoutSaveHandler: (() => Promise<void>) | null = null;
+const poolByName = new Map<string, PowerPoolOption>();
+
+function toggleLoadout(force?: boolean): void {
+  const show = force ?? loadoutEl.classList.contains("hidden");
+  if (show) {
+    inventoryEl.classList.add("hidden");
+    powersEl.classList.add("hidden");
+    attrsEl.classList.add("hidden");
+    closeNpc();
+    void loadoutRefreshHandler?.();
+  }
+  loadoutEl.classList.toggle("hidden", !show);
+}
+
+function renderLoadout(): void {
+  const data = loadoutCache;
+  if (!data) { loadoutItemsEl.innerHTML = `<div class="inv-empty">Loading…</div>`; return; }
+  loadoutPointsEl.textContent =
+    `${loadoutSelection.active.size}/${data.maxActive} skills · ${loadoutSelection.passive.size}/${data.maxPassive} masteries`;
+  loadoutItemsEl.innerHTML = "";
+  const section = (title: string, options: PowerPoolOption[], selected: Set<string>, cap: number): void => {
+    const header = document.createElement("div");
+    header.className = "power-skill";
+    header.textContent = `${title} (${selected.size}/${cap})`;
+    loadoutItemsEl.appendChild(header);
+    for (const option of options) {
+      const chosen = selected.has(option.name);
+      const row = document.createElement("div");
+      row.className = `inv-row loadout-row${chosen ? " equipped" : ""}`;
+      row.innerHTML = `<span class="inv-name">${escapeHtml(prettyPower(option.name))}<span class="inv-affixes">${escapeHtml((option.description ?? "").replace(/\{[0-9]+\}/g, "…"))}</span></span>`;
+      const button = document.createElement("button");
+      button.className = "inv-btn";
+      button.textContent = chosen ? "Remove" : "Equip";
+      button.disabled = !chosen && selected.size >= cap;
+      button.addEventListener("click", () => {
+        if (selected.has(option.name)) selected.delete(option.name);
+        else if (selected.size < cap) selected.add(option.name);
+        renderLoadout();
+      });
+      row.appendChild(button);
+      loadoutItemsEl.appendChild(row);
+    }
+  };
+  section("Active skills", data.poolActive, loadoutSelection.active, data.maxActive);
+  section("Masteries", data.poolPassive, loadoutSelection.passive, data.maxPassive);
+}
+
+function prettyPower(name: string): string {
+  return name.replace(/([a-z])([A-Z])/g, "$1 $2");
 }
 
 const NPc_TABS: Record<string, { label: string; hint: string }> = {
@@ -650,20 +762,23 @@ function renderHud(hudState: HudState): void {
   const boss = document.getElementById("hud-boss") as HTMLElement;
   boss.classList.toggle("hidden", hudState.bossAlive || hudState.bossKillsRemaining <= 0);
   (document.getElementById("hud-boss-count") as HTMLElement).textContent = String(hudState.bossKillsRemaining);
-  const skillButtons = ["hud-skill", "hud-skill-2", "hud-skill-3"] as const;
+  const skillButtons = ["hud-skill", "hud-skill-2", "hud-skill-3", "hud-skill-4", "hud-skill-5", "hud-skill-6"] as const;
   skillButtons.forEach((id, index) => {
     const button = document.getElementById(id) as HTMLButtonElement;
     const skill = hudState.skills[index];
-    const ready = skill?.ready ?? true;
-    const name = skill?.name ?? `Skill ${index + 1}`;
+    button.classList.toggle("hidden", !skill);
+    if (!skill) return;
+    const ready = skill.ready ?? true;
+    const name = skill.name ?? `Skill ${index + 1}`;
     const power = classPowers?.active[index];
-    const description = [power?.descriptionFilled ?? power?.description?.replace(/\{[0-9]+\}/g, "…") ?? "",
+    const pooled = poolByName.get(name);
+    const description = [power?.descriptionFilled ?? power?.description?.replace(/\{[0-9]+\}/g, "…") ?? pooled?.description?.replace(/\{[0-9]+\}/g, "…") ?? "",
       power?.special ? `Special: ${power.special}` : "",
       power?.chains ? `Chains: ${power.chains}` : "",
       power?.baseChain?.length ? `Class: ${power.baseChain.slice(0, 3).join(" < ")}` : "",
       power?.masteries?.length ? `Masteries: ${power.masteries.length}` : "",
       power?.confidence ? `[${power.confidence}]` : ""].filter(Boolean).join("\n");
-    const mana = skill?.manaCost ? `  ${Math.round(skill.manaCost)}m` : "";
+    const mana = skill.manaCost ? `  ${Math.round(skill.manaCost)}m` : "";
     if (description) button.title = description;
     button.classList.toggle("disabled", !ready);
     button.textContent = ready ? `${name}${mana}` : `${name} ${Math.ceil(skill.cooldown)}s`;
