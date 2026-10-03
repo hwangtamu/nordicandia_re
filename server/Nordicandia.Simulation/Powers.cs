@@ -34,6 +34,9 @@ public sealed record PassiveProfile(
 
 public sealed record ClassPowers(string ClassName, IReadOnlyList<SkillProfile> Active, PassiveProfile Passive);
 
+/// <summary>Every selectable power for a class, used to build a 6-active / 3-passive loadout.</summary>
+public sealed record ClassPowerPool(string ClassName, IReadOnlyList<SkillProfile> Active, IReadOnlyList<PassiveProfile> Passive);
+
 /// <summary>One attribute modifier a mastery rank grants.
 /// <paramref name="Operator"/>: 0 Add, 1 Subtract, 2 Multiply (client enum).
 /// <paramref name="ModifierType"/>: 0 PerLevel, 1 SpecificLevel.</summary>
