@@ -162,7 +162,30 @@ ret
 - 物品数量 = `Item_Quantity_Bonus_Percent_Total` → 每堆掉落额外重抽，封顶
   `GameParameters.MaxQuantityFromMagicFindMultiplier = 5`。
 
-仍缺：毒/分叉等还没进入 `CombatInstance` 结算；魔法找到的精确曲线要等反汇编解码。
+### 魔法找到饱和曲线（ClientVerified，已替换 Interim）
+
+`ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes`（Android `0x02CA0534`）按稀有度类型选不同的
+(D11,D13,D9) 常量（.so `0x13879D8`=225、`0x1387878`=150、`0x1386FE0`=0.01、`0x13874D0`=0.6），
+权重 = `baseWeight * (1 + 0.01 * (100*MF*D13) / (100*MF*D11 + D9*D13))`，最终按中点取偶取整：
+
+| 类型 | D11 | D13 | D9 | 因子 |
+|---|---:|---:|---:|---|
+| Normal | 1 | 1 | 1 | `1 + MF/(100*MF+1)`（几乎不变，占比下降） |
+| Unique | 0.5 | 225 | 2 | `1 + 4.5*MF/(MF+9)`（饱和 ×5.5） |
+| Set | 0.6 | 150 | 4 | `1 + 2.5*MF/(MF+10)`（饱和 ×3.5） |
+
+`ItemCatalog.RollRarityType` 已按此实现（`RoundHalfEven`）。
+
+### 命中时效果：毒 / 分叉 / 链（ClientVerified 属性，执行已接入）
+
+`ShootRangedProjectile.HandleForkAndChain` 读 `Projectile_Auto_Attacks_Fork_Chance`(431) 与
+`Projectile_Auto_Attacks_Chain_Chance`(663)，对两者调用 `Calculator.CalculateChance`，命中后产生额外弹道；
+`Poison_Chance_On_Hit`(428) / `Double_Damage_Chance_On_Crit_On_Poisoned_Target`(429) 为中毒与毒暴。
+`CombatantStats` 新增 `ForkChance`/`ChainChance`/`PoisonChance`/`DoubleDamageOnCritPoisoned`，
+`CharacterRatings.Apply` 从属性引擎读取，`CombatInstance.ApplyOnHit` 执行：
+自动攻击触发分叉/链；所有命中触发中毒（3 秒 DoT）与“毒目标暴击翻倍”。
+
+仍缺：毒 DoT 的精确幅度（当前取主手毒伤的一半/秒，Interim）、元素转换/穿透、AI、离线。
 
 `Affixes.json` 与 `ItemAffixes.json` 的取舍补充证据：Items.json/ItemTypes.json 的 `AffixIds` 共引用
 1388/210 个 Guid，**全部存在于 `Affixes.json`**，仅子集在 `ItemAffixes.json`；例如 `FireResistance` 被引用的是

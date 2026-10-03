@@ -24,6 +24,11 @@ internal static class CharacterRatings
             ManaMax = eval.ManaMax,
             Damage = eval.WeaponDamage,
             Resistances = eval.Resistances,
+            // Recovered on-hit mechanics (GameAttributes ids 431/663/428/429).
+            ForkChance = eval.Resolve("Projectile_Auto_Attacks_Fork_Chance"),
+            ChainChance = eval.Resolve("Projectile_Auto_Attacks_Chain_Chance"),
+            PoisonChance = eval.Resolve("Poison_Chance_On_Hit"),
+            DoubleDamageOnCritPoisoned = eval.Resolve("Double_Damage_Chance_On_Crit_On_Poisoned_Target"),
         };
     }
 }

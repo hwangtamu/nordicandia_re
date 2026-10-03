@@ -51,16 +51,19 @@ public static class ItemCatalog
     /// <summary>Item rarity-type roll weights from Droprates.json.ItemRarityTypeWeights.</summary>
     public static IReadOnlyDictionary<string, double> RarityTypeWeights { get; private set; } = new Dictionary<string, double>();
 
-    /// <summary>Rolls Normal/Unique/Set using the client weights. <paramref name="magicFind"/> (a
-    /// fraction, e.g. 0.3 for +30%) raises the Unique/Set weights. The client's exact magic-find
-    /// curve (ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes) is not fully recovered, so
-    /// this linear boost is a documented Interim rule; the base weights are ClientVerified.</summary>
+    /// <summary>Rolls Normal/Unique/Set using the client weights and the recovered magic-find
+    /// saturation from <c>ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes</c>:
+    /// each type keeps its base weight and is scaled by <c>1 + 0.01 * (100*MF*D13) /
+    /// (100*MF*D11 + D9*D13)</c>, with (D11,D13,D9) = Normal (1,1,1), Unique (0.5,225,2),
+    /// Set (0.6,150,4). The final weights use round-half-to-even. <paramref name="magicFind"/> is a
+    /// fraction (0.3 = +30%).</summary>
     public static RarityType RollRarityType(CombatRandom rng, double magicFind = 0)
     {
         double normal = RarityTypeWeights.GetValueOrDefault("Normal", 1), unique = RarityTypeWeights.GetValueOrDefault("Unique", 0), set = RarityTypeWeights.GetValueOrDefault("Set", 0);
-        var boost = 1 + Math.Max(0, magicFind);
-        unique *= boost;
-        set *= boost;
+        var mf = Math.Max(0, magicFind);
+        normal = RoundHalfEven(normal * Saturation(mf, 1, 1, 1));
+        unique = RoundHalfEven(unique * Saturation(mf, 0.5, 225, 2));
+        set = RoundHalfEven(set * Saturation(mf, 0.6, 150, 4));
         var total = normal + unique + set;
         if (total <= 0) return RarityType.Normal;
         var roll = rng.NextDouble() * total;
@@ -68,6 +71,13 @@ public static class ItemCatalog
         if (roll < set + unique) return RarityType.Unique;
         return RarityType.Normal;
     }
+
+    /// <summary>Recovered per-type magic-find factor: <c>1 + 0.01 * (100*MF*d13) /
+    /// (100*MF*d11 + d9*d13)</c>.</summary>
+    private static double Saturation(double magicFind, double d11, double d13, double d9)
+        => 1 + 0.01 * (100 * magicFind * d13) / (100 * magicFind * d11 + d9 * d13);
+
+    private static double RoundHalfEven(double value) => Math.Round(value, MidpointRounding.ToEven);
 
     // Equip slot -> candidate item type names (client ItemTypes).
     private static readonly string[][] SlotTypes =

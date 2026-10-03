@@ -17,7 +17,30 @@ static class CombatInstanceTests
     {
         FixedStepIsDeterministic();
         KillsAwardExperience();
+        OnHitMechanicsApply();
         CommandsAreIdempotentAndPersist();
+    }
+
+    private static void OnHitMechanicsApply()
+    {
+        void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
+        // Recovered on-hit chances at 1.0 so the effect is deterministic.
+        var stats = CombatantStats.FromRealtime(offense: 40, defense: 2000, recovery: 0, level: 5) with
+        {
+            PoisonChance = 1.0,
+            ForkChance = 1.0,
+            ChainChance = 1.0,
+            DoubleDamageOnCritPoisoned = 1.0,
+            Damage = new DamageBundle(Poison: 25),
+        };
+        var instance = new CombatInstance(stats, 0, 0, 0, 0, seed: 99, monsterCount: 4);
+        Check(instance.PoisonChance == 1.0 && instance.ForkChance == 1.0 && instance.ChainChance == 1.0,
+            "on-hit: recovered poison/fork/chain chances reach the instance");
+        for (var i = 0; i < 600; i++) instance.Advance(0.05);
+        var snapshot = instance.Snapshot();
+        var damaged = snapshot.Monsters.Count(m => m.Hp < m.MaxHp);
+        Check(damaged >= 2, $"on-hit: fork/chain/poison damage several monsters ({damaged})");
+        Check(snapshot.Kills > 0, "on-hit: the recovered on-hit mechanics contribute to kills");
     }
 
     private static void FixedStepIsDeterministic()

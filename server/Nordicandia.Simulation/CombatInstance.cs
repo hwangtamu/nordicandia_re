@@ -25,6 +25,10 @@ public sealed class CombatMonster
     public double AttackInterval { get; set; } = 1.6;
     public double AttackCooldown { get; set; }
     public double StunTimer { get; set; }
+    /// <summary>Remaining poison duration; while &gt; 0 the target counts as poisoned.</summary>
+    public double PoisonTimer { get; set; }
+    /// <summary>Poison damage per second while <see cref="PoisonTimer"/> is active.</summary>
+    public double PoisonDps { get; set; }
     public bool Alive { get; set; } = true;
     public double RespawnTimer { get; set; }
     public double WanderTimer { get; set; }
@@ -151,6 +155,12 @@ public sealed class CombatInstance
     public double ManaMax { get; private set; }
     public DamageBundle Damage { get; private set; }
     public ResistanceBundle Resistances { get; private set; }
+    // Recovered on-hit chances (Poison_Chance_On_Hit 428, Double_Damage_..._Poisoned 429,
+    // Projectile_Auto_Attacks_Fork_Chance 431).
+    public double ForkChance { get; private set; }
+    public double ChainChance { get; private set; }
+    public double PoisonChance { get; private set; }
+    public double DoubleDamageOnCritPoisoned { get; private set; }
     public int PlayerLevel { get; private set; }
     public double Experience { get; private set; }
     public int Silver { get; private set; }
@@ -213,6 +223,10 @@ public sealed class CombatInstance
         ManaMax = stats.ManaMax;
         Damage = stats.Damage;
         Resistances = stats.Resistances;
+        ForkChance = stats.ForkChance;
+        ChainChance = stats.ChainChance;
+        PoisonChance = stats.PoisonChance;
+        DoubleDamageOnCritPoisoned = stats.DoubleDamageOnCritPoisoned;
     }
 
     private CombatantStats PlayerStats() => new(EffectiveOffense(), Defense, Recovery, PlayerLevel,
@@ -371,6 +385,7 @@ public sealed class CombatInstance
         if (PlayerHp > 0) UpdatePlayer(dt);
         UpdateMonsters(dt);
         if (boss is { Alive: true } && PlayerHp > 0) UpdateBoss(dt);
+        TickPoison(dt);
         Version++;
     }
 
@@ -408,7 +423,7 @@ public sealed class CombatInstance
                 PlayerStats(), PlayerDamageBundle(), MonsterStats(target), target.Resistances,
                 new AttackProfile(1.0, 0.08, 1.6, 0.12),
                 rng);
-            DamageMonster(target, hit.Damage);
+            DamageMonster(target, ApplyOnHit(target, hit, autoAttack: true));
         }
     }
 
@@ -427,6 +442,8 @@ public sealed class CombatInstance
                     monster.Z = Math.Sin(angle) * radius;
                     monster.Hp = monster.MaxHp;
                     monster.Alive = true;
+                    monster.PoisonTimer = 0;
+                    monster.PoisonDps = 0;
                 }
                 continue;
             }
@@ -535,6 +552,73 @@ public sealed class CombatInstance
         return best;
     }
 
+    /// <summary>Nearest alive monster other than <paramref name="exclude"/> (fork/chain target).</summary>
+    private CombatMonster NearestAliveMonsterExcept(CombatMonster exclude, double range)
+    {
+        CombatMonster best = null;
+        var bestDistance = range;
+        if (boss is { Alive: true } && boss != exclude)
+        {
+            var bd = Distance(boss);
+            if (bd < bestDistance) { bestDistance = bd; best = boss; }
+        }
+        foreach (var monster in monsters)
+        {
+            if (!monster.Alive || monster == exclude) continue;
+            var distance = Distance(monster);
+            if (distance < bestDistance) { bestDistance = distance; best = monster; }
+        }
+        return best;
+    }
+
+    /// <summary>Recovered on-hit mechanics: Poison_Chance_On_Hit (428),
+    /// Double_Damage_Chance_On_Crit_On_Poisoned_Target (429) and, for auto-attacks,
+    /// Projectile_Auto_Attacks_Fork_Chance (431) via Calculator.CalculateChance (see
+    /// ShootRangedProjectile.HandleForkAndChain). Returns the damage actually dealt.</summary>
+    private double ApplyOnHit(CombatMonster target, DamageResult hit, bool autoAttack)
+    {
+        if (!hit.Hit) return 0;
+        var damage = hit.Damage;
+        if (hit.Critical && target.PoisonTimer > 0 && CombatModel.RollChance(DoubleDamageOnCritPoisoned, rng))
+            damage *= 2;
+        if (CombatModel.RollChance(PoisonChance, rng))
+        {
+            target.PoisonTimer = Math.Max(target.PoisonTimer, PoisonSeconds);
+            target.PoisonDps = Math.Max(target.PoisonDps, PoisonDamagePerSecond());
+        }
+        if (autoAttack && CombatModel.RollChance(ForkChance, rng))
+        {
+            var forked = NearestAliveMonsterExcept(target, PlayerAttackRange * 2);
+            if (forked is not null) DamageMonster(forked, damage);
+        }
+        if (autoAttack && CombatModel.RollChance(ChainChance, rng))
+        {
+            var chained = NearestAliveMonsterExcept(target, PlayerAttackRange * 2);
+            if (chained is not null) DamageMonster(chained, damage * 0.75);
+        }
+        return damage;
+    }
+
+    private const double PoisonSeconds = 3.0;
+
+    /// <summary>Poison DoT rate: half the main-hand poison damage per second (Interim magnitude;
+    /// the chance and double-damage rules are the recovered ones).</summary>
+    private double PoisonDamagePerSecond() => Math.Max(1.0, Damage.Poison * 0.5);
+
+    private void TickPoison(double dt)
+    {
+        foreach (var monster in monsters) TickMonsterPoison(monster, dt);
+        if (boss is { Alive: true }) TickMonsterPoison(boss, dt);
+    }
+
+    private void TickMonsterPoison(CombatMonster monster, double dt)
+    {
+        if (monster is null || !monster.Alive || monster.PoisonTimer <= 0) return;
+        monster.PoisonTimer -= dt;
+        DamageMonster(monster, monster.PoisonDps * dt);
+        if (monster.PoisonTimer <= 0) monster.PoisonDps = 0;
+    }
+
     private void DamageMonster(CombatMonster monster, double damage)
     {
         if (!monster.Alive) return;
@@ -630,8 +714,9 @@ public sealed class CombatInstance
                 foreach (var monster in inRange)
                 {
                     var hit = ResolveSkill(monster, skill, skill.Multiplier);
-                    total += hit.Damage;
-                    DamageMonster(monster, hit.Damage);
+                    var dealt = ApplyOnHit(monster, hit, autoAttack: false);
+                    total += dealt;
+                    DamageMonster(monster, dealt);
                     if (stun > 0) monster.StunTimer = Math.Max(monster.StunTimer, stun);
                 }
                 Version++;
@@ -653,8 +738,9 @@ public sealed class CombatInstance
                 foreach (var monster in candidates.Take(maxTargets))
                 {
                     var hit = ResolveSkill(monster, skill, currentMultiplier);
-                    total += hit.Damage;
-                    DamageMonster(monster, hit.Damage);
+                    var dealt = ApplyOnHit(monster, hit, autoAttack: false);
+                    total += dealt;
+                    DamageMonster(monster, dealt);
                     currentMultiplier *= decay;
                 }
                 Version++;
@@ -695,8 +781,8 @@ public sealed class CombatInstance
                 if (target is null) return new SkillOutcome(false, 0, -1, "no_target");
                 BeginCast(skillId, skill);
                 var hit = ResolveSkill(target, skill, skill.Multiplier);
-                DamageMonster(target, hit.Damage);
-                var total = hit.Damage;
+                var total = ApplyOnHit(target, hit, autoAttack: false);
+                DamageMonster(target, total);
                 if (skill.Values.ContainsKey("Power_Projectile_Pierce_Chance") ||
                     skill.Values.ContainsKey("Power_Power_Shot_Pierce_Chance_Percent"))
                 {
@@ -716,11 +802,12 @@ public sealed class CombatInstance
                 if (target is null) return new SkillOutcome(false, 0, -1, "no_target");
                 BeginCast(skillId, skill);
                 var hit = ResolveSkill(target, skill, skill.Multiplier);
-                DamageMonster(target, hit.Damage);
+                var dealt = ApplyOnHit(target, hit, autoAttack: false);
+                DamageMonster(target, dealt);
                 var stun = StunSecondsOf(skill);
                 if (stun > 0) target.StunTimer = Math.Max(target.StunTimer, stun);
                 Version++;
-                return new SkillOutcome(true, hit.Damage, target.Index, "ok");
+                return new SkillOutcome(true, dealt, target.Index, "ok");
             }
         }
     }

@@ -76,7 +76,8 @@ static class PowerPoolTests
             if (ItemCatalog.RollRarityType(rngPlain) != ItemCatalog.RarityType.Normal) plain++;
             if (ItemCatalog.RollRarityType(rngLucky, 10.0) != ItemCatalog.RarityType.Normal) lucky++;
         }
-        Check(lucky > plain * 5, $"loot: magic find raises rare drops ({plain} -> {lucky})");
+        Check(lucky > plain * 2 && lucky < plain * 4,
+            $"loot: magic find raises rare drops by the recovered saturation ({plain} -> {lucky})");
 
         // Base_Magic_Find is an identity multiplier: a recovered +0.3 bonus is +30% total.
         var mf = CharacterAttributeEngine.Instance.Evaluate(new Dictionary<int, double> { [355] = 1.3 });

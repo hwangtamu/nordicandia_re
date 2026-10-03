@@ -41,7 +41,8 @@ public enum RuleConfidence
 /// </summary>
 public readonly record struct CombatantStats(double Offense, double Defense, double Recovery, int Level,
     double AttackRating = 0, double Armor = 0, double Evasion = 0, double CritChance = 0,
-    double LifeMax = 0, double ManaMax = 0, DamageBundle Damage = default, ResistanceBundle Resistances = default)
+    double LifeMax = 0, double ManaMax = 0, DamageBundle Damage = default, ResistanceBundle Resistances = default,
+    double ForkChance = 0, double ChainChance = 0, double PoisonChance = 0, double DoubleDamageOnCritPoisoned = 0)
 {
     public static CombatantStats FromRealtime(double offense, double defense, double recovery, int level)
         => new(Math.Max(0, offense), Math.Max(0, defense), Math.Max(0, recovery), Math.Max(1, level));
