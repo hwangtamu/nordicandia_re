@@ -56,6 +56,8 @@ AffixGenerationTests.Run();
 
 PowerParameterTests.Run();
 
+PowerPoolTests.Run();
+
 ManaMasteryTests.Run();
 
 AcceptanceRegressionTests.Run();

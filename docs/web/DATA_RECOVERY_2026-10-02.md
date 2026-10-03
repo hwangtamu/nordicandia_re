@@ -109,6 +109,20 @@ ret
 `PowerParameterTests` 断言 19 条全部存在、四组等级公式、概率上限与“非标量不填零”。
 **这些参数仍未进入网页战斗结算**（`runtimeIntegrated=false`）；该目录只是让运行时可按名取值。
 
+## 职业可选池（加载装基础）
+
+新增 `tools/web-content/export_power_pools.py`，把 `CharacterClasses.json` 的职业池与 `powers_full.json`
+连接，产出 `power_pools.json`（已嵌入服务端）。`PowerCatalog` 现暴露：
+
+- `MaxActiveSkills=6`、`MaxPassiveSkills=3`（客户端 `SkillSlotRules` 的 6/3 上限）；
+- `PoolFor(classId)` / `TryGetPooled(guid)`：每个可玩职业的完整主动/被动池（Warrior 13/11、Hunter 14/11、
+  Mage 12/10、Necromancer 12/10），19 个恢复出的被动按职业分布（如 Warrior 有 TreasureHunter/RepelMagic，
+  Hunter 有 DeadlyPoison/Fork/Solitary，Mage 有 Fire/Cold/LightningArmor，Necromancer 有 MasterSummoner/
+  Pillaging/VileTouch）。
+
+`PowerPoolTests` 断言 4 职业池均 ≥6 主动/≥3 被动、条目带 id/name、恢复被动可按名解析。
+下一步是把当前固定的「3 主动 + 1 被动」套件改为从该池中选择的 6/3 装具，并让战斗使用所选被动。
+
 `Affixes.json` 与 `ItemAffixes.json` 的取舍补充证据：Items.json/ItemTypes.json 的 `AffixIds` 共引用
 1388/210 个 Guid，**全部存在于 `Affixes.json`**，仅子集在 `ItemAffixes.json`；例如 `FireResistance` 被引用的是
 四个 GenerationType=4 的 Guid，而 gen=1 的那条未被任何物品类型引用。故当前精选目录（取自 `Affixes.json`）
