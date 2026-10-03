@@ -61,8 +61,8 @@
 | E01 | 完整物品/词缀目录 | ✅ 2026-10-03：从 `ItemAffixes.json` 导出全部 97 条随机 Prefix/Suffix 词缀（Item 域 56 / Monster 27 / Area 14），多属性、Guid/Group/TagData/Domain 齐备；修正 `GameAttributeI` 漏采使属性 id 表 927→1181，词缀引用 0 未解析；`AffixCatalog`/`LootTable` 改用全量目录并按 Domain 过滤，多属性逐条写入。`E01AffixCatalogTests` 10 条，全回归 643 PASS，回放 58/58。见 `docs/web/E01_AFFIX_CATALOG.md` | B01–B02 |
 | E02 | 完整掉落生成管线 | ⏳ 部分：已接入数量余数/MF 饱和/稀有度类型/词缀数量（前轮）+ **item-type 词缀资格、TagData 加权抽取、ValueMultiplier**（本轮）；`Droprates` 五段（含 `AffixRarityRatio`、`LootTables`）已导出。**待办**：词缀稀有度池 MF 公式（Interim，当前用物品稀有度近似）、物品类型抽取权重、怪物/容器掉落资格、统计分布对照。`E02DropPipelineTests` 13 条，全回归 656 PASS。见 `docs/web/E02_DROP_PIPELINE.md` | C01、E01、B05 |
 | E03 | 独特/套装/隐式与开放词缀槽 | ⏳ 部分：11 套 / 51 条断点加成全部解析（修正 `GameAttributeDA` 漏采使属性表 1181→1242），`export_set_catalog.py` 正式导出；已验证脱装后无残留加成。**待办**：开放词缀槽（`Open_Prefix/Suffix_Slot` 机制）、prefix/suffix 真实容量（合成仍用 `2+rarity/3` 近似）、独特 Proc 触发。`E03SetAndSlotsTests` 5 条，全回归 662 PASS。见 `docs/web/E03_SETS_AND_SLOTS.md` | E01、C02 |
-| E04 | 校准制作流程 | 原版存在的合成、分解、重铸、祝福、镶嵌及套装换购逐项核对：资格、概率、费用、材料、失败结果；操作失败/重试不丢失或复制物品 | E01–E03 |
-| E05 | 校准 NPC、商店和资源经济 | 商店商品/刷新/价格、币种、药水、Aesir 效果与过滤；所有数值绑定证据；用正常角色测成长，不能以改币账号验证经济 | E02–E04、C08 |
+| E04 | 校准制作流程 | ⏳ 部分：合成/熔炼/加插槽/镶嵌加热/祝福/套装换购/商人已接入，关键公式 ClientVerified（精华→钢系数表、成功率、`sockets+1`、`affixes×overheat`），失败/重试不丢失不复制（原子变更+快照）。**待办**：分解产出量（网页近似，客户端疑似抽词缀）、`GetCraftingCost`、Titansteel 产出计数、可分解/合并名称集合。见 `docs/web/E04_E05_CRAFT_ECONOMY.md` | E01–E03 |
+| E05 | 校准 NPC、商店和资源经济 | ⏳ 部分：商人购买/以物易物、套装换购、Aesir 祝福与蛋白石效果已接入。**待办**：商店价格数据源（疑 `TradeValueMultiplier`）、祝福价（客户端 TODO-PRICE seed，Interim）、商店刷新/过滤/药水、正常角色经济验证。见 `docs/web/E04_E05_CRAFT_ECONOMY.md` | E02–E04、C08 |
 
 ## P1–P2：怪物、地图与进度
 
