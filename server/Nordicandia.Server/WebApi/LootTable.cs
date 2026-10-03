@@ -90,7 +90,8 @@ public static class LootTable
     public static string AffixName(int attributeId)
     {
         foreach (var affix in AffixCatalog.Entries)
-            if (affix.AttributeId == attributeId) return affix.AttributeName;
+            foreach (var a in affix.Attributes)
+                if (a.AttributeId == attributeId) return a.AttributeName;
         return "Affix";
     }
 
@@ -131,16 +132,18 @@ public static class LootTable
         var defense = baseStats.Defense;
         var recovery = baseStats.Recovery;
         // The client passes excludedAffixDefinitions to GenerateRandomAffix and filters
-        // candidates before drawing. A duplicate must not consume a rolled slot.
-        // This remains the curated web pool; domain/group/prefix limits are not yet recovered.
-        var pool = AffixCatalog.Entries.Where(a => a.IsPrefixOrSuffix).DistinctBy(a => a.Name).ToList();
-        var chosen = new List<(AffixCatalog.Affix Affix, double Value)>();
+        // candidates before drawing. A duplicate must not consume a rolled slot. E01: the pool is
+        // the full client catalog filtered to item-domain (0) random Prefix/Suffix affixes.
+        var pool = AffixCatalog.Entries
+            .Where(a => a.IsPrefixOrSuffix && a.Domain == AffixCatalog.DomainItem)
+            .DistinctBy(a => a.Name).ToList();
+        var chosen = new List<(AffixCatalog.Affix Affix, List<(AffixCatalog.AffixAttribute Attribute, double Value)> Values)>();
         for (var i = 0; i < affixCount && pool.Count > 0; i++)
         {
             var index = (int)(affixRng.NextDouble() * pool.Count);
             var affix = pool[index];
             pool.RemoveAt(index);
-            chosen.Add((affix, AffixCatalog.Roll(affix, drop.Rarity, affixRng)));
+            chosen.Add((affix, AffixCatalog.RollAll(affix, drop.Rarity, affixRng)));
         }
 
         var suffix = string.Concat(chosen.Select(a => " " + a.Affix.Name));
@@ -237,17 +240,15 @@ public static class LootTable
             },
             Affixes = chosen.Select(a => new SerializedAffix
             {
-                DefinitionIntegerId = a.Affix.AttributeId,
+                // E01: the client's SerializedAffix references the affix definition, not the
+                // granted attribute (several affixes can share a primary attribute).
+                DefinitionIntegerId = a.Affix.IntegerId != 0 ? a.Affix.IntegerId : a.Affix.AttributeId,
                 Rarity = (Rarity)Math.Clamp(drop.Rarity, 0, 11),
                 Attributes = new SerializedAttributes
                 {
                     Values = new Dictionary<AttributeOrigin, Dictionary<int, GameAttributeValue>>
                     {
-                        [AttributeOrigin.Item] = new()
-                        {
-                            [a.Affix.AttributeId] = Value(Math.Round(a.Value, 4)),
-                            [AttrAffixType] = Value(a.Affix.GenerationType),
-                        },
+                        [AttributeOrigin.Item] = AffixValues(a.Affix, a.Values),
                     },
                     MultiplicativeValues = new(),
                 },
@@ -257,6 +258,18 @@ public static class LootTable
     }
 
     private static GameAttributeValue Value(double v) => new() { Value = (int)Math.Round(v), ValueD = v };
+
+    /// <summary>E01: an affix may grant several attributes; store each rolled value plus the
+    /// client AffixType (Prefix/Suffix) on the affix record.</summary>
+    private static Dictionary<int, GameAttributeValue> AffixValues(AffixCatalog.Affix affix,
+        List<(AffixCatalog.AffixAttribute Attribute, double Value)> values)
+    {
+        var map = new Dictionary<int, GameAttributeValue>();
+        foreach (var (attribute, value) in values)
+            map[attribute.AttributeId] = Value(Math.Round(value, 4));
+        map[AttrAffixType] = Value(affix.GenerationType);
+        return map;
+    }
 
     private static int Hash(int level, int slot)
     {

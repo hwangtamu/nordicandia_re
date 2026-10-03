@@ -986,6 +986,24 @@
    "expected": { "value": 1.2 },
    "source": "Monster.txt CalculateAttributes 0x02A6D110, boss @0x13880D8",
    "status": "对照通过"
+  },
+  {
+   "id": "affix_catalog.LocalBaseFireDamage",
+   "kind": "affix_catalog",
+   "rule": "E01: multi-attribute item prefix (fire min + delta)",
+   "inputs": { "name": "LocalBaseFireDamage" },
+   "expected": { "generationType": 0, "domain": 0, "attributeCount": 2, "attributeIds": "2513,2514" },
+   "source": "gamedata_decrypted/ItemAffixes.json",
+   "status": "对照通过"
+  },
+  {
+   "id": "affix_catalog.LifePercent",
+   "kind": "affix_catalog",
+   "rule": "E01: single-attribute item prefix",
+   "inputs": { "name": "LifePercent" },
+   "expected": { "generationType": 0, "domain": 0, "attributeCount": 1, "attributeIds": "302" },
+   "source": "gamedata_decrypted/ItemAffixes.json",
+   "status": "对照通过"
   }
  ]
 }

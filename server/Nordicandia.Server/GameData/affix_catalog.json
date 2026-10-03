@@ -1,1098 +1,9149 @@
 {
-  "Agility_Percent_Bonus": {
+ "Agility_Percent_Bonus": {
+  "attributes": [
+   {
     "attributeId": 130,
     "attributeName": "Agility_Bonus_Percent",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 2.0,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": 1
-      },
-      {
-        "max": 7.0,
-        "min": 5.0,
-        "rarity": 2
-      },
-      {
-        "max": 10.0,
-        "min": 8.0,
-        "rarity": 3
-      },
-      {
-        "max": 14.0,
-        "min": 11.0,
-        "rarity": 4
-      },
-      {
-        "max": 18.0,
-        "min": 15.0,
-        "rarity": 5
-      },
-      {
-        "max": 24.0,
-        "min": 19.0,
-        "rarity": 6
-      },
-      {
-        "max": 35.0,
-        "min": 30.0,
-        "rarity": 7
-      },
-      {
-        "max": 50.0,
-        "min": 45.0,
-        "rarity": 8
-      },
-      {
-        "max": 80.0,
-        "min": 75.0,
-        "rarity": 9
-      },
-      {
-        "max": 130.0,
-        "min": 120.0,
-        "rarity": 10
-      },
-      {
-        "max": 260.0,
-        "min": 240.0,
-        "rarity": 11
-      }
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 18.0,
+      "min": 15.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 19.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 80.0,
+      "min": 75.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 130.0,
+      "min": 120.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "ArmorPercent": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "AgilityPercent",
+  "groupId": "b3e9461f-4ecd-4a2a-8d2c-e47fca236ed2",
+  "guid": "ca7ae41e-b578-4745-9648-7f9965d82520",
+  "integerId": 68,
+  "tags": [
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   },
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   }
+  ]
+ },
+ "AreaAffixesAreHidden": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 7.0,
+      "min": 7.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 14.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 40.0,
+      "min": 40.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 64.0,
+      "min": 64.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 158,
+    "attributeName": "Area_Affixes_Are_Hidden",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": 1,
+      "valueType": 1
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "95c614c4-48fe-4c65-b509-217847cbc30c",
+  "integerId": 800,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMagicFindAppliesToQuantity": {
+  "attributes": [
+   {
+    "attributeId": 152,
+    "attributeName": "Area_MagicFind_Has_No_Effect",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": 1,
+      "valueType": 1
+     }
+    ]
+   },
+   {
+    "attributeId": 151,
+    "attributeName": "Area_Percent_Of_MagicFind_Applies_To_Item_Quantity",
+    "ranges": [
+     {
+      "max": 10.0,
+      "min": 10.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 11.0,
+      "min": 11.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 6.0,
+      "min": 6.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "fa976392-1db4-4269-8617-1d4edeb486ac",
+  "integerId": 789,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 250
+   }
+  ]
+ },
+ "AreaMonsterAdditionalProjectiles": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 8.0,
+      "min": 8.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 5,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 19.0,
+      "min": 19.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 38.0,
+      "min": 38.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 47.0,
+      "min": 47.0,
+      "rarity": 5,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 64.0,
+      "min": 64.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 96.0,
+      "min": 96.0,
+      "rarity": 5,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2722,
+    "attributeName": "Area_Monsters_Fire_Additional_Projectiles",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": 1,
+      "valueType": 1
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 3,
+      "valueType": 1
+     },
+     {
+      "max": 3.0,
+      "min": 3.0,
+      "rarity": 5,
+      "valueType": 1
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "751be123-fab0-4ae2-ba21-a0564ea2e428",
+  "integerId": 416,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterColdEnchanted": {
+  "attributes": [
+   {
+    "attributeId": 2708,
+    "attributeName": "Area_Monsters_Extra_Cold_Damage",
+    "ranges": [
+     {
+      "max": 49.0,
+      "min": 40.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 59.0,
+      "min": 50.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 20.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 40.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 8.0,
+      "min": 8.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "5d4b73bf-34ef-4157-b6e4-1f6eca5a9011",
+  "integerId": 405,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterCritBonus": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 7.0,
+      "min": 7.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 14.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 45.0,
+      "min": 45.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2725,
+    "attributeName": "Area_Monsters_Crit_Chance_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 200.0,
+      "min": 160.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 280.0,
+      "min": 220.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2726,
+    "attributeName": "Area_Monsters_Crit_Damage_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 45.0,
+      "min": 40.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "cac9adde-a9b0-4ce7-be42-236d1722f15b",
+  "integerId": 419,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterDamage": {
+  "attributes": [
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 19.0,
+      "min": 19.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 8.0,
+      "min": 8.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 45.0,
+      "min": 45.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2706,
+    "attributeName": "Area_Monsters_Damage_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 15.0,
+      "min": 15.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 25.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "a4e08341-ee75-4ff8-95b3-375b51bd447f",
+  "integerId": 403,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterFireEnchanted": {
+  "attributes": [
+   {
+    "attributeId": 2707,
+    "attributeName": "Area_Monsters_Extra_Fire_Damage",
+    "ranges": [
+     {
+      "max": 49.0,
+      "min": 40.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 59.0,
+      "min": 50.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 20.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 40.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 8.0,
+      "min": 8.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "4af0560c-b1c9-47ea-82a4-c509e8715077",
+  "integerId": 404,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterIgniteOnHit": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 7.0,
+      "min": 7.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 14.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2724,
+    "attributeName": "Area_Monsters_Ignite_On_Hit",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": 1,
+      "valueType": 1
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "d80e9bca-fa45-40d7-9790-3121fafa2318",
+  "integerId": 418,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 650
+   }
+  ]
+ },
+ "AreaMonsterLife": {
+  "attributes": [
+   {
+    "attributeId": 2705,
+    "attributeName": "Area_Monsters_Life_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 29.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 39.0,
+      "min": 30.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 13.0,
+      "min": 13.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 20.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 40.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 6.0,
+      "min": 6.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "80d022f5-efe6-4bec-99b2-842d8670f1a0",
+  "integerId": 402,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterLifeRegen": {
+  "attributes": [
+   {
+    "attributeId": 2715,
+    "attributeName": "Area_Monsters_Life_Regeneration_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 3.0,
+      "min": 3.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 5.0,
+      "min": 5.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 10.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "f7bbe66f-abc0-48c4-9c8f-5dbf7029397e",
+  "integerId": 409,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterLightningEnchanted": {
+  "attributes": [
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 20.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 40.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2709,
+    "attributeName": "Area_Monsters_Extra_Lightning_Damage",
+    "ranges": [
+     {
+      "max": 49.0,
+      "min": 40.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 59.0,
+      "min": 50.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 8.0,
+      "min": 8.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "29737803-8a34-4ad6-923a-0133dc1a5d44",
+  "integerId": 406,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterMoreBosses": {
+  "attributes": [
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 19.0,
+      "min": 19.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 30.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 45.0,
+      "min": 45.0,
+      "rarity": 5,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 20.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 40.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 60.0,
+      "min": 60.0,
+      "rarity": 5,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 8.0,
+      "min": 8.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 5,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2717,
+    "attributeName": "Area_Contains_More_Bosses",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": 1,
+      "valueType": 1
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 3,
+      "valueType": 1
+     },
+     {
+      "max": 3.0,
+      "min": 3.0,
+      "rarity": 5,
+      "valueType": 1
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "6d2e3c0f-f769-497f-ac3d-cda5086458f3",
+  "integerId": 411,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterMoreChampions": {
+  "attributes": [
+   {
+    "attributeId": 2718,
+    "attributeName": "Area_Contains_More_Champion_Monsters",
+    "ranges": [
+     {
+      "max": 30.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 45.0,
+      "min": 35.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 5.0,
+      "min": 5.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 10.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 10.0,
+      "min": 10.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 20.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 38.0,
+      "min": 38.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "e21f74c3-33e7-4fcd-a851-5a17c97a0b0e",
+  "integerId": 412,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterMoreRareMonsters": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 6.0,
+      "min": 6.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 10.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 13.0,
+      "min": 13.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 19.0,
+      "min": 19.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 20.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 30.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2719,
+    "attributeName": "Area_Contains_More_Rare_Monsters",
+    "ranges": [
+     {
+      "max": 30.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 45.0,
+      "min": 35.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "4e0e5b85-d643-4423-9e67-9e1aa072bf6e",
+  "integerId": 413,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterOnlyElemental": {
+  "attributes": [
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 13.0,
+      "min": 13.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 19.0,
+      "min": 19.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 7.0,
+      "min": 7.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 14.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 42.0,
+      "min": 42.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2721,
+    "attributeName": "Area_Only_Contains_Elemental_Monsters",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": 1,
+      "valueType": 1
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "9b662d5c-d83e-416e-826c-3256b17edad8",
+  "integerId": 415,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterOnlyRanged": {
+  "attributes": [
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 13.0,
+      "min": 13.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 19.0,
+      "min": 19.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 6.0,
+      "min": 6.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 14.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 38.0,
+      "min": 38.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2720,
+    "attributeName": "Area_Only_Contains_Ranged_Monsters",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": 1,
+      "valueType": 1
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "536e5daa-31d8-4af7-8d1d-71b9323956f5",
+  "integerId": 414,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterPhysicalResistance": {
+  "attributes": [
+   {
+    "attributeId": 2701,
+    "attributeName": "Area_Monsters_Additional_Physical_Damage_Reduction",
+    "ranges": [
+     {
+      "max": 20.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 25.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 13.0,
+      "min": 13.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 25.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 6.0,
+      "min": 6.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "e3167de0-98d7-46a7-aeb8-1f85cab3e6df",
+  "integerId": 401,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 800
+   }
+  ]
+ },
+ "AreaMonsterPoisonEnchanted": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 7.0,
+      "min": 7.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 20.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 40.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2710,
+    "attributeName": "Area_Monsters_Extra_Poison_Damage",
+    "ranges": [
+     {
+      "max": 40.0,
+      "min": 40.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 59.0,
+      "min": 50.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "2a559233-90e7-4f1f-ab35-b8af76d19c98",
+  "integerId": 407,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterPoisonOnHit": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 7.0,
+      "min": 7.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 14.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 38.0,
+      "min": 38.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 22.0,
+      "min": 22.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2723,
+    "attributeName": "Area_Monsters_Poison_On_Hit",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": 1,
+      "valueType": 1
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "c51477e6-e3eb-457f-b195-ee387eca1a48",
+  "integerId": 417,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterResistAll": {
+  "attributes": [
+   {
+    "attributeId": 2716,
+    "attributeName": "Area_Monsters_Resist_All_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 13.0,
+      "min": 13.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 22.0,
+      "min": 22.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 36.0,
+      "min": 36.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 6.0,
+      "min": 6.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "78afb1b3-b3c2-4099-b215-5945929013f1",
+  "integerId": 410,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterSpeedBonus": {
+  "attributes": [
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 19.0,
+      "min": 19.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 8.0,
+      "min": 8.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2714,
+    "attributeName": "Area_Monsters_Attack_Speed_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 34.0,
+      "min": 25.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 45.0,
+      "min": 35.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2713,
+    "attributeName": "Area_Monsters_Movement_Speed_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "2dd39756-aff2-4df2-8590-9f0cd9701831",
+  "integerId": 408,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaMonsterTakeReducedCritDamage": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 5.0,
+      "min": 5.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 10.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 10.0,
+      "min": 10.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 20.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 36.0,
+      "min": 36.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2728,
+    "attributeName": "Area_Monsters_Take_Reduced_Crit_Damage",
+    "ranges": [
+     {
+      "max": 30.0,
+      "min": 25.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "c26222fa-0f5d-4fc6-9f37-450a0faf221c",
+  "integerId": 421,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaPlayerPotionLongerCooldowns": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 6.0,
+      "min": 6.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 38.0,
+      "min": 38.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 159,
+    "attributeName": "Area_Player_Increased_Potion_Cooldowns",
+    "ranges": [
+     {
+      "max": 29.0,
+      "min": 25.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "889409e9-b68c-4b1a-ba2c-875cc305ec3a",
+  "integerId": 801,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaPlayerReducedArmorAndBlock": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 6.0,
+      "min": 6.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 13.0,
+      "min": 13.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 20.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 36.0,
+      "min": 36.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2729,
+    "attributeName": "Area_Player_Less_Armor",
+    "ranges": [
+     {
+      "max": 19.0,
+      "min": 15.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2730,
+    "attributeName": "Area_Player_Less_Chance_To_Block",
+    "ranges": [
+     {
+      "max": 19.0,
+      "min": 15.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "73cd2019-88a5-4366-b5fe-6c4239fdc99c",
+  "integerId": 422,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaPlayerReducedLifeRegen": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 7.0,
+      "min": 7.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 14.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 20.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 30.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2727,
+    "attributeName": "Area_Player_Less_Life_Regeneration",
+    "ranges": [
+     {
+      "max": 29.0,
+      "min": 25.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "0d0a4533-13be-4b06-a2f2-90d7b2872598",
+  "integerId": 420,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaPlayerReducedMaxResistances": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 8.0,
+      "min": 8.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 6.0,
+      "min": 16.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 19.0,
+      "min": 19.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 28.0,
+      "min": 28.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 32.0,
+      "min": 32.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 40.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2731,
+    "attributeName": "Area_Player_Reduced_Max_Resistances",
+    "ranges": [
+     {
+      "max": 8.0,
+      "min": 5.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 9.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "81bdfbae-9b26-48db-87a1-90df3f0dd3f0",
+  "integerId": 423,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AreaPlayerSkillLongerCooldowns": {
+  "attributes": [
+   {
+    "attributeId": 2700,
+    "attributeName": "Area_Pack_Size_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 6.0,
+      "min": 6.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2702,
+    "attributeName": "Area_Item_Drop_Quantity_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 16.0,
+      "min": 16.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2704,
+    "attributeName": "Area_Item_Level_Bonus",
+    "ranges": [
+     {
+      "max": 24.0,
+      "min": 24.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 38.0,
+      "min": 38.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 2732,
+    "attributeName": "Area_Player_Increased_Power_Cooldowns",
+    "ranges": [
+     {
+      "max": 29.0,
+      "min": 25.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 2,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 4,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "f26d8ca5-a368-49f2-8bab-d27241515471",
+  "integerId": 424,
+  "tags": [
+   {
+    "guid": "18800088-e218-4914-92f8-5447ec8c85a7",
+    "tag": null,
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "c2b30e3c-2470-4e0a-86b6-d2d2e4268309",
+    "tag": "Portal",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "ArmorPercent": {
+  "attributes": [
+   {
     "attributeId": 252,
     "attributeName": "Armor_Bonus_Percent",
-    "generationType": 0,
     "ranges": [
-      {
-        "max": 2.0,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": 1
-      },
-      {
-        "max": 7.0,
-        "min": 5.0,
-        "rarity": 2
-      },
-      {
-        "max": 15.0,
-        "min": 12.0,
-        "rarity": 4
-      },
-      {
-        "max": 20.0,
-        "min": 18.0,
-        "rarity": 5
-      },
-      {
-        "max": 25.0,
-        "min": 22.0,
-        "rarity": 6
-      },
-      {
-        "max": 35.0,
-        "min": 30.0,
-        "rarity": 7
-      },
-      {
-        "max": 50.0,
-        "min": 45.0,
-        "rarity": 8
-      },
-      {
-        "max": 70.0,
-        "min": 65.0,
-        "rarity": 9
-      },
-      {
-        "max": 10.0,
-        "min": 8.0,
-        "rarity": 3
-      },
-      {
-        "max": 100.0,
-        "min": 95.0,
-        "rarity": 10
-      },
-      {
-        "max": 200.0,
-        "min": 180.0,
-        "rarity": 11
-      }
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 12.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 18.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 22.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 65.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 95.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "AttackRating_Percent": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "ArmorPercent",
+  "groupId": "b01f0eb8-6268-4b99-aa4c-8572f1dc4f77",
+  "guid": "78f198ed-2269-4a5e-a04a-020cc7a714d1",
+  "integerId": 30,
+  "tags": [
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "48a01353-85e4-4b21-ad35-b75e6aa1f25b",
+    "tag": "HeavyArmor",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   }
+  ]
+ },
+ "AttackRating": {
+  "attributes": [
+   {
+    "attributeId": 203,
+    "attributeName": "Base_AttackRating",
+    "ranges": [
+     {
+      "max": 50.0,
+      "min": 25.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 75.0,
+      "min": 51.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 100.0,
+      "min": 76.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 125.0,
+      "min": 101.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 150.0,
+      "min": 126.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 200.0,
+      "min": 151.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 250.0,
+      "min": 201.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 300.0,
+      "min": 251.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 400.0,
+      "min": 350.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 650.0,
+      "min": 600.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 1000.0,
+      "min": 900.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "BaseAttackRating",
+  "groupId": "74122ad7-184f-4ecb-b4d9-fed97fd71687",
+  "guid": "30f39d78-9ee9-4c3a-b749-cf623f5c851a",
+  "integerId": 155,
+  "tags": [
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "e4511988-f837-4fcf-bdb4-2f64882447a6",
+    "tag": "Gloves",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "773d8f44-dc6c-4e0c-967d-b7f569877e54",
+    "tag": "TwoHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a22e5371-2742-4db7-9104-2cf81836155a",
+    "tag": "OneHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AttackRating_Percent": {
+  "attributes": [
+   {
     "attributeId": 204,
     "attributeName": "AttackRating_Bonus_Percent",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": null
-      },
-      {
-        "max": 6.0,
-        "min": 5.0,
-        "rarity": 1
-      },
-      {
-        "max": 10.0,
-        "min": 7.0,
-        "rarity": 2
-      },
-      {
-        "max": 15.0,
-        "min": 11.0,
-        "rarity": 3
-      },
-      {
-        "max": 20.0,
-        "min": 16.0,
-        "rarity": 4
-      },
-      {
-        "max": 30.0,
-        "min": 21.0,
-        "rarity": 5
-      },
-      {
-        "max": 40.0,
-        "min": 31.0,
-        "rarity": 6
-      },
-      {
-        "max": 50.0,
-        "min": 45.0,
-        "rarity": 7
-      },
-      {
-        "max": 70.0,
-        "min": 60.0,
-        "rarity": 8
-      },
-      {
-        "max": 100.0,
-        "min": 90.0,
-        "rarity": 9
-      },
-      {
-        "max": 150.0,
-        "min": 140.0,
-        "rarity": 10
-      },
-      {
-        "max": 300.0,
-        "min": 280.0,
-        "rarity": 11
-      }
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 7.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 21.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 31.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 60.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 90.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 150.0,
+      "min": 140.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "AttackSpeedPercent": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "AttackRatingPercent",
+  "groupId": "e619c8ae-21a7-4c86-9e4b-196726ecf32b",
+  "guid": "0918f1e2-07e2-433c-8e61-f07607375df0",
+  "integerId": 154,
+  "tags": [
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "e4511988-f837-4fcf-bdb4-2f64882447a6",
+    "tag": "Gloves",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "fdeed4d2-6f14-46de-86a0-5c4eba3f9c0d",
+    "tag": "Weapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "AttackSpeedPercent": {
+  "attributes": [
+   {
     "attributeId": 451,
     "attributeName": "Attack_Speed_Bonus_Percent",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 2.0,
-        "min": 2.0,
-        "rarity": null
-      },
-      {
-        "max": 3.0,
-        "min": 2.0,
-        "rarity": 1
-      },
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": 2
-      },
-      {
-        "max": 5.0,
-        "min": 4.0,
-        "rarity": 3
-      },
-      {
-        "max": 6.0,
-        "min": 5.0,
-        "rarity": 4
-      },
-      {
-        "max": 10.0,
-        "min": 8.0,
-        "rarity": 6
-      },
-      {
-        "max": 14.0,
-        "min": 11.0,
-        "rarity": 7
-      },
-      {
-        "max": 19.0,
-        "min": 15.0,
-        "rarity": 8
-      },
-      {
-        "max": 8.0,
-        "min": 7.0,
-        "rarity": 5
-      },
-      {
-        "max": 25.0,
-        "min": 21.0,
-        "rarity": 9
-      },
-      {
-        "max": 40.0,
-        "min": 35.0,
-        "rarity": 10
-      },
-      {
-        "max": 80.0,
-        "min": 70.0,
-        "rarity": 11
-      }
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 19.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 25.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 18.0,
+      "min": 15.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 80.0,
+      "min": 75.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "ColdResistance": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "AttackSpeedPercent",
+  "groupId": "b4257d6a-f84a-4f28-8a00-9473249c7ea5",
+  "guid": "eebacdf0-820e-4e9a-8a09-8cf470cec1ea",
+  "integerId": 35,
+  "tags": [
+   {
+    "guid": "f3738e00-f1ad-4189-8936-1da172182d9f",
+    "tag": "Amulet",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "e4511988-f837-4fcf-bdb4-2f64882447a6",
+    "tag": "Gloves",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "fdeed4d2-6f14-46de-86a0-5c4eba3f9c0d",
+    "tag": "Weapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "BaseWeaponColdDamage": {
+  "attributes": [
+   {
+    "attributeId": 1503,
+    "attributeName": "Base_Weapon_Cold_Damage_Delta_Bonus",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 9.0,
+      "min": 7.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 13.0,
+      "min": 10.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 17.0,
+      "min": 14.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 23.0,
+      "min": 18.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 24.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   },
+   {
+    "attributeId": 1502,
+    "attributeName": "Base_Weapon_Cold_Damage_Min_Bonus",
+    "ranges": [
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 21.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 26.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 85.0,
+      "min": 75.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "ColdDamage",
+  "groupId": "f75302f9-27dd-4d75-a953-1931b7300eca",
+  "guid": "dca374d4-ca6e-4f49-96da-e0143a9d5e83",
+  "integerId": 454,
+  "tags": [
+   {
+    "guid": "f3738e00-f1ad-4189-8936-1da172182d9f",
+    "tag": "Amulet",
+    "valueMultiplier": 1.0,
+    "weight": 250
+   }
+  ]
+ },
+ "BaseWeaponFireDamage": {
+  "attributes": [
+   {
+    "attributeId": 1403,
+    "attributeName": "Base_Weapon_Fire_Damage_Delta_Bonus",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 9.0,
+      "min": 7.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 13.0,
+      "min": 10.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 17.0,
+      "min": 14.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 23.0,
+      "min": 18.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 24.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   },
+   {
+    "attributeId": 1402,
+    "attributeName": "Base_Weapon_Fire_Damage_Min_Bonus",
+    "ranges": [
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 21.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 26.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 85.0,
+      "min": 75.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "FireDamage",
+  "groupId": "76613d6b-e04a-4540-b3c1-652ecc583430",
+  "guid": "679fad98-4b51-4d43-9192-5658c25cb193",
+  "integerId": 453,
+  "tags": [
+   {
+    "guid": "f3738e00-f1ad-4189-8936-1da172182d9f",
+    "tag": "Amulet",
+    "valueMultiplier": 1.0,
+    "weight": 250
+   }
+  ]
+ },
+ "BaseWeaponLightningDamage": {
+  "attributes": [
+   {
+    "attributeId": 1603,
+    "attributeName": "Base_Weapon_Lightning_Damage_Delta_Bonus",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 9.0,
+      "min": 7.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 13.0,
+      "min": 10.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 17.0,
+      "min": 14.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 23.0,
+      "min": 18.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 24.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   },
+   {
+    "attributeId": 1602,
+    "attributeName": "Base_Weapon_Lightning_Damage_Min_Bonus",
+    "ranges": [
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 21.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 26.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 85.0,
+      "min": 75.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LightningDamage",
+  "groupId": "a9abac25-11c4-44a8-9598-3dcb039108f0",
+  "guid": "aba0383a-2dd2-427f-b68b-d46696104816",
+  "integerId": 455,
+  "tags": [
+   {
+    "guid": "f3738e00-f1ad-4189-8936-1da172182d9f",
+    "tag": "Amulet",
+    "valueMultiplier": 1.0,
+    "weight": 250
+   }
+  ]
+ },
+ "BaseWeaponPhysicalDamage": {
+  "attributes": [
+   {
+    "attributeId": 503,
+    "attributeName": "Base_Weapon_Physical_Damage_Delta_Bonus",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 9.0,
+      "min": 7.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 13.0,
+      "min": 10.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 17.0,
+      "min": 14.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 23.0,
+      "min": 18.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 24.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   },
+   {
+    "attributeId": 502,
+    "attributeName": "Base_Weapon_Physical_Damage_Min_Bonus",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 21.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 26.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 85.0,
+      "min": 75.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "PhysicalDamage",
+  "groupId": "5799eb02-39b5-4ee0-9772-e021d024220a",
+  "guid": "6a5b3755-188a-4d1d-a0da-c0850d37ee8c",
+  "integerId": 452,
+  "tags": [
+   {
+    "guid": "f3738e00-f1ad-4189-8936-1da172182d9f",
+    "tag": "Amulet",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "BaseWeaponPoisonDamage": {
+  "attributes": [
+   {
+    "attributeId": 1703,
+    "attributeName": "Base_Weapon_Poison_Damage_Delta_Bonus",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 9.0,
+      "min": 7.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 13.0,
+      "min": 10.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 17.0,
+      "min": 14.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 23.0,
+      "min": 18.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 24.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   },
+   {
+    "attributeId": 1702,
+    "attributeName": "Base_Weapon_Poison_Damage_Min_Bonus",
+    "ranges": [
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 21.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 26.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 85.0,
+      "min": 75.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "PoisonDamage",
+  "groupId": "c7aacce1-6513-47dc-b61e-d6811a9ecb7f",
+  "guid": "72d7af0a-e507-43c8-846b-b65287b1ae20",
+  "integerId": 456,
+  "tags": [
+   {
+    "guid": "f3738e00-f1ad-4189-8936-1da172182d9f",
+    "tag": "Amulet",
+    "valueMultiplier": 1.0,
+    "weight": 250
+   }
+  ]
+ },
+ "ColdLifeLeech": {
+  "attributes": [
+   {
+    "attributeId": 315,
+    "attributeName": "Cold_Life_Leech",
+    "ranges": [
+     {
+      "max": 0.6,
+      "min": 0.4,
+      "rarity": null,
+      "valueType": 3
+     },
+     {
+      "max": 1.0,
+      "min": 0.8,
+      "rarity": 1,
+      "valueType": 3
+     },
+     {
+      "max": 1.4,
+      "min": 1.2,
+      "rarity": 2,
+      "valueType": 3
+     },
+     {
+      "max": 1.8,
+      "min": 1.6,
+      "rarity": 3,
+      "valueType": 3
+     },
+     {
+      "max": 2.2,
+      "min": 2.0,
+      "rarity": 4,
+      "valueType": 3
+     },
+     {
+      "max": 2.7,
+      "min": 2.5,
+      "rarity": 5,
+      "valueType": 3
+     },
+     {
+      "max": 3.1,
+      "min": 2.9,
+      "rarity": 6,
+      "valueType": 3
+     },
+     {
+      "max": 3.5,
+      "min": 3.3,
+      "rarity": 7,
+      "valueType": 3
+     },
+     {
+      "max": 4.0,
+      "min": 3.7,
+      "rarity": 8,
+      "valueType": 3
+     },
+     {
+      "max": 6.0,
+      "min": 5.5,
+      "rarity": 9,
+      "valueType": 3
+     },
+     {
+      "max": 10.0,
+      "min": 9.0,
+      "rarity": 10,
+      "valueType": 3
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LifeLeech",
+  "groupId": "07d306f1-6efd-4869-90be-a430051fd7c1",
+  "guid": "beea98c6-df4d-42e9-8984-b341ec9ea806",
+  "integerId": 286,
+  "tags": [
+   {
+    "guid": "646e610e-c167-4352-a4b1-b5b1334ffa16",
+    "tag": "Belt",
+    "valueMultiplier": 1.0,
+    "weight": 250
+   }
+  ]
+ },
+ "ColdResistance": {
+  "attributes": [
+   {
     "attributeId": 1011,
     "attributeName": "Resistance_Cold",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": 1
-      },
-      {
-        "max": 6.0,
-        "min": 5.0,
-        "rarity": 2
-      },
-      {
-        "max": 8.0,
-        "min": 7.0,
-        "rarity": 3
-      },
-      {
-        "max": 10.0,
-        "min": 9.0,
-        "rarity": 4
-      },
-      {
-        "max": 12.0,
-        "min": 11.0,
-        "rarity": 5
-      },
-      {
-        "max": 15.0,
-        "min": 13.0,
-        "rarity": 6
-      },
-      {
-        "max": 20.0,
-        "min": 16.0,
-        "rarity": 7
-      },
-      {
-        "max": 30.0,
-        "min": 25.0,
-        "rarity": 8
-      },
-      {
-        "max": 2.0,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 50.0,
-        "min": 40.0,
-        "rarity": 9
-      },
-      {
-        "max": 70.0,
-        "min": 60.0,
-        "rarity": 10
-      },
-      {
-        "max": 140.0,
-        "min": 120.0,
-        "rarity": 11
-      }
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 8.0,
+      "min": 7.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 9.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 11.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 13.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 25.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 40.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 60.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "Constitution_Percent_Bonus": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "ColdResistance",
+  "groupId": "652dfb9f-05af-4760-bfc2-92ce6164fde9",
+  "guid": "fa0e9f93-9abd-4f9c-a81f-2184e1ee5f6b",
+  "integerId": 165,
+  "tags": [
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "Constitution_Percent_Bonus": {
+  "attributes": [
+   {
     "attributeId": 129,
     "attributeName": "Constitution_Bonus_Percent",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 2.0,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": 1
-      },
-      {
-        "max": 7.0,
-        "min": 5.0,
-        "rarity": 2
-      },
-      {
-        "max": 10.0,
-        "min": 8.0,
-        "rarity": 3
-      },
-      {
-        "max": 14.0,
-        "min": 11.0,
-        "rarity": 4
-      },
-      {
-        "max": 18.0,
-        "min": 15.0,
-        "rarity": 5
-      },
-      {
-        "max": 24.0,
-        "min": 19.0,
-        "rarity": 6
-      },
-      {
-        "max": 35.0,
-        "min": 30.0,
-        "rarity": 7
-      },
-      {
-        "max": 50.0,
-        "min": 45.0,
-        "rarity": 8
-      },
-      {
-        "max": 80.0,
-        "min": 75.0,
-        "rarity": 9
-      },
-      {
-        "max": 130.0,
-        "min": 120.0,
-        "rarity": 10
-      },
-      {
-        "max": 260.0,
-        "min": 240.0,
-        "rarity": 11
-      }
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 18.0,
+      "min": 15.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 19.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 80.0,
+      "min": 75.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 130.0,
+      "min": 120.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "Crit_Chance_Percent_Bonus": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "ConstitutionPercent",
+  "groupId": "0872b395-0e62-4ebf-b9ab-c44fa6160002",
+  "guid": "2cc5fa00-3e93-4385-a9aa-e4c0f15a46a6",
+  "integerId": 67,
+  "tags": [
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   },
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   }
+  ]
+ },
+ "Crit_Chance_Percent_Bonus": {
+  "attributes": [
+   {
     "attributeId": 705,
     "attributeName": "Crit_Chance_Bonus_Percent",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 1.5,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 3.0,
-        "min": 2.0,
-        "rarity": 1
-      },
-      {
-        "max": 5.0,
-        "min": 3.5,
-        "rarity": 2
-      },
-      {
-        "max": 7.0,
-        "min": 5.5,
-        "rarity": 3
-      },
-      {
-        "max": 10.0,
-        "min": 7.0,
-        "rarity": 4
-      },
-      {
-        "max": 13.0,
-        "min": 10.0,
-        "rarity": 5
-      },
-      {
-        "max": 16.0,
-        "min": 13.0,
-        "rarity": 6
-      },
-      {
-        "max": 21.0,
-        "min": 18.0,
-        "rarity": 7
-      },
-      {
-        "max": 35.0,
-        "min": 32.0,
-        "rarity": 8
-      },
-      {
-        "max": 53.0,
-        "min": 46.0,
-        "rarity": 9
-      },
-      {
-        "max": 70.0,
-        "min": 63.0,
-        "rarity": 10
-      },
-      {
-        "max": 140.0,
-        "min": 130.0,
-        "rarity": 11
-      }
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 18.0,
+      "min": 15.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 19.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 25.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 75.0,
+      "min": 65.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 90.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "Crit_Damage_Percent_Bonus": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "CritChancePercent",
+  "groupId": "a81ad5f8-77a3-401f-aebe-c49d1ede7b18",
+  "guid": "4960b19e-ad9b-4714-ad3f-32c14cd9caa6",
+  "integerId": 71,
+  "tags": [
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "fdeed4d2-6f14-46de-86a0-5c4eba3f9c0d",
+    "tag": "Weapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "Crit_Damage_Percent_Bonus": {
+  "attributes": [
+   {
     "attributeId": 713,
     "attributeName": "Crit_Damage_Bonus_Percent",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": null
-      },
-      {
-        "max": 7.0,
-        "min": 5.0,
-        "rarity": 1
-      },
-      {
-        "max": 10.0,
-        "min": 8.0,
-        "rarity": 2
-      },
-      {
-        "max": 14.0,
-        "min": 11.0,
-        "rarity": 3
-      },
-      {
-        "max": 18.0,
-        "min": 15.0,
-        "rarity": 4
-      },
-      {
-        "max": 24.0,
-        "min": 19.0,
-        "rarity": 5
-      },
-      {
-        "max": 30.0,
-        "min": 25.0,
-        "rarity": 6
-      },
-      {
-        "max": 40.0,
-        "min": 31.0,
-        "rarity": 7
-      },
-      {
-        "max": 50.0,
-        "min": 45.0,
-        "rarity": 8
-      },
-      {
-        "max": 75.0,
-        "min": 65.0,
-        "rarity": 9
-      },
-      {
-        "max": 100.0,
-        "min": 90.0,
-        "rarity": 10
-      },
-      {
-        "max": 200.0,
-        "min": 180.0,
-        "rarity": 11
-      }
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 11.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 18.0,
+      "min": 15.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 19.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 25.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 31.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 75.0,
+      "min": 65.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 90.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "Dexterity_Percent_Bonus": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "CritDamagePercent",
+  "groupId": "319a8568-66f9-4e42-bfff-b88a35ee07f2",
+  "guid": "1f0886cd-0bbd-4383-9147-e88526984d74",
+  "integerId": 72,
+  "tags": [
+   {
+    "guid": "fdeed4d2-6f14-46de-86a0-5c4eba3f9c0d",
+    "tag": "Weapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "f3738e00-f1ad-4189-8936-1da172182d9f",
+    "tag": "Amulet",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "Dexterity_Percent_Bonus": {
+  "attributes": [
+   {
     "attributeId": 110,
     "attributeName": "Dexterity_Bonus_Percent",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 2.0,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": 1
-      },
-      {
-        "max": 7.0,
-        "min": 5.0,
-        "rarity": 2
-      },
-      {
-        "max": 10.0,
-        "min": 8.0,
-        "rarity": 3
-      },
-      {
-        "max": 14.0,
-        "min": 11.0,
-        "rarity": 4
-      },
-      {
-        "max": 18.0,
-        "min": 15.0,
-        "rarity": 5
-      },
-      {
-        "max": 24.0,
-        "min": 19.0,
-        "rarity": 6
-      },
-      {
-        "max": 35.0,
-        "min": 30.0,
-        "rarity": 7
-      },
-      {
-        "max": 50.0,
-        "min": 45.0,
-        "rarity": 8
-      },
-      {
-        "max": 80.0,
-        "min": 75.0,
-        "rarity": 9
-      },
-      {
-        "max": 130.0,
-        "min": 120.0,
-        "rarity": 10
-      },
-      {
-        "max": 260.0,
-        "min": 240.0,
-        "rarity": 11
-      }
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 18.0,
+      "min": 15.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 19.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 80.0,
+      "min": 75.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 130.0,
+      "min": 120.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "ElementalResist": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "DexterityPercent",
+  "groupId": "7ad12228-76d2-47a0-8e31-c516f42d2701",
+  "guid": "9f524f07-b12a-49b5-bb1b-5bd641db5ee2",
+  "integerId": 27,
+  "tags": [
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "DodgeChancePercent": {
+  "attributes": [
+   {
+    "attributeId": 801,
+    "attributeName": "Dodge_Chance_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 8.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 10.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 17.0,
+      "min": 14.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 18.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 22.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 27.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 55.0,
+      "min": 50.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 75.0,
+      "min": 70.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "ChanceToDodge",
+  "groupId": "0f5fa686-258f-4515-94be-7d1a3df08017",
+  "guid": "bcc992b8-1967-4b5d-896e-c83d4b702b6a",
+  "integerId": 303,
+  "tags": [
+   {
+    "guid": "3735403a-7368-470a-b2f3-3da76a881b31",
+    "tag": "Cloak",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   }
+  ]
+ },
+ "ElementalResist": {
+  "attributes": [
+   {
     "attributeId": 1002,
     "attributeName": "Resistance_All",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 1.0,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 2.0,
-        "min": 2.0,
-        "rarity": 1
-      },
-      {
-        "max": 3.0,
-        "min": 3.0,
-        "rarity": 2
-      },
-      {
-        "max": 4.0,
-        "min": 4.0,
-        "rarity": 3
-      },
-      {
-        "max": 6.0,
-        "min": 5.0,
-        "rarity": 4
-      },
-      {
-        "max": 8.0,
-        "min": 7.0,
-        "rarity": 5
-      },
-      {
-        "max": 11.0,
-        "min": 9.0,
-        "rarity": 6
-      },
-      {
-        "max": 15.0,
-        "min": 13.0,
-        "rarity": 7
-      },
-      {
-        "max": 25.0,
-        "min": 20.0,
-        "rarity": 8
-      },
-      {
-        "max": 35.0,
-        "min": 30.0,
-        "rarity": 9
-      },
-      {
-        "max": 50.0,
-        "min": 45.0,
-        "rarity": 10
-      },
-      {
-        "max": 100.0,
-        "min": 90.0,
-        "rarity": 11
-      }
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 3.0,
+      "min": 3.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 4.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 8.0,
+      "min": 7.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 11.0,
+      "min": 9.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 13.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "EvasionPercent": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "ElementalResistance",
+  "groupId": "c44fbfc8-5c42-45dc-9119-e733f1c23236",
+  "guid": "d5887838-3d27-438e-b204-5ce534381b7b",
+  "integerId": 289,
+  "tags": [
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "EvasionPercent": {
+  "attributes": [
+   {
     "attributeId": 257,
     "attributeName": "Evasion_Bonus_Percent",
-    "generationType": 0,
     "ranges": [
-      {
-        "max": 2.0,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": 1
-      },
-      {
-        "max": 7.0,
-        "min": 5.0,
-        "rarity": 2
-      },
-      {
-        "max": 10.0,
-        "min": 8.0,
-        "rarity": 3
-      },
-      {
-        "max": 15.0,
-        "min": 12.0,
-        "rarity": 4
-      },
-      {
-        "max": 20.0,
-        "min": 18.0,
-        "rarity": 5
-      },
-      {
-        "max": 25.0,
-        "min": 22.0,
-        "rarity": 6
-      },
-      {
-        "max": 35.0,
-        "min": 30.0,
-        "rarity": 7
-      },
-      {
-        "max": 50.0,
-        "min": 45.0,
-        "rarity": 8
-      },
-      {
-        "max": 70.0,
-        "min": 65.0,
-        "rarity": 9
-      },
-      {
-        "max": 100.0,
-        "min": 95.0,
-        "rarity": 10
-      },
-      {
-        "max": 200.0,
-        "min": 190.0,
-        "rarity": 11
-      }
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 12.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 18.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 22.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 65.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 95.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "FireResistance": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "EvasionPercent",
+  "groupId": "96801a81-2118-4c11-92d9-78b94a4d64a9",
+  "guid": "ab69cdde-2256-4cf9-b83e-cf359c9e2ce2",
+  "integerId": 105,
+  "tags": [
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "e0bacdad-1a21-40c5-9e15-6be36cb4a9ac",
+    "tag": "MediumArmor",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   }
+  ]
+ },
+ "FireLifeLeech": {
+  "attributes": [
+   {
+    "attributeId": 314,
+    "attributeName": "Fire_Life_Leech",
+    "ranges": [
+     {
+      "max": 0.72,
+      "min": 0.48,
+      "rarity": null,
+      "valueType": 3
+     },
+     {
+      "max": 1.2,
+      "min": 0.96,
+      "rarity": 1,
+      "valueType": 3
+     },
+     {
+      "max": 1.68,
+      "min": 1.44,
+      "rarity": 2,
+      "valueType": 3
+     },
+     {
+      "max": 2.16,
+      "min": 1.92,
+      "rarity": 3,
+      "valueType": 3
+     },
+     {
+      "max": 2.64,
+      "min": 2.4,
+      "rarity": 4,
+      "valueType": 3
+     },
+     {
+      "max": 3.24,
+      "min": 3.0,
+      "rarity": 5,
+      "valueType": 3
+     },
+     {
+      "max": 3.7199999999999998,
+      "min": 3.48,
+      "rarity": 6,
+      "valueType": 3
+     },
+     {
+      "max": 4.2,
+      "min": 3.9599999999999995,
+      "rarity": 7,
+      "valueType": 3
+     },
+     {
+      "max": 4.8,
+      "min": 4.44,
+      "rarity": 8,
+      "valueType": 3
+     },
+     {
+      "max": 7.199999999999999,
+      "min": 6.6,
+      "rarity": 9,
+      "valueType": 3
+     },
+     {
+      "max": 12.0,
+      "min": 10.799999999999999,
+      "rarity": 10,
+      "valueType": 3
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LifeLeech",
+  "groupId": "07d306f1-6efd-4869-90be-a430051fd7c1",
+  "guid": "d1dbd65f-aec1-4f57-9b67-22c9e48efd49",
+  "integerId": 285,
+  "tags": [
+   {
+    "guid": "646e610e-c167-4352-a4b1-b5b1334ffa16",
+    "tag": "Belt",
+    "valueMultiplier": 1.0,
+    "weight": 250
+   }
+  ]
+ },
+ "FireResistance": {
+  "attributes": [
+   {
     "attributeId": 1000,
     "attributeName": "Resistance_Fire",
-    "generationType": 4,
     "ranges": [
-      {
-        "max": 75.0,
-        "min": 50.0,
-        "rarity": 1
-      }
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 8.0,
+      "min": 7.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 9.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 11.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 13.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 25.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 40.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 60.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "Intelligence_Percent_Bonus": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "FireResistance",
+  "groupId": "b2825143-6eb5-4362-bb50-fa32c0d9b227",
+  "guid": "2c3b224f-b018-47ef-bc7a-be3284819001",
+  "integerId": 164,
+  "tags": [
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "ForceFieldPercent": {
+  "attributes": [
+   {
+    "attributeId": 3104,
+    "attributeName": "ForceField_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 12.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 18.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 22.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 65.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 95.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "ForceFieldPercent",
+  "groupId": "7057c826-5283-4d82-ab5c-542089cb995d",
+  "guid": "4baa56c2-778d-4dfe-bb42-aa54148ca697",
+  "integerId": 519,
+  "tags": [
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "fad6dea9-9be4-4782-98ee-b6d61d7d2312",
+    "tag": "LightArmor",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   }
+  ]
+ },
+ "Intelligence_Percent_Bonus": {
+  "attributes": [
+   {
     "attributeId": 111,
     "attributeName": "Intelligence_Bonus_Percent",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 2.0,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": 1
-      },
-      {
-        "max": 7.0,
-        "min": 5.0,
-        "rarity": 2
-      },
-      {
-        "max": 10.0,
-        "min": 8.0,
-        "rarity": 3
-      },
-      {
-        "max": 14.0,
-        "min": 11.0,
-        "rarity": 4
-      },
-      {
-        "max": 18.0,
-        "min": 15.0,
-        "rarity": 5
-      },
-      {
-        "max": 24.0,
-        "min": 19.0,
-        "rarity": 6
-      },
-      {
-        "max": 35.0,
-        "min": 30.0,
-        "rarity": 7
-      },
-      {
-        "max": 50.0,
-        "min": 45.0,
-        "rarity": 8
-      },
-      {
-        "max": 80.0,
-        "min": 75.0,
-        "rarity": 9
-      },
-      {
-        "max": 130.0,
-        "min": 120.0,
-        "rarity": 10
-      },
-      {
-        "max": 260.0,
-        "min": 240.0,
-        "rarity": 11
-      }
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 18.0,
+      "min": 15.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 19.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 80.0,
+      "min": 75.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 130.0,
+      "min": 120.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "LightningResistance": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "IntelligencePercent",
+  "groupId": "0f996375-2ec0-47c1-ba5e-96d24a8194a7",
+  "guid": "2ff82bb4-a306-4ef7-ac82-458109de47ed",
+  "integerId": 28,
+  "tags": [
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "LifeLeechRate": {
+  "attributes": [
+   {
+    "attributeId": 340,
+    "attributeName": "Life_Leech_Rate_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 12.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 18.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 22.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 65.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 95.0,
+      "rarity": 10,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LifeLeechRate",
+  "groupId": "2fcd2a2e-6602-411e-befa-47f7f909e244",
+  "guid": "e5608505-5ff0-4b48-94fb-d1337e17b1c3",
+  "integerId": 304,
+  "tags": [
+   {
+    "guid": "f3738e00-f1ad-4189-8936-1da172182d9f",
+    "tag": "Amulet",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "LifePercent": {
+  "attributes": [
+   {
+    "attributeId": 302,
+    "attributeName": "Life_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 75.0,
+      "min": 65.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 90.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 150.0,
+      "min": 140.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LifePercent",
+  "groupId": "986c665a-7dff-4f94-b106-083cb2b255e1",
+  "guid": "d10556e0-3966-4183-b62c-0ffa8f02a7d2",
+  "integerId": 32,
+  "tags": [
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 750
+   }
+  ]
+ },
+ "LifeRegenPercent": {
+  "attributes": [
+   {
+    "attributeId": 306,
+    "attributeName": "Life_Regen_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 18.0,
+      "min": 15.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 19.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 25.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 40.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 75.0,
+      "min": 70.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 90.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "LifeRegenPercent",
+  "groupId": "6142ee51-b385-49bf-94f6-51fb46c53987",
+  "guid": "743a1288-72ab-457b-990c-ef21e1025a29",
+  "integerId": 33,
+  "tags": [
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "LightningLifeLeech": {
+  "attributes": [
+   {
+    "attributeId": 316,
+    "attributeName": "Lightning_Life_Leech",
+    "ranges": [
+     {
+      "max": 0.72,
+      "min": 0.48,
+      "rarity": null,
+      "valueType": 3
+     },
+     {
+      "max": 1.2,
+      "min": 0.96,
+      "rarity": 1,
+      "valueType": 3
+     },
+     {
+      "max": 1.68,
+      "min": 1.44,
+      "rarity": 2,
+      "valueType": 3
+     },
+     {
+      "max": 2.16,
+      "min": 1.92,
+      "rarity": 3,
+      "valueType": 3
+     },
+     {
+      "max": 2.64,
+      "min": 2.4,
+      "rarity": 4,
+      "valueType": 3
+     },
+     {
+      "max": 3.24,
+      "min": 3.0,
+      "rarity": 5,
+      "valueType": 3
+     },
+     {
+      "max": 3.7199999999999998,
+      "min": 3.48,
+      "rarity": 6,
+      "valueType": 3
+     },
+     {
+      "max": 4.2,
+      "min": 3.9599999999999995,
+      "rarity": 7,
+      "valueType": 3
+     },
+     {
+      "max": 4.8,
+      "min": 4.44,
+      "rarity": 8,
+      "valueType": 3
+     },
+     {
+      "max": 7.199999999999999,
+      "min": 6.6,
+      "rarity": 9,
+      "valueType": 3
+     },
+     {
+      "max": 12.0,
+      "min": 10.799999999999999,
+      "rarity": 10,
+      "valueType": 3
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LifeLeech",
+  "groupId": "07d306f1-6efd-4869-90be-a430051fd7c1",
+  "guid": "76f55d8e-cc5e-4077-a6b7-354daf57c4b5",
+  "integerId": 287,
+  "tags": [
+   {
+    "guid": "646e610e-c167-4352-a4b1-b5b1334ffa16",
+    "tag": "Belt",
+    "valueMultiplier": 1.0,
+    "weight": 250
+   }
+  ]
+ },
+ "LightningResistance": {
+  "attributes": [
+   {
     "attributeId": 1012,
     "attributeName": "Resistance_Lightning",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": 1
-      },
-      {
-        "max": 6.0,
-        "min": 5.0,
-        "rarity": 2
-      },
-      {
-        "max": 8.0,
-        "min": 7.0,
-        "rarity": 3
-      },
-      {
-        "max": 10.0,
-        "min": 9.0,
-        "rarity": 4
-      },
-      {
-        "max": 12.0,
-        "min": 11.0,
-        "rarity": 5
-      },
-      {
-        "max": 15.0,
-        "min": 13.0,
-        "rarity": 6
-      },
-      {
-        "max": 20.0,
-        "min": 16.0,
-        "rarity": 7
-      },
-      {
-        "max": 30.0,
-        "min": 25.0,
-        "rarity": 8
-      },
-      {
-        "max": 2.0,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 50.0,
-        "min": 40.0,
-        "rarity": 9
-      },
-      {
-        "max": 70.0,
-        "min": 60.0,
-        "rarity": 10
-      },
-      {
-        "max": 140.0,
-        "min": 120.0,
-        "rarity": 11
-      }
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 8.0,
+      "min": 7.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 9.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 11.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 13.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 25.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 40.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 60.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "PoisonResistance": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "LightningResistance",
+  "groupId": "ee0f5ff2-b785-42b7-9ae8-2941395007a3",
+  "guid": "36515b99-2e45-4c62-9db2-31af82382140",
+  "integerId": 166,
+  "tags": [
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "LocalArmorPercent": {
+  "attributes": [
+   {
+    "attributeId": 275,
+    "attributeName": "Local_Armor_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 30.0,
+      "min": 20.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 60.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 140.0,
+      "min": 120.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 220.0,
+      "min": 200.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 260.0,
+      "min": 240.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 350.0,
+      "min": 300.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 40.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 180.0,
+      "min": 160.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 80.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 500.0,
+      "min": 450.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 850.0,
+      "min": 800.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalDefensesPercent",
+  "groupId": "8ecf8ed6-dc72-4a3a-8aeb-3bd3ff41014c",
+  "guid": "d2f81da1-4069-484d-ba8e-26ac70c4b356",
+  "integerId": 25,
+  "tags": [
+   {
+    "guid": "48a01353-85e4-4b21-ad35-b75e6aa1f25b",
+    "tag": "HeavyArmor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "LocalAttackSpeedPercent": {
+  "attributes": [
+   {
+    "attributeId": 463,
+    "attributeName": "Local_Attack_Speed_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 8.0,
+      "min": 5.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 11.0,
+      "min": 8.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 12.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 19.0,
+      "min": 16.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 20.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 25.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 36.0,
+      "min": 31.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 45.0,
+      "min": 40.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 55.0,
+      "min": 50.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 60.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 90.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "LocalAttackSpeedPercent",
+  "groupId": "957003f7-199c-427b-838d-f631cf66e355",
+  "guid": "01a1d515-3385-48a1-836e-cdaadff8e494",
+  "integerId": 34,
+  "tags": [
+   {
+    "guid": "fdeed4d2-6f14-46de-86a0-5c4eba3f9c0d",
+    "tag": "Weapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "LocalBaseArmor": {
+  "attributes": [
+   {
+    "attributeId": 274,
+    "attributeName": "Local_Base_Armor",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.25,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 6.25,
+      "min": 5.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 12.5,
+      "min": 10.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 87.5,
+      "min": 75.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 125.0,
+      "min": 112.5,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 187.5,
+      "min": 162.5,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 250.0,
+      "min": 225.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 500.0,
+      "min": 450.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalBaseDefences",
+  "groupId": "b992bc8f-7dc2-4e94-8765-8b9dfba93263",
+  "guid": "0ac753ca-b8cb-4bc2-8345-9ff0d633589f",
+  "integerId": 31,
+  "tags": [
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 2.0,
+    "weight": 1000
+   },
+   {
+    "guid": "48a01353-85e4-4b21-ad35-b75e6aa1f25b",
+    "tag": "HeavyArmor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "646e610e-c167-4352-a4b1-b5b1334ffa16",
+    "tag": "Belt",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "ba32cebf-7784-4d15-b99a-979f4feaa12d",
+    "tag": "BodyArmor",
+    "valueMultiplier": 1.5,
+    "weight": null
+   }
+  ]
+ },
+ "LocalBaseColdDamage": {
+  "attributes": [
+   {
+    "attributeId": 2524,
+    "attributeName": "Local_Base_Cold_Damage_Min",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 21.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 26.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 85.0,
+      "min": 75.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   },
+   {
+    "attributeId": 2525,
+    "attributeName": "Local_Base_Cold_Damage_Delta",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 9.0,
+      "min": 7.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 13.0,
+      "min": 10.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 17.0,
+      "min": 14.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 23.0,
+      "min": 18.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 24.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalColdDamage",
+  "groupId": "bcf8addd-f8a1-48b3-a464-5863da548d31",
+  "guid": "64d38338-dc55-4f2f-bae6-ba55eb904e34",
+  "integerId": 169,
+  "tags": [
+   {
+    "guid": "a22e5371-2742-4db7-9104-2cf81836155a",
+    "tag": "OneHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 125
+   },
+   {
+    "guid": "773d8f44-dc6c-4e0c-967d-b7f569877e54",
+    "tag": "TwoHandWeapon",
+    "valueMultiplier": 1.9,
+    "weight": 125
+   }
+  ]
+ },
+ "LocalBaseEvasion": {
+  "attributes": [
+   {
+    "attributeId": 277,
+    "attributeName": "Local_Base_Evasion",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.25,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 6.25,
+      "min": 5.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 12.5,
+      "min": 10.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 87.5,
+      "min": 75.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 125.0,
+      "min": 112.5,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 187.5,
+      "min": 162.5,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 250.0,
+      "min": 225.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 375.0,
+      "min": 350.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalBaseDefences",
+  "groupId": "b992bc8f-7dc2-4e94-8765-8b9dfba93263",
+  "guid": "4b41e485-36bd-498e-9192-7ab9313bdda0",
+  "integerId": 106,
+  "tags": [
+   {
+    "guid": "e0bacdad-1a21-40c5-9e15-6be36cb4a9ac",
+    "tag": "MediumArmor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "ba32cebf-7784-4d15-b99a-979f4feaa12d",
+    "tag": "BodyArmor",
+    "valueMultiplier": 1.5,
+    "weight": null
+   }
+  ]
+ },
+ "LocalBaseFireDamage": {
+  "attributes": [
+   {
+    "attributeId": 2513,
+    "attributeName": "Local_Base_Fire_Damage_Min",
+    "ranges": [
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 21.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 26.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 85.0,
+      "min": 75.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   },
+   {
+    "attributeId": 2514,
+    "attributeName": "Local_Base_Fire_Damage_Delta",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 9.0,
+      "min": 7.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 13.0,
+      "min": 10.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 17.0,
+      "min": 14.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 23.0,
+      "min": 18.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 24.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalFireDamage",
+  "groupId": "ff03ff54-c33e-4f8e-ae9b-e0d714bb0f79",
+  "guid": "4e2cb052-c0ee-445c-beb1-a8095f5c576a",
+  "integerId": 168,
+  "tags": [
+   {
+    "guid": "a22e5371-2742-4db7-9104-2cf81836155a",
+    "tag": "OneHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 125
+   },
+   {
+    "guid": "773d8f44-dc6c-4e0c-967d-b7f569877e54",
+    "tag": "TwoHandWeapon",
+    "valueMultiplier": 1.9,
+    "weight": 125
+   }
+  ]
+ },
+ "LocalBaseForceField": {
+  "attributes": [
+   {
+    "attributeId": 3123,
+    "attributeName": "Local_Base_ForceField",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.25,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 6.25,
+      "min": 5.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 12.5,
+      "min": 10.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 87.5,
+      "min": 75.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 125.0,
+      "min": 112.5,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 187.5,
+      "min": 162.5,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 250.0,
+      "min": 225.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 500.0,
+      "min": 450.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalBaseDefences",
+  "groupId": "b992bc8f-7dc2-4e94-8765-8b9dfba93263",
+  "guid": "cd5cdcfe-db16-43ba-a68c-b80501cefe9d",
+  "integerId": 521,
+  "tags": [
+   {
+    "guid": "fad6dea9-9be4-4782-98ee-b6d61d7d2312",
+    "tag": "LightArmor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "ba32cebf-7784-4d15-b99a-979f4feaa12d",
+    "tag": "BodyArmor",
+    "valueMultiplier": 1.5,
+    "weight": null
+   }
+  ]
+ },
+ "LocalBaseLightningDamage": {
+  "attributes": [
+   {
+    "attributeId": 2535,
+    "attributeName": "Local_Base_Lightning_Damage_Min",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 21.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 26.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 85.0,
+      "min": 75.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   },
+   {
+    "attributeId": 2536,
+    "attributeName": "Local_Base_Lightning_Damage_Delta",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 9.0,
+      "min": 7.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 13.0,
+      "min": 10.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 17.0,
+      "min": 14.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 23.0,
+      "min": 18.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 24.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalLightningDamage",
+  "groupId": "870f743d-29dc-4213-929f-de97955abc05",
+  "guid": "01897e65-4a02-4ccc-9c26-ce9a1b810fea",
+  "integerId": 170,
+  "tags": [
+   {
+    "guid": "a22e5371-2742-4db7-9104-2cf81836155a",
+    "tag": "OneHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 125
+   },
+   {
+    "guid": "773d8f44-dc6c-4e0c-967d-b7f569877e54",
+    "tag": "TwoHandWeapon",
+    "valueMultiplier": 1.9,
+    "weight": 125
+   }
+  ]
+ },
+ "LocalBasePhysicalDamage": {
+  "attributes": [
+   {
+    "attributeId": 2503,
+    "attributeName": "Local_Base_Physical_Damage_Delta",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 9.0,
+      "min": 7.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 13.0,
+      "min": 10.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 17.0,
+      "min": 14.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 23.0,
+      "min": 18.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 24.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   },
+   {
+    "attributeId": 2502,
+    "attributeName": "Local_Base_Physical_Damage_Min",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 21.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 26.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 85.0,
+      "min": 75.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalPhysicalDamage",
+  "groupId": "2ab780c3-ad33-438a-9166-4de634a4e4fd",
+  "guid": "caf0bc9c-f8ef-4f43-8806-7b78245eab16",
+  "integerId": 36,
+  "tags": [
+   {
+    "guid": "a22e5371-2742-4db7-9104-2cf81836155a",
+    "tag": "OneHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "8345e2a6-e9ed-4ec4-9b18-4b2bcd7c26c5",
+    "tag": "Fire",
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "052daf6c-06e1-46c7-bd1c-d0ee8f220f87",
+    "tag": "Cold",
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "4fb7b476-b622-4574-b395-049e20a62208",
+    "tag": "Lightning",
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "a104c27e-e115-4382-a3e4-19838ec834d9",
+    "tag": "Poison",
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "773d8f44-dc6c-4e0c-967d-b7f569877e54",
+    "tag": "TwoHandWeapon",
+    "valueMultiplier": 1.9,
+    "weight": 1000
+   }
+  ]
+ },
+ "LocalBasePoisonDamage": {
+  "attributes": [
+   {
+    "attributeId": 2546,
+    "attributeName": "Local_Base_Poison_Damage_Min",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 21.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 26.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 85.0,
+      "min": 75.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   },
+   {
+    "attributeId": 2547,
+    "attributeName": "Local_Base_Poison_Damage_Delta",
+    "ranges": [
+     {
+      "max": 1.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 2.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 9.0,
+      "min": 7.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 13.0,
+      "min": 10.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 17.0,
+      "min": 14.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 23.0,
+      "min": 18.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 30.0,
+      "min": 24.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalPoisonDamage",
+  "groupId": "a1365c67-23e8-493b-950f-b786a1b72b3c",
+  "guid": "189c02e4-81dd-424e-953b-ea991e504fe0",
+  "integerId": 171,
+  "tags": [
+   {
+    "guid": "a22e5371-2742-4db7-9104-2cf81836155a",
+    "tag": "OneHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 125
+   },
+   {
+    "guid": "773d8f44-dc6c-4e0c-967d-b7f569877e54",
+    "tag": "TwoHandWeapon",
+    "valueMultiplier": 1.9,
+    "weight": 125
+   }
+  ]
+ },
+ "LocalColdDamagePercent": {
+  "attributes": [
+   {
+    "attributeId": 2526,
+    "attributeName": "Local_Cold_Damage_Percent",
+    "ranges": [
+     {
+      "max": 15.0,
+      "min": 6.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 85.0,
+      "min": 70.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 110.0,
+      "min": 90.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 135.0,
+      "min": 120.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 160.0,
+      "min": 145.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 200.0,
+      "min": 175.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 300.0,
+      "min": 250.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 450.0,
+      "min": 400.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalColdDamagePercent",
+  "groupId": "12469564-1df4-4142-b1b3-cddba92a7f41",
+  "guid": "792c8998-b58d-49d1-9462-a0dbbb0dd487",
+  "integerId": 222,
+  "tags": [
+   {
+    "guid": "a22e5371-2742-4db7-9104-2cf81836155a",
+    "tag": "OneHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 125
+   },
+   {
+    "guid": "773d8f44-dc6c-4e0c-967d-b7f569877e54",
+    "tag": "TwoHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 125
+   }
+  ]
+ },
+ "LocalEvasionPercent": {
+  "attributes": [
+   {
+    "attributeId": 278,
+    "attributeName": "Local_Evasion_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 100.0,
+      "min": 80.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 140.0,
+      "min": 120.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 180.0,
+      "min": 160.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 220.0,
+      "min": 200.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 260.0,
+      "min": 240.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 350.0,
+      "min": 300.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 20.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 40.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 60.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 500.0,
+      "min": 450.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 850.0,
+      "min": 800.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalDefensesPercent",
+  "groupId": "8ecf8ed6-dc72-4a3a-8aeb-3bd3ff41014c",
+  "guid": "9eff2b98-90f4-4590-ae6e-572ef89f2da4",
+  "integerId": 104,
+  "tags": [
+   {
+    "guid": "e0bacdad-1a21-40c5-9e15-6be36cb4a9ac",
+    "tag": "MediumArmor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "LocalFireDamagePercent": {
+  "attributes": [
+   {
+    "attributeId": 2515,
+    "attributeName": "Local_Fire_Damage_Percent",
+    "ranges": [
+     {
+      "max": 15.0,
+      "min": 6.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 85.0,
+      "min": 70.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 110.0,
+      "min": 90.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 135.0,
+      "min": 120.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 160.0,
+      "min": 145.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 200.0,
+      "min": 175.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 300.0,
+      "min": 250.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 450.0,
+      "min": 400.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalFireDamagePercent",
+  "groupId": "48b16d1b-dd47-4b9c-a541-3cb9c71ee386",
+  "guid": "0da84d78-eea8-4770-a01e-a488afe73883",
+  "integerId": 221,
+  "tags": [
+   {
+    "guid": "a22e5371-2742-4db7-9104-2cf81836155a",
+    "tag": "OneHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 125
+   },
+   {
+    "guid": "773d8f44-dc6c-4e0c-967d-b7f569877e54",
+    "tag": "TwoHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 125
+   }
+  ]
+ },
+ "LocalForceFieldPercent": {
+  "attributes": [
+   {
+    "attributeId": 3124,
+    "attributeName": "Local_ForceField_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 30.0,
+      "min": 20.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 60.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 140.0,
+      "min": 120.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 220.0,
+      "min": 200.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 260.0,
+      "min": 240.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 350.0,
+      "min": 300.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 40.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 180.0,
+      "min": 160.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 80.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 500.0,
+      "min": 450.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 850.0,
+      "min": 800.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalDefensesPercent",
+  "groupId": "8ecf8ed6-dc72-4a3a-8aeb-3bd3ff41014c",
+  "guid": "d51e979d-728e-42be-b480-f1f739ca255e",
+  "integerId": 520,
+  "tags": [
+   {
+    "guid": "fad6dea9-9be4-4782-98ee-b6d61d7d2312",
+    "tag": "LightArmor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "LocalLightningDamagePercent": {
+  "attributes": [
+   {
+    "attributeId": 2537,
+    "attributeName": "Local_Lightning_Damage_Percent",
+    "ranges": [
+     {
+      "max": 15.0,
+      "min": 6.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 85.0,
+      "min": 70.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 110.0,
+      "min": 90.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 135.0,
+      "min": 120.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 160.0,
+      "min": 145.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 200.0,
+      "min": 175.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 300.0,
+      "min": 250.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 450.0,
+      "min": 400.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalLightningDamagePercent",
+  "groupId": "15ad6c8b-b11e-4ebc-9d01-c949c27d88df",
+  "guid": "0910c960-bc3f-4a9f-84f8-04fc914871a4",
+  "integerId": 223,
+  "tags": [
+   {
+    "guid": "a22e5371-2742-4db7-9104-2cf81836155a",
+    "tag": "OneHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 125
+   },
+   {
+    "guid": "773d8f44-dc6c-4e0c-967d-b7f569877e54",
+    "tag": "TwoHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 125
+   }
+  ]
+ },
+ "LocalPhysicalDamagePercent": {
+  "attributes": [
+   {
+    "attributeId": 2504,
+    "attributeName": "Local_Physical_Damage_Percent",
+    "ranges": [
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 85.0,
+      "min": 70.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 110.0,
+      "min": 90.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 135.0,
+      "min": 120.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 160.0,
+      "min": 145.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 200.0,
+      "min": 175.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 6.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 300.0,
+      "min": 250.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 500.0,
+      "min": 450.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalPhysicalDamagePercent",
+  "groupId": "8ef18baf-1b16-4d02-a48d-7c5e3e908224",
+  "guid": "ad45b009-4eb1-4fbc-a799-fcad16cd2d5d",
+  "integerId": 37,
+  "tags": [
+   {
+    "guid": "a22e5371-2742-4db7-9104-2cf81836155a",
+    "tag": "OneHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "8345e2a6-e9ed-4ec4-9b18-4b2bcd7c26c5",
+    "tag": "Fire",
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "052daf6c-06e1-46c7-bd1c-d0ee8f220f87",
+    "tag": "Cold",
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "4fb7b476-b622-4574-b395-049e20a62208",
+    "tag": "Lightning",
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "a104c27e-e115-4382-a3e4-19838ec834d9",
+    "tag": "Poison",
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "773d8f44-dc6c-4e0c-967d-b7f569877e54",
+    "tag": "TwoHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "LocalPhysicalDamagePercentAndAttackRating": {
+  "attributes": [
+   {
+    "attributeId": 2504,
+    "attributeName": "Local_Physical_Damage_Percent",
+    "ranges": [
+     {
+      "max": 5.0,
+      "min": 3.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 9.0,
+      "min": 6.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 10.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 45.0,
+      "min": 35.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 65.0,
+      "min": 55.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 80.0,
+      "min": 71.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 90.0,
+      "min": 81.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 25.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 91.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 150.0,
+      "min": 140.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   },
+   {
+    "attributeId": 203,
+    "attributeName": "Base_AttackRating",
+    "ranges": [
+     {
+      "max": 7.0,
+      "min": 4.0,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 12.0,
+      "min": 8.0,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 25.0,
+      "min": 15.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 40.0,
+      "min": 30.0,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 55.0,
+      "min": 45.0,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 70.0,
+      "min": 60.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 90.0,
+      "min": 80.0,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 115.0,
+      "min": 105.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 130.0,
+      "min": 120.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 150.0,
+      "min": 140.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 200.0,
+      "min": 180.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalPhysicalDamagePercentAndAttackRating",
+  "groupId": "3a826c2d-859a-401a-a78c-adb6f804279c",
+  "guid": "8447f31e-c3bf-4b92-9590-dc694159d0fe",
+  "integerId": 775,
+  "tags": [
+   {
+    "guid": "052daf6c-06e1-46c7-bd1c-d0ee8f220f87",
+    "tag": "Cold",
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "8345e2a6-e9ed-4ec4-9b18-4b2bcd7c26c5",
+    "tag": "Fire",
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "4fb7b476-b622-4574-b395-049e20a62208",
+    "tag": "Lightning",
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "a104c27e-e115-4382-a3e4-19838ec834d9",
+    "tag": "Poison",
+    "valueMultiplier": 1.0,
+    "weight": null
+   },
+   {
+    "guid": "a22e5371-2742-4db7-9104-2cf81836155a",
+    "tag": "OneHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "773d8f44-dc6c-4e0c-967d-b7f569877e54",
+    "tag": "TwoHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "LocalPoisonDamagePercent": {
+  "attributes": [
+   {
+    "attributeId": 2548,
+    "attributeName": "Local_Poison_Damage_Percent",
+    "ranges": [
+     {
+      "max": 15.0,
+      "min": 6.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 20.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 40.0,
+      "min": 35.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 60.0,
+      "min": 50.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 85.0,
+      "min": 70.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 110.0,
+      "min": 90.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 135.0,
+      "min": 120.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 160.0,
+      "min": 145.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 200.0,
+      "min": 175.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 300.0,
+      "min": 250.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 450.0,
+      "min": 400.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LocalPoisonDamagePercent",
+  "groupId": "9d699027-e7f5-4c56-918e-98c7c3295b37",
+  "guid": "9a2a0ff3-123a-41b9-8299-fec1f875c321",
+  "integerId": 224,
+  "tags": [
+   {
+    "guid": "a22e5371-2742-4db7-9104-2cf81836155a",
+    "tag": "OneHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 125
+   },
+   {
+    "guid": "773d8f44-dc6c-4e0c-967d-b7f569877e54",
+    "tag": "TwoHandWeapon",
+    "valueMultiplier": 1.0,
+    "weight": 125
+   }
+  ]
+ },
+ "Local_Crit_Bonus_Percent": {
+  "attributes": [
+   {
+    "attributeId": 719,
+    "attributeName": "Local_Crit_Chance_Percent_Bonus",
+    "ranges": [
+     {
+      "max": 10.0,
+      "min": 5.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 11.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 22.0,
+      "min": 16.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 28.0,
+      "min": 23.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 29.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 42.0,
+      "min": 36.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 60.0,
+      "min": 55.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 75.0,
+      "min": 70.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 43.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 90.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 140.0,
+      "min": 130.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "LocalCritBonusPercent",
+  "groupId": "cec07fc4-badd-4694-b76c-0bef0af9adfb",
+  "guid": "ae2ac7da-69b6-40e4-9ae8-7658abe5660d",
+  "integerId": 70,
+  "tags": [
+   {
+    "guid": "fdeed4d2-6f14-46de-86a0-5c4eba3f9c0d",
+    "tag": "Weapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "MagicFindPercent": {
+  "attributes": [
+   {
+    "attributeId": 356,
+    "attributeName": "Magic_Find_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 4.0,
+      "min": 2.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 8.0,
+      "min": 5.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 13.0,
+      "min": 9.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 19.0,
+      "min": 14.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 26.0,
+      "min": 20.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 34.0,
+      "min": 27.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 45.0,
+      "min": 40.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 55.0,
+      "min": 50.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 60.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 120.0,
+      "min": 100.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 150.0,
+      "min": 140.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "MagicFind",
+  "groupId": "2c503354-ec97-4458-969b-198b4e547300",
+  "guid": "6e55e757-1a6a-4c24-b8c0-2f28bbaf79d5",
+  "integerId": 73,
+  "tags": [
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   }
+  ]
+ },
+ "ManaGainedOnKill": {
+  "attributes": [
+   {
+    "attributeId": 148,
+    "attributeName": "Mana_Gained_On_Kill",
+    "ranges": [
+     {
+      "max": 0.6,
+      "min": 0.5,
+      "rarity": null,
+      "valueType": 2
+     },
+     {
+      "max": 0.9,
+      "min": 0.7,
+      "rarity": 1,
+      "valueType": 2
+     },
+     {
+      "max": 1.2,
+      "min": 1.0,
+      "rarity": 2,
+      "valueType": 2
+     },
+     {
+      "max": 1.75,
+      "min": 1.25,
+      "rarity": 3,
+      "valueType": 2
+     },
+     {
+      "max": 2.0,
+      "min": 1.75,
+      "rarity": 4,
+      "valueType": 2
+     },
+     {
+      "max": 2.5,
+      "min": 2.0,
+      "rarity": 5,
+      "valueType": 2
+     },
+     {
+      "max": 3.0,
+      "min": 2.5,
+      "rarity": 6,
+      "valueType": 2
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 7,
+      "valueType": 2
+     },
+     {
+      "max": 5.0,
+      "min": 4.0,
+      "rarity": 8,
+      "valueType": 2
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 9,
+      "valueType": 2
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 10,
+      "valueType": 2
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "ManaOnKill",
+  "groupId": "8bfd5e52-a330-4eff-824e-13ed03cf72a8",
+  "guid": "0493dcea-abf2-4582-960a-5dc6cf340b62",
+  "integerId": 770,
+  "tags": [
+   {
+    "guid": "fdeed4d2-6f14-46de-86a0-5c4eba3f9c0d",
+    "tag": "Weapon",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "ff072a95-9988-42ef-8c45-93fb16dc19ee",
+    "tag": "Arrows",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "Mindpower_Percent_Bonus": {
+  "attributes": [
+   {
+    "attributeId": 131,
+    "attributeName": "Mindpower_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 19.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 18.0,
+      "min": 15.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 80.0,
+      "min": 75.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 130.0,
+      "min": 120.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "MindpowerPercent",
+  "groupId": "96ec9e04-4d17-46b3-b7e1-d791be903ac7",
+  "guid": "309ee39a-5b24-4078-9c89-dad2e4ce96cd",
+  "integerId": 69,
+  "tags": [
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   },
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   }
+  ]
+ },
+ "MonsterAccurate": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "5321ca0a-669c-44d7-a14d-225e236f4453",
+  "integerId": 807,
+  "tags": []
+ },
+ "MonsterAttackSpeed": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "01abe565-1bbd-4dc9-a8e8-d166be890257",
+  "integerId": 803,
+  "tags": []
+ },
+ "MonsterCriticals": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "5f88321d-640a-40e9-9cfe-7d76b6590413",
+  "integerId": 808,
+  "tags": []
+ },
+ "MonsterDamageReduction": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "6853fcad-10ab-449d-83c8-7b1fb4a5a606",
+  "integerId": 805,
+  "tags": []
+ },
+ "MonsterEnergyShield": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "17223821-12b1-45ce-8db4-9df926668f74",
+  "integerId": 812,
+  "tags": []
+ },
+ "MonsterEvasive": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "c1e2f81d-6ffb-4d30-aff9-4b8ec8d8db4c",
+  "integerId": 806,
+  "tags": []
+ },
+ "MonsterExtraDamage": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "d8b41047-9849-4cbd-b138-2169b5b9278a",
+  "integerId": 804,
+  "tags": []
+ },
+ "MonsterExtraExperience": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "b56c5f8f-0139-4cb3-8dc3-d270377ef196",
+  "integerId": 815,
+  "tags": []
+ },
+ "MonsterExtraFastMovement": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "c9e1e425-81ab-430f-b671-1bf9db636d76",
+  "integerId": 802,
+  "tags": []
+ },
+ "MonsterIncreasedLife": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "67476683-7423-4ba0-9b99-f23c7fc01354",
+  "integerId": 811,
+  "tags": []
+ },
+ "MonsterItemRarityAndQuantity": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "69f45598-f89f-4f10-9b35-bb6fde34a2f1",
+  "integerId": 813,
+  "tags": []
+ },
+ "MonsterMultipleProjectiles": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "22c1aa6e-4494-47ea-be7f-067d6c032699",
+  "integerId": 814,
+  "tags": []
+ },
+ "MonsterResists": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 1,
+  "group": null,
+  "groupId": null,
+  "guid": "ddfe39df-f47b-49a7-9475-4ce2e900f47c",
+  "integerId": 809,
+  "tags": []
+ },
+ "MonsterStunImmune": {
+  "attributes": [],
+  "dependencies": [],
+  "domain": 2,
+  "generationType": 0,
+  "group": null,
+  "groupId": null,
+  "guid": "de826953-786f-4a46-a146-ba5982246f6e",
+  "integerId": 810,
+  "tags": []
+ },
+ "MovementSpeed": {
+  "attributes": [
+   {
+    "attributeId": 1101,
+    "attributeName": "Movement_Speed_Bonus_Percent",
+    "ranges": [
+     {
+      "max": 3.0,
+      "min": 2.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 5.0,
+      "min": 4.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 8.0,
+      "min": 6.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 9.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 16.0,
+      "min": 13.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 17.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 45.0,
+      "min": 40.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 25.0,
+      "min": 21.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 60.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 100.0,
+      "min": 90.0,
+      "rarity": 10,
+      "valueType": null
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "MovementSpeedPercent",
+  "groupId": "c600669b-7855-4ab4-86dd-2b45dfa91243",
+  "guid": "d982ced4-fcaf-48f5-b3d6-4d264f721b5a",
+  "integerId": 290,
+  "tags": [
+   {
+    "guid": "3eaf3e5e-2665-49b7-9d61-9fdf9590f72d",
+    "tag": "Boots",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "3735403a-7368-470a-b2f3-3da76a881b31",
+    "tag": "Cloak",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   }
+  ]
+ },
+ "PhysicalLifeLeech": {
+  "attributes": [
+   {
+    "attributeId": 313,
+    "attributeName": "Physical_Life_Leech",
+    "ranges": [
+     {
+      "max": 0.72,
+      "min": 0.48,
+      "rarity": null,
+      "valueType": 3
+     },
+     {
+      "max": 1.2,
+      "min": 0.96,
+      "rarity": 1,
+      "valueType": 3
+     },
+     {
+      "max": 1.68,
+      "min": 1.44,
+      "rarity": 2,
+      "valueType": 3
+     },
+     {
+      "max": 2.16,
+      "min": 1.92,
+      "rarity": 3,
+      "valueType": 3
+     },
+     {
+      "max": 2.64,
+      "min": 2.4,
+      "rarity": 4,
+      "valueType": 3
+     },
+     {
+      "max": 3.24,
+      "min": 3.0,
+      "rarity": 5,
+      "valueType": 3
+     },
+     {
+      "max": 3.7199999999999998,
+      "min": 3.48,
+      "rarity": 6,
+      "valueType": 3
+     },
+     {
+      "max": 4.2,
+      "min": 3.9599999999999995,
+      "rarity": 7,
+      "valueType": 3
+     },
+     {
+      "max": 4.8,
+      "min": 4.44,
+      "rarity": 8,
+      "valueType": 3
+     },
+     {
+      "max": 7.2,
+      "min": 6.6,
+      "rarity": 9,
+      "valueType": 3
+     },
+     {
+      "max": 12.0,
+      "min": 10.8,
+      "rarity": 10,
+      "valueType": 3
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LifeLeech",
+  "groupId": "07d306f1-6efd-4869-90be-a430051fd7c1",
+  "guid": "ade972e9-55c5-4d5f-9e51-57e604698b1f",
+  "integerId": 156,
+  "tags": [
+   {
+    "guid": "f3738e00-f1ad-4189-8936-1da172182d9f",
+    "tag": "Amulet",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "fdeed4d2-6f14-46de-86a0-5c4eba3f9c0d",
+    "tag": "Weapon",
+    "valueMultiplier": 1.0,
+    "weight": 500
+   }
+  ]
+ },
+ "PoisonLifeLeech": {
+  "attributes": [
+   {
+    "attributeId": 317,
+    "attributeName": "Poison_Life_Leech",
+    "ranges": [
+     {
+      "max": 0.72,
+      "min": 0.48,
+      "rarity": null,
+      "valueType": 3
+     },
+     {
+      "max": 1.2,
+      "min": 0.96,
+      "rarity": 1,
+      "valueType": 3
+     },
+     {
+      "max": 1.68,
+      "min": 1.44,
+      "rarity": 2,
+      "valueType": 3
+     },
+     {
+      "max": 2.16,
+      "min": 1.92,
+      "rarity": 3,
+      "valueType": 3
+     },
+     {
+      "max": 2.64,
+      "min": 2.4,
+      "rarity": 4,
+      "valueType": 3
+     },
+     {
+      "max": 3.24,
+      "min": 3.0,
+      "rarity": 5,
+      "valueType": 3
+     },
+     {
+      "max": 3.7199999999999998,
+      "min": 3.48,
+      "rarity": 6,
+      "valueType": 3
+     },
+     {
+      "max": 4.2,
+      "min": 3.9599999999999995,
+      "rarity": 7,
+      "valueType": 3
+     },
+     {
+      "max": 4.8,
+      "min": 4.44,
+      "rarity": 8,
+      "valueType": 3
+     },
+     {
+      "max": 7.199999999999999,
+      "min": 6.6,
+      "rarity": 9,
+      "valueType": 3
+     },
+     {
+      "max": 12.0,
+      "min": 10.799999999999999,
+      "rarity": 10,
+      "valueType": 3
+     }
+    ]
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 0,
+  "group": "LifeLeech",
+  "groupId": "07d306f1-6efd-4869-90be-a430051fd7c1",
+  "guid": "b2513396-1e1b-4857-b18f-748d6d9b4d12",
+  "integerId": 288,
+  "tags": [
+   {
+    "guid": "646e610e-c167-4352-a4b1-b5b1334ffa16",
+    "tag": "Belt",
+    "valueMultiplier": 1.0,
+    "weight": 250
+   }
+  ]
+ },
+ "PoisonResistance": {
+  "attributes": [
+   {
     "attributeId": 1013,
     "attributeName": "Resistance_Poison",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": 1
-      },
-      {
-        "max": 6.0,
-        "min": 5.0,
-        "rarity": 2
-      },
-      {
-        "max": 8.0,
-        "min": 7.0,
-        "rarity": 3
-      },
-      {
-        "max": 10.0,
-        "min": 9.0,
-        "rarity": 4
-      },
-      {
-        "max": 12.0,
-        "min": 11.0,
-        "rarity": 5
-      },
-      {
-        "max": 15.0,
-        "min": 13.0,
-        "rarity": 6
-      },
-      {
-        "max": 20.0,
-        "min": 16.0,
-        "rarity": 7
-      },
-      {
-        "max": 30.0,
-        "min": 25.0,
-        "rarity": 8
-      },
-      {
-        "max": 2.0,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 50.0,
-        "min": 40.0,
-        "rarity": 9
-      },
-      {
-        "max": 70.0,
-        "min": 60.0,
-        "rarity": 10
-      },
-      {
-        "max": 140.0,
-        "min": 120.0,
-        "rarity": 11
-      }
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 6.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 8.0,
+      "min": 7.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 9.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 12.0,
+      "min": 11.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 15.0,
+      "min": 13.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 20.0,
+      "min": 16.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 30.0,
+      "min": 25.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 40.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 70.0,
+      "min": 60.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "ResistanceAll": {
-    "attributeId": 1002,
-    "attributeName": "Resistance_All",
-    "generationType": 2,
-    "ranges": [
-      {
-        "max": 8.0,
-        "min": 5.0,
-        "rarity": 1
-      }
-    ]
-  },
-  "Strength_Percent_Bonus": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "PoisonResistance",
+  "groupId": "b894a5bc-5635-4aba-8896-a0faaffab7e9",
+  "guid": "765ddff3-d3c2-4b0a-a923-e07aef4aa644",
+  "integerId": 167,
+  "tags": [
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "Strength_Percent_Bonus": {
+  "attributes": [
+   {
     "attributeId": 109,
     "attributeName": "Strength_Bonus_Percent",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 2.0,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": 1
-      },
-      {
-        "max": 7.0,
-        "min": 5.0,
-        "rarity": 2
-      },
-      {
-        "max": 10.0,
-        "min": 8.0,
-        "rarity": 3
-      },
-      {
-        "max": 14.0,
-        "min": 11.0,
-        "rarity": 4
-      },
-      {
-        "max": 18.0,
-        "min": 15.0,
-        "rarity": 5
-      },
-      {
-        "max": 24.0,
-        "min": 19.0,
-        "rarity": 6
-      },
-      {
-        "max": 35.0,
-        "min": 30.0,
-        "rarity": 7
-      },
-      {
-        "max": 50.0,
-        "min": 45.0,
-        "rarity": 8
-      },
-      {
-        "max": 80.0,
-        "min": 75.0,
-        "rarity": 9
-      },
-      {
-        "max": 130.0,
-        "min": 120.0,
-        "rarity": 10
-      },
-      {
-        "max": 260.0,
-        "min": 240.0,
-        "rarity": 11
-      }
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 18.0,
+      "min": 15.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 19.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 80.0,
+      "min": 75.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 130.0,
+      "min": 120.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  },
-  "Vitality_Percent_Bonus": {
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "StrengthPercent",
+  "groupId": "22c180b9-636d-4792-abfc-a7101db2f96e",
+  "guid": "4ecec596-9203-493e-84c1-58e97cd869aa",
+  "integerId": 0,
+  "tags": [
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ },
+ "Vitality_Percent_Bonus": {
+  "attributes": [
+   {
     "attributeId": 112,
     "attributeName": "Vitality_Bonus_Percent",
-    "generationType": 1,
     "ranges": [
-      {
-        "max": 2.0,
-        "min": 1.0,
-        "rarity": null
-      },
-      {
-        "max": 4.0,
-        "min": 3.0,
-        "rarity": 1
-      },
-      {
-        "max": 7.0,
-        "min": 5.0,
-        "rarity": 2
-      },
-      {
-        "max": 10.0,
-        "min": 8.0,
-        "rarity": 3
-      },
-      {
-        "max": 14.0,
-        "min": 11.0,
-        "rarity": 4
-      },
-      {
-        "max": 18.0,
-        "min": 15.0,
-        "rarity": 5
-      },
-      {
-        "max": 24.0,
-        "min": 19.0,
-        "rarity": 6
-      },
-      {
-        "max": 35.0,
-        "min": 30.0,
-        "rarity": 7
-      },
-      {
-        "max": 50.0,
-        "min": 45.0,
-        "rarity": 8
-      },
-      {
-        "max": 80.0,
-        "min": 75.0,
-        "rarity": 9
-      },
-      {
-        "max": 130.0,
-        "min": 120.0,
-        "rarity": 10
-      },
-      {
-        "max": 260.0,
-        "min": 240.0,
-        "rarity": 11
-      }
+     {
+      "max": 2.0,
+      "min": 1.0,
+      "rarity": null,
+      "valueType": null
+     },
+     {
+      "max": 4.0,
+      "min": 3.0,
+      "rarity": 1,
+      "valueType": null
+     },
+     {
+      "max": 7.0,
+      "min": 5.0,
+      "rarity": 2,
+      "valueType": null
+     },
+     {
+      "max": 10.0,
+      "min": 8.0,
+      "rarity": 3,
+      "valueType": null
+     },
+     {
+      "max": 14.0,
+      "min": 11.0,
+      "rarity": 4,
+      "valueType": null
+     },
+     {
+      "max": 18.0,
+      "min": 15.0,
+      "rarity": 5,
+      "valueType": null
+     },
+     {
+      "max": 24.0,
+      "min": 19.0,
+      "rarity": 6,
+      "valueType": null
+     },
+     {
+      "max": 35.0,
+      "min": 30.0,
+      "rarity": 7,
+      "valueType": null
+     },
+     {
+      "max": 50.0,
+      "min": 45.0,
+      "rarity": 8,
+      "valueType": null
+     },
+     {
+      "max": 80.0,
+      "min": 75.0,
+      "rarity": 9,
+      "valueType": null
+     },
+     {
+      "max": 130.0,
+      "min": 120.0,
+      "rarity": 10,
+      "valueType": null
+     }
     ]
-  }
+   }
+  ],
+  "dependencies": [],
+  "domain": 0,
+  "generationType": 1,
+  "group": "VitalityPercent",
+  "groupId": "b41dca58-e6f1-460b-808b-ae835a0473d6",
+  "guid": "1ac40da6-67d7-4dd4-9f8e-66a1ea363b2d",
+  "integerId": 29,
+  "tags": [
+   {
+    "guid": "61503e60-56ce-48e4-bacd-497d7db9b64e",
+    "tag": "Armor",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a18891de-bc49-420a-b063-842f415b3a30",
+    "tag": "Jewelry",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   },
+   {
+    "guid": "a9851b3b-3416-41a9-8eb4-4cb8236c12f3",
+    "tag": "Shield",
+    "valueMultiplier": 1.0,
+    "weight": 1000
+   }
+  ]
+ }
 }

@@ -30,6 +30,7 @@ public sealed class CharacterAttributeEngine
     public static CharacterAttributeEngine Instance => Default.Value;
 
     private readonly Dictionary<string, int> nameToId;
+    private readonly Dictionary<int, string> idToName;
     private readonly Dictionary<int, string> formulas;
     private readonly Dictionary<string, double> constants;
 
@@ -37,6 +38,8 @@ public sealed class CharacterAttributeEngine
         Dictionary<int, string> formulas, Dictionary<string, double> constants)
     {
         this.nameToId = nameToId;
+        idToName = new Dictionary<int, string>(nameToId.Count);
+        foreach (var kv in nameToId) idToName.TryAdd(kv.Value, kv.Key);
         this.formulas = formulas;
         this.constants = constants;
     }
@@ -45,6 +48,9 @@ public sealed class CharacterAttributeEngine
     public int FormulaCount => formulas.Count;
 
     public bool TryGetId(string name, out int id) => nameToId.TryGetValue(name, out id);
+
+    /// <summary>Reverse lookup: the client attribute name for a numeric id (E01 reference check).</summary>
+    public bool TryGetName(int id, out string name) => idToName.TryGetValue(id, out name!);
 
     /// <summary>Begin an evaluation over a stored attribute map (id -> summed value).</summary>
     public Evaluation Evaluate(IReadOnlyDictionary<int, double> stored) => new(this, stored);

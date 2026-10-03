@@ -74,6 +74,7 @@ RunSuite("WebM0", WebM0Tests.Run);
 RunSuite("CombatInstance", CombatInstanceTests.Run);
 RunSuite("LootEquipment", LootEquipmentTests.Run);
 RunSuite("AffixGeneration", AffixGenerationTests.Run);
+RunSuite("E01AffixCatalog", E01AffixCatalogTests.Run);
 RunSuite("PowerParameter", PowerParameterTests.Run);
 RunSuite("PowerPool", PowerPoolTests.Run);
 RunSuite("ManaMastery", ManaMasteryTests.Run);

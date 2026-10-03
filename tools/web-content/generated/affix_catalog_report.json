@@ -1,0 +1,18 @@
+{
+ "baseline": "android-1.9.3 (versionCode 507033)",
+ "source": "gamedata_decrypted/ItemAffixes.json",
+ "randomAffixes": 97,
+ "byGeneration": {
+  "1": 37,
+  "0": 60
+ },
+ "byDomain": {
+  "0": 56,
+  "4": 27,
+  "2": 14
+ },
+ "unresolvedAttributeIds": [],
+ "unresolvedTagGuids": [
+  "18800088-e218-4914-92f8-5447ec8c85a7"
+ ]
+}

@@ -412,6 +412,19 @@ static class FidelityReplayTests
                 return (Eq(damage, expected.GetProperty("damage").GetDouble()) && !rounded,
                     $"damage={damage}");
             }
+            case "affix_catalog":
+            {
+                // E01: the full client item-affix catalog entries (ItemAffixes.json).
+                var name = inputs.GetProperty("name").GetString();
+                var affix = AffixCatalog.Entries.FirstOrDefault(e => e.Name == name);
+                if (affix.Name is null) return (false, $"affix '{name}' not found");
+                var ids = string.Join(",", affix.Attributes.Select(a => a.AttributeId));
+                var ok = affix.GenerationType == expected.GetProperty("generationType").GetInt32()
+                    && affix.Domain == expected.GetProperty("domain").GetInt32()
+                    && affix.Attributes.Count == expected.GetProperty("attributeCount").GetInt32()
+                    && ids == expected.GetProperty("attributeIds").GetString();
+                return (ok, $"gen={affix.GenerationType} domain={affix.Domain} attrs=[{ids}]");
+            }
             case "rarity_final_mult":
             {
                 // D04: CalculateAttributes rarity table. table[0] @0x1385BA0 (normal/magic/rare)

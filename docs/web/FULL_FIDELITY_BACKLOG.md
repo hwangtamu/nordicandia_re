@@ -58,7 +58,7 @@
 
 | ID | 任务 | 交付与验收 | 依赖 |
 |---|---|---|---|
-| E01 | 完整物品/词缀目录 | 将当前精选词缀扩展到基线可用目录；核对 Affixes/ItemAffixes 来源、Guid/Group、标签、Domain、等级与装备部位限制；全部引用可解析 | B01–B02 |
+| E01 | 完整物品/词缀目录 | ✅ 2026-10-03：从 `ItemAffixes.json` 导出全部 97 条随机 Prefix/Suffix 词缀（Item 域 56 / Monster 27 / Area 14），多属性、Guid/Group/TagData/Domain 齐备；修正 `GameAttributeI` 漏采使属性 id 表 927→1181，词缀引用 0 未解析；`AffixCatalog`/`LootTable` 改用全量目录并按 Domain 过滤，多属性逐条写入。`E01AffixCatalogTests` 10 条，全回归 643 PASS，回放 58/58。见 `docs/web/E01_AFFIX_CATALOG.md` | B01–B02 |
 | E02 | 完整掉落生成管线 | 怪物/容器掉落资格、数量余数、MF、物品类型、稀有度、词缀数、词缀稀有度与值范围；顺序和上限逐项对照，固定边界及统计分布通过 | C01、E01、B05 |
 | E03 | 独特/套装/隐式与开放词缀槽 | 完整触发效果、套装件数阈值、prefix/suffix 容量及 Open_Prefix/Suffix_Slot；替换网页容量近似；脱装后无残留加成 | E01、C02 |
 | E04 | 校准制作流程 | 原版存在的合成、分解、重铸、祝福、镶嵌及套装换购逐项核对：资格、概率、费用、材料、失败结果；操作失败/重试不丢失或复制物品 | E01–E03 |

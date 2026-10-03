@@ -29,7 +29,8 @@ OUT = ROOT / "tools/web-content/generated/attribute_ids.json"
 
 NAME_LINE = re.compile(r"mov\s+rax, qword ptr \[rip \+ 0x[0-9a-f]+\]\s+(\S.*)$")
 ID_LINE = re.compile(r"mov\s+dx, (0x[0-9a-fA-F]+|\d+)")
-CTOR = "GameAttributeD__ctor_1"
+# Doubles use GameAttributeD, ints/bools use GameAttributeI; both carry the id/name pair.
+CTORS = ("GameAttributeD__ctor_1", "GameAttributeI__ctor_1")
 
 
 def main() -> int:
@@ -49,7 +50,7 @@ def main() -> int:
         m = ID_LINE.search(line)
         if m:
             last_id = int(m.group(1), 0)
-        if CTOR in line:
+        if any(ctor in line for ctor in CTORS):
             if last_id is not None and last_name:
                 table.setdefault(last_id, last_name)
             last_id = None
