@@ -117,6 +117,23 @@ static class FidelityReplayTests
                 };
                 return Eq(actual, expected.GetProperty("value").GetDouble());
             }
+            case "damage_order":
+            {
+                // AttackPayload.Resolve order: miss -> dodge -> block -> crit.
+                var dodge = Get(inputs, "dodge");
+                var block = Get(inputs, "block");
+                var mult = inputs.TryGetProperty("blockMultiplier", out var bm) ? bm.GetDouble() : 1.0;
+                var attacker = CombatantStats.FromRealtime(1000, 0, 0, 10);
+                var defender = CombatantStats.FromRealtime(1000, 0, 0, 10)
+                    with { DodgeChance = dodge, BlockChance = block, BlockedDamageMultiplier = mult };
+                var result = CombatModel.ResolveBundleAttack(attacker, new DamageBundle(Physical: 100), defender,
+                    default, new AttackProfile(1.0, 0, 0, 0), new CombatRandom(7));
+                if (!expected.GetProperty("hit").GetBoolean()) return !result.Hit;
+                var plain = CombatModel.ResolveBundleAttack(attacker, new DamageBundle(Physical: 100),
+                    CombatantStats.FromRealtime(1000, 0, 0, 10), default, new AttackProfile(1.0, 0, 0, 0), new CombatRandom(7));
+                var ratio = expected.TryGetProperty("ratio", out var r) ? r.GetDouble() : 1.0;
+                return result.Hit && Eq(result.Damage, plain.Damage * ratio);
+            }
             default:
                 throw new InvalidOperationException($"unknown sample kind '{kind}'");
         }

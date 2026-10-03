@@ -13,11 +13,11 @@
 | ID | 区域 | 状态 | 位置 | 现状 | 差异/影响 | 关闭 |
 |---|---|---|---|---|---|---|
 | D01 | 技能执行 | Provisional | `PowerProfiles.generated.cs`、`CombatInstance` | 93 个玩家技能有真实名/描述/图标/冷却/数值，但执行是 13 类原型（见 [B02](B02_CONTENT_CATALOG.md)） | 具体施法/弹体/时间线/Buff 未移植 | C04–C06 |
-| D02 | 伤害输入/执行 | Provisional + Inferred | `CombatModel.ResolveHit/ResolveBundleAttack` | 公式 ClientVerified；`Inputs=Provisional`、`Execution=Inferred` | 属性来源与合成顺序未对照 | C01 |
+| D02 | 伤害输入/执行 | Interim | `CombatModel.ResolveBundleAttack` | 结算顺序已按 `AttackPayload.Resolve` 修为 miss→dodge→block→crit，dodge/block 已接入（B04 样本）；公式 ClientVerified；`Inputs=Provisional`、`Execution=Inferred` | 属性来源/合成顺序与 evade 分离未全对照 | C01 |
 | D03 | 生命曲线 | Provisional | `CombatModel.MaxHealth` | `150+50*level` | 客户端 `CalculateCombatAttributes` 未采样 | C01、C08 |
 | D04 | 击杀经验 | Provisional | `CombatModel.ExperienceReward` | `8*level^1.35+5` | 客户端 `Monster.CalculateAttributes` 未采样 | W01、C01 |
 | D05 | 怪物属性缩放 | Provisional | `CombatRegistry.MonsterProfiles` | 5 类通用原型倍率 | 原版怪物各自属性/缩放未接入 | W01 |
-| D06 | 元素穿透应用 | Inferred | `CombatModel.ApplyPenetration`、`CharacterRatings` | 属性名 ClientVerified，应用顺序为推断 | 负抗性/免疫边界未对照 | C01 |
+| D06 | 元素穿透应用 | Inferred | `CombatModel.ApplyPenetration`、`CharacterRatings` | 属性名 ClientVerified，应用顺序为推断 | 负抗性/免疫边界未对照；`IsEvaded` 与 `ChanceToHit` 的分离未验证 | C01 |
 | D07 | Buff 生命周期 | Interim | `CombatInstance` 毒/诅咒 | 毒保留最高 DPS 并刷新；无唯一键/替换/驱散 | 叠加与强弱比较与原版不同 | C02 |
 | D08 | 弹体碰撞 | Interim | `CombatInstance.SecondaryTargets` | 分叉/链用"附近敌人"代替运动弹体 | 散射轨迹/视线/穿透未模拟 | C03 |
 | D09 | 诅咒幅度/时长 | Provisional | `MonsterPowerCatalog` 诅咒 | 目标属性 ClientVerified；幅度/时长为占位 | 诅咒强度与原版不同 | W02、W03 |

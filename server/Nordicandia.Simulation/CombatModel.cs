@@ -44,7 +44,11 @@ public readonly record struct CombatantStats(double Offense, double Defense, dou
     double LifeMax = 0, double ManaMax = 0, DamageBundle Damage = default, ResistanceBundle Resistances = default,
     double ForkChance = 0, double ChainChance = 0, double PoisonChance = 0, double DoubleDamageOnCritPoisoned = 0,
     double MoveSpeedMultiplier = 1, bool ProjectileAutoAttack = false, bool PoisonOnHit = false,
-    DamageBundle Conversion = default, ResistanceBundle Penetration = default, double ArmorPenetration = 0)
+    DamageBundle Conversion = default, ResistanceBundle Penetration = default, double ArmorPenetration = 0,
+    // AttackPayload.Resolve order: miss -> dodge -> evade -> block -> crit. Dodge_Chance_Total
+    // (0x1310) and Block_Chance_Total (0x1278); a block scales the hit by
+    // Blocked_Damage_Taken_Multiplier_Total (0x12D8, default 0.5).
+    double DodgeChance = 0, double BlockChance = 0, double BlockedDamageMultiplier = 1)
 {
     public static CombatantStats FromRealtime(double offense, double defense, double recovery, int level)
         => new(Math.Max(0, offense), Math.Max(0, defense), Math.Max(0, recovery), Math.Max(1, level));
@@ -267,10 +271,14 @@ public static class CombatModel
             AssumedVariance: profile.Variance > 0,
             AssumedMinDamage: true);
 
+        // AttackPayload.Resolve order: miss -> dodge -> block -> crit.
         var hit = RollChance(ChanceToHit(attacker.EffectiveAttackRating, defender.EffectiveEvasion), rng);
+        if (!hit) return new DamageResult(0.0, false, confidence, false);
+        if (RollChance(defender.DodgeChance, rng))
+            return new DamageResult(0.0, false, confidence, false);
+        var blocked = RollChance(defender.BlockChance, rng);
         var critChance = attacker.CritChance > 0 ? attacker.CritChance : profile.CritChance;
         var critical = RollChance(critChance, rng);
-        if (!hit) return new DamageResult(0.0, false, confidence, false);
 
         var scale = Math.Max(0, profile.SkillMultiplier) * (critical ? Math.Max(1.0, profile.CritMultiplier) : 1.0);
         // Client order: convert the weapon's physical damage, then mitigate with armour and
@@ -280,7 +288,8 @@ public static class CombatModel
         var armor = defender.EffectiveArmor * Math.Max(0, 1 - attacker.ArmorPenetration);
         var mitigated = MitigateDamage(converted, armor, resistances);
         var variance = 1.0 + (rng.NextDouble() * 2.0 - 1.0) * Math.Max(0, profile.Variance);
-        var damage = Math.Max(1.0, mitigated * Math.Max(0.05, variance));
+        var blockFactor = blocked ? Math.Max(0.0, defender.BlockedDamageMultiplier) : 1.0;
+        var damage = Math.Max(1.0, mitigated * blockFactor * Math.Max(0.05, variance));
         return new DamageResult(damage, critical, confidence, true);
     }
 

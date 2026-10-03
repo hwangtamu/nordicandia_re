@@ -45,6 +45,11 @@ internal static class CharacterRatings
                 eval.Resolve("Lightning_Resistance_Penetration_Total"),
                 eval.Resolve("Poison_Resistance_Penetration_Total")),
             ArmorPenetration = eval.Resolve("Armor_Piercing_Percent_Total"),
+            // AttackPayload.Resolve order: dodge then block. Defaults come from the baseline
+            // (Base_Dodge_Chance 0.05, Base_Blocked_Damage_Taken_Multiplier 0.5).
+            DodgeChance = Math.Max(eval.Resolve("Dodge_Chance_Total"), eval.Resolve("Dodge_Chance_Spell_Total")),
+            BlockChance = Math.Max(eval.Resolve("Block_Chance_Total"), eval.Resolve("Block_Chance_Spell_Total")),
+            BlockedDamageMultiplier = eval.Resolve("Blocked_Damage_Taken_Multiplier_Total"),
         };
     }
 }

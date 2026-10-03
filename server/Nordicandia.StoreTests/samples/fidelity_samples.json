@@ -173,6 +173,24 @@
       "expected": { "value": 0.5 },
       "source": "disasm_powers.py SummonSkeleton @ 0x2a536f8",
       "status": "对照通过"
+    },
+    {
+      "id": "damage_order.dodge",
+      "kind": "damage_order",
+      "rule": "AttackPayload.Resolve: IsDodged (Dodge_Chance_Total 0x1310)",
+      "inputs": { "dodge": 1.0 },
+      "expected": { "hit": false },
+      "source": "AttackPayload.Resolve IsDodged + attribute 0x1310 (Dodge_Chance_Total)",
+      "status": "对照通过"
+    },
+    {
+      "id": "damage_order.block",
+      "kind": "damage_order",
+      "rule": "AttackPayload.Resolve: IsBlocked + Blocked_Damage_Taken_Multiplier_Total (0x12D8)",
+      "inputs": { "block": 1.0, "blockMultiplier": 0.5 },
+      "expected": { "hit": true, "ratio": 0.5 },
+      "source": "AttackPayload.txt IsBlocked + attribute 0x1278/0x12D8",
+      "status": "对照通过"
     }
   ]
 }

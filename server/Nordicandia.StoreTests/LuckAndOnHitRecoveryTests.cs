@@ -318,4 +318,22 @@ static class LuckAndOnHitRecoveryTests
         ice.UseSkill(0);
         Check(ice.Monsters.Any(m => m.StunTimer > 0), "skill: IceNova freezes enemies");
     }
+
+    public static void DodgeBlock()
+    {
+        // AttackPayload.Resolve: miss -> dodge -> evade -> block -> crit.
+        var attacker = CombatantStats.FromRealtime(1000, 0, 0, 10);
+        var rng = new CombatRandom(7);
+        var dodger = CombatantStats.FromRealtime(1000, 0, 0, 10) with { DodgeChance = 1.0 };
+        var dodged = CombatModel.ResolveBundleAttack(attacker, new DamageBundle(Physical: 100), dodger,
+            default, new AttackProfile(1.0, 0, 0, 0), rng);
+        Check(!dodged.Hit && dodged.Damage == 0, "damage order: a 100% dodge avoids the hit");
+        var blocker = CombatantStats.FromRealtime(1000, 0, 0, 10) with { BlockChance = 1.0, BlockedDamageMultiplier = 0.5 };
+        var blocked = CombatModel.ResolveBundleAttack(attacker, new DamageBundle(Physical: 100), blocker,
+            default, new AttackProfile(1.0, 0, 0, 0), rng);
+        var plain = CombatModel.ResolveBundleAttack(attacker, new DamageBundle(Physical: 100),
+            CombatantStats.FromRealtime(1000, 0, 0, 10), default, new AttackProfile(1.0, 0, 0, 0), rng);
+        Check(blocked.Hit && Math.Abs(blocked.Damage - plain.Damage * 0.5) < 1e-9,
+            $"damage order: a 100% block halves the hit ({plain.Damage:F1} -> {blocked.Damage:F1})");
+    }
 }
