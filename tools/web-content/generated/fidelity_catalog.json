@@ -1,0 +1,3506 @@
+{
+ "baseline": {
+  "platform": "android",
+  "version": "1.9.3",
+  "versionCode": 507033
+ },
+ "classes": {
+  "Hunter": {
+   "active": [
+    {
+     "implementedBy": "RapidFire",
+     "integerId": 31,
+     "masteryCount": 6,
+     "name": "RapidFire",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveHunterSkill",
+     "webEffect": "rally"
+    },
+    {
+     "implementedBy": "ArrowRain",
+     "integerId": 29,
+     "masteryCount": 6,
+     "name": "ArrowRain",
+     "parameterFields": [
+      "_Duration_k__BackingField",
+      "_BaseDelayBetweenArrows_k__BackingField",
+      "_VariationDelayBetweenArrows_k__BackingField",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Spell"
+     ],
+     "type": "ActiveHunterSkill",
+     "webEffect": "nova"
+    },
+    {
+     "implementedBy": "SummonWolf",
+     "integerId": 41,
+     "masteryCount": 7,
+     "name": "SummonWolf",
+     "parameterFields": [
+      "_MoreMonstersPercent",
+      "_MinionHealthPercent",
+      "_MinionDamagePercent",
+      "_IsResummoning",
+      "_MinionHealthPercent",
+      "_MinionDamagePercent",
+      "_IsKillingMinion",
+      "_Wolf",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "AllowInTown",
+      "Minion",
+      "Spell"
+     ],
+     "type": "ActiveHunterSkill",
+     "webEffect": "summon"
+    },
+    {
+     "implementedBy": "FrozenArrow",
+     "integerId": 116,
+     "masteryCount": 6,
+     "name": "FrozenArrow",
+     "parameterFields": [
+      "_NovaFreezeDuration",
+      "_HasSpawnedNova",
+      "_NovaHitEnemies",
+      "_ChanceToRecastNova",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId",
+      "__7__wrap1"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Projectile",
+      "Cold",
+      "Attack"
+     ],
+     "type": "ActiveHunterSkill",
+     "webEffect": "projectile"
+    },
+    {
+     "implementedBy": "PowerShot",
+     "integerId": 27,
+     "masteryCount": 6,
+     "name": "PowerShot",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId",
+      "__7__wrap1"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Attack"
+     ],
+     "type": "ActiveHunterSkill",
+     "webEffect": "projectile"
+    },
+    {
+     "implementedBy": "ManaArrows",
+     "integerId": 100,
+     "masteryCount": 6,
+     "name": "ManaArrows",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Bow"
+     ],
+     "type": "ActiveHunterSkill",
+     "webEffect": "projectile"
+    },
+    {
+     "implementedBy": "Multishot",
+     "integerId": 32,
+     "masteryCount": 6,
+     "name": "Multishot",
+     "parameterFields": [
+      "_HitActors",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId",
+      "__7__wrap1"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Attack",
+      "Projectile"
+     ],
+     "type": "ActiveHunterSkill",
+     "webEffect": "projectile"
+    },
+    {
+     "implementedBy": "Fade",
+     "integerId": 30,
+     "masteryCount": 6,
+     "name": "Fade",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveHunterSkill",
+     "webEffect": "mobility"
+    },
+    {
+     "implementedBy": "ImpalingTrap",
+     "integerId": 73,
+     "masteryCount": 6,
+     "name": "ImpalingTrap",
+     "parameterFields": [
+      "_Radius_k__BackingField",
+      "_DelayBeforeEruption_k__BackingField",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Spell",
+      "AoE"
+     ],
+     "type": "ActiveHunterSkill",
+     "webEffect": "strike"
+    },
+    {
+     "implementedBy": "Backflip",
+     "integerId": 28,
+     "masteryCount": 7,
+     "name": "Backflip",
+     "parameterFields": [
+      "_Destination",
+      "_OwnerMover",
+      "_Distance",
+      "_HasStarted",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId",
+      "_couldUpdatePosition_5__2"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Movement",
+      "Spell"
+     ],
+     "type": "ActiveHunterSkill",
+     "webEffect": "rally"
+    },
+    {
+     "implementedBy": "MarkOfTheChosen",
+     "integerId": 75,
+     "masteryCount": 6,
+     "name": "MarkOfTheChosen",
+     "parameterFields": [
+      "_LifeLeechBonusPercent",
+      "_CurrentIncreasedDamageTaken",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "ActiveHunterSkill",
+     "webEffect": "rally"
+    },
+    {
+     "implementedBy": "Thorns",
+     "integerId": 112,
+     "masteryCount": 6,
+     "name": "Thorns",
+     "parameterFields": [
+      "_PhysicalDamageReduction",
+      "_Effect",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveHunterSkill",
+     "webEffect": "rally"
+    },
+    {
+     "implementedBy": "BeastWithin",
+     "integerId": 114,
+     "masteryCount": 6,
+     "name": "BeastWithin",
+     "parameterFields": [
+      "_Effect",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveHunterSkill",
+     "webEffect": "rally"
+    },
+    {
+     "implementedBy": "Mixology",
+     "integerId": 164,
+     "masteryCount": 7,
+     "name": "Mixology",
+     "parameterFields": [
+      "_Effect",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveGeneralSkill",
+     "webEffect": "rally"
+    }
+   ],
+   "passive": [
+    {
+     "implementedBy": "Precision",
+     "integerId": 33,
+     "name": "Precision",
+     "parameterFields": [
+      "_AttackRatingBonus",
+      "_MaxStacks",
+      "_ShouldRemove"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveHunterSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "Sharpshooter",
+     "integerId": 34,
+     "name": "Sharpshooter",
+     "parameterFields": [
+      "_RangeIncrease"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveHunterSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "BeastTracking",
+     "integerId": 106,
+     "name": "BeastTracking",
+     "parameterFields": [
+      "_MoreBeastDamage",
+      "_MoreChampionMonsters"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveHunterSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "DoubleDraw",
+     "integerId": 36,
+     "name": "DoubleDraw",
+     "parameterFields": [
+      "_ExtraProjectileChance"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveHunterSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "PoolOfMana",
+     "integerId": 102,
+     "name": "PoolOfMana",
+     "parameterFields": [
+      "_ManaBonus"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveHunterSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "Concentrate",
+     "integerId": 108,
+     "name": "Concentrate",
+     "parameterFields": [],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveHunterSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "Cripple",
+     "integerId": 110,
+     "name": "Cripple",
+     "parameterFields": [
+      "_MinimumAttackRangePercent",
+      "_SlowPercent",
+      "_SlowDuration"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveHunterSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "DeadlyPoison",
+     "integerId": 136,
+     "name": "DeadlyPoison",
+     "parameterFields": [],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveHunterSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "TastyTreats",
+     "integerId": 138,
+     "name": "TastyTreats",
+     "parameterFields": [],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveHunterSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "Solitary",
+     "integerId": 140,
+     "name": "Solitary",
+     "parameterFields": [
+      "_ListeningWorld"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveHunterSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "Fork",
+     "integerId": 142,
+     "name": "Fork",
+     "parameterFields": [],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveHunterSkill",
+     "webEffect": "might"
+    }
+   ]
+  },
+  "Mage": {
+   "active": [
+    {
+     "implementedBy": "ChainLightning",
+     "integerId": 49,
+     "masteryCount": 6,
+     "name": "ChainLightning",
+     "parameterFields": [
+      "_DamageReductionPerJump",
+      "_ForcedEmptyMasteries",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Lightning",
+      "Spell"
+     ],
+     "type": "ActiveMageSkill",
+     "webEffect": "chain"
+    },
+    {
+     "implementedBy": "Teleport",
+     "integerId": 130,
+     "masteryCount": 6,
+     "name": "Teleport",
+     "parameterFields": [
+      "_Mover",
+      "_UserOriginalScale",
+      "_TeleportMovementSpeedMultiplier",
+      "_HasStarted",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId",
+      "_targetPos_5__2",
+      "_couldUpdatePosition_5__3"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Movement",
+      "Spell"
+     ],
+     "type": "ActiveMageSkill",
+     "webEffect": "rally"
+    },
+    {
+     "implementedBy": "IceNova",
+     "integerId": 45,
+     "masteryCount": 6,
+     "name": "IceNova",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Spell",
+      "AoE",
+      "Cold"
+     ],
+     "type": "ActiveMageSkill",
+     "webEffect": "nova"
+    },
+    {
+     "implementedBy": "ElementalSeal",
+     "integerId": 53,
+     "masteryCount": 6,
+     "name": "ElementalSeal",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Duration",
+      "Spell",
+      "AoE"
+     ],
+     "type": "ActiveMageSkill",
+     "webEffect": "nova"
+    },
+    {
+     "implementedBy": "Blizzard",
+     "integerId": 48,
+     "masteryCount": 6,
+     "name": "Blizzard",
+     "parameterFields": [
+      "_BaseDelayBetweenShards_k__BackingField",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Spell",
+      "Cold"
+     ],
+     "type": "ActiveMageSkill",
+     "webEffect": "nova"
+    },
+    {
+     "implementedBy": "ManaShield",
+     "integerId": 52,
+     "masteryCount": 6,
+     "name": "ManaShield",
+     "parameterFields": [
+      "_ShieldRegen",
+      "_Effect",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveMageSkill",
+     "webEffect": "shield"
+    },
+    {
+     "implementedBy": "IceBlast",
+     "integerId": 46,
+     "masteryCount": 6,
+     "name": "IceBlast",
+     "parameterFields": [
+      "_HitActors",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId",
+      "__7__wrap1"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Spell",
+      "Cold"
+     ],
+     "type": "ActiveMageSkill",
+     "webEffect": "projectile"
+    },
+    {
+     "implementedBy": "InfernalBlast",
+     "integerId": 47,
+     "masteryCount": 6,
+     "name": "InfernalBlast",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId",
+      "__7__wrap1"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Fire",
+      "Spell"
+     ],
+     "type": "ActiveMageSkill",
+     "webEffect": "projectile"
+    },
+    {
+     "implementedBy": "Thunderstrike",
+     "integerId": 51,
+     "masteryCount": 6,
+     "name": "Thunderstrike",
+     "parameterFields": [
+      "Logger",
+      "_ForcedEmptyChainLightningMasteries",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Lightning",
+      "Spell"
+     ],
+     "type": "ActiveMageSkill",
+     "webEffect": "nova"
+    },
+    {
+     "implementedBy": "Tornado",
+     "integerId": 77,
+     "masteryCount": 6,
+     "name": "Tornado",
+     "parameterFields": [
+      "_TimeSinceLastRetarget",
+      "_AttractionActorMovers",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId",
+      "__7__wrap1"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Lightning",
+      "Spell"
+     ],
+     "type": "ActiveMageSkill",
+     "webEffect": "projectile"
+    },
+    {
+     "implementedBy": "PoisonCloud",
+     "integerId": 128,
+     "masteryCount": 6,
+     "name": "PoisonCloud",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "AoE",
+      "Duration",
+      "Poison",
+      "Spell"
+     ],
+     "type": "ActiveMageSkill",
+     "webEffect": "nova"
+    },
+    {
+     "implementedBy": "Mixology",
+     "integerId": 164,
+     "masteryCount": 7,
+     "name": "Mixology",
+     "parameterFields": [
+      "_Effect",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveGeneralSkill",
+     "webEffect": "rally"
+    }
+   ],
+   "passive": [
+    {
+     "implementedBy": "Hubris",
+     "integerId": 50,
+     "name": "Hubris",
+     "parameterFields": [
+      "_IntelligenceBonus"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveMageSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "ManaFlow",
+     "integerId": 126,
+     "name": "ManaFlow",
+     "parameterFields": [
+      "_IncreasedMaximumManaPercent",
+      "_IncreasedManaRegeneration"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveMageSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "RapidCasting",
+     "integerId": 134,
+     "name": "RapidCasting",
+     "parameterFields": [
+      "_MoreAttackSpeedPercent",
+      "_MoreSkillManaCostPercent"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveMageSkill",
+     "webEffect": "haste"
+    },
+    {
+     "implementedBy": "AncientKnowledge",
+     "integerId": 118,
+     "name": "AncientKnowledge",
+     "parameterFields": [
+      "_ExperienceBonus"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveMageSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "BloodCasting",
+     "integerId": 120,
+     "name": "BloodCasting",
+     "parameterFields": [
+      "_PercentOfManaCostTakenAsLife"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveMageSkill",
+     "webEffect": "haste"
+    },
+    {
+     "implementedBy": "FireArmor",
+     "integerId": 54,
+     "name": "FireArmor",
+     "parameterFields": [
+      "_ResistanceBonus",
+      "_DamageTakenAsElement"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Fire"
+     ],
+     "type": "PassiveMageSkill",
+     "webEffect": "warding"
+    },
+    {
+     "implementedBy": "ColdArmor",
+     "integerId": 55,
+     "name": "ColdArmor",
+     "parameterFields": [
+      "_ResistanceBonus",
+      "_DamageTakenAsElement"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Fire"
+     ],
+     "type": "PassiveMageSkill",
+     "webEffect": "warding"
+    },
+    {
+     "implementedBy": "LightningArmor",
+     "integerId": 56,
+     "name": "LightningArmor",
+     "parameterFields": [
+      "_ResistanceBonus",
+      "_DamageTakenAsElement"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Fire"
+     ],
+     "type": "PassiveMageSkill",
+     "webEffect": "warding"
+    },
+    {
+     "implementedBy": "EvasiveManeuver",
+     "integerId": 122,
+     "name": "EvasiveManeuver",
+     "parameterFields": [
+      "_IncreasedDodgeChance",
+      "_ChanceToReduceTeleportCooldownWhenHit",
+      "_TeleportCooldownReductionTime",
+      "_TeleportCooldownReductionProcCooldown",
+      "_LastCooldownProcTick"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Movement"
+     ],
+     "type": "PassiveMageSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "ForceField",
+     "integerId": 124,
+     "name": "ForceField",
+     "parameterFields": [
+      "_MoreForceField"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Movement"
+     ],
+     "type": "PassiveMageSkill",
+     "webEffect": "might"
+    }
+   ]
+  },
+  "Necromancer": {
+   "active": [
+    {
+     "implementedBy": "SummonSkeleton",
+     "integerId": 213,
+     "masteryCount": 6,
+     "name": "SummonSkeleton",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "AllowInTown",
+      "Spell",
+      "Minion"
+     ],
+     "type": "ActiveNecromancerSkill",
+     "webEffect": "summon"
+    },
+    {
+     "implementedBy": "AstralWalk",
+     "integerId": 235,
+     "masteryCount": 6,
+     "name": "AstralWalk",
+     "parameterFields": [
+      "_Mover",
+      "_UserOriginalScale",
+      "_HasStarted",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId",
+      "_couldUpdatePosition_5__2"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Defensive",
+      "Spell"
+     ],
+     "type": "ActiveNecromancerSkill",
+     "webEffect": "mobility"
+    },
+    {
+     "implementedBy": "Shadowbolt",
+     "integerId": 221,
+     "masteryCount": 7,
+     "name": "Shadowbolt",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId",
+      "__7__wrap1"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell",
+      "Offensive"
+     ],
+     "type": "ActiveNecromancerSkill",
+     "webEffect": "projectile"
+    },
+    {
+     "implementedBy": "UnholyFocus",
+     "integerId": 219,
+     "masteryCount": 7,
+     "name": "UnholyFocus",
+     "parameterFields": [
+      "_Effect",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveNecromancerSkill",
+     "webEffect": "mobility"
+    },
+    {
+     "implementedBy": "DrainLife",
+     "integerId": 225,
+     "masteryCount": 6,
+     "name": "DrainLife",
+     "parameterFields": [
+      "_NearbyActors",
+      "_LeechTargets",
+      "_TimeoutTimer",
+      "_BeamThicknessRadius",
+      "_beamEnd",
+      "_beamStart",
+      "_beam",
+      "_WeaponDamageMult",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId",
+      "_totalLifeLeech_5__2",
+      "_leechBonusPerMinion_5__3",
+      "_damagePerTenthSecond_5__4",
+      "_timePassed_5__5",
+      "_percentOfLifeGivenToMinionsOnKill_5__6"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Poison",
+      "Spell"
+     ],
+     "type": "ActiveNecromancerSkill",
+     "webEffect": "summon"
+    },
+    {
+     "implementedBy": "SummonDemon",
+     "integerId": 215,
+     "masteryCount": 6,
+     "name": "SummonDemon",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "AllowInTown",
+      "Spell",
+      "Minion"
+     ],
+     "type": "ActiveNecromancerSkill",
+     "webEffect": "summon"
+    },
+    {
+     "implementedBy": "BoneLink",
+     "integerId": 233,
+     "masteryCount": 6,
+     "name": "BoneLink",
+     "parameterFields": [
+      "_LinkedBuffs",
+      "_LinkedTargets",
+      "_LastBoneEffectGroupTick",
+      "_Effect",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Defensive",
+      "Spell"
+     ],
+     "type": "ActiveNecromancerSkill",
+     "webEffect": "summon"
+    },
+    {
+     "implementedBy": "Decay",
+     "integerId": 229,
+     "masteryCount": 6,
+     "name": "Decay",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "AoE",
+      "Spell"
+     ],
+     "type": "ActiveNecromancerSkill",
+     "webEffect": "nova"
+    },
+    {
+     "implementedBy": "DemonicPresence",
+     "integerId": 227,
+     "masteryCount": 6,
+     "name": "DemonicPresence",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Aura",
+      "AoE",
+      "Spell"
+     ],
+     "type": "ActiveNecromancerSkill",
+     "webEffect": "summon"
+    },
+    {
+     "implementedBy": "Sacrifice",
+     "integerId": 231,
+     "masteryCount": 6,
+     "name": "Sacrifice",
+     "parameterFields": [
+      "_TimeSinceLastResourceTick",
+      "_ResourceUpdateFrequency",
+      "_HasCastOffensiveSkill",
+      "_LifeGainedAsPercent",
+      "_ForceFieldGainedAsPercent",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveNecromancerSkill",
+     "webEffect": "summon"
+    },
+    {
+     "implementedBy": "SummonDeath",
+     "integerId": 217,
+     "masteryCount": 7,
+     "name": "SummonDeath",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "AllowInTown",
+      "Spell",
+      "Minion"
+     ],
+     "type": "ActiveNecromancerSkill",
+     "webEffect": "summon"
+    },
+    {
+     "implementedBy": "Mixology",
+     "integerId": 164,
+     "masteryCount": 7,
+     "name": "Mixology",
+     "parameterFields": [
+      "_Effect",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveGeneralSkill",
+     "webEffect": "rally"
+    }
+   ],
+   "passive": [
+    {
+     "implementedBy": "Bodyguard",
+     "integerId": 245,
+     "name": "Bodyguard",
+     "parameterFields": [
+      "_ReducedCritDamageTaken",
+      "_NearbyActors"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveNecromancerSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "AccumulatingShadows",
+     "integerId": 243,
+     "name": "AccumulatingShadows",
+     "parameterFields": [
+      "_MaxStacks",
+      "_ShadowBoltDamageIncrease",
+      "_ShadowBoltTimeWindow"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveNecromancerSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "Pillaging",
+     "integerId": 249,
+     "name": "Pillaging",
+     "parameterFields": [
+      "_MinionMagicFindIncrease",
+      "_AdditionalIronDropChance"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveNecromancerSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "BoneArmor",
+     "integerId": 247,
+     "name": "BoneArmor",
+     "parameterFields": [
+      "_PhysicalDamageReductionBonus",
+      "_DamageTakenAsPhysical"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveNecromancerSkill",
+     "webEffect": "warding"
+    },
+    {
+     "implementedBy": "DarkMagic",
+     "integerId": 251,
+     "name": "DarkMagic",
+     "parameterFields": [
+      "_ManaGainedOnKill",
+      "_ManaCostReduction"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveNecromancerSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "GiftOfTheVampire",
+     "integerId": 253,
+     "name": "GiftOfTheVampire",
+     "parameterFields": [
+      "_MinionLeechGainPercent",
+      "_LifeLeechBonus"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveNecromancerSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "MasterSummoner",
+     "integerId": 255,
+     "name": "MasterSummoner",
+     "parameterFields": [
+      "_MinionLifeBonus",
+      "_MinionDamageBonus"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveNecromancerSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "Reanimator",
+     "integerId": 257,
+     "name": "Reanimator",
+     "parameterFields": [
+      "_ChanceToReanimateFallenMinion",
+      "_ReanimatedMinionLifePercent"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveNecromancerSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "VileTouch",
+     "integerId": 259,
+     "name": "VileTouch",
+     "parameterFields": [
+      "_MorePoisonDamage",
+      "_PoisonChanceOnHit"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveNecromancerSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "WandMaster",
+     "integerId": 263,
+     "name": "WandMaster",
+     "parameterFields": [
+      "_MoreDamageWithWands"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveNecromancerSkill",
+     "webEffect": "might"
+    }
+   ]
+  },
+  "Warrior": {
+   "active": [
+    {
+     "implementedBy": "Slam",
+     "integerId": 94,
+     "masteryCount": 7,
+     "name": "Slam",
+     "parameterFields": [
+      "_TargetPositions",
+      "_JointTargetList",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Attack",
+      "Melee"
+     ],
+     "type": "ActiveWarriorSkill",
+     "webEffect": "nova"
+    },
+    {
+     "implementedBy": "Might",
+     "integerId": 1,
+     "masteryCount": 7,
+     "name": "Might",
+     "parameterFields": [
+      "_Effect",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveWarriorSkill",
+     "webEffect": "rally"
+    },
+    {
+     "implementedBy": "Pounce",
+     "integerId": 71,
+     "masteryCount": 6,
+     "name": "Pounce",
+     "parameterFields": [
+      "_Mover",
+      "_HasStarted",
+      "_IsWaitingForCooldown",
+      "OnLanded",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId",
+      "_targetPos_5__2"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Movement",
+      "Offensive",
+      "Spell"
+     ],
+     "type": "ActiveWarriorSkill",
+     "webEffect": "nova"
+    },
+    {
+     "implementedBy": "WarStomp",
+     "integerId": 11,
+     "masteryCount": 6,
+     "name": "WarStomp",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Attack"
+     ],
+     "type": "ActiveWarriorSkill",
+     "webEffect": "nova"
+    },
+    {
+     "implementedBy": "Shatter",
+     "integerId": 19,
+     "masteryCount": 7,
+     "name": "Shatter",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Offensive",
+      "Attack",
+      "Melee"
+     ],
+     "type": "ActiveWarriorSkill",
+     "webEffect": "strike"
+    },
+    {
+     "implementedBy": "Sprint",
+     "integerId": 12,
+     "masteryCount": 6,
+     "name": "Sprint",
+     "parameterFields": [
+      "_Effect",
+      "_ChargeTarget",
+      "_LastChargeTick",
+      "_CouldUpdatePosition",
+      "_ChargeSpeedBoost",
+      "_CurrentFirstHitDamageBonus",
+      "_FirstHitDamageBonus",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveWarriorSkill",
+     "webEffect": "mobility"
+    },
+    {
+     "implementedBy": "IncrementalFortress",
+     "integerId": 10,
+     "masteryCount": 6,
+     "name": "IncrementalFortress",
+     "parameterFields": [
+      "_Effect",
+      "_StackInstances",
+      "_HasInstanceBeenRemoved",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveWarriorSkill",
+     "webEffect": "rally"
+    },
+    {
+     "implementedBy": "Retaliation",
+     "integerId": 17,
+     "masteryCount": 6,
+     "name": "Retaliation",
+     "parameterFields": [
+      "_RetaliationCounter",
+      "_RetaliationStartTick",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveWarriorSkill",
+     "webEffect": "nova"
+    },
+    {
+     "implementedBy": "Frenzy",
+     "integerId": 67,
+     "masteryCount": 6,
+     "name": "Frenzy",
+     "parameterFields": [
+      "_MaxStackCount",
+      "_StackInstances",
+      "_HasInstanceBeenRemoved",
+      "_Effect",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveWarriorSkill",
+     "webEffect": "rally"
+    },
+    {
+     "implementedBy": "Intimidate",
+     "integerId": 69,
+     "masteryCount": 6,
+     "name": "Intimidate",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveWarriorSkill",
+     "webEffect": "nova"
+    },
+    {
+     "implementedBy": "Hunger",
+     "integerId": 23,
+     "masteryCount": 6,
+     "name": "Hunger",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveWarriorSkill",
+     "webEffect": "leech"
+    },
+    {
+     "implementedBy": "Mixology",
+     "integerId": 164,
+     "masteryCount": 7,
+     "name": "Mixology",
+     "parameterFields": [
+      "_Effect",
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Spell"
+     ],
+     "type": "ActiveGeneralSkill",
+     "webEffect": "rally"
+    },
+    {
+     "implementedBy": "Whirlwind",
+     "integerId": 265,
+     "masteryCount": 6,
+     "name": "Whirlwind",
+     "parameterFields": [
+      "__1__state",
+      "__2__current",
+      "__l__initialThreadId"
+     ],
+     "source": "Powers.json",
+     "tags": [
+      "Movement",
+      "Duration",
+      "AoE",
+      "Melee",
+      "Offensive",
+      "Attack"
+     ],
+     "type": "ActiveWarriorSkill",
+     "webEffect": "nova"
+    }
+   ],
+   "passive": [
+    {
+     "implementedBy": "Overkill",
+     "integerId": 15,
+     "name": "Overkill",
+     "parameterFields": [
+      "_OverkillChance",
+      "_IsChaining"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveWarriorSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "TreasureHunter",
+     "integerId": 18,
+     "name": "TreasureHunter",
+     "parameterFields": [
+      "_MagicFindIncrease",
+      "_ItemQuantityIncrease"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveWarriorSkill",
+     "webEffect": "fortune"
+    },
+    {
+     "implementedBy": "AxeSpecialization",
+     "integerId": 2,
+     "name": "AxeSpecialization",
+     "parameterFields": [
+      "_DeadlyChance"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveWarriorSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "SwordSpecialization",
+     "integerId": 6,
+     "name": "SwordSpecialization",
+     "parameterFields": [
+      "_ExtraSwingChance",
+      "_MaxAdditionalSwings"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveWarriorSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "MaceSpecialization",
+     "integerId": 4,
+     "name": "MaceSpecialization",
+     "parameterFields": [
+      "_ThrowMaceChance",
+      "_ThrowRadius"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveWarriorSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "SpearSpecialization",
+     "integerId": 5,
+     "name": "SpearSpecialization",
+     "parameterFields": [
+      "_ArmorPiercing"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveWarriorSkill",
+     "webEffect": "warding"
+    },
+    {
+     "implementedBy": null,
+     "integerId": 3,
+     "name": "DaggerSpecialization",
+     "parameterFields": [],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveWarriorSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "CheatDeath",
+     "integerId": 13,
+     "name": "CheatDeath",
+     "parameterFields": [
+      "_CooldownTime",
+      "_FatalDamageNewLifePercent",
+      "_VitalityBonusPercent"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveWarriorSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "BossHunter",
+     "integerId": 14,
+     "name": "BossHunter",
+     "parameterFields": [
+      "_SpawnIncrease"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveWarriorSkill",
+     "webEffect": "might"
+    },
+    {
+     "implementedBy": "Meditation",
+     "integerId": 20,
+     "name": "Meditation",
+     "parameterFields": [
+      "_CooldownReduction",
+      "_CooldownResetChance"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveWarriorSkill",
+     "webEffect": "haste"
+    },
+    {
+     "implementedBy": "RepelMagic",
+     "integerId": 160,
+     "name": "RepelMagic",
+     "parameterFields": [
+      "_IncreasedMaximumResistances",
+      "_IncreasedMaximumPhysReduction"
+     ],
+     "source": "Powers.json",
+     "tags": [],
+     "type": "PassiveWarriorSkill",
+     "webEffect": "might"
+    }
+   ]
+  }
+ },
+ "denominator": {
+  "activeSkills": 51,
+  "classes": 4,
+  "masteries": 318,
+  "passiveSkills": 42,
+  "playerSkills": 93,
+  "webExecutedArchetypes": [
+   "chain",
+   "fortune",
+   "haste",
+   "leech",
+   "might",
+   "mobility",
+   "nova",
+   "projectile",
+   "rally",
+   "shield",
+   "strike",
+   "summon",
+   "warding"
+  ]
+ },
+ "masteries": {
+  "ArrowRain": [
+   {
+    "category": 1,
+    "integerId": 16,
+    "maxPoints": null,
+    "name": "MasteryArrowRainImprovedArrowRain"
+   },
+   {
+    "category": null,
+    "integerId": 18,
+    "maxPoints": 6,
+    "name": "MasteryArrowRainArrowCascade"
+   },
+   {
+    "category": 2,
+    "integerId": 20,
+    "maxPoints": 5,
+    "name": "MasteryArrowRainPrecisionArrows"
+   },
+   {
+    "category": 1,
+    "integerId": 243,
+    "maxPoints": 5,
+    "name": "MasteryArrowRainTorrent"
+   },
+   {
+    "category": null,
+    "integerId": 457,
+    "maxPoints": 5,
+    "name": "MasteryArrowRainPenetrate"
+   },
+   {
+    "category": 2,
+    "integerId": 459,
+    "maxPoints": 5,
+    "name": "MasteryArrowRainPureArrows"
+   }
+  ],
+  "AstralWalk": [
+   {
+    "category": 1,
+    "integerId": 303,
+    "maxPoints": 10,
+    "name": "MasteryAstralWalkImprovedAstralWalk"
+   },
+   {
+    "category": null,
+    "integerId": 323,
+    "maxPoints": 6,
+    "name": "MasteryAstralWalkAutoWalk"
+   },
+   {
+    "category": 2,
+    "integerId": 347,
+    "maxPoints": 5,
+    "name": "MasteryAstralWalkFlight"
+   },
+   {
+    "category": 1,
+    "integerId": 377,
+    "maxPoints": 1,
+    "name": "MasteryAstralWalkDecoy"
+   },
+   {
+    "category": null,
+    "integerId": 601,
+    "maxPoints": 5,
+    "name": "MasteryAstralWalkReducedManaCost"
+   },
+   {
+    "category": 2,
+    "integerId": 603,
+    "maxPoints": 5,
+    "name": "MasteryAstralWalkImmortal"
+   }
+  ],
+  "Backflip": [
+   {
+    "category": null,
+    "integerId": 149,
+    "maxPoints": 6,
+    "name": "MasteryBackflipSafetyFlip"
+   },
+   {
+    "category": 1,
+    "integerId": 151,
+    "maxPoints": 10,
+    "name": "MasteryBackflipHaste"
+   },
+   {
+    "category": 1,
+    "integerId": 153,
+    "maxPoints": 1,
+    "name": "MasteryBackflipFrontflip"
+   },
+   {
+    "category": 2,
+    "integerId": 157,
+    "maxPoints": 5,
+    "name": "MasteryBackflipAcrobatics"
+   },
+   {
+    "category": 1,
+    "integerId": 239,
+    "maxPoints": 5,
+    "name": "MasteryBackflipMirror"
+   },
+   {
+    "category": null,
+    "integerId": 453,
+    "maxPoints": 5,
+    "name": "MasteryBackflipDodge"
+   },
+   {
+    "category": 2,
+    "integerId": 455,
+    "maxPoints": 5,
+    "name": "MasteryBackflipPowerShot"
+   }
+  ],
+  "BeastWithin": [
+   {
+    "category": 1,
+    "integerId": 199,
+    "maxPoints": 1,
+    "name": "MasteryBeastWithinHemoglobin"
+   },
+   {
+    "category": 1,
+    "integerId": 207,
+    "maxPoints": null,
+    "name": "MasteryBeastWithinBearsStrength"
+   },
+   {
+    "category": 2,
+    "integerId": 215,
+    "maxPoints": 5,
+    "name": "MasteryBeastWithinVoracity"
+   },
+   {
+    "category": null,
+    "integerId": 247,
+    "maxPoints": 6,
+    "name": "MasteryBeastWithinDuration"
+   },
+   {
+    "category": null,
+    "integerId": 501,
+    "maxPoints": 5,
+    "name": "MasteryBeastWithinSnakesDexterity"
+   },
+   {
+    "category": 2,
+    "integerId": 503,
+    "maxPoints": 5,
+    "name": "MasteryBeastWithinTotalLeech"
+   }
+  ],
+  "Blizzard": [
+   {
+    "category": 1,
+    "integerId": 22,
+    "maxPoints": 20,
+    "name": "MasteryBlizzardCrystalShards"
+   },
+   {
+    "category": null,
+    "integerId": 24,
+    "maxPoints": 6,
+    "name": "MasteryBlizzardIcestorm"
+   },
+   {
+    "category": 2,
+    "integerId": 26,
+    "maxPoints": 5,
+    "name": "MasteryBlizzardGravity"
+   },
+   {
+    "category": 1,
+    "integerId": 261,
+    "maxPoints": 5,
+    "name": "MasteryBlizzardChillingGround"
+   },
+   {
+    "category": null,
+    "integerId": 523,
+    "maxPoints": 5,
+    "name": "MasteryBlizzardRapidStorm"
+   },
+   {
+    "category": 2,
+    "integerId": 525,
+    "maxPoints": 5,
+    "name": "MasteryBlizzardHurricane"
+   }
+  ],
+  "BoneLink": [
+   {
+    "category": 1,
+    "integerId": 301,
+    "maxPoints": 10,
+    "name": "MasteryBoneLinkImprovedLink"
+   },
+   {
+    "category": null,
+    "integerId": 325,
+    "maxPoints": 6,
+    "name": "MasteryBoneLinkDeepLink"
+   },
+   {
+    "category": 2,
+    "integerId": 345,
+    "maxPoints": 5,
+    "name": "MasteryBoneLinkReflectiveBones"
+   },
+   {
+    "category": 1,
+    "integerId": 595,
+    "maxPoints": 5,
+    "name": "MasteryBoneLinkMoreLinkedTargets"
+   },
+   {
+    "category": null,
+    "integerId": 597,
+    "maxPoints": 5,
+    "name": "MasteryBoneLinkGainLifePercentOnKill"
+   },
+   {
+    "category": 2,
+    "integerId": 599,
+    "maxPoints": 5,
+    "name": "MasteryBoneLinkMoreDamageDealt"
+   }
+  ],
+  "ChainLightning": [
+   {
+    "category": 1,
+    "integerId": 10,
+    "maxPoints": null,
+    "name": "MasteryChainLightningImprovedChainLightning"
+   },
+   {
+    "category": null,
+    "integerId": 12,
+    "maxPoints": 6,
+    "name": "MasteryChainLightningWeapon"
+   },
+   {
+    "category": 1,
+    "integerId": 14,
+    "maxPoints": 5,
+    "name": "MasteryChainLightningChains"
+   },
+   {
+    "category": 2,
+    "integerId": 255,
+    "maxPoints": 5,
+    "name": "MasteryChainLightningManaChain"
+   },
+   {
+    "category": null,
+    "integerId": 527,
+    "maxPoints": 5,
+    "name": "MasteryChainLightningDamagePerJump"
+   },
+   {
+    "category": 2,
+    "integerId": 529,
+    "maxPoints": 5,
+    "name": "MasteryChainLightningThunderstrike"
+   }
+  ],
+  "Decay": [
+   {
+    "category": 1,
+    "integerId": 297,
+    "maxPoints": 10,
+    "name": "MasteryDecayImprovedDecay"
+   },
+   {
+    "category": null,
+    "integerId": 319,
+    "maxPoints": 6,
+    "name": "MasteryDecayAutocast"
+   },
+   {
+    "category": 1,
+    "integerId": 341,
+    "maxPoints": 5,
+    "name": "MasteryDecayRot"
+   },
+   {
+    "category": 2,
+    "integerId": 371,
+    "maxPoints": 5,
+    "name": "MasteryDecayDuration"
+   },
+   {
+    "category": 2,
+    "integerId": 589,
+    "maxPoints": 5,
+    "name": "MasteryDecayMorePoisonDamageTaken"
+   },
+   {
+    "category": null,
+    "integerId": 591,
+    "maxPoints": 5,
+    "name": "MasteryDecayMinionRegen"
+   }
+  ],
+  "DemonicPresence": [
+   {
+    "category": 1,
+    "integerId": 295,
+    "maxPoints": 10,
+    "name": "MasteryDemonicPresenceImprovedDemonicPresence"
+   },
+   {
+    "category": null,
+    "integerId": 317,
+    "maxPoints": 6,
+    "name": "MasteryDemonicPresenceAura"
+   },
+   {
+    "category": 2,
+    "integerId": 339,
+    "maxPoints": 5,
+    "name": "MasteryDemonicPresenceCower"
+   },
+   {
+    "category": 1,
+    "integerId": 369,
+    "maxPoints": 5,
+    "name": "MasteryDemonicPresenceRegeneration"
+   },
+   {
+    "category": null,
+    "integerId": 585,
+    "maxPoints": 5,
+    "name": "MasteryDemonicPresenceMoreDefenses"
+   },
+   {
+    "category": 2,
+    "integerId": 587,
+    "maxPoints": 5,
+    "name": "MasteryDemonicPresencePotionEffects"
+   }
+  ],
+  "DrainLife": [
+   {
+    "category": 1,
+    "integerId": 293,
+    "maxPoints": 10,
+    "name": "MasteryDrainLifeImprovedDrainLife"
+   },
+   {
+    "category": null,
+    "integerId": 315,
+    "maxPoints": 6,
+    "name": "MasteryDrainLifeAutocast"
+   },
+   {
+    "category": 2,
+    "integerId": 337,
+    "maxPoints": 5,
+    "name": "MasteryDrainLifeEndlessDrain"
+   },
+   {
+    "category": 2,
+    "integerId": 365,
+    "maxPoints": 5,
+    "name": "MasteryDrainLifeSoulDrain"
+   },
+   {
+    "category": 1,
+    "integerId": 367,
+    "maxPoints": 5,
+    "name": "MasteryDrainLifeSoulTransfer"
+   },
+   {
+    "category": null,
+    "integerId": 583,
+    "maxPoints": 5,
+    "name": "MasteryDrainLifeRange"
+   }
+  ],
+  "ElementalSeal": [
+   {
+    "category": 1,
+    "integerId": 28,
+    "maxPoints": null,
+    "name": "MasteryElementalSealImprovedElementalSeal"
+   },
+   {
+    "category": 2,
+    "integerId": 30,
+    "maxPoints": 5,
+    "name": "MasteryElementalSealFireTrap"
+   },
+   {
+    "category": null,
+    "integerId": 32,
+    "maxPoints": 6,
+    "name": "MasteryElementalSealAura"
+   },
+   {
+    "category": null,
+    "integerId": 541,
+    "maxPoints": 5,
+    "name": "MasteryElementalSealRadius"
+   },
+   {
+    "category": 1,
+    "integerId": 543,
+    "maxPoints": 5,
+    "name": "MasteryElementalSealMoreResistancesInside"
+   },
+   {
+    "category": 2,
+    "integerId": 545,
+    "maxPoints": 5,
+    "name": "MasteryElementalSealMorePlayerDamage"
+   }
+  ],
+  "Fade": [
+   {
+    "category": 1,
+    "integerId": 155,
+    "maxPoints": null,
+    "name": "MasteryFadeBlur"
+   },
+   {
+    "category": null,
+    "integerId": 159,
+    "maxPoints": 6,
+    "name": "MasteryFadeDarkness"
+   },
+   {
+    "category": 2,
+    "integerId": 161,
+    "maxPoints": 5,
+    "name": "MasteryFadeQuickReflexes"
+   },
+   {
+    "category": 1,
+    "integerId": 241,
+    "maxPoints": 5,
+    "name": "MasteryFadeSpeed"
+   },
+   {
+    "category": null,
+    "integerId": 461,
+    "maxPoints": 5,
+    "name": "MasteryFadeRegenerate"
+   },
+   {
+    "category": 2,
+    "integerId": 463,
+    "maxPoints": 5,
+    "name": "MasteryFadeShadowAssassin"
+   }
+  ],
+  "Frenzy": [
+   {
+    "category": 1,
+    "integerId": 102,
+    "maxPoints": null,
+    "name": "MasteryFrenzyFury"
+   },
+   {
+    "category": 2,
+    "integerId": 134,
+    "maxPoints": 10,
+    "name": "MasteryFrenzyDualMastery"
+   },
+   {
+    "category": null,
+    "integerId": 136,
+    "maxPoints": 6,
+    "name": "MasteryFrenzyEndlessFrenzy"
+   },
+   {
+    "category": 1,
+    "integerId": 429,
+    "maxPoints": 5,
+    "name": "MasteryFrenzyMaxAttackSpeed"
+   },
+   {
+    "category": null,
+    "integerId": 431,
+    "maxPoints": 5,
+    "name": "MasteryFrenzyEstablishedWeakness"
+   },
+   {
+    "category": 2,
+    "integerId": 433,
+    "maxPoints": 5,
+    "name": "MasteryFrenzyDualStriking"
+   }
+  ],
+  "FrozenArrow": [
+   {
+    "category": 2,
+    "integerId": 201,
+    "maxPoints": 5,
+    "name": "MasteryFrozenArrowRapidFreeze"
+   },
+   {
+    "category": 1,
+    "integerId": 209,
+    "maxPoints": 20,
+    "name": "MasteryFrozenArrowCrystallize"
+   },
+   {
+    "category": null,
+    "integerId": 217,
+    "maxPoints": 6,
+    "name": "MasteryFrozenArrowAutoFreeze"
+   },
+   {
+    "category": 1,
+    "integerId": 245,
+    "maxPoints": 5,
+    "name": "MasteryFrozenArrowFrozenWave"
+   },
+   {
+    "category": null,
+    "integerId": 505,
+    "maxPoints": 5,
+    "name": "MasteryFrozenArrowFrozenShots"
+   },
+   {
+    "category": 2,
+    "integerId": 507,
+    "maxPoints": 5,
+    "name": "MasteryFrozenArrowPiercingIce"
+   }
+  ],
+  "Hunger": [
+   {
+    "category": 1,
+    "integerId": 98,
+    "maxPoints": 10,
+    "name": "MasteryHungerInsatiableHunger"
+   },
+   {
+    "category": 2,
+    "integerId": 100,
+    "maxPoints": 5,
+    "name": "MasteryHungerHeartseeker"
+   },
+   {
+    "category": null,
+    "integerId": 104,
+    "maxPoints": 6,
+    "name": "MasteryHungerAwakenedHunger"
+   },
+   {
+    "category": null,
+    "integerId": 423,
+    "maxPoints": 5,
+    "name": "MasteryHungerRestoreLifeOnAwaken"
+   },
+   {
+    "category": 1,
+    "integerId": 425,
+    "maxPoints": 10,
+    "name": "MasteryHungerCellRecovery"
+   },
+   {
+    "category": 2,
+    "integerId": 427,
+    "maxPoints": 5,
+    "name": "MasteryHungerFinishingBlow"
+   }
+  ],
+  "IceBlast": [
+   {
+    "category": 1,
+    "integerId": 34,
+    "maxPoints": null,
+    "name": "MasteryIceBlastImprovedIceBlast"
+   },
+   {
+    "category": null,
+    "integerId": 36,
+    "maxPoints": 6,
+    "name": "MasteryIceBlastCounterBlast"
+   },
+   {
+    "category": 2,
+    "integerId": 38,
+    "maxPoints": 5,
+    "name": "MasteryIceBlastPiercingIce"
+   },
+   {
+    "category": null,
+    "integerId": 513,
+    "maxPoints": 5,
+    "name": "MasteryIceBlastRapidRetaliation"
+   },
+   {
+    "category": 1,
+    "integerId": 515,
+    "maxPoints": 5,
+    "name": "MasteryIceBlastManaOnHit"
+   },
+   {
+    "category": 2,
+    "integerId": 517,
+    "maxPoints": 5,
+    "name": "MasteryIceBlastCriticalDamage"
+   }
+  ],
+  "IceNova": [
+   {
+    "category": 1,
+    "integerId": 40,
+    "maxPoints": null,
+    "name": "MasteryIceNovaImprovedIceNova"
+   },
+   {
+    "category": null,
+    "integerId": 42,
+    "maxPoints": 6,
+    "name": "MasteryIceNovaDeepFreeze"
+   },
+   {
+    "category": 2,
+    "integerId": 44,
+    "maxPoints": 5,
+    "name": "MasteryIceNovaConcentratedIce"
+   },
+   {
+    "category": 1,
+    "integerId": 259,
+    "maxPoints": 5,
+    "name": "MasteryIceNovaFreeze"
+   },
+   {
+    "category": null,
+    "integerId": 509,
+    "maxPoints": 5,
+    "name": "MasteryIceNovaThaw"
+   },
+   {
+    "category": 2,
+    "integerId": 511,
+    "maxPoints": 5,
+    "name": "MasteryIceNovaIceBomb"
+   }
+  ],
+  "ImpalingTrap": [
+   {
+    "category": 2,
+    "integerId": 189,
+    "maxPoints": 5,
+    "name": "MasteryImpalingTrapPoisonedEdges"
+   },
+   {
+    "category": 1,
+    "integerId": 191,
+    "maxPoints": 10,
+    "name": "MasteryImpalingTrapSteelSpikes"
+   },
+   {
+    "category": null,
+    "integerId": 193,
+    "maxPoints": 6,
+    "name": "MasteryImpalingTrapDeviousTrap"
+   },
+   {
+    "category": null,
+    "integerId": 481,
+    "maxPoints": 5,
+    "name": "MasteryImpalingTrapFreeze"
+   },
+   {
+    "category": 1,
+    "integerId": 483,
+    "maxPoints": 5,
+    "name": "MasteryImpalingTrapHealingTrap"
+   },
+   {
+    "category": 2,
+    "integerId": 485,
+    "maxPoints": 5,
+    "name": "MasteryImpalingTrapFireBomb"
+   }
+  ],
+  "IncrementalFortress": [
+   {
+    "category": 1,
+    "integerId": 88,
+    "maxPoints": 25,
+    "name": "MasteryIncrementalFortressImprovedIncrementalFortress"
+   },
+   {
+    "category": 1,
+    "integerId": 120,
+    "maxPoints": 5,
+    "name": "MasteryIncrementalFortressElementalFortress"
+   },
+   {
+    "category": 2,
+    "integerId": 122,
+    "maxPoints": 5,
+    "name": "MasteryIncrementalFortressHeavyFortress"
+   },
+   {
+    "category": null,
+    "integerId": 223,
+    "maxPoints": 6,
+    "name": "MasteryIncrementalFortressDuration"
+   },
+   {
+    "category": 2,
+    "integerId": 405,
+    "maxPoints": 5,
+    "name": "MasteryIncrementalFortressCounterAttack"
+   },
+   {
+    "category": null,
+    "integerId": 407,
+    "maxPoints": 5,
+    "name": "MasteryIncrementalFortressBlock"
+   }
+  ],
+  "InfernalBlast": [
+   {
+    "category": 1,
+    "integerId": 46,
+    "maxPoints": null,
+    "name": "MasteryInfernalBlastImprovedInfernalBlast"
+   },
+   {
+    "category": null,
+    "integerId": 48,
+    "maxPoints": 6,
+    "name": "MasteryInfernalBlastConflagration"
+   },
+   {
+    "category": 2,
+    "integerId": 50,
+    "maxPoints": 3,
+    "name": "MasteryInfernalBlastMulticast"
+   },
+   {
+    "category": 1,
+    "integerId": 253,
+    "maxPoints": 5,
+    "name": "MasteryInfernalBlastVelocity"
+   },
+   {
+    "category": null,
+    "integerId": 519,
+    "maxPoints": 5,
+    "name": "MasteryInfernalBlastMultipleExplosions"
+   },
+   {
+    "category": 2,
+    "integerId": 521,
+    "maxPoints": 5,
+    "name": "MasteryInfernalBlastLivingBomb"
+   }
+  ],
+  "Intimidate": [
+   {
+    "category": 1,
+    "integerId": 106,
+    "maxPoints": 10,
+    "name": "MasteryIntimidateSubdue"
+   },
+   {
+    "category": null,
+    "integerId": 108,
+    "maxPoints": 6,
+    "name": "MasteryIntimidateIntimidatingPresence"
+   },
+   {
+    "category": 2,
+    "integerId": 110,
+    "maxPoints": 5,
+    "name": "MasteryIntimidateShieldUp"
+   },
+   {
+    "category": null,
+    "integerId": 435,
+    "maxPoints": 5,
+    "name": "MasteryIntimidateMock"
+   },
+   {
+    "category": 1,
+    "integerId": 437,
+    "maxPoints": 5,
+    "name": "MasteryIntimidateWound"
+   },
+   {
+    "category": 2,
+    "integerId": 439,
+    "maxPoints": 5,
+    "name": "MasteryIntimidateShieldWall"
+   }
+  ],
+  "ManaArrows": [
+   {
+    "category": null,
+    "integerId": 195,
+    "maxPoints": 6,
+    "name": "MasteryManaArrowsDrainingArrows"
+   },
+   {
+    "category": 1,
+    "integerId": 203,
+    "maxPoints": null,
+    "name": "MasteryManaArrowsImprovedManaArrows"
+   },
+   {
+    "category": 2,
+    "integerId": 211,
+    "maxPoints": 5,
+    "name": "MasteryManaArrowsQuickRecharge"
+   },
+   {
+    "category": 1,
+    "integerId": 249,
+    "maxPoints": 10,
+    "name": "MasteryManaArrowsCharges"
+   },
+   {
+    "category": 2,
+    "integerId": 493,
+    "maxPoints": 5,
+    "name": "MasteryManaArrowsManaOnKill"
+   },
+   {
+    "category": null,
+    "integerId": 495,
+    "maxPoints": 5,
+    "name": "MasteryManaArrowsMaxMana"
+   }
+  ],
+  "ManaShield": [
+   {
+    "category": 1,
+    "integerId": 52,
+    "maxPoints": null,
+    "name": "MasteryManaShieldImprovedManaShield"
+   },
+   {
+    "category": 2,
+    "integerId": 54,
+    "maxPoints": 5,
+    "name": "MasteryManaShieldHeavyShield"
+   },
+   {
+    "category": null,
+    "integerId": 56,
+    "maxPoints": 6,
+    "name": "MasteryManaShieldRegeneration"
+   },
+   {
+    "category": null,
+    "integerId": 535,
+    "maxPoints": 5,
+    "name": "MasteryManaShieldReducedCritDamage"
+   },
+   {
+    "category": 1,
+    "integerId": 537,
+    "maxPoints": 5,
+    "name": "MasteryManaShieldManaPotionEffect"
+   },
+   {
+    "category": 2,
+    "integerId": 539,
+    "maxPoints": 5,
+    "name": "MasteryManaShieldMaxElementalResists"
+   }
+  ],
+  "MarkOfTheChosen": [
+   {
+    "category": 2,
+    "integerId": 183,
+    "maxPoints": 5,
+    "name": "MasteryMarkOfTheChosenPenetrate"
+   },
+   {
+    "category": 1,
+    "integerId": 185,
+    "maxPoints": null,
+    "name": "MasteryMarkOfTheChosenMarkedForDeath"
+   },
+   {
+    "category": null,
+    "integerId": 187,
+    "maxPoints": 6,
+    "name": "MasteryMarkOfTheChosenAutoMark"
+   },
+   {
+    "category": null,
+    "integerId": 487,
+    "maxPoints": 5,
+    "name": "MasteryMarkOfTheChosenCull"
+   },
+   {
+    "category": 1,
+    "integerId": 489,
+    "maxPoints": 5,
+    "name": "MasteryMarkOfTheChosenLessResistances"
+   },
+   {
+    "category": 2,
+    "integerId": 491,
+    "maxPoints": 5,
+    "name": "MasteryMarkOfTheChosenDoom"
+   }
+  ],
+  "Might": [
+   {
+    "category": 1,
+    "integerId": 82,
+    "maxPoints": null,
+    "name": "MasteryMightImprovedMight"
+   },
+   {
+    "category": 2,
+    "integerId": 84,
+    "maxPoints": 5,
+    "name": "MasteryMightFuriousRage"
+   },
+   {
+    "category": 1,
+    "integerId": 86,
+    "maxPoints": 5,
+    "name": "MasteryMightPiercingStrength"
+   },
+   {
+    "category": null,
+    "integerId": 221,
+    "maxPoints": 6,
+    "name": "MasteryMightDuration"
+   },
+   {
+    "category": 2,
+    "integerId": 399,
+    "maxPoints": 5,
+    "name": "MasteryMightObsession"
+   },
+   {
+    "category": null,
+    "integerId": 401,
+    "maxPoints": 5,
+    "name": "MasteryMightDisarm"
+   },
+   {
+    "category": 1,
+    "integerId": 403,
+    "maxPoints": 5,
+    "name": "MasteryMightSturdiness"
+   }
+  ],
+  "Mixology": [
+   {
+    "category": 1,
+    "integerId": 269,
+    "maxPoints": null,
+    "name": "MasteryMixologyDuration"
+   },
+   {
+    "category": null,
+    "integerId": 271,
+    "maxPoints": 10,
+    "name": "MasteryMixologyAutoPotion"
+   },
+   {
+    "category": 2,
+    "integerId": 273,
+    "maxPoints": 5,
+    "name": "MasteryMixologyPowerfulConcotion"
+   },
+   {
+    "category": 2,
+    "integerId": 275,
+    "maxPoints": 5,
+    "name": "MasteryMixologyThirst"
+   },
+   {
+    "category": null,
+    "integerId": 277,
+    "maxPoints": 1,
+    "name": "MasteryMixologySmartPotions"
+   },
+   {
+    "category": 1,
+    "integerId": 395,
+    "maxPoints": 5,
+    "name": "MasteryMixologyManaDuringLife"
+   },
+   {
+    "category": 1,
+    "integerId": 397,
+    "maxPoints": 5,
+    "name": "MasteryMixologyLifeDuringMana"
+   }
+  ],
+  "Multishot": [
+   {
+    "category": 1,
+    "integerId": 171,
+    "maxPoints": null,
+    "name": "MasteryMultishotImprovedMultishot"
+   },
+   {
+    "category": 2,
+    "integerId": 173,
+    "maxPoints": 5,
+    "name": "MasteryMultishotBroadside"
+   },
+   {
+    "category": null,
+    "integerId": 175,
+    "maxPoints": 6,
+    "name": "MasteryMultishotMultipleReload"
+   },
+   {
+    "category": 2,
+    "integerId": 471,
+    "maxPoints": 5,
+    "name": "MasteryMultishotFork"
+   },
+   {
+    "category": null,
+    "integerId": 473,
+    "maxPoints": 5,
+    "name": "MasteryMultishotExplosiveArrows"
+   },
+   {
+    "category": 1,
+    "integerId": 475,
+    "maxPoints": 5,
+    "name": "MasteryMultishotKnockback"
+   }
+  ],
+  "PoisonCloud": [
+   {
+    "category": 1,
+    "integerId": 58,
+    "maxPoints": 10,
+    "name": "MasteryPoisonCloudSlime"
+   },
+   {
+    "category": null,
+    "integerId": 60,
+    "maxPoints": 5,
+    "name": "MasteryPoisonCloudDisease"
+   },
+   {
+    "category": 2,
+    "integerId": 62,
+    "maxPoints": 5,
+    "name": "MasteryPoisonCloudDecay"
+   },
+   {
+    "category": null,
+    "integerId": 549,
+    "maxPoints": 6,
+    "name": "MasteryPoisonCloudAutoCast"
+   },
+   {
+    "category": 2,
+    "integerId": 551,
+    "maxPoints": 5,
+    "name": "MasteryPoisonCloudSlimelings"
+   },
+   {
+    "category": 1,
+    "integerId": 553,
+    "maxPoints": 5,
+    "name": "MasteryPoisonCloudHeal"
+   }
+  ],
+  "Pounce": [
+   {
+    "category": 2,
+    "integerId": 112,
+    "maxPoints": 5,
+    "name": "MasteryPounceKnockback"
+   },
+   {
+    "category": null,
+    "integerId": 138,
+    "maxPoints": 6,
+    "name": "MasteryPounceProwess"
+   },
+   {
+    "category": 1,
+    "integerId": 140,
+    "maxPoints": null,
+    "name": "MasteryPounceImprovedPounce"
+   },
+   {
+    "category": null,
+    "integerId": 229,
+    "maxPoints": 5,
+    "name": "MasteryPounceLongjump"
+   },
+   {
+    "category": 1,
+    "integerId": 233,
+    "maxPoints": 10,
+    "name": "MasteryPounceWings"
+   },
+   {
+    "category": 2,
+    "integerId": 441,
+    "maxPoints": 5,
+    "name": "MasteryPounceRend"
+   }
+  ],
+  "PowerShot": [
+   {
+    "category": 2,
+    "integerId": 143,
+    "maxPoints": 5,
+    "name": "MasteryPowerShotPiercingArrow"
+   },
+   {
+    "category": 1,
+    "integerId": 145,
+    "maxPoints": null,
+    "name": "MasteryPowerShotImprovedPowerShot"
+   },
+   {
+    "category": null,
+    "integerId": 147,
+    "maxPoints": 6,
+    "name": "MasteryPowerShotPowerAttacks"
+   },
+   {
+    "category": 1,
+    "integerId": 237,
+    "maxPoints": 10,
+    "name": "MasteryPowerShotQuickshot"
+   },
+   {
+    "category": 2,
+    "integerId": 449,
+    "maxPoints": 5,
+    "name": "MasteryPowerShotHomingShot"
+   },
+   {
+    "category": null,
+    "integerId": 451,
+    "maxPoints": 5,
+    "name": "MasteryPowerShotLessManaCost"
+   }
+  ],
+  "RapidFire": [
+   {
+    "category": null,
+    "integerId": 163,
+    "maxPoints": 6,
+    "name": "MasteryRapidFireEnduringSwiftness"
+   },
+   {
+    "category": 2,
+    "integerId": 165,
+    "maxPoints": 5,
+    "name": "MasteryRapidFireBattery"
+   },
+   {
+    "category": 1,
+    "integerId": 167,
+    "maxPoints": null,
+    "name": "MasteryRapidFireImprovedRapidFire"
+   },
+   {
+    "category": null,
+    "integerId": 465,
+    "maxPoints": 5,
+    "name": "MasteryRapidFireAttackRange"
+   },
+   {
+    "category": 1,
+    "integerId": 467,
+    "maxPoints": 5,
+    "name": "MasteryRapidFireMaxAttackSpeed"
+   },
+   {
+    "category": 2,
+    "integerId": 469,
+    "maxPoints": 5,
+    "name": "MasteryRapidFireReducedStandStill"
+   }
+  ],
+  "Retaliation": [
+   {
+    "category": 1,
+    "integerId": 94,
+    "maxPoints": 10,
+    "name": "MasteryRetaliationImprovedRetaliation"
+   },
+   {
+    "category": 2,
+    "integerId": 128,
+    "maxPoints": 5,
+    "name": "MasteryRetaliationReflexes"
+   },
+   {
+    "category": null,
+    "integerId": 130,
+    "maxPoints": 6,
+    "name": "MasteryRetaliationEndurance"
+   },
+   {
+    "category": 1,
+    "integerId": 235,
+    "maxPoints": 5,
+    "name": "MasteryRetaliationRange"
+   },
+   {
+    "category": null,
+    "integerId": 419,
+    "maxPoints": 5,
+    "name": "MasteryRetaliationThorns"
+   },
+   {
+    "category": 2,
+    "integerId": 421,
+    "maxPoints": 5,
+    "name": "MasteryRetaliationThrownAxe"
+   }
+  ],
+  "Sacrifice": [
+   {
+    "category": 1,
+    "integerId": 299,
+    "maxPoints": 10,
+    "name": "MasterySacrificeImprovedSacrifice"
+   },
+   {
+    "category": null,
+    "integerId": 321,
+    "maxPoints": 6,
+    "name": "MasterySacrificeAutoSacrifice"
+   },
+   {
+    "category": 2,
+    "integerId": 343,
+    "maxPoints": 5,
+    "name": "MasterySacrificeInfusion"
+   },
+   {
+    "category": 1,
+    "integerId": 373,
+    "maxPoints": 5,
+    "name": "MasterySacrificeDuration"
+   },
+   {
+    "category": null,
+    "integerId": 375,
+    "maxPoints": 5,
+    "name": "MasterySacrificeCulling"
+   },
+   {
+    "category": 2,
+    "integerId": 593,
+    "maxPoints": 5,
+    "name": "MasterySacrificeDetonate"
+   }
+  ],
+  "Shadowbolt": [
+   {
+    "category": 1,
+    "integerId": 291,
+    "maxPoints": null,
+    "name": "MasteryShadowboltImprovedShadowbolt"
+   },
+   {
+    "category": null,
+    "integerId": 313,
+    "maxPoints": 6,
+    "name": "MasteryShadowboltAutoCast"
+   },
+   {
+    "category": 2,
+    "integerId": 335,
+    "maxPoints": 5,
+    "name": "MasteryShadowboltShadowPower"
+   },
+   {
+    "category": 1,
+    "integerId": 363,
+    "maxPoints": 5,
+    "name": "MasteryShadowboltExplosion"
+   },
+   {
+    "category": 1,
+    "integerId": 389,
+    "maxPoints": 5,
+    "name": "MasteryShadowboltSpeed"
+   },
+   {
+    "category": null,
+    "integerId": 579,
+    "maxPoints": 5,
+    "name": "MasteryShadowboltPenetration"
+   },
+   {
+    "category": 2,
+    "integerId": 581,
+    "maxPoints": 5,
+    "name": "MasteryShadowboltCooldown"
+   }
+  ],
+  "Shatter": [
+   {
+    "category": 1,
+    "integerId": 2,
+    "maxPoints": null,
+    "name": "MasteryShatterImprovedShatter"
+   },
+   {
+    "category": 1,
+    "integerId": 6,
+    "maxPoints": 5,
+    "name": "MasteryShatterSplittingPower"
+   },
+   {
+    "category": 1,
+    "integerId": 8,
+    "maxPoints": 5,
+    "name": "MasteryShatterOverpower"
+   },
+   {
+    "category": 2,
+    "integerId": 132,
+    "maxPoints": 5,
+    "name": "MasteryShatterPrecisionStrike"
+   },
+   {
+    "category": null,
+    "integerId": 225,
+    "maxPoints": 6,
+    "name": "MasteryShatterAutoShatter"
+   },
+   {
+    "category": 2,
+    "integerId": 391,
+    "maxPoints": 5,
+    "name": "MasteryShatterCrushingBlow"
+   },
+   {
+    "category": null,
+    "integerId": 393,
+    "maxPoints": 5,
+    "name": "MasteryShatterLightningStrike"
+   }
+  ],
+  "Slam": [
+   {
+    "category": 1,
+    "integerId": 114,
+    "maxPoints": null,
+    "name": "MasterySlamImprovedSlam"
+   },
+   {
+    "category": 2,
+    "integerId": 116,
+    "maxPoints": 5,
+    "name": "MasterySlamWideSlam"
+   },
+   {
+    "category": null,
+    "integerId": 142,
+    "maxPoints": 6,
+    "name": "MasterySlamEarthquake"
+   },
+   {
+    "category": 1,
+    "integerId": 231,
+    "maxPoints": 10,
+    "name": "MasterySlamQuickSlam"
+   },
+   {
+    "category": 1,
+    "integerId": 281,
+    "maxPoints": 2,
+    "name": "MasterySlamShockwave"
+   },
+   {
+    "category": 2,
+    "integerId": 443,
+    "maxPoints": 5,
+    "name": "MasterySlamVampiricSlam"
+   },
+   {
+    "category": null,
+    "integerId": 445,
+    "maxPoints": 5,
+    "name": "MasterySlamMana"
+   }
+  ],
+  "Sprint": [
+   {
+    "category": 2,
+    "integerId": 92,
+    "maxPoints": 5,
+    "name": "MasterySprintCharge"
+   },
+   {
+    "category": 1,
+    "integerId": 96,
+    "maxPoints": 15,
+    "name": "MasterySprintImprovedSprint"
+   },
+   {
+    "category": null,
+    "integerId": 118,
+    "maxPoints": 6,
+    "name": "MasterySprintMarathon"
+   },
+   {
+    "category": null,
+    "integerId": 413,
+    "maxPoints": 5,
+    "name": "MasterySprintAttackSpeed"
+   },
+   {
+    "category": 2,
+    "integerId": 415,
+    "maxPoints": 5,
+    "name": "MasterySprintChargeFirstHit"
+   },
+   {
+    "category": 1,
+    "integerId": 417,
+    "maxPoints": 5,
+    "name": "MasterySprintAcrobatics"
+   }
+  ],
+  "SummonDeath": [
+   {
+    "category": 1,
+    "integerId": 287,
+    "maxPoints": 10,
+    "name": "MasterySummonDeathImprovedDeath"
+   },
+   {
+    "category": null,
+    "integerId": 309,
+    "maxPoints": 6,
+    "name": "MasterySummonDeathAutoSummon"
+   },
+   {
+    "category": 2,
+    "integerId": 331,
+    "maxPoints": 5,
+    "name": "MasterySummonDeathAttackSpeed"
+   },
+   {
+    "category": 1,
+    "integerId": 355,
+    "maxPoints": 5,
+    "name": "MasterySummonDeathSweep"
+   },
+   {
+    "category": 1,
+    "integerId": 357,
+    "maxPoints": 1,
+    "name": "MasterySummonDeathDuo"
+   },
+   {
+    "category": null,
+    "integerId": 569,
+    "maxPoints": 5,
+    "name": "MasterySummonDeathChanceToBlock"
+   },
+   {
+    "category": 2,
+    "integerId": 571,
+    "maxPoints": 5,
+    "name": "MasterySummonDeathMoreInitialDamage"
+   }
+  ],
+  "SummonDemon": [
+   {
+    "category": 1,
+    "integerId": 285,
+    "maxPoints": 10,
+    "name": "MasterySummonDemonImprovedDemons"
+   },
+   {
+    "category": null,
+    "integerId": 307,
+    "maxPoints": 6,
+    "name": "MasterySummonDemonAutoSummon"
+   },
+   {
+    "category": 2,
+    "integerId": 329,
+    "maxPoints": 4,
+    "name": "MasterySummonDemonDemonicHorde"
+   },
+   {
+    "category": 1,
+    "integerId": 353,
+    "maxPoints": 5,
+    "name": "MasterySummonDemonSharpshooter"
+   },
+   {
+    "category": null,
+    "integerId": 565,
+    "maxPoints": 5,
+    "name": "MasterySummonDemonReducedRangedDamageTaken"
+   },
+   {
+    "category": 2,
+    "integerId": 567,
+    "maxPoints": 5,
+    "name": "MasterySummonDemonMoreDamageDealtAndTaken"
+   }
+  ],
+  "SummonSkeleton": [
+   {
+    "category": 1,
+    "integerId": 283,
+    "maxPoints": 10,
+    "name": "MasterySummonSkeletonImprovedSkeletons"
+   },
+   {
+    "category": null,
+    "integerId": 305,
+    "maxPoints": 6,
+    "name": "MasterySummonSkeletonAutoSummon"
+   },
+   {
+    "category": 2,
+    "integerId": 327,
+    "maxPoints": 4,
+    "name": "MasterySummonSkeletonSkeletalArmy"
+   },
+   {
+    "category": 1,
+    "integerId": 351,
+    "maxPoints": 5,
+    "name": "MasterySummonSkeletonDurableBones"
+   },
+   {
+    "category": null,
+    "integerId": 561,
+    "maxPoints": 5,
+    "name": "MasterySummonSkeletonMoreArmor"
+   },
+   {
+    "category": 2,
+    "integerId": 563,
+    "maxPoints": 5,
+    "name": "MasterySummonSkeletonDetonate"
+   }
+  ],
+  "SummonWolf": [
+   {
+    "category": null,
+    "integerId": 177,
+    "maxPoints": 10,
+    "name": "MasterySummonWolfSpiritWolf"
+   },
+   {
+    "category": 1,
+    "integerId": 179,
+    "maxPoints": null,
+    "name": "MasterySummonWolfSpeed"
+   },
+   {
+    "category": 2,
+    "integerId": 181,
+    "maxPoints": 5,
+    "name": "MasterySummonWolfEnrage"
+   },
+   {
+    "category": 1,
+    "integerId": 219,
+    "maxPoints": 1,
+    "name": "MasterySummonWolfAgility"
+   },
+   {
+    "category": 1,
+    "integerId": 267,
+    "maxPoints": 5,
+    "name": "MasterySummonWolfVigor"
+   },
+   {
+    "category": null,
+    "integerId": 477,
+    "maxPoints": 5,
+    "name": "MasterySummonWolfAoeAttack"
+   },
+   {
+    "category": 2,
+    "integerId": 479,
+    "maxPoints": 5,
+    "name": "MasterySummonWolfReducedCooldown"
+   }
+  ],
+  "Teleport": [
+   {
+    "category": 1,
+    "integerId": 64,
+    "maxPoints": 5,
+    "name": "MasteryTeleportImprovedTeleport"
+   },
+   {
+    "category": null,
+    "integerId": 66,
+    "maxPoints": 5,
+    "name": "MasteryTeleportElusiveness"
+   },
+   {
+    "category": 2,
+    "integerId": 68,
+    "maxPoints": 5,
+    "name": "MasteryTeleportRecitement"
+   },
+   {
+    "category": null,
+    "integerId": 555,
+    "maxPoints": 6,
+    "name": "MasteryTeleportSafetyTeleport"
+   },
+   {
+    "category": 1,
+    "integerId": 557,
+    "maxPoints": 5,
+    "name": "MasteryTeleportLightningSpeed"
+   },
+   {
+    "category": 2,
+    "integerId": 559,
+    "maxPoints": 5,
+    "name": "MasteryTeleportKnockback"
+   }
+  ],
+  "Thorns": [
+   {
+    "category": null,
+    "integerId": 197,
+    "maxPoints": 6,
+    "name": "MasteryThornsThickThorns"
+   },
+   {
+    "category": 1,
+    "integerId": 205,
+    "maxPoints": 10,
+    "name": "MasteryThornsRazorEdges"
+   },
+   {
+    "category": 2,
+    "integerId": 213,
+    "maxPoints": 5,
+    "name": "MasteryThornsDeepCuts"
+   },
+   {
+    "category": 1,
+    "integerId": 251,
+    "maxPoints": 5,
+    "name": "MasteryThornsThornArmor"
+   },
+   {
+    "category": 2,
+    "integerId": 497,
+    "maxPoints": 5,
+    "name": "MasteryThornsToxicSting"
+   },
+   {
+    "category": null,
+    "integerId": 499,
+    "maxPoints": 5,
+    "name": "MasteryThornsCritDamageReduction"
+   }
+  ],
+  "Thunderstrike": [
+   {
+    "category": 1,
+    "integerId": 70,
+    "maxPoints": null,
+    "name": "MasteryThunderstrikeImprovedThunderstrike"
+   },
+   {
+    "category": 1,
+    "integerId": 72,
+    "maxPoints": 5,
+    "name": "MasteryThunderstrikeShocking"
+   },
+   {
+    "category": null,
+    "integerId": 74,
+    "maxPoints": 6,
+    "name": "MasteryThunderstrikeWrathOfThor"
+   },
+   {
+    "category": 2,
+    "integerId": 257,
+    "maxPoints": 5,
+    "name": "MasteryThunderstrikeFocusedLightning"
+   },
+   {
+    "category": null,
+    "integerId": 531,
+    "maxPoints": 5,
+    "name": "MasteryThunderstrikeReCast"
+   },
+   {
+    "category": 2,
+    "integerId": 533,
+    "maxPoints": 5,
+    "name": "MasteryThunderstrikeChainLightningOnHit"
+   }
+  ],
+  "Tornado": [
+   {
+    "category": 1,
+    "integerId": 76,
+    "maxPoints": null,
+    "name": "MasteryTornadoImprovedTornado"
+   },
+   {
+    "category": null,
+    "integerId": 78,
+    "maxPoints": 1,
+    "name": "MasteryTornadoSeeker"
+   },
+   {
+    "category": 2,
+    "integerId": 80,
+    "maxPoints": 5,
+    "name": "MasteryTornadoAttraction"
+   },
+   {
+    "category": null,
+    "integerId": 263,
+    "maxPoints": 6,
+    "name": "MasteryTornadoAutoCast"
+   },
+   {
+    "category": 1,
+    "integerId": 265,
+    "maxPoints": 5,
+    "name": "MasteryTornadoTwister"
+   },
+   {
+    "category": 2,
+    "integerId": 547,
+    "maxPoints": 5,
+    "name": "MasteryTornadoHurricane"
+   }
+  ],
+  "UnholyFocus": [
+   {
+    "category": 1,
+    "integerId": 289,
+    "maxPoints": 10,
+    "name": "MasteryUnholyFocusUnholySpeed"
+   },
+   {
+    "category": null,
+    "integerId": 311,
+    "maxPoints": 6,
+    "name": "MasteryUnholyFocusAutocast"
+   },
+   {
+    "category": 2,
+    "integerId": 333,
+    "maxPoints": 5,
+    "name": "MasteryUnholyFocusProminence"
+   },
+   {
+    "category": 1,
+    "integerId": 359,
+    "maxPoints": 5,
+    "name": "MasteryUnholyFocusFocusedMind"
+   },
+   {
+    "category": null,
+    "integerId": 573,
+    "maxPoints": 5,
+    "name": "MasteryUnholyFocusChargeCooldown"
+   },
+   {
+    "category": 2,
+    "integerId": 575,
+    "maxPoints": 5,
+    "name": "MasteryUnholyFocusShadowboltDamage"
+   },
+   {
+    "category": 1,
+    "integerId": 577,
+    "maxPoints": 5,
+    "name": "MasteryUnholyFocusMaxAttackSpeed"
+   }
+  ],
+  "WarStomp": [
+   {
+    "category": 1,
+    "integerId": 90,
+    "maxPoints": null,
+    "name": "MasteryWarStompImprovedWarStomp"
+   },
+   {
+    "category": 2,
+    "integerId": 124,
+    "maxPoints": 5,
+    "name": "MasteryWarStompKnockOut"
+   },
+   {
+    "category": null,
+    "integerId": 126,
+    "maxPoints": 6,
+    "name": "MasteryWarStompGroundShaker"
+   },
+   {
+    "category": 1,
+    "integerId": 227,
+    "maxPoints": 10,
+    "name": "MasteryWarStompForceOfTheMinotaur"
+   },
+   {
+    "category": 2,
+    "integerId": 409,
+    "maxPoints": 5,
+    "name": "MasteryWarStompBlazingStomp"
+   },
+   {
+    "category": null,
+    "integerId": 411,
+    "maxPoints": 5,
+    "name": "MasteryWarStompGraspingVines"
+   }
+  ],
+  "Whirlwind": [
+   {
+    "category": 1,
+    "integerId": 379,
+    "maxPoints": 10,
+    "name": "MasteryWhirlwindImprovedWhirlwind"
+   },
+   {
+    "category": 2,
+    "integerId": 381,
+    "maxPoints": 5,
+    "name": "MasteryWhirlwindBloodWhirl"
+   },
+   {
+    "category": null,
+    "integerId": 383,
+    "maxPoints": 6,
+    "name": "MasteryWhirlwindAutoWhirl"
+   },
+   {
+    "category": 1,
+    "integerId": 385,
+    "maxPoints": 5,
+    "name": "MasteryWhirlwindJaggedBlades"
+   },
+   {
+    "category": null,
+    "integerId": 387,
+    "maxPoints": 5,
+    "name": "MasteryWhirlwindSmartWhirl"
+   },
+   {
+    "category": 2,
+    "integerId": 447,
+    "maxPoints": 5,
+    "name": "MasteryWhirlwindBloodWhirlpool"
+   }
+  ]
+ },
+ "schemaVersion": 1
+}
