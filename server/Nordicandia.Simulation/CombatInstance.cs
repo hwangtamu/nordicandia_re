@@ -6,7 +6,9 @@ public readonly record struct MonsterProfile(
     DamageBundle Damage = default, ResistanceBundle Resistances = default,
     // Data-driven behaviour (Monsters.json Ranged/Caster): ranged/caster packs stop at
     // AttackRange and back off inside PreferredDistance instead of closing to melee.
-    bool Ranged = false, double AttackRange = 0, double PreferredDistance = 0);
+    bool Ranged = false, double AttackRange = 0, double PreferredDistance = 0,
+    // Brains.json action tree name (Monsters.json BrainId); null uses the Standard brain.
+    string Brain = null);
 
 /// <summary>One monster inside an authoritative combat instance.</summary>
 public sealed class CombatMonster
@@ -31,6 +33,12 @@ public sealed class CombatMonster
     public bool Ranged { get; set; }
     public double AttackRange { get; set; }
     public double PreferredDistance { get; set; }
+    /// <summary>Brains.json action tree name.</summary>
+    public string Brain { get; set; }
+    /// <summary>Power selected by the brain for the current think window.</summary>
+    public string BrainAction { get; set; }
+    public double ActionTimer { get; set; }
+    public bool WasInCombat { get; set; }
     public double StunTimer { get; set; }
     /// <summary>Remaining poison duration; while &gt; 0 the target counts as poisoned.</summary>
     public double PoisonTimer { get; set; }
@@ -49,7 +57,8 @@ public readonly record struct LootDrop(int Slot, int Rarity, int Level, bool Bos
 
 /// <summary>Read-only projection of an <see cref="CombatInstance"/> handed to callers/tests.</summary>
 public readonly record struct MonsterSnapshot(
-    int Index, string Name, int Level, bool IsBoss, double X, double Z, double Hp, double MaxHp, bool Alive, double StunTimer);
+    int Index, string Name, int Level, bool IsBoss, double X, double Z, double Hp, double MaxHp, bool Alive, double StunTimer,
+    string Action = "");
 
 public readonly record struct CombatSnapshot(
     long Version,
@@ -418,6 +427,7 @@ public sealed class CombatInstance
             Ranged = profile.Ranged,
             AttackRange = profile.AttackRange > 0 ? profile.AttackRange : MonsterAttackRange,
             PreferredDistance = profile.PreferredDistance > 0 ? profile.PreferredDistance : MonsterAttackRange * 0.5,
+            Brain = profile.Brain ?? "Standard",
             Alive = alive,
             AttackCooldown = rng.NextDouble() * 1.6,
             WanderTimer = rng.NextDouble() * 2,
@@ -557,11 +567,104 @@ public sealed class CombatInstance
                 }
                 continue;
             }
-            ChaseAndAttack(monster, dt);
+            UpdateBrain(monster, dt);
         }
     }
 
     private void UpdateBoss(double dt) => ChaseAndAttack(boss, dt);
+
+    /// <summary>Recovered WeightedActionBrain: pick a weighted action from the monster's
+    /// Brains.json tree whose conditions hold, then execute the power's behaviour.</summary>
+    private void UpdateBrain(CombatMonster monster, double dt)
+    {
+        if (monster.StunTimer > 0)
+        {
+            monster.StunTimer = Math.Max(0, monster.StunTimer - dt);
+            return;
+        }
+        var inCombat = DistanceToPlayer(monster) <= MonsterAggroRange;
+        if (inCombat) monster.WasInCombat = true;
+        var stateCombat = inCombat;
+        var stateRunOut = !inCombat && monster.WasInCombat;
+        var stateWander = !inCombat && !monster.WasInCombat;
+
+        bool Condition(string name) => name switch
+        {
+            "StateCombat" => stateCombat,
+            "StateRunOutOfCombat" => stateRunOut,
+            "StateWander" => stateWander,
+            "IHaveNoMinions" => true,
+            "IHaveMinions" => false,
+            "NotOnFullLife" => monster.Hp < monster.MaxHp,
+            "MoreThan50PercentLife" => monster.Hp > 0.5 * monster.MaxHp,
+            "LessThan50PercentLife" => monster.Hp < 0.5 * monster.MaxHp,
+            "NotIntimidated" => true,
+            "TargetNear" => inCombat,
+            "TargetFar" => !inCombat,
+            _ => false,
+        };
+
+        if (monster.BrainAction is null || monster.ActionTimer <= 0)
+        {
+            var brain = BrainCatalog.For(monster.Brain);
+            monster.BrainAction = BrainCatalog.Choose(brain, Condition, rng.NextDouble)?.Power ?? "DefaultAttackProxy";
+            monster.ActionTimer = 0.5 + rng.NextDouble() * 0.5;
+        }
+        else
+        {
+            monster.ActionTimer -= dt;
+        }
+
+        switch (monster.BrainAction)
+        {
+            case "Wander":
+                WanderStep(monster, dt);
+                break;
+            case "Flee":
+            case "RunOutOfCombat":
+                FleeStep(monster, dt);
+                break;
+            default: // DefaultAttackProxy and un-modelled powers (boss specials) chase and attack.
+                ChaseAndAttack(monster, dt);
+                break;
+        }
+    }
+
+    private double DistanceToPlayer(CombatMonster monster)
+        => Math.Sqrt((PlayerX - monster.X) * (PlayerX - monster.X) + (PlayerZ - monster.Z) * (PlayerZ - monster.Z));
+
+    private void WanderStep(CombatMonster monster, double dt)
+    {
+        monster.WanderTimer -= dt;
+        if (monster.WanderTimer <= 0)
+        {
+            monster.WanderTimer = 2 + rng.NextDouble() * 3;
+            var angle = rng.NextDouble() * Math.PI * 2;
+            var radius = 4 + rng.NextDouble() * 12;
+            monster.TargetX = Math.Cos(angle) * radius;
+            monster.TargetZ = Math.Sin(angle) * radius;
+        }
+        MoveToward(monster, monster.TargetX, monster.TargetZ, dt);
+    }
+
+    private void FleeStep(CombatMonster monster, double dt)
+    {
+        var dx = monster.X - PlayerX;
+        var dz = monster.Z - PlayerZ;
+        var dist = Math.Max(1e-6, Math.Sqrt(dx * dx + dz * dz));
+        MoveToward(monster, monster.X + dx / dist * 5, monster.Z + dz / dist * 5, dt);
+    }
+
+    private void MoveToward(CombatMonster monster, double goalX, double goalZ, double dt)
+    {
+        var gx = goalX - monster.X;
+        var gz = goalZ - monster.Z;
+        var gdist = Math.Sqrt(gx * gx + gz * gz);
+        if (gdist <= 0.3) return;
+        var step = Math.Min(gdist, monster.Speed * dt);
+        monster.X = Math.Clamp(monster.X + gx / gdist * step, -ArenaHalf, ArenaHalf);
+        monster.Z = Math.Clamp(monster.Z + gz / gdist * step, -ArenaHalf, ArenaHalf);
+    }
 
     private void ChaseAndAttack(CombatMonster monster, double dt)
     {
@@ -1071,7 +1174,8 @@ public sealed class CombatInstance
         var rows = new List<MonsterSnapshot>(monsters.Count + 1);
         foreach (var monster in monsters)
             rows.Add(new MonsterSnapshot(monster.Index, monster.Name, monster.Level, false,
-                Math.Round(monster.X, 3), Math.Round(monster.Z, 3), Math.Round(monster.Hp, 2), Math.Round(monster.MaxHp, 2), monster.Alive, Math.Round(monster.StunTimer, 2)));
+                Math.Round(monster.X, 3), Math.Round(monster.Z, 3), Math.Round(monster.Hp, 2), Math.Round(monster.MaxHp, 2), monster.Alive, Math.Round(monster.StunTimer, 2),
+                monster.BrainAction ?? ""));
         if (boss is { Alive: true })
             rows.Add(new MonsterSnapshot(boss.Index, boss.Name, boss.Level, true,
                 Math.Round(boss.X, 3), Math.Round(boss.Z, 3), Math.Round(boss.Hp, 2), Math.Round(boss.MaxHp, 2), true, Math.Round(boss.StunTimer, 2)));

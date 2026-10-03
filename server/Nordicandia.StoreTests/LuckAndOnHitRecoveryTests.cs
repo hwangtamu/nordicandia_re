@@ -215,4 +215,26 @@ static class LuckAndOnHitRecoveryTests
         instance.Advance(0.05);
         Check(archer.X < 20, $"ai: a ranged monster closes in while outside its attack range ({archer.X:F2})");
     }
+
+    public static void BrainSelection()
+    {
+        Check(BrainCatalog.For("Standard") is not null, "brain: the Standard tree loads");
+        var attack = BrainCatalog.Choose(BrainCatalog.For("Standard"), n => n == "StateCombat", () => 0.0);
+        Check(attack?.Power == "DefaultAttackProxy", $"brain: Standard attacks in combat ({attack?.Power})");
+        var wander = BrainCatalog.Choose(BrainCatalog.For("Standard"), n => n == "StateWander", () => 0.0);
+        Check(wander?.Power == "Wander", "brain: Standard wanders out of combat");
+        Check(BrainCatalog.Choose(BrainCatalog.For("Standard"), _ => false, () => 0.0) is null,
+            "brain: no eligible action selects nothing");
+        // Boss trees expose their named special powers.
+        var boss = BrainCatalog.For("Boss_WolfKing");
+        Check(boss is not null && boss.Actions.Any(a => a.Power == "WolfKingRoar")
+            && boss.Actions.Any(a => a.Power == "WolfKingSummonPack"),
+            "brain: a boss tree exposes its special powers");
+        var instance = new CombatInstance(CombatantStats.FromRealtime(0, 1e6, 0, 1), 0, 0, 0, 0, seed: 3,
+            monsterCount: 1, monsterProfiles: new[] { new MonsterProfile("Bat", Brain: "Standard") });
+        instance.MoveTo(0, 0);
+        instance.Advance(0.05);
+        Check(instance.Monsters[0].BrainAction is "DefaultAttackProxy" or "Wander" or "Flee",
+            $"brain: a monster selects and runs an action ({instance.Monsters[0].BrainAction})");
+    }
 }

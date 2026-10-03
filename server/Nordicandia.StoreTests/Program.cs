@@ -7,6 +7,7 @@ LuckAndOnHitRecoveryTests.EquippedWeaponGate();
 LuckAndOnHitRecoveryTests.ConversionPenetration();
 LuckAndOnHitRecoveryTests.ItemQuantityRemainder();
 LuckAndOnHitRecoveryTests.RangedKiting();
+LuckAndOnHitRecoveryTests.BrainSelection();
 
 var directory = Path.Combine(Path.GetTempPath(), "nord-alias-test-" + Guid.NewGuid());
 Directory.CreateDirectory(directory);

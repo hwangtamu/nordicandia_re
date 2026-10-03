@@ -110,6 +110,6 @@ killsPerMinute = truncate(efficiency * clamp(1.5 * secondHighestReachedTier, 10,
 * **Niflheim pack 布局**：`NiflheimPortalGameMode` 的 `TotalPacks`、`GetRandomPackSize`、0.1s 逐个生成、刷怪区与顺序刷新已接入网页（详见 `M3_STATUS.md`）。
 * **元素转换/穿透**：`ApplyWeaponDamageConversion` / `InternalApplyDamageConversion` 与 `*_Resistance_Penetration_Total` / `Armor_Piercing_Percent_Total` 已接入伤害管线。
 * **物品数量取整**：`floor(remainder + Num_Items_Granted × (Item_Quantity_Final_Multiplier + 1))` 余数累积。
-* **怪物 AI**：按 gamedata `Ranged`/`Caster` 分化为远程保持距离/近战追打；完整 Brain 动作树未移植。
+* **怪物 AI**：`Brains.json` 的完整加权动作树已接入——40 个 `MonsterBrainCondition` 条件名逐一对上 `StringHashHelper.HashNameSafe` 哈希（`tools/web-content/export_brains.py`），`BrainCatalog` 按条件筛选后加权抽取，`CombatInstance.UpdateBrain` 执行攻击/游荡/逃跑；原型指定对应 brain。boss 专属技能效果仍需各自 Power 逻辑。
 
 服务端套件 **438 PASS**，smoke/npc-smoke 通过。

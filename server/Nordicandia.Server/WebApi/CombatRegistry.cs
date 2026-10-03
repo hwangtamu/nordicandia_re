@@ -52,21 +52,23 @@ public sealed class CombatRegistry
     private static readonly MonsterProfile[] MonsterProfiles =
     {
         new("Bat", HpMult: 0.7, OffenseMult: 1.0, DefenseMult: 0.7, Speed: 3.2,
-            Resistances: new ResistanceBundle(Fire: -0.2)),
+            Resistances: new ResistanceBundle(Fire: -0.2), Brain: "Standard"),
         new("DemonOrc", HpMult: 1.3, OffenseMult: 1.2, DefenseMult: 1.0, Speed: 2.4,
-            Damage: new DamageBundle(Fire: 0.5), Resistances: new ResistanceBundle(Fire: 0.3, Cold: -0.2)),
+            Damage: new DamageBundle(Fire: 0.5), Resistances: new ResistanceBundle(Fire: 0.3, Cold: -0.2),
+            Brain: "Standard"),
         // Ranged (gamedata SkeletonArcher1): attacks from range and backs off when the player closes.
         new("Skeleton", HpMult: 1.0, OffenseMult: 0.9, DefenseMult: 1.1, Speed: 2.2,
             Damage: new DamageBundle(Cold: 0.4), Resistances: new ResistanceBundle(Poison: 0.5, Fire: -0.3),
-            Ranged: true, AttackRange: 8, PreferredDistance: 4),
+            Ranged: true, AttackRange: 8, PreferredDistance: 4, Brain: "StandardFleeingWhenClose"),
         new("BloodHound", HpMult: 0.8, OffenseMult: 1.4, DefenseMult: 0.6, Speed: 3.0,
-            Damage: new DamageBundle(Poison: 0.5), Resistances: new ResistanceBundle(Poison: 0.4)),
+            Damage: new DamageBundle(Poison: 0.5), Resistances: new ResistanceBundle(Poison: 0.4),
+            Brain: "Standard"),
         new("StoneGolem", HpMult: 1.8, OffenseMult: 0.8, DefenseMult: 1.6, Speed: 1.6,
-            Resistances: new ResistanceBundle(Lightning: -0.2, Fire: 0.2)),
+            Resistances: new ResistanceBundle(Lightning: -0.2, Fire: 0.2), Brain: "Standard"),
         // Caster (gamedata CasterDemon1): long-range elemental attacker.
         new("CasterDemon1", HpMult: 0.9, OffenseMult: 1.1, DefenseMult: 0.8, Speed: 2.0,
             Damage: new DamageBundle(Fire: 0.6), Resistances: new ResistanceBundle(Fire: 0.4, Cold: -0.2),
-            Ranged: true, AttackRange: 9, PreferredDistance: 5),
+            Ranged: true, AttackRange: 9, PreferredDistance: 5, Brain: "StandardCurseSlow"),
     };
 
     /// <summary>Scaled archetypes for a Niflheim run. Provisional: the client's

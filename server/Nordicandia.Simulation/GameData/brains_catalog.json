@@ -1,0 +1,1312 @@
+{
+ "AggressiveMinion": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateRunOutOfCombat"
+    ],
+    "power": "RunOutOfCombat",
+    "weight": 1000
+   }
+  ],
+  "id": 6
+ },
+ "ArrowstreamMinion": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   }
+  ],
+  "id": 29
+ },
+ "Boss_AncientDragon": {
+  "actions": [
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "NotOnFullLife"
+    ],
+    "power": "DragonFireBreath",
+    "weight": 400
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 100
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "TargetNear",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 200
+   },
+   {
+    "conditions": [
+     "TargetFar"
+    ],
+    "power": "DragonFireBreath",
+    "weight": 50
+   }
+  ],
+  "id": 10
+ },
+ "Boss_Bolomahl": {
+  "actions": [
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 25
+   },
+   {
+    "conditions": [
+     "NotOnFullLife",
+     "StateCombat"
+    ],
+    "power": "BolomahlTripleStrike",
+    "weight": 400
+   },
+   {
+    "conditions": [
+     "NotOnFullLife",
+     "TargetFar",
+     "StateCombat"
+    ],
+    "power": "BolomahlTripleStrike",
+    "weight": 100
+   }
+  ],
+  "id": 11
+ },
+ "Boss_BoneDragon": {
+  "actions": [
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 300
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "BoneDragonSummonSkeleton",
+    "weight": 500
+   }
+  ],
+  "id": 14
+ },
+ "Boss_FallenAngel": {
+  "actions": [
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 100
+   },
+   {
+    "conditions": [
+     "NotOnFullLife"
+    ],
+    "power": "FallenAngelRay",
+    "weight": 400
+   }
+  ],
+  "id": 13
+ },
+ "Boss_Hel": {
+  "actions": [
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 300
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "IHaveNoMinions",
+     "StateCombat"
+    ],
+    "power": "HelSummonPack",
+    "weight": 400
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "TargetFar"
+    ],
+    "power": "HelHomingFire",
+    "weight": 400
+   },
+   {
+    "conditions": [
+     "LessThan50PercentLife",
+     "NoRepeat",
+     "StateCombat",
+     "IHaveMinions"
+    ],
+    "power": "HelFireNovas",
+    "weight": 400
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "NotOnFullLife"
+    ],
+    "power": "HelBigFireNova",
+    "weight": 300
+   },
+   {
+    "conditions": [
+     "TargetFar",
+     "StateCombat",
+     "NotOnFullLife"
+    ],
+    "power": "HelBigFireNova",
+    "weight": 600
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "IHaveMinions",
+     "NoRepeat"
+    ],
+    "power": "HelSummonPack",
+    "weight": 25
+   },
+   {
+    "conditions": [
+     "IHaveNoMinions",
+     "LessThan50PercentLife",
+     "StateCombat"
+    ],
+    "power": "HelFireNovas",
+    "weight": 100
+   }
+  ],
+  "id": 17
+ },
+ "Boss_Kibu": {
+  "actions": [
+   {
+    "conditions": [],
+    "power": "Flee",
+    "weight": 80
+   },
+   {
+    "conditions": [],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "IHaveNoMinions",
+     "StateCombat"
+    ],
+    "power": "KibuSummonElemental",
+    "weight": 400
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "TargetNotTooFar"
+    ],
+    "power": "KibuShock",
+    "weight": 400
+   },
+   {
+    "conditions": [
+     "NoRepeat",
+     "StateCombat"
+    ],
+    "power": "KibuLightningExplodeSequence",
+    "weight": 300
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "KibuShockwave",
+    "weight": 300
+   }
+  ],
+  "id": 33
+ },
+ "Boss_Odr": {
+  "actions": [
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat",
+     "OdrTotemIsAlive",
+     "NoRepeat"
+    ],
+    "power": "Flee",
+    "weight": 100
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "OdrTotemIsAlive",
+     "OdrTotemSpawned"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "CanSummonOdrTotem"
+    ],
+    "power": "OdrSummonTotem",
+    "weight": 10000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "OdrTotemIsAlive",
+     "NoRepeat",
+     "OdrTotemHasNoCharges"
+    ],
+    "power": "OdrChargeTotemFire",
+    "weight": 200
+   },
+   {
+    "conditions": [
+     "OdrTotemIsAlive",
+     "StateCombat",
+     "NoRepeat",
+     "OdrTotemHasNoCharges"
+    ],
+    "power": "OdrChargeTotemCold",
+    "weight": 200
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "OdrTotemIsAlive",
+     "NoRepeat",
+     "OdrTotemHasNoCharges"
+    ],
+    "power": "OdrChargeTotemLightning",
+    "weight": 200
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "OdrTotemDead"
+    ],
+    "power": "MeleeWeaponSwing",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "CanEnrage",
+     "StateCombat"
+    ],
+    "power": "OdrEnrage",
+    "weight": 10000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "OdrTotemDead"
+    ],
+    "power": "OdrSlam",
+    "weight": 200
+   }
+  ],
+  "id": 19
+ },
+ "Boss_OdrTotem": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat",
+     "HasTotemChargeFire"
+    ],
+    "power": "OdrTotemFireAttack",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "HasTotemChargeCold"
+    ],
+    "power": "OdrTotemColdAttack",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "HasTotemChargeLightning"
+    ],
+    "power": "OdrTotemLightningAttack",
+    "weight": 1000
+   }
+  ],
+  "id": 20
+ },
+ "Boss_VileDragon": {
+  "actions": [
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 150
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "NotOnFullLife"
+    ],
+    "power": "VileDragonNova",
+    "weight": 300
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   }
+  ],
+  "id": 15
+ },
+ "Boss_Warchief": {
+  "actions": [
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 25
+   },
+   {
+    "conditions": [
+     "NotOnFullLife"
+    ],
+    "power": "WarchiefWhirlwind",
+    "weight": 300
+   },
+   {
+    "conditions": [
+     "NotOnFullLife",
+     "TargetFar"
+    ],
+    "power": "WarchiefWhirlwind",
+    "weight": 10
+   }
+  ],
+  "id": 12
+ },
+ "Boss_WolfKing": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "IHaveNoMinions"
+    ],
+    "power": "WolfKingSummonPack",
+    "weight": 150
+   },
+   {
+    "conditions": [
+     "NotOnFullLife"
+    ],
+    "power": "WolfKingRoar",
+    "weight": 150
+   },
+   {
+    "conditions": [
+     "IHaveMinions"
+    ],
+    "power": "WolfKingRoar",
+    "weight": 250
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "NotOnFullLife"
+    ],
+    "power": "WolfKingCharge",
+    "weight": 400
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 25
+   }
+  ],
+  "id": 5
+ },
+ "CombatPet": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat",
+     "TargetNotTooFarFromMaster"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 500
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "TargetTooFarFromMaster"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateIdle"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 100
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   }
+  ],
+  "id": 34
+ },
+ "Fleeing": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 1000
+   }
+  ],
+  "id": 9
+ },
+ "GolemTrigger": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "ImExpired"
+    ],
+    "power": "RunOutOfCombat",
+    "weight": 100000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   }
+  ],
+  "id": 4
+ },
+ "NecroDeath": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat",
+     "TargetNotTooFarFromMaster"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateIdle"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "HasUnholyFocusBuff",
+     "TargetCanBeInstaKilledByDeath",
+     "TargetNotTooFarFromMaster"
+    ],
+    "power": "DeathInstantKill",
+    "weight": 1000000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "TargetTooFarFromMaster"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   }
+  ],
+  "id": 32
+ },
+ "NecroDemon": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat",
+     "TargetNotTooFarFromMaster"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateIdle"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "HasUnholyFocusBuff",
+     "TargetNotTooFarFromMaster"
+    ],
+    "power": "DemonShadowbolt",
+    "weight": 1000000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "TargetTooFarFromMaster"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   }
+  ],
+  "id": 31
+ },
+ "NecroSkeleton": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat",
+     "TargetNotTooFarFromMaster"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateIdle"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "HasUnholyFocusBuff",
+     "TargetNotTooFarFromMaster"
+    ],
+    "power": "SkeletonCharge",
+    "weight": 1000000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "TargetTooFarFromMaster"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   }
+  ],
+  "id": 30
+ },
+ "NoAI": {
+  "actions": [],
+  "id": 0
+ },
+ "Pet": {
+  "actions": [
+   {
+    "conditions": [],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [],
+    "power": "Wander",
+    "weight": 20
+   },
+   {
+    "conditions": [
+     "PetHasFreeInventorySpace",
+     "WorldLootExists"
+    ],
+    "power": "PetLoot",
+    "weight": 1000000
+   }
+  ],
+  "id": 8
+ },
+ "Standard": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateRunOutOfCombat"
+    ],
+    "power": "RunOutOfCombat",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 25
+   }
+  ],
+  "id": 1
+ },
+ "StandardCurseAmplifyDamageTaken": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateRunOutOfCombat"
+    ],
+    "power": "RunOutOfCombat",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "NotIntimidated"
+    ],
+    "power": "Flee",
+    "weight": 25
+   },
+   {
+    "conditions": [
+     "ImAboveOrEqualToTier4",
+     "ImNotNormalMonster",
+     "StateCombat"
+    ],
+    "power": "MonsterCurseAmplifyDamageTaken",
+    "weight": 400
+   }
+  ],
+  "id": 24
+ },
+ "StandardCurseLivingLeech": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateRunOutOfCombat"
+    ],
+    "power": "RunOutOfCombat",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 25
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "ImNotNormalMonster",
+     "ImAboveOrEqualToTier4"
+    ],
+    "power": "MonsterCurseLivingLeech",
+    "weight": 400
+   }
+  ],
+  "id": 25
+ },
+ "StandardCurseReducedWeaponDamage": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateRunOutOfCombat"
+    ],
+    "power": "RunOutOfCombat",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "NotIntimidated"
+    ],
+    "power": "Flee",
+    "weight": 25
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "ImAboveOrEqualToTier4",
+     "ImNotNormalMonster"
+    ],
+    "power": "MonsterCurseReducedWeaponDamage",
+    "weight": 400
+   }
+  ],
+  "id": 22
+ },
+ "StandardCurseSlow": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateRunOutOfCombat"
+    ],
+    "power": "RunOutOfCombat",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "NotIntimidated"
+    ],
+    "power": "Flee",
+    "weight": 25
+   },
+   {
+    "conditions": [
+     "ImNotNormalMonster",
+     "ImAboveOrEqualToTier4",
+     "StateCombat"
+    ],
+    "power": "MonsterCurseSlow",
+    "weight": 400
+   }
+  ],
+  "id": 23
+ },
+ "StandardFleeingWhenClose": {
+  "actions": [
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateRunOutOfCombat"
+    ],
+    "power": "RunOutOfCombat",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 25
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "TargetNear",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 125
+   }
+  ],
+  "id": 2
+ },
+ "StandardFleeingWhenCloseCurseLowerResist": {
+  "actions": [
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateRunOutOfCombat"
+    ],
+    "power": "RunOutOfCombat",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 50
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat",
+     "TargetNear"
+    ],
+    "power": "Flee",
+    "weight": 125
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "ImAboveOrEqualToTier4",
+     "ImNotNormalMonster"
+    ],
+    "power": "MonsterCurseLowerResistances",
+    "weight": 400
+   }
+  ],
+  "id": 21
+ },
+ "StandardFleeingWhenCloseCursingSlowProj": {
+  "actions": [
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateRunOutOfCombat"
+    ],
+    "power": "RunOutOfCombat",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat"
+    ],
+    "power": "Flee",
+    "weight": 50
+   },
+   {
+    "conditions": [
+     "NotIntimidated",
+     "StateCombat",
+     "TargetNear"
+    ],
+    "power": "Flee",
+    "weight": 125
+   },
+   {
+    "conditions": [
+     "StateCombat",
+     "ImAboveOrEqualToTier4",
+     "ImNotNormalMonster"
+    ],
+    "power": "MonsterCurseSlowProjectiles",
+    "weight": 0
+   }
+  ],
+  "id": 18
+ },
+ "StandardMinion": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "MasterIsNotBeingAttacked"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   }
+  ],
+  "id": 3
+ },
+ "SummonWolf": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "DefaultAttackProxy",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateIdle"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   }
+  ],
+  "id": 26
+ },
+ "UniqueItemHuginn": {
+  "actions": [
+   {
+    "conditions": [
+     "StateCombat",
+     "NoRepeat",
+     "AliveIdleNonBossMonstersExist"
+    ],
+    "power": "UniqueItemHuginnPull",
+    "weight": 100000
+   },
+   {
+    "conditions": [
+     "UniqueHuginnHasPulledMonsters"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateIdle"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1
+   }
+  ],
+  "id": 27
+ },
+ "UniqueItemMuninn": {
+  "actions": [
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateIdle"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   },
+   {
+    "conditions": [
+     "StateCombat"
+    ],
+    "power": "MinionReturnToMaster",
+    "weight": 1000
+   }
+  ],
+  "id": 28
+ },
+ "Wander": {
+  "actions": [
+   {
+    "conditions": [
+     "StateWander"
+    ],
+    "power": "Wander",
+    "weight": 1000
+   }
+  ],
+  "id": 7
+ }
+}
