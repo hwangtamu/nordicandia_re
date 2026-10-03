@@ -27,7 +27,7 @@ public static class LootTable
     public const int AttrRequiredLevel = 99006;
     /// <summary>Web-only flag (1) marking a unique/legendary item.</summary>
     public const int AttrUnique = 99007;
-    /// <summary>Web-only attribute holding an affix's AffixType (1=Prefix, 2=Suffix).</summary>
+    /// <summary>Web-only attribute holding the client's AffixType (0=Prefix, 1=Suffix, 2=Implicit).</summary>
     public const int AttrAffixType = 99008;
 
     private static readonly Lazy<IReadOnlyList<(int Count, int Weight)>> AffixCountWeights = new(LoadAffixCountWeights);
@@ -129,13 +129,16 @@ public static class LootTable
         var offense = baseStats.Offense;
         var defense = baseStats.Defense;
         var recovery = baseStats.Recovery;
-        var pool = AffixCatalog.Entries;
+        // The client passes excludedAffixDefinitions to GenerateRandomAffix and filters
+        // candidates before drawing. A duplicate must not consume a rolled slot.
+        // This remains the curated web pool; domain/group/prefix limits are not yet recovered.
+        var pool = AffixCatalog.Entries.Where(a => a.IsPrefixOrSuffix).DistinctBy(a => a.Name).ToList();
         var chosen = new List<(AffixCatalog.Affix Affix, double Value)>();
-        var used = new HashSet<string>();
         for (var i = 0; i < affixCount && pool.Count > 0; i++)
         {
-            var affix = pool[(int)(affixRng.NextDouble() * pool.Count) % pool.Count];
-            if (!used.Add(affix.Name)) continue;
+            var index = (int)(affixRng.NextDouble() * pool.Count);
+            var affix = pool[index];
+            pool.RemoveAt(index);
             chosen.Add((affix, AffixCatalog.Roll(affix, drop.Rarity, affixRng)));
         }
 

@@ -15,12 +15,16 @@ public static class AffixCatalog
     public readonly record struct Range(int? Rarity, double Min, double Max);
     public readonly record struct Affix(string Name, int AttributeId, string AttributeName, int GenerationType, IReadOnlyList<Range> Ranges)
     {
-        /// <summary>AffixType: 1 = Prefix, 2 = Suffix (0/3 are implicit/both).</summary>
-        public bool IsPrefixOrSuffix => GenerationType is 1 or 2;
+        /// <summary>Client AffixType: Prefix=0, Suffix=1, Implicit=2, Set=3, Unique=4.</summary>
+        public bool IsPrefixOrSuffix => IsRandomAffixType(GenerationType);
     }
 
     private static readonly Lazy<IReadOnlyList<Affix>> All = new(Load);
     public static IReadOnlyList<Affix> Entries => All.Value;
+
+    /// <summary>ItemAffixDefinition.IsPrefixOrSuffix uses an unsigned comparison against 2
+    /// (ARM64 0x02CECFA8), rejecting Undefined=-1 as well as implicit/set/unique.</summary>
+    public static bool IsRandomAffixType(int generationType) => generationType is 0 or 1;
 
     /// <summary>Rolls a value for the affix at the item's rarity: uses the highest range whose
     /// rarity threshold does not exceed the item rarity.</summary>

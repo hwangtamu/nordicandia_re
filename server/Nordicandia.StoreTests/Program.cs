@@ -52,6 +52,8 @@ CombatInstanceTests.Run();
 
 LootEquipmentTests.Run();
 
+AffixGenerationTests.Run();
+
 ManaMasteryTests.Run();
 
 AcceptanceRegressionTests.Run();

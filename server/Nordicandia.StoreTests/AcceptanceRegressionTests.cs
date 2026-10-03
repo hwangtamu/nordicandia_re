@@ -24,6 +24,7 @@ static class AcceptanceRegressionTests
         EquippedWeaponFeedsWeaponDamage();
         SmeltAndDisassembleConsumeSources();
         CraftEssenceConsumesIron();
+        AffixMergeRespectsClientTypes();
         RealAffixesCarryClientAttributes();
         SetBonusesAndEquipRequirements();
         UniqueAndSetItemDefinitions();
@@ -467,6 +468,54 @@ static class AcceptanceRegressionTests
             "scaling: a higher-level weapon has >= base damage (same definition/rarity)");
     }
 
+    private static void AffixMergeRespectsClientTypes()
+    {
+        var (store, _, owner, characterId, _) = Create("affix-types", 100);
+        using (store)
+        {
+            SerializedAffix Affix(int id, int? type) => new()
+            {
+                DefinitionIntegerId = id, Rarity = (Rarity)10,
+                Attributes = new SerializedAttributes
+                {
+                    Values = new Dictionary<AttributeOrigin, Dictionary<int, GameAttributeValue>>
+                    {
+                        [AttributeOrigin.Item] = type.HasValue
+                            ? new() { [LootTable.AttrAffixType] = new() { Value = type.Value, ValueD = type.Value } }
+                            : new(),
+                    },
+                    MultiplicativeValues = new(),
+                },
+            };
+            var target = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 1));
+            target.Slot = ItemSlotTypes.Blacksmith_TargetItem;
+            target.Affixes = new() { Affix(4000, 2) }; // Existing implicit must remain intact.
+            var source = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 3));
+            source.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            source.Affixes = Enumerable.Range(-1, 6).Select(t => Affix(3000 + t, t)).ToList();
+            source.Affixes.Add(Affix(3100, null)); // Preserve the existing untyped-save compatibility.
+            var iron = new SerializedItem
+            {
+                Id = Guid.NewGuid(), DefinitionIntegerId = 63, Slot = ItemSlotTypes.Inventory,
+                Attributes = new SerializedAttributes
+                {
+                    Values = new Dictionary<AttributeOrigin, Dictionary<int, GameAttributeValue>>
+                    {
+                        [AttributeOrigin.Item] = new() { [19] = new() { Value = 1000, ValueD = 1000 } },
+                    },
+                    MultiplicativeValues = new(),
+                },
+            };
+            store.GrantItems(owner, characterId, new List<SerializedItem> { target, source, iron });
+            var result = store.CraftEssenceItem(owner, characterId, 10);
+            var ids = result.Result?.Affixes.Select(a => a.DefinitionIntegerId).OrderBy(id => id).ToArray();
+            if (!result.OperationSuccessful || !result.Success || ids == null ||
+                !ids.SequenceEqual(new[] { 3000, 3001, 3100, 4000 }))
+                throw new Exception("merge: client 0/1 types must merge; -1/2/3/4 must not; existing and untyped affixes remain compatible");
+            Console.WriteLine("PASS merge: actual crafting accepts Prefix=0/Suffix=1 and rejects undefined/implicit/set/unique sources");
+        }
+    }
+
     private static void CraftEssenceConsumesIron()
     {
         void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS " + name); }
@@ -535,9 +584,9 @@ static class AcceptanceRegressionTests
                 "merge: the target keeps its original affixes");
             Check(resultIds.All(union.Contains), "merge: the result only contains target/source affixes");
             Check(resultIds.Count <= capacity, "merge: the target does not exceed its affix capacity");
-            // Only prefix/suffix (type 1 or 2) source affixes merge and only those absent from the target.
+            // Only prefix/suffix (type 0 or 1) source affixes merge and only those absent from the target.
             var adoptable = mergeSource.Affixes
-                .Where(a => AffixType(a) is 1 or 2 && !originalIds.Contains(a.DefinitionIntegerId))
+                .Where(a => AffixType(a) is 0 or 1 && !originalIds.Contains(a.DefinitionIntegerId))
                 .Select(a => a.DefinitionIntegerId).ToList();
             if (adoptable.Count > 0)
                 Check(adoptable.Any(resultIds.Contains), "merge: a new prefix/suffix source affix is adopted");
