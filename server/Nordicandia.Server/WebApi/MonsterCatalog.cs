@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.Json;
+using Nordicandia.Simulation;
 
 namespace Nordicandia.Server.WebApi;
 
@@ -21,6 +22,28 @@ public static class MonsterCatalog
 
     public static Monster? ByName(string name)
         => name is not null && All.Value.TryGetValue(name, out var m) ? m : null;
+
+    /// <summary>Game.DamageType ids (Physical=0, Fire=1, Cold=2, Lightning=3, Poison=4; Pure=5).</summary>
+    public static string DamageTypeName(int? id) => id switch
+    {
+        1 => "Fire",
+        2 => "Cold",
+        3 => "Lightning",
+        4 => "Poison",
+        _ => "Physical",
+    };
+
+    /// <summary>W01: the monster's dominant damage as a single-element bundle, from the client's
+    /// DamageType. A monster without an explicit type deals physical damage.</summary>
+    public static DamageBundle DamageBundle(string monsterName)
+        => DamageTypeName(ByName(monsterName)?.DamageType) switch
+        {
+            "Fire" => new DamageBundle(Fire: 1),
+            "Cold" => new DamageBundle(Cold: 1),
+            "Lightning" => new DamageBundle(Lightning: 1),
+            "Poison" => new DamageBundle(Poison: 1),
+            _ => new DamageBundle(Physical: 1),
+        };
 
     private static IReadOnlyDictionary<string, Monster> Load()
     {

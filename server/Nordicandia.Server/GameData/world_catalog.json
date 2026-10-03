@@ -1,0 +1,668 @@
+{
+ "baseline": "android-1.9.3 (versionCode 507033)",
+ "generatedAt": "2026-10-03",
+ "counts": {
+  "total": 36,
+  "tiered": 35,
+  "town": 1,
+  "bossDangling": 0
+ },
+ "items": [
+  {
+   "guid": "e5669f2c-6204-4032-8077-8fea0d920c1b",
+   "integerId": 0,
+   "name": "Grasshill",
+   "tier": 1,
+   "themeId": 1,
+   "bossName": "Boss_WolfKing",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000
+   },
+   "status": "正式",
+   "availability": "世界阶层 1"
+  },
+  {
+   "guid": "8c3f92f0-e4d2-41d4-a27d-9570917df96f",
+   "integerId": 1,
+   "name": "Borgash",
+   "tier": 2,
+   "themeId": 2,
+   "bossName": "Boss_TheWarchief",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Orc": 1000,
+    "EvilChest": 1
+   },
+   "status": "正式",
+   "availability": "世界阶层 2"
+  },
+  {
+   "guid": "4a578f86-a9f1-4281-8084-8f4ca1bd7ef6",
+   "integerId": 2,
+   "name": "Krilaqar",
+   "tier": 3,
+   "themeId": null,
+   "bossName": "Boss_Bolomahl",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Demon": 1000,
+    "EvilChest": 1
+   },
+   "status": "正式",
+   "availability": "世界阶层 3"
+  },
+  {
+   "guid": "847d2123-9657-434a-98bf-33628b618683",
+   "integerId": 3,
+   "name": "Rochmal",
+   "tier": 4,
+   "themeId": 3,
+   "bossName": "Boss_BoneDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Undead": 1000,
+    "EvilChest": 1
+   },
+   "status": "正式",
+   "availability": "世界阶层 4"
+  },
+  {
+   "guid": "97f4de2b-1b9d-4bc1-8dbc-23f2cc29b511",
+   "integerId": 4,
+   "name": "Ashpond",
+   "tier": 5,
+   "themeId": null,
+   "bossName": "Boss_AncientDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Goblin": 1000,
+    "EvilChest": 1
+   },
+   "status": "正式",
+   "availability": "世界阶层 5"
+  },
+  {
+   "guid": "8c82fe6a-f7f2-4d70-9791-ce66308df4ed",
+   "integerId": 5,
+   "name": "Meadowgate",
+   "tier": 6,
+   "themeId": null,
+   "bossName": "Boss_Knight1",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Undead": 1000,
+    "Orc": 1000,
+    "Demon": 1000,
+    "Beast": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 6"
+  },
+  {
+   "guid": "a70d1b53-063b-467d-aab3-b8d1f16930c7",
+   "integerId": 6,
+   "name": "Wolfbarrow",
+   "tier": 7,
+   "themeId": null,
+   "bossName": "Boss_VileDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 7"
+  },
+  {
+   "guid": "f7d47ee2-e749-4a6f-a319-81cc102f980e",
+   "integerId": 7,
+   "name": "Deepmere",
+   "tier": 8,
+   "themeId": 1,
+   "bossName": "Boss_WolfKing",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 8"
+  },
+  {
+   "guid": "1d03ca18-40e7-477e-a01d-601bd9295370",
+   "integerId": 8,
+   "name": "Blackmoor",
+   "tier": 9,
+   "themeId": 2,
+   "bossName": "Boss_TheWarchief",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Undead": 1000,
+    "Orc": 1000,
+    "Demon": 1000,
+    "Beast": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 9"
+  },
+  {
+   "guid": "cfbf2e20-f66a-47c8-9521-c380d72d5602",
+   "integerId": 9,
+   "name": "Shadowmill",
+   "tier": 10,
+   "themeId": null,
+   "bossName": "Boss_Bolomahl",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 10"
+  },
+  {
+   "guid": "a2213b05-74d2-42e0-9689-a22cc6ece7d7",
+   "integerId": 11,
+   "name": "Goldmist",
+   "tier": 11,
+   "themeId": 3,
+   "bossName": "Boss_BoneDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 11"
+  },
+  {
+   "guid": "409e0739-701c-4756-b922-fbd3aa03b8c8",
+   "integerId": 12,
+   "name": "Westgate",
+   "tier": 12,
+   "themeId": null,
+   "bossName": "Boss_AncientDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 12"
+  },
+  {
+   "guid": "1ab10323-10d6-4600-8c97-20f1c19cf6d2",
+   "integerId": 13,
+   "name": "Hollowfield",
+   "tier": 13,
+   "themeId": null,
+   "bossName": "Boss_Knight1",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 13"
+  },
+  {
+   "guid": "3e4b0129-f3ab-4a54-9c2b-ed6681176dff",
+   "integerId": 14,
+   "name": "Aldlyn",
+   "tier": 14,
+   "themeId": null,
+   "bossName": "Boss_VileDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 14"
+  },
+  {
+   "guid": "2e4f1e67-d800-427e-b0d8-075e7027b320",
+   "integerId": 10,
+   "name": "Warbridge",
+   "tier": 15,
+   "themeId": 1,
+   "bossName": "Boss_WolfKing",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 15"
+  },
+  {
+   "guid": "fb2b976e-ace4-4cd1-920f-b2e2feecba24",
+   "integerId": 15,
+   "name": "The Void",
+   "tier": 16,
+   "themeId": 2,
+   "bossName": "Boss_TheWarchief",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 16"
+  },
+  {
+   "guid": "5df4c902-b0cc-47ca-a66e-78685aef3a52",
+   "integerId": 17,
+   "name": "The Void_2",
+   "tier": 17,
+   "themeId": null,
+   "bossName": "Boss_Bolomahl",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 17"
+  },
+  {
+   "guid": "4a520b49-6598-442c-9591-830b78cecf61",
+   "integerId": 18,
+   "name": "The Void_3",
+   "tier": 18,
+   "themeId": 3,
+   "bossName": "Boss_BoneDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 18"
+  },
+  {
+   "guid": "b46a1c98-6221-4c5c-b0e2-2f7318d5499e",
+   "integerId": 19,
+   "name": "The Void_4",
+   "tier": 19,
+   "themeId": null,
+   "bossName": "Boss_AncientDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 19"
+  },
+  {
+   "guid": "4103dfed-69d3-47d5-962e-eda7882904e3",
+   "integerId": 20,
+   "name": "The Void_5",
+   "tier": 20,
+   "themeId": null,
+   "bossName": "Boss_Knight1",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 20"
+  },
+  {
+   "guid": "41f4e1dc-0e60-4e9d-8b1d-5cd8d200b50f",
+   "integerId": 21,
+   "name": "The Void_6",
+   "tier": 21,
+   "themeId": null,
+   "bossName": "Boss_VileDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 21"
+  },
+  {
+   "guid": "3931bb36-667e-4f01-89e8-7234f315bfcd",
+   "integerId": 22,
+   "name": "The Void_7",
+   "tier": 22,
+   "themeId": 1,
+   "bossName": "Boss_WolfKing",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 22"
+  },
+  {
+   "guid": "239fbb47-54c1-40d4-ab11-9fa5130b2e73",
+   "integerId": 23,
+   "name": "The Void_8",
+   "tier": 23,
+   "themeId": 2,
+   "bossName": "Boss_TheWarchief",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 23"
+  },
+  {
+   "guid": "f743a154-25ef-4f13-97f8-e05ea4cc2470",
+   "integerId": 24,
+   "name": "The Void_9",
+   "tier": 24,
+   "themeId": null,
+   "bossName": "Boss_Bolomahl",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 24"
+  },
+  {
+   "guid": "eff39d91-bf3d-4b91-9773-96c8f62cb05b",
+   "integerId": 25,
+   "name": "The Void_10",
+   "tier": 25,
+   "themeId": 3,
+   "bossName": "Boss_BoneDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 25"
+  },
+  {
+   "guid": "1a644f07-76a5-4482-b9fe-1e05540aa5c4",
+   "integerId": 26,
+   "name": "The Void_11",
+   "tier": 26,
+   "themeId": null,
+   "bossName": "Boss_AncientDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 26"
+  },
+  {
+   "guid": "0529e54e-c533-4701-b50a-240bd17c202d",
+   "integerId": 27,
+   "name": "The Void_12",
+   "tier": 27,
+   "themeId": null,
+   "bossName": "Boss_Knight1",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 27"
+  },
+  {
+   "guid": "0291059b-0e54-4796-b075-2c14a116cf47",
+   "integerId": 28,
+   "name": "The Void_13",
+   "tier": 28,
+   "themeId": null,
+   "bossName": "Boss_VileDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 28"
+  },
+  {
+   "guid": "4f76a14d-e29f-421a-abb2-848ae5ff765c",
+   "integerId": 29,
+   "name": "The Void_14",
+   "tier": 29,
+   "themeId": 1,
+   "bossName": "Boss_WolfKing",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 29"
+  },
+  {
+   "guid": "ecf8bea4-1f52-4c8e-9804-3c42edec36a6",
+   "integerId": 30,
+   "name": "The Void_15",
+   "tier": 30,
+   "themeId": 2,
+   "bossName": "Boss_TheWarchief",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 30"
+  },
+  {
+   "guid": "c533195b-2714-4e0a-baff-410f107bbff3",
+   "integerId": 36,
+   "name": "The Void_16",
+   "tier": 31,
+   "themeId": 2,
+   "bossName": "Boss_Bolomahl",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 31"
+  },
+  {
+   "guid": "8afbefe2-2943-4745-8f28-b11fe9a22f40",
+   "integerId": 37,
+   "name": "The Void_17",
+   "tier": 32,
+   "themeId": 2,
+   "bossName": "Boss_BoneDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 32"
+  },
+  {
+   "guid": "2dfa77ba-89fb-4ab0-b445-abada0353e28",
+   "integerId": 38,
+   "name": "The Void_18",
+   "tier": 33,
+   "themeId": 2,
+   "bossName": "Boss_AncientDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 33"
+  },
+  {
+   "guid": "9677fd6b-8e84-4800-9f5b-652237919458",
+   "integerId": 39,
+   "name": "The Void_19",
+   "tier": 34,
+   "themeId": 2,
+   "bossName": "Boss_Knight1",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 34"
+  },
+  {
+   "guid": "44b9f998-0688-4536-a48a-80b53effb6f5",
+   "integerId": 40,
+   "name": "The Void_12",
+   "tier": 35,
+   "themeId": 2,
+   "bossName": "Boss_VileDragon",
+   "bossDangling": false,
+   "spawnWeights": {
+    "Beast": 1000,
+    "Demon": 1000,
+    "Orc": 1000,
+    "Undead": 1000,
+    "Goblin": 1000,
+    "EvilChest": 5
+   },
+   "status": "正式",
+   "availability": "世界阶层 35"
+  },
+  {
+   "guid": "62764ffc-e492-4019-8f5f-906e3be6b94c",
+   "integerId": 16,
+   "name": "Town",
+   "tier": null,
+   "themeId": null,
+   "bossName": null,
+   "bossDangling": false,
+   "spawnWeights": {},
+   "status": "正式",
+   "availability": "城镇"
+  }
+ ]
+}

@@ -728,6 +728,13 @@ public sealed partial class CombatInstance
             case "RunOutOfCombat":
                 FleeStep(monster, dt);
                 break;
+            // W02: explicit non-power actions from Brains.json. Pet/totem actions (return to master,
+            // loot, unique pull) fall through to the melee/range behaviour in the web slice.
+            case "MeleeWeaponSwing":
+            case "MinionReturnToMaster":
+            case "PetLoot":
+            case "UniqueItemHuginnPull":
+            case "DefaultAttackProxy":
             default: // DefaultAttackProxy chases and attacks.
                 ChaseAndAttack(monster, dt);
                 break;

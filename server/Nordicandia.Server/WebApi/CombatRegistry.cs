@@ -51,25 +51,27 @@ public sealed class CombatRegistry
     // (MonsterScaling), not from hand-tuned multipliers. Archetypes therefore only carry what
     // the client itself varies: damage distribution, resistances, ranged/caster behaviour, brain
     // and rarity. Names match gamedata monsters so the client resolves the portrait icons.
+    // W01: names are real gamedata monsters and the damage type comes from Monsters.json
+    // (DamageType: 0 Physical / 1 Fire / 2 Cold / 3 Lightning / 4 Poison). Resistances stay as
+    // Provisional game-balance adaptations (the client derives them from the attribute engine and
+    // area affixes, not from the monster definition).
     private static readonly MonsterProfile[] MonsterProfiles =
     {
-        new("Bat", Speed: 3.2,
+        new("Bat", Speed: 3.2, Damage: MonsterCatalog.DamageBundle("Bat"),
             Resistances: new ResistanceBundle(Fire: -0.2), Brain: "Standard"),
-        new("DemonOrc", Speed: 2.4,
-            Damage: new DamageBundle(Fire: 0.5), Resistances: new ResistanceBundle(Fire: 0.3, Cold: -0.2),
-            Brain: "Standard"),
+        new("DemonOrc", Speed: 2.4, Damage: MonsterCatalog.DamageBundle("DemonOrc"),
+            Resistances: new ResistanceBundle(Fire: 0.3, Cold: -0.2), Brain: "Standard"),
         // Ranged (gamedata SkeletonArcher1): attacks from range and backs off when the player closes.
-        new("Skeleton", Speed: 2.2,
-            Damage: new DamageBundle(Cold: 0.4), Resistances: new ResistanceBundle(Poison: 0.5, Fire: -0.3),
+        new("SkeletonArcher1", Speed: 2.2, Damage: MonsterCatalog.DamageBundle("SkeletonArcher1"),
+            Resistances: new ResistanceBundle(Poison: 0.5, Fire: -0.3),
             Ranged: true, AttackRange: 8, PreferredDistance: 4, Brain: "StandardFleeingWhenClose"),
-        new("BloodHound", Speed: 3.0,
-            Damage: new DamageBundle(Poison: 0.5), Resistances: new ResistanceBundle(Poison: 0.4),
-            Brain: "Standard"),
-        new("StoneGolem", Speed: 1.6,
+        new("GrayWolf", Speed: 3.0, Damage: MonsterCatalog.DamageBundle("GrayWolf"),
+            Resistances: new ResistanceBundle(Poison: 0.4), Brain: "Standard"),
+        new("StoneGolem", Speed: 1.6, Damage: MonsterCatalog.DamageBundle("StoneGolem"),
             Resistances: new ResistanceBundle(Lightning: -0.2, Fire: 0.2), Brain: "Standard"),
-        // Caster (gamedata CasterDemon1): long-range elemental attacker; Champion (rarity 4).
-        new("CasterDemon1", Speed: 2.0,
-            Damage: new DamageBundle(Fire: 0.6), Resistances: new ResistanceBundle(Fire: 0.4, Cold: -0.2),
+        // Caster (gamedata CasterDemon1): long-range cold attacker; Champion (rarity 4).
+        new("CasterDemon1", Speed: 2.0, Damage: MonsterCatalog.DamageBundle("CasterDemon1"),
+            Resistances: new ResistanceBundle(Fire: 0.4, Cold: 0.4),
             Ranged: true, AttackRange: 9, PreferredDistance: 5, Brain: "StandardCurseSlow",
             Champion: true, Rarity: 4),
     };
