@@ -1,0 +1,3791 @@
+{
+ "count": 93,
+ "specs": [
+  {
+   "name": "Slam",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "Slam",
+   "tags": [
+    "Offensive",
+    "Attack",
+    "Melee"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "melee enemy",
+   "resources": {
+    "mana": 35.0
+   },
+   "cooldown": 15.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": 1.0,
+    "damageMultiplier": 5.5
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 7,
+   "masteries": [
+    "MasterySlamImprovedSlam",
+    "MasterySlamWideSlam",
+    "MasterySlamEarthquake",
+    "MasterySlamQuickSlam",
+    "MasterySlamShockwave",
+    "MasterySlamVampiricSlam",
+    "MasterySlamMana"
+   ],
+   "behaviorGaps": [
+    "Slam_Max_Distance"
+   ]
+  },
+  {
+   "name": "Might",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "Might",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "rally",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 20.0
+   },
+   "cooldown": 30.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 10.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 7,
+   "masteries": [
+    "MasteryMightImprovedMight",
+    "MasteryMightFuriousRage",
+    "MasteryMightPiercingStrength",
+    "MasteryMightDuration",
+    "MasteryMightObsession",
+    "MasteryMightDisarm",
+    "MasteryMightSturdiness"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Pounce",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "Pounce",
+   "tags": [
+    "Movement",
+    "Offensive",
+    "Spell"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemies in radius",
+   "resources": {
+    "mana": 15.0
+   },
+   "cooldown": 10.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": 2.0,
+    "damageMultiplier": 0.25
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryPounceKnockback",
+    "MasteryPounceProwess",
+    "MasteryPounceImprovedPounce",
+    "MasteryPounceLongjump",
+    "MasteryPounceWings",
+    "MasteryPounceRend"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "WarStomp",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "WarStomp",
+   "tags": [
+    "Offensive",
+    "Attack"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemies in radius",
+   "resources": {
+    "mana": 25.0
+   },
+   "cooldown": 22.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": 0.7
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryWarStompImprovedWarStomp",
+    "MasteryWarStompKnockOut",
+    "MasteryWarStompGroundShaker",
+    "MasteryWarStompForceOfTheMinotaur",
+    "MasteryWarStompBlazingStomp",
+    "MasteryWarStompGraspingVines"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Shatter",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "Shatter",
+   "tags": [
+    "Offensive",
+    "Attack",
+    "Melee"
+   ],
+   "prototype": "strike",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "melee enemy",
+   "resources": {
+    "mana": 35.0
+   },
+   "cooldown": 5.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": 9.0
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 7,
+   "masteries": [
+    "MasteryShatterImprovedShatter",
+    "MasteryShatterSplittingPower",
+    "MasteryShatterOverpower",
+    "MasteryShatterPrecisionStrike",
+    "MasteryShatterAutoShatter",
+    "MasteryShatterCrushingBlow",
+    "MasteryShatterLightningStrike"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Sprint",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "Sprint",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "mobility",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 15.0
+   },
+   "cooldown": 30.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 7.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasterySprintCharge",
+    "MasterySprintImprovedSprint",
+    "MasterySprintMarathon",
+    "MasterySprintAttackSpeed",
+    "MasterySprintChargeFirstHit",
+    "MasterySprintAcrobatics"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "IncrementalFortress",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "IncrementalFortress",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "rally",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryIncrementalFortressImprovedIncrementalFortress",
+    "MasteryIncrementalFortressElementalFortress",
+    "MasteryIncrementalFortressHeavyFortress",
+    "MasteryIncrementalFortressDuration",
+    "MasteryIncrementalFortressCounterAttack",
+    "MasteryIncrementalFortressBlock"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Retaliation",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "Retaliation",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemies in radius",
+   "resources": {
+    "mana": 0.3
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 12.0,
+    "radius": null,
+    "damageMultiplier": 0.3
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryRetaliationImprovedRetaliation",
+    "MasteryRetaliationReflexes",
+    "MasteryRetaliationEndurance",
+    "MasteryRetaliationRange",
+    "MasteryRetaliationThorns",
+    "MasteryRetaliationThrownAxe"
+   ],
+   "behaviorGaps": [
+    "Buff_Duration"
+   ]
+  },
+  {
+   "name": "Frenzy",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "Frenzy",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "rally",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": 30.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 20.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration",
+    "Buff_Stack_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryFrenzyFury",
+    "MasteryFrenzyDualMastery",
+    "MasteryFrenzyEndlessFrenzy",
+    "MasteryFrenzyMaxAttackSpeed",
+    "MasteryFrenzyEstablishedWeakness",
+    "MasteryFrenzyDualStriking"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Intimidate",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "Intimidate",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemies in radius",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": 16.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 10.0,
+    "radius": 6.0,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryIntimidateSubdue",
+    "MasteryIntimidateIntimidatingPresence",
+    "MasteryIntimidateShieldUp",
+    "MasteryIntimidateMock",
+    "MasteryIntimidateWound",
+    "MasteryIntimidateShieldWall"
+   ],
+   "behaviorGaps": [
+    "Buff_Duration",
+    "Power_Intimidate_Opponent_All_Damage_Reduced_Percent"
+   ]
+  },
+  {
+   "name": "Hunger",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "Hunger",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "leech",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 20.0
+   },
+   "cooldown": 20.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 7.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration",
+    "Cold_Life_Leech",
+    "Fire_Life_Leech",
+    "Life_Leech_Maximum_Recovery_Bonus_Percent",
+    "Lightning_Life_Leech",
+    "Physical_Life_Leech",
+    "Poison_Life_Leech"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryHungerInsatiableHunger",
+    "MasteryHungerHeartseeker",
+    "MasteryHungerAwakenedHunger",
+    "MasteryHungerRestoreLifeOnAwaken",
+    "MasteryHungerCellRecovery",
+    "MasteryHungerFinishingBlow"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Mixology",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "Mixology",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "rally",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 20.0
+   },
+   "cooldown": 300.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 300.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 7,
+   "masteries": [
+    "MasteryMixologyDuration",
+    "MasteryMixologyAutoPotion",
+    "MasteryMixologyPowerfulConcotion",
+    "MasteryMixologyThirst",
+    "MasteryMixologySmartPotions",
+    "MasteryMixologyManaDuringLife",
+    "MasteryMixologyLifeDuringMana"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Whirlwind",
+   "class": "Warrior",
+   "kind": "active",
+   "implementedBy": "Whirlwind",
+   "tags": [
+    "Movement",
+    "Duration",
+    "AoE",
+    "Melee",
+    "Offensive",
+    "Attack"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "melee enemy",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": 25.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 5.0,
+    "radius": 2.0,
+    "damageMultiplier": 0.4
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryWhirlwindImprovedWhirlwind",
+    "MasteryWhirlwindBloodWhirl",
+    "MasteryWhirlwindAutoWhirl",
+    "MasteryWhirlwindJaggedBlades",
+    "MasteryWhirlwindSmartWhirl",
+    "MasteryWhirlwindBloodWhirlpool"
+   ],
+   "behaviorGaps": [
+    "Power_Duration",
+    "Power_Whirlwind_Damage_Frequency"
+   ]
+  },
+  {
+   "name": "Overkill",
+   "class": "Warrior",
+   "kind": "passive",
+   "implementedBy": "Overkill",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "TreasureHunter",
+   "class": "Warrior",
+   "kind": "passive",
+   "implementedBy": "TreasureHunter",
+   "tags": [],
+   "prototype": "fortune",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "AxeSpecialization",
+   "class": "Warrior",
+   "kind": "passive",
+   "implementedBy": "AxeSpecialization",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "SwordSpecialization",
+   "class": "Warrior",
+   "kind": "passive",
+   "implementedBy": "SwordSpecialization",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "MaceSpecialization",
+   "class": "Warrior",
+   "kind": "passive",
+   "implementedBy": "MaceSpecialization",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "SpearSpecialization",
+   "class": "Warrior",
+   "kind": "passive",
+   "implementedBy": "SpearSpecialization",
+   "tags": [],
+   "prototype": "warding",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "DaggerSpecialization",
+   "class": "Warrior",
+   "kind": "passive",
+   "implementedBy": null,
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "CheatDeath",
+   "class": "Warrior",
+   "kind": "passive",
+   "implementedBy": "CheatDeath",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "BossHunter",
+   "class": "Warrior",
+   "kind": "passive",
+   "implementedBy": "BossHunter",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Meditation",
+   "class": "Warrior",
+   "kind": "passive",
+   "implementedBy": "Meditation",
+   "tags": [],
+   "prototype": "haste",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "RepelMagic",
+   "class": "Warrior",
+   "kind": "passive",
+   "implementedBy": "RepelMagic",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "RapidFire",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "RapidFire",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "rally",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": 25.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 4.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryRapidFireEnduringSwiftness",
+    "MasteryRapidFireBattery",
+    "MasteryRapidFireImprovedRapidFire",
+    "MasteryRapidFireAttackRange",
+    "MasteryRapidFireMaxAttackSpeed",
+    "MasteryRapidFireReducedStandStill"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "ArrowRain",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "ArrowRain",
+   "tags": [
+    "Offensive",
+    "Spell"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemies in radius",
+   "resources": {
+    "mana": 20.0
+   },
+   "cooldown": 25.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": 3.0,
+    "damageMultiplier": 1.8
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryArrowRainImprovedArrowRain",
+    "MasteryArrowRainArrowCascade",
+    "MasteryArrowRainPrecisionArrows",
+    "MasteryArrowRainTorrent",
+    "MasteryArrowRainPenetrate",
+    "MasteryArrowRainPureArrows"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "SummonWolf",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "SummonWolf",
+   "tags": [
+    "AllowInTown",
+    "Minion",
+    "Spell"
+   ],
+   "prototype": "summon",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self (minions)",
+   "resources": {
+    "mana": 45.0
+   },
+   "cooldown": 45.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 7,
+   "masteries": [
+    "MasterySummonWolfSpiritWolf",
+    "MasterySummonWolfSpeed",
+    "MasterySummonWolfEnrage",
+    "MasterySummonWolfAgility",
+    "MasterySummonWolfVigor",
+    "MasterySummonWolfAoeAttack",
+    "MasterySummonWolfReducedCooldown"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "FrozenArrow",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "FrozenArrow",
+   "tags": [
+    "Offensive",
+    "Projectile",
+    "Cold",
+    "Attack"
+   ],
+   "prototype": "projectile",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemy",
+   "resources": {
+    "mana": 25.0
+   },
+   "cooldown": 25.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": 4.0,
+    "damageMultiplier": 1.4
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryFrozenArrowRapidFreeze",
+    "MasteryFrozenArrowCrystallize",
+    "MasteryFrozenArrowAutoFreeze",
+    "MasteryFrozenArrowFrozenWave",
+    "MasteryFrozenArrowFrozenShots",
+    "MasteryFrozenArrowPiercingIce"
+   ],
+   "behaviorGaps": [
+    "Base_Power_Radius"
+   ]
+  },
+  {
+   "name": "PowerShot",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "PowerShot",
+   "tags": [
+    "Offensive",
+    "Attack"
+   ],
+   "prototype": "projectile",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemy",
+   "resources": {
+    "mana": 25.0
+   },
+   "cooldown": 8.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": 4.5
+   },
+   "buffs": [],
+   "projectile": [
+    "Power_Power_Shot_Pierce_Chance_Percent"
+   ],
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryPowerShotPiercingArrow",
+    "MasteryPowerShotImprovedPowerShot",
+    "MasteryPowerShotPowerAttacks",
+    "MasteryPowerShotQuickshot",
+    "MasteryPowerShotHomingShot",
+    "MasteryPowerShotLessManaCost"
+   ],
+   "behaviorGaps": [
+    "Base_Action_Speed"
+   ]
+  },
+  {
+   "name": "ManaArrows",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "ManaArrows",
+   "tags": [
+    "Bow"
+   ],
+   "prototype": "projectile",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemy",
+   "resources": {
+    "mana": 25.0
+   },
+   "cooldown": 25.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": 1.2
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryManaArrowsDrainingArrows",
+    "MasteryManaArrowsImprovedManaArrows",
+    "MasteryManaArrowsQuickRecharge",
+    "MasteryManaArrowsCharges",
+    "MasteryManaArrowsManaOnKill",
+    "MasteryManaArrowsMaxMana"
+   ],
+   "behaviorGaps": [
+    "Power_Mana_Arrows_Mana_Per_Hit",
+    "Power_Mana_Arrows_Num_Charges"
+   ]
+  },
+  {
+   "name": "Multishot",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "Multishot",
+   "tags": [
+    "Offensive",
+    "Attack",
+    "Projectile"
+   ],
+   "prototype": "projectile",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemy",
+   "resources": {
+    "mana": 20.0
+   },
+   "cooldown": 10.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": 6.5
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryMultishotImprovedMultishot",
+    "MasteryMultishotBroadside",
+    "MasteryMultishotMultipleReload",
+    "MasteryMultishotFork",
+    "MasteryMultishotExplosiveArrows",
+    "MasteryMultishotKnockback"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Fade",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "Fade",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "mobility",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": 20.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 6.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryFadeBlur",
+    "MasteryFadeDarkness",
+    "MasteryFadeQuickReflexes",
+    "MasteryFadeSpeed",
+    "MasteryFadeRegenerate",
+    "MasteryFadeShadowAssassin"
+   ],
+   "behaviorGaps": [
+    "Evasion_Bonus_Percent"
+   ]
+  },
+  {
+   "name": "ImpalingTrap",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "ImpalingTrap",
+   "tags": [
+    "Offensive",
+    "Spell",
+    "AoE"
+   ],
+   "prototype": "strike",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemy",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": 30.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 5.0,
+    "radius": null,
+    "damageMultiplier": 7.5
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryImpalingTrapPoisonedEdges",
+    "MasteryImpalingTrapSteelSpikes",
+    "MasteryImpalingTrapDeviousTrap",
+    "MasteryImpalingTrapFreeze",
+    "MasteryImpalingTrapHealingTrap",
+    "MasteryImpalingTrapFireBomb"
+   ],
+   "behaviorGaps": [
+    "Power_Duration"
+   ]
+  },
+  {
+   "name": "Backflip",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "Backflip",
+   "tags": [
+    "Movement",
+    "Spell"
+   ],
+   "prototype": "rally",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 25.0
+   },
+   "cooldown": 16.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 7,
+   "masteries": [
+    "MasteryBackflipSafetyFlip",
+    "MasteryBackflipHaste",
+    "MasteryBackflipFrontflip",
+    "MasteryBackflipAcrobatics",
+    "MasteryBackflipMirror",
+    "MasteryBackflipDodge",
+    "MasteryBackflipPowerShot"
+   ],
+   "behaviorGaps": [
+    "Power_Backflip_Increased_Backflip_Speed_Percent",
+    "Power_Backflip_Mirror_Image_Duration",
+    "Power_Backflip_Mirror_Image_Health_Percent"
+   ]
+  },
+  {
+   "name": "MarkOfTheChosen",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "MarkOfTheChosen",
+   "tags": [],
+   "prototype": "rally",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 25.0
+   },
+   "cooldown": 15.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 15.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryMarkOfTheChosenPenetrate",
+    "MasteryMarkOfTheChosenMarkedForDeath",
+    "MasteryMarkOfTheChosenAutoMark",
+    "MasteryMarkOfTheChosenCull",
+    "MasteryMarkOfTheChosenLessResistances",
+    "MasteryMarkOfTheChosenDoom"
+   ],
+   "behaviorGaps": [
+    "Power_Duration",
+    "Power_Mark_Of_The_Chosen_Amplify_Damage_Taken_Percent"
+   ]
+  },
+  {
+   "name": "Thorns",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "Thorns",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "rally",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 35.0
+   },
+   "cooldown": 24.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 10.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryThornsThickThorns",
+    "MasteryThornsRazorEdges",
+    "MasteryThornsDeepCuts",
+    "MasteryThornsThornArmor",
+    "MasteryThornsToxicSting",
+    "MasteryThornsCritDamageReduction"
+   ],
+   "behaviorGaps": [
+    "Base_Physical_Damage_Reduction_Bonus",
+    "Reflect_Melee_Damage_Percent"
+   ]
+  },
+  {
+   "name": "BeastWithin",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "BeastWithin",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "rally",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 7.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryBeastWithinHemoglobin",
+    "MasteryBeastWithinBearsStrength",
+    "MasteryBeastWithinVoracity",
+    "MasteryBeastWithinDuration",
+    "MasteryBeastWithinSnakesDexterity",
+    "MasteryBeastWithinTotalLeech"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Mixology",
+   "class": "Hunter",
+   "kind": "active",
+   "implementedBy": "Mixology",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "rally",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 20.0
+   },
+   "cooldown": 300.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 300.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 7,
+   "masteries": [
+    "MasteryMixologyDuration",
+    "MasteryMixologyAutoPotion",
+    "MasteryMixologyPowerfulConcotion",
+    "MasteryMixologyThirst",
+    "MasteryMixologySmartPotions",
+    "MasteryMixologyManaDuringLife",
+    "MasteryMixologyLifeDuringMana"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Precision",
+   "class": "Hunter",
+   "kind": "passive",
+   "implementedBy": "Precision",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Sharpshooter",
+   "class": "Hunter",
+   "kind": "passive",
+   "implementedBy": "Sharpshooter",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "BeastTracking",
+   "class": "Hunter",
+   "kind": "passive",
+   "implementedBy": "BeastTracking",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "DoubleDraw",
+   "class": "Hunter",
+   "kind": "passive",
+   "implementedBy": "DoubleDraw",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "PoolOfMana",
+   "class": "Hunter",
+   "kind": "passive",
+   "implementedBy": "PoolOfMana",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Concentrate",
+   "class": "Hunter",
+   "kind": "passive",
+   "implementedBy": "Concentrate",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Cripple",
+   "class": "Hunter",
+   "kind": "passive",
+   "implementedBy": "Cripple",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "DeadlyPoison",
+   "class": "Hunter",
+   "kind": "passive",
+   "implementedBy": "DeadlyPoison",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "TastyTreats",
+   "class": "Hunter",
+   "kind": "passive",
+   "implementedBy": "TastyTreats",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": [
+    "Power_SummonWolf_Attack_Speed_Bonus",
+    "Power_SummonWolf_Base_Life_Regen"
+   ],
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Solitary",
+   "class": "Hunter",
+   "kind": "passive",
+   "implementedBy": "Solitary",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Fork",
+   "class": "Hunter",
+   "kind": "passive",
+   "implementedBy": "Fork",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "ChainLightning",
+   "class": "Mage",
+   "kind": "active",
+   "implementedBy": "ChainLightning",
+   "tags": [
+    "Offensive",
+    "Lightning",
+    "Spell"
+   ],
+   "prototype": "chain",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemy",
+   "resources": {
+    "mana": 25.0
+   },
+   "cooldown": 20.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": 2.5
+   },
+   "buffs": [],
+   "projectile": [
+    "ChainLightning_Max_Num_Chains"
+   ],
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryChainLightningImprovedChainLightning",
+    "MasteryChainLightningWeapon",
+    "MasteryChainLightningChains",
+    "MasteryChainLightningManaChain",
+    "MasteryChainLightningDamagePerJump",
+    "MasteryChainLightningThunderstrike"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Teleport",
+   "class": "Mage",
+   "kind": "active",
+   "implementedBy": "Teleport",
+   "tags": [
+    "Movement",
+    "Spell"
+   ],
+   "prototype": "rally",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 20.0
+   },
+   "cooldown": 12.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryTeleportImprovedTeleport",
+    "MasteryTeleportElusiveness",
+    "MasteryTeleportRecitement",
+    "MasteryTeleportSafetyTeleport",
+    "MasteryTeleportLightningSpeed",
+    "MasteryTeleportKnockback"
+   ],
+   "behaviorGaps": [
+    "Base_Action_Speed"
+   ]
+  },
+  {
+   "name": "IceNova",
+   "class": "Mage",
+   "kind": "active",
+   "implementedBy": "IceNova",
+   "tags": [
+    "Offensive",
+    "Spell",
+    "AoE",
+    "Cold"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemies in radius",
+   "resources": {
+    "mana": 20.0
+   },
+   "cooldown": 30.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": 6.0,
+    "damageMultiplier": 0.5
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryIceNovaImprovedIceNova",
+    "MasteryIceNovaDeepFreeze",
+    "MasteryIceNovaConcentratedIce",
+    "MasteryIceNovaFreeze",
+    "MasteryIceNovaThaw",
+    "MasteryIceNovaIceBomb"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "ElementalSeal",
+   "class": "Mage",
+   "kind": "active",
+   "implementedBy": "ElementalSeal",
+   "tags": [
+    "Offensive",
+    "Duration",
+    "Spell",
+    "AoE"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemies in radius",
+   "resources": {
+    "mana": 25.0
+   },
+   "cooldown": 25.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 10.0,
+    "radius": 2.5,
+    "damageMultiplier": 0.25
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryElementalSealImprovedElementalSeal",
+    "MasteryElementalSealFireTrap",
+    "MasteryElementalSealAura",
+    "MasteryElementalSealRadius",
+    "MasteryElementalSealMoreResistancesInside",
+    "MasteryElementalSealMorePlayerDamage"
+   ],
+   "behaviorGaps": [
+    "Power_Duration",
+    "Power_Elemental_Seal_Weapon_Damage_Multiplier"
+   ]
+  },
+  {
+   "name": "Blizzard",
+   "class": "Mage",
+   "kind": "active",
+   "implementedBy": "Blizzard",
+   "tags": [
+    "Offensive",
+    "Spell",
+    "Cold"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemies in radius",
+   "resources": {
+    "mana": 25.0
+   },
+   "cooldown": 25.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 4.0,
+    "radius": 4.0,
+    "damageMultiplier": 1.0
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryBlizzardCrystalShards",
+    "MasteryBlizzardIcestorm",
+    "MasteryBlizzardGravity",
+    "MasteryBlizzardChillingGround",
+    "MasteryBlizzardRapidStorm",
+    "MasteryBlizzardHurricane"
+   ],
+   "behaviorGaps": [
+    "Base_Crit_Chance_Multiplier",
+    "Power_Duration"
+   ]
+  },
+  {
+   "name": "ManaShield",
+   "class": "Mage",
+   "kind": "active",
+   "implementedBy": "ManaShield",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "shield",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": 0.2,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryManaShieldImprovedManaShield",
+    "MasteryManaShieldHeavyShield",
+    "MasteryManaShieldRegeneration",
+    "MasteryManaShieldReducedCritDamage",
+    "MasteryManaShieldManaPotionEffect",
+    "MasteryManaShieldMaxElementalResists"
+   ],
+   "behaviorGaps": [
+    "Mana_Shield_Damage_Absorbtion_Factor"
+   ]
+  },
+  {
+   "name": "IceBlast",
+   "class": "Mage",
+   "kind": "active",
+   "implementedBy": "IceBlast",
+   "tags": [
+    "Offensive",
+    "Spell",
+    "Cold"
+   ],
+   "prototype": "projectile",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemy",
+   "resources": {
+    "mana": 15.0
+   },
+   "cooldown": 15.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": 15.0,
+    "damageMultiplier": 3.0
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryIceBlastImprovedIceBlast",
+    "MasteryIceBlastCounterBlast",
+    "MasteryIceBlastPiercingIce",
+    "MasteryIceBlastRapidRetaliation",
+    "MasteryIceBlastManaOnHit",
+    "MasteryIceBlastCriticalDamage"
+   ],
+   "behaviorGaps": [
+    "Base_Power_Radius",
+    "Power_Weapon_Damage_Multiplier_2"
+   ]
+  },
+  {
+   "name": "InfernalBlast",
+   "class": "Mage",
+   "kind": "active",
+   "implementedBy": "InfernalBlast",
+   "tags": [
+    "Offensive",
+    "Fire",
+    "Spell"
+   ],
+   "prototype": "projectile",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemy",
+   "resources": {
+    "mana": 22.0
+   },
+   "cooldown": 22.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 4.0,
+    "radius": 3.0,
+    "damageMultiplier": 7.0
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryInfernalBlastImprovedInfernalBlast",
+    "MasteryInfernalBlastConflagration",
+    "MasteryInfernalBlastMulticast",
+    "MasteryInfernalBlastVelocity",
+    "MasteryInfernalBlastMultipleExplosions",
+    "MasteryInfernalBlastLivingBomb"
+   ],
+   "behaviorGaps": [
+    "Base_Power_Radius",
+    "Power_Duration",
+    "Power_Weapon_Damage_Multiplier_2"
+   ]
+  },
+  {
+   "name": "Thunderstrike",
+   "class": "Mage",
+   "kind": "active",
+   "implementedBy": "Thunderstrike",
+   "tags": [
+    "Offensive",
+    "Lightning",
+    "Spell"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemies in radius",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": 30.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 4.0,
+    "radius": 30.0,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryThunderstrikeImprovedThunderstrike",
+    "MasteryThunderstrikeShocking",
+    "MasteryThunderstrikeWrathOfThor",
+    "MasteryThunderstrikeFocusedLightning",
+    "MasteryThunderstrikeReCast",
+    "MasteryThunderstrikeChainLightningOnHit"
+   ],
+   "behaviorGaps": [
+    "Power_Duration"
+   ]
+  },
+  {
+   "name": "Tornado",
+   "class": "Mage",
+   "kind": "active",
+   "implementedBy": "Tornado",
+   "tags": [
+    "Offensive",
+    "Lightning",
+    "Spell"
+   ],
+   "prototype": "projectile",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemy",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": 30.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 7.0,
+    "radius": 2.0,
+    "damageMultiplier": 2.3
+   },
+   "buffs": [],
+   "projectile": [
+    "Power_Projectile_Pierce_Chance"
+   ],
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryTornadoImprovedTornado",
+    "MasteryTornadoSeeker",
+    "MasteryTornadoAttraction",
+    "MasteryTornadoAutoCast",
+    "MasteryTornadoTwister",
+    "MasteryTornadoHurricane"
+   ],
+   "behaviorGaps": [
+    "Base_Power_Radius",
+    "Power_Duration"
+   ]
+  },
+  {
+   "name": "PoisonCloud",
+   "class": "Mage",
+   "kind": "active",
+   "implementedBy": "PoisonCloud",
+   "tags": [
+    "Offensive",
+    "AoE",
+    "Duration",
+    "Poison",
+    "Spell"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemies in radius",
+   "resources": {
+    "mana": 25.0
+   },
+   "cooldown": 25.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 6.0,
+    "radius": 3.0,
+    "damageMultiplier": 0.9
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryPoisonCloudSlime",
+    "MasteryPoisonCloudDisease",
+    "MasteryPoisonCloudDecay",
+    "MasteryPoisonCloudAutoCast",
+    "MasteryPoisonCloudSlimelings",
+    "MasteryPoisonCloudHeal"
+   ],
+   "behaviorGaps": [
+    "Power_Duration",
+    "Power_Slow_Effect_Percent"
+   ]
+  },
+  {
+   "name": "Mixology",
+   "class": "Mage",
+   "kind": "active",
+   "implementedBy": "Mixology",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "rally",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 20.0
+   },
+   "cooldown": 300.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 300.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 7,
+   "masteries": [
+    "MasteryMixologyDuration",
+    "MasteryMixologyAutoPotion",
+    "MasteryMixologyPowerfulConcotion",
+    "MasteryMixologyThirst",
+    "MasteryMixologySmartPotions",
+    "MasteryMixologyManaDuringLife",
+    "MasteryMixologyLifeDuringMana"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Hubris",
+   "class": "Mage",
+   "kind": "passive",
+   "implementedBy": "Hubris",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "ManaFlow",
+   "class": "Mage",
+   "kind": "passive",
+   "implementedBy": "ManaFlow",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "RapidCasting",
+   "class": "Mage",
+   "kind": "passive",
+   "implementedBy": "RapidCasting",
+   "tags": [],
+   "prototype": "haste",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "AncientKnowledge",
+   "class": "Mage",
+   "kind": "passive",
+   "implementedBy": "AncientKnowledge",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "BloodCasting",
+   "class": "Mage",
+   "kind": "passive",
+   "implementedBy": "BloodCasting",
+   "tags": [],
+   "prototype": "haste",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "FireArmor",
+   "class": "Mage",
+   "kind": "passive",
+   "implementedBy": "FireArmor",
+   "tags": [
+    "Fire"
+   ],
+   "prototype": "warding",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "ColdArmor",
+   "class": "Mage",
+   "kind": "passive",
+   "implementedBy": "ColdArmor",
+   "tags": [
+    "Fire"
+   ],
+   "prototype": "warding",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "LightningArmor",
+   "class": "Mage",
+   "kind": "passive",
+   "implementedBy": "LightningArmor",
+   "tags": [
+    "Fire"
+   ],
+   "prototype": "warding",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "EvasiveManeuver",
+   "class": "Mage",
+   "kind": "passive",
+   "implementedBy": "EvasiveManeuver",
+   "tags": [
+    "Movement"
+   ],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "ForceField",
+   "class": "Mage",
+   "kind": "passive",
+   "implementedBy": "ForceField",
+   "tags": [
+    "Movement"
+   ],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "SummonSkeleton",
+   "class": "Necromancer",
+   "kind": "active",
+   "implementedBy": "SummonSkeleton",
+   "tags": [
+    "AllowInTown",
+    "Spell",
+    "Minion"
+   ],
+   "prototype": "summon",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self (minions)",
+   "resources": {
+    "mana": 20.0
+   },
+   "cooldown": 10.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": [
+    "Minion_Inheritance_Armor_Evasion_Bonus_Percent",
+    "Minion_Inheritance_Attack_Speed_Bonus_Percent",
+    "Minion_Inheritance_Crit_Chance_Bonus_Percent",
+    "Minion_Inheritance_Crit_Damage_Bonus_Percent",
+    "Minion_Inheritance_Force_Field_Bonus_Percent",
+    "Minion_Inheritance_Life_Bonus_Percent",
+    "Minion_Inheritance_Movement_Speed_Bonus_Percent",
+    "Minion_Inheritance_Resistances_Bonus_Percent",
+    "Minion_Inheritance_Weapon_Damage_Bonus_Percent"
+   ],
+   "masteryCount": 6,
+   "masteries": [
+    "MasterySummonSkeletonImprovedSkeletons",
+    "MasterySummonSkeletonAutoSummon",
+    "MasterySummonSkeletonSkeletalArmy",
+    "MasterySummonSkeletonDurableBones",
+    "MasterySummonSkeletonMoreArmor",
+    "MasterySummonSkeletonDetonate"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "AstralWalk",
+   "class": "Necromancer",
+   "kind": "active",
+   "implementedBy": "AstralWalk",
+   "tags": [
+    "Defensive",
+    "Spell"
+   ],
+   "prototype": "mobility",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 25.0
+   },
+   "cooldown": 16.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryAstralWalkImprovedAstralWalk",
+    "MasteryAstralWalkAutoWalk",
+    "MasteryAstralWalkFlight",
+    "MasteryAstralWalkDecoy",
+    "MasteryAstralWalkReducedManaCost",
+    "MasteryAstralWalkImmortal"
+   ],
+   "behaviorGaps": [
+    "AstralWalk_Movement_Speed_Bonus_Percent"
+   ]
+  },
+  {
+   "name": "Shadowbolt",
+   "class": "Necromancer",
+   "kind": "active",
+   "implementedBy": "Shadowbolt",
+   "tags": [
+    "Spell",
+    "Offensive"
+   ],
+   "prototype": "projectile",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemy",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": 15.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": 2.5,
+    "damageMultiplier": 3.0
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 7,
+   "masteries": [
+    "MasteryShadowboltImprovedShadowbolt",
+    "MasteryShadowboltAutoCast",
+    "MasteryShadowboltShadowPower",
+    "MasteryShadowboltExplosion",
+    "MasteryShadowboltSpeed",
+    "MasteryShadowboltPenetration",
+    "MasteryShadowboltCooldown"
+   ],
+   "behaviorGaps": [
+    "Base_Power_Radius",
+    "Power_Weapon_Damage_Multiplier_2"
+   ]
+  },
+  {
+   "name": "UnholyFocus",
+   "class": "Necromancer",
+   "kind": "active",
+   "implementedBy": "UnholyFocus",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "mobility",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 45.0
+   },
+   "cooldown": 25.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 8.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 7,
+   "masteries": [
+    "MasteryUnholyFocusUnholySpeed",
+    "MasteryUnholyFocusAutocast",
+    "MasteryUnholyFocusProminence",
+    "MasteryUnholyFocusFocusedMind",
+    "MasteryUnholyFocusChargeCooldown",
+    "MasteryUnholyFocusShadowboltDamage",
+    "MasteryUnholyFocusMaxAttackSpeed"
+   ],
+   "behaviorGaps": [
+    "Power_Unholy_Focus_Attack_Speed_Bonus_Percent",
+    "Power_Unholy_Focus_Death_Attacks_On_Target_Instantly_Kills_Threshold",
+    "Power_Unholy_Focus_Demon_Shadowbolt_Weapon_Damage_Multiplier",
+    "Power_Unholy_Focus_Movement_Speed_Bonus_Percent",
+    "Power_Unholy_Focus_Skeleton_Charge_Cooldown"
+   ]
+  },
+  {
+   "name": "DrainLife",
+   "class": "Necromancer",
+   "kind": "active",
+   "implementedBy": "DrainLife",
+   "tags": [
+    "Offensive",
+    "Poison",
+    "Spell"
+   ],
+   "prototype": "summon",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self (minions)",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": 22.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 6.0,
+    "radius": 1.0,
+    "damageMultiplier": 0.7
+   },
+   "buffs": [
+    "Power_Drain_Life_Life_Leech_Bonus_Per_Active_Minion",
+    "Power_Drain_Life_Percent_Of_Life_Leech_Leeched_As_Life"
+   ],
+   "projectile": null,
+   "summon": [
+    "Power_Drain_Life_Life_Leech_Bonus_Per_Active_Minion"
+   ],
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryDrainLifeImprovedDrainLife",
+    "MasteryDrainLifeAutocast",
+    "MasteryDrainLifeEndlessDrain",
+    "MasteryDrainLifeSoulDrain",
+    "MasteryDrainLifeSoulTransfer",
+    "MasteryDrainLifeRange"
+   ],
+   "behaviorGaps": [
+    "Base_Action_Speed",
+    "Base_Power_Radius",
+    "Base_Power_Weapon_Damage_Multiplier",
+    "Power_Drain_Life_Percent_Of_Life_Leech_Leeched_As_Life",
+    "Power_Duration",
+    "field_0x158"
+   ]
+  },
+  {
+   "name": "SummonDemon",
+   "class": "Necromancer",
+   "kind": "active",
+   "implementedBy": "SummonDemon",
+   "tags": [
+    "AllowInTown",
+    "Spell",
+    "Minion"
+   ],
+   "prototype": "summon",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self (minions)",
+   "resources": {
+    "mana": 16.0
+   },
+   "cooldown": 16.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": [
+    "Minion_Inheritance_Armor_Evasion_Bonus_Percent",
+    "Minion_Inheritance_Attack_Speed_Bonus_Percent",
+    "Minion_Inheritance_Crit_Chance_Bonus_Percent",
+    "Minion_Inheritance_Crit_Damage_Bonus_Percent",
+    "Minion_Inheritance_Force_Field_Bonus_Percent",
+    "Minion_Inheritance_Life_Bonus_Percent",
+    "Minion_Inheritance_Movement_Speed_Bonus_Percent",
+    "Minion_Inheritance_Resistances_Bonus_Percent",
+    "Minion_Inheritance_Weapon_Damage_Bonus_Percent",
+    "Power_Minion_Duration"
+   ],
+   "masteryCount": 6,
+   "masteries": [
+    "MasterySummonDemonImprovedDemons",
+    "MasterySummonDemonAutoSummon",
+    "MasterySummonDemonDemonicHorde",
+    "MasterySummonDemonSharpshooter",
+    "MasterySummonDemonReducedRangedDamageTaken",
+    "MasterySummonDemonMoreDamageDealtAndTaken"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "BoneLink",
+   "class": "Necromancer",
+   "kind": "active",
+   "implementedBy": "BoneLink",
+   "tags": [
+    "Defensive",
+    "Spell"
+   ],
+   "prototype": "summon",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self (minions)",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": 24.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 15.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryBoneLinkImprovedLink",
+    "MasteryBoneLinkDeepLink",
+    "MasteryBoneLinkReflectiveBones",
+    "MasteryBoneLinkMoreLinkedTargets",
+    "MasteryBoneLinkGainLifePercentOnKill",
+    "MasteryBoneLinkMoreDamageDealt"
+   ],
+   "behaviorGaps": [
+    "Amplify_Damage_Taken_Percent",
+    "Buff_Duration"
+   ]
+  },
+  {
+   "name": "Decay",
+   "class": "Necromancer",
+   "kind": "active",
+   "implementedBy": "Decay",
+   "tags": [
+    "Offensive",
+    "AoE",
+    "Spell"
+   ],
+   "prototype": "nova",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "enemies in radius",
+   "resources": {
+    "mana": 22.0
+   },
+   "cooldown": 22.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 8.0,
+    "radius": 5.0,
+    "damageMultiplier": 0.25
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryDecayImprovedDecay",
+    "MasteryDecayAutocast",
+    "MasteryDecayRot",
+    "MasteryDecayDuration",
+    "MasteryDecayMorePoisonDamageTaken",
+    "MasteryDecayMinionRegen"
+   ],
+   "behaviorGaps": [
+    "Power_Decay_Target_Reduced_Attack_Speed_Percent",
+    "Power_Duration"
+   ]
+  },
+  {
+   "name": "DemonicPresence",
+   "class": "Necromancer",
+   "kind": "active",
+   "implementedBy": "DemonicPresence",
+   "tags": [
+    "Offensive",
+    "Aura",
+    "AoE",
+    "Spell"
+   ],
+   "prototype": "summon",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self (minions)",
+   "resources": {
+    "mana": 30.0
+   },
+   "cooldown": 30.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 16.0,
+    "radius": 7.0,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 6,
+   "masteries": [
+    "MasteryDemonicPresenceImprovedDemonicPresence",
+    "MasteryDemonicPresenceAura",
+    "MasteryDemonicPresenceCower",
+    "MasteryDemonicPresenceRegeneration",
+    "MasteryDemonicPresenceMoreDefenses",
+    "MasteryDemonicPresencePotionEffects"
+   ],
+   "behaviorGaps": [
+    "Base_Power_Radius",
+    "Life_Regen_Bonus",
+    "Power_Demonic_Presence_Base_ForceField_Bonus_Percent",
+    "Power_Demonic_Presence_Base_Life_Bonus_Percent",
+    "Power_Duration"
+   ]
+  },
+  {
+   "name": "Sacrifice",
+   "class": "Necromancer",
+   "kind": "active",
+   "implementedBy": "Sacrifice",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "summon",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self (minions)",
+   "resources": {
+    "mana": 10.0
+   },
+   "cooldown": 25.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 5.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": [
+    "Power_Life_And_Force_Field_Gained_From_Minion_Percent"
+   ],
+   "masteryCount": 6,
+   "masteries": [
+    "MasterySacrificeImprovedSacrifice",
+    "MasterySacrificeAutoSacrifice",
+    "MasterySacrificeInfusion",
+    "MasterySacrificeDuration",
+    "MasterySacrificeCulling",
+    "MasterySacrificeDetonate"
+   ],
+   "behaviorGaps": [
+    "Mana_Granted_Percent",
+    "Next_Offensive_Spell_Cast_Damage_Increased_Percent",
+    "Power_Duration"
+   ]
+  },
+  {
+   "name": "SummonDeath",
+   "class": "Necromancer",
+   "kind": "active",
+   "implementedBy": "SummonDeath",
+   "tags": [
+    "AllowInTown",
+    "Spell",
+    "Minion"
+   ],
+   "prototype": "summon",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self (minions)",
+   "resources": {
+    "mana": 45.0
+   },
+   "cooldown": 45.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": [
+    "Minion_Inheritance_Armor_Evasion_Bonus_Percent",
+    "Minion_Inheritance_Attack_Speed_Bonus_Percent",
+    "Minion_Inheritance_Crit_Chance_Bonus_Percent",
+    "Minion_Inheritance_Crit_Damage_Bonus_Percent",
+    "Minion_Inheritance_Force_Field_Bonus_Percent",
+    "Minion_Inheritance_Life_Bonus_Percent",
+    "Minion_Inheritance_Movement_Speed_Bonus_Percent",
+    "Minion_Inheritance_Resistances_Bonus_Percent"
+   ],
+   "masteryCount": 7,
+   "masteries": [
+    "MasterySummonDeathImprovedDeath",
+    "MasterySummonDeathAutoSummon",
+    "MasterySummonDeathAttackSpeed",
+    "MasterySummonDeathSweep",
+    "MasterySummonDeathDuo",
+    "MasterySummonDeathChanceToBlock",
+    "MasterySummonDeathMoreInitialDamage"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Mixology",
+   "class": "Necromancer",
+   "kind": "active",
+   "implementedBy": "Mixology",
+   "tags": [
+    "Spell"
+   ],
+   "prototype": "rally",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "self",
+   "resources": {
+    "mana": 20.0
+   },
+   "cooldown": 300.0,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": 300.0,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [
+    "Buff_Duration"
+   ],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 7,
+   "masteries": [
+    "MasteryMixologyDuration",
+    "MasteryMixologyAutoPotion",
+    "MasteryMixologyPowerfulConcotion",
+    "MasteryMixologyThirst",
+    "MasteryMixologySmartPotions",
+    "MasteryMixologyManaDuringLife",
+    "MasteryMixologyLifeDuringMana"
+   ],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Bodyguard",
+   "class": "Necromancer",
+   "kind": "passive",
+   "implementedBy": "Bodyguard",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "AccumulatingShadows",
+   "class": "Necromancer",
+   "kind": "passive",
+   "implementedBy": "AccumulatingShadows",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Pillaging",
+   "class": "Necromancer",
+   "kind": "passive",
+   "implementedBy": "Pillaging",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "BoneArmor",
+   "class": "Necromancer",
+   "kind": "passive",
+   "implementedBy": "BoneArmor",
+   "tags": [],
+   "prototype": "warding",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "DarkMagic",
+   "class": "Necromancer",
+   "kind": "passive",
+   "implementedBy": "DarkMagic",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "GiftOfTheVampire",
+   "class": "Necromancer",
+   "kind": "passive",
+   "implementedBy": "GiftOfTheVampire",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "MasterSummoner",
+   "class": "Necromancer",
+   "kind": "passive",
+   "implementedBy": "MasterSummoner",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "Reanimator",
+   "class": "Necromancer",
+   "kind": "passive",
+   "implementedBy": "Reanimator",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "VileTouch",
+   "class": "Necromancer",
+   "kind": "passive",
+   "implementedBy": "VileTouch",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "provisional-behaviour",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  },
+  {
+   "name": "WandMaster",
+   "class": "Necromancer",
+   "kind": "passive",
+   "implementedBy": "WandMaster",
+   "tags": [],
+   "prototype": "might",
+   "prototypeConfidence": "client-verified",
+   "castConditions": {
+    "requiredWeapons": 0,
+    "targetedCast": null
+   },
+   "target": "unknown",
+   "resources": {
+    "mana": null
+   },
+   "cooldown": null,
+   "levelCurve": {
+    "status": "not recovered",
+    "note": "per-rank scaling lives in IL2CPP method bodies"
+   },
+   "effectTimeline": {
+    "duration": null,
+    "radius": null,
+    "damageMultiplier": null
+   },
+   "buffs": [],
+   "projectile": null,
+   "summon": null,
+   "masteryCount": 0,
+   "masteries": [],
+   "behaviorGaps": []
+  }
+ ]
+}

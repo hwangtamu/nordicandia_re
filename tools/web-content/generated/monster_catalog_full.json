@@ -1,0 +1,2136 @@
+{
+ "baseline": "android-1.9.3 (versionCode 507033)",
+ "generatedAt": "2026-10-03",
+ "counts": {
+  "total": 136,
+  "byType": {
+   "BaseMinion": 16,
+   "Beast": 18,
+   "Blacksmith": 1,
+   "Changer": 1,
+   "ChristmasMonster": 3,
+   "CombatPet": 5,
+   "CombatPetkeeper": 1,
+   "Demon": 15,
+   "Disassembler": 1,
+   "Dragon": 3,
+   "Elder": 1,
+   "EvilChest": 1,
+   "FallMonster": 5,
+   "GiftStatue": 1,
+   "Goblin": 4,
+   "Golem": 3,
+   "GolemTrigger": 3,
+   "GuildDefenseMaster": 1,
+   "Merchant": 1,
+   "Offering": 1,
+   "Orc": 10,
+   "Pet": 8,
+   "Petkeeper": 1,
+   "PortalMaster": 1,
+   "SetItemMerchant": 1,
+   "SpringMonster": 12,
+   "Tutorial": 1,
+   "Undead": 17
+  },
+  "withRarities": 115,
+  "bossOrSummonOnly": 21,
+  "brainDangling": 0,
+  "brainMissing": 4
+ },
+ "items": [
+  {
+   "guid": "a189b0c1-fab5-4af2-8a30-fb4809ba56ef",
+   "integerId": 122,
+   "name": "ArrowstreamMinion",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    3
+   ],
+   "brainId": "e39ffb52-df5f-49c3-b67d-95a2c7b966b1",
+   "brainName": "ArrowstreamMinion",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 3）"
+  },
+  {
+   "guid": "48eea2c2-877e-4a59-bbbc-9f83abbc49f9",
+   "integerId": 90,
+   "name": "BoneDragonSkeleton",
+   "typeName": "BaseMinion",
+   "availableRarities": null,
+   "brainId": "ba6816d1-b04c-4fbb-9aa6-9a8f255a6c01",
+   "brainName": "AggressiveMinion",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "0f7ffdc5-28b4-4dde-a7c0-780d83b05d62",
+   "integerId": 128,
+   "name": "GuidSiegeRunestone",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "47c52043-f03b-4714-8506-62c41ea2b775",
+   "brainName": "NoAI",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "601db7c2-e520-4691-9a84-cada40f21442",
+   "integerId": 106,
+   "name": "HelMinion",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    1
+   ],
+   "brainId": "ba6816d1-b04c-4fbb-9aa6-9a8f255a6c01",
+   "brainName": "AggressiveMinion",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic）"
+  },
+  {
+   "guid": "bd00b530-f848-43df-aa90-16285fba881b",
+   "integerId": 88,
+   "name": "HunterMirrorImageMinion",
+   "typeName": "BaseMinion",
+   "availableRarities": null,
+   "brainId": null,
+   "brainName": null,
+   "brainDangling": false,
+   "brainMissing": true,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "9e8fc3d6-dc7a-40f6-a9aa-ad1de1113a3e",
+   "integerId": 170,
+   "name": "KibuElemental",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    1
+   ],
+   "brainId": "ba6816d1-b04c-4fbb-9aa6-9a8f255a6c01",
+   "brainName": "AggressiveMinion",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic）"
+  },
+  {
+   "guid": "a9c492f0-5aef-4ad6-ac6b-adc4ffc71ccd",
+   "integerId": 116,
+   "name": "OdrTotem",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "8db5a443-4441-425d-83be-2b5180ced0c4",
+   "brainName": "Boss_OdrTotem",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "3fba1cab-2000-4e80-b14d-d0560bb80726",
+   "integerId": 134,
+   "name": "SummonDeathMinion",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "ea9e42e8-37a9-4e21-ade8-543e512d32f1",
+   "brainName": "NecroDeath",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "a103859c-f762-4f9d-ad3f-00c350080e64",
+   "integerId": 132,
+   "name": "SummonDemonMinion",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "1da0f045-b0fc-4d88-a115-bce248aab6b7",
+   "brainName": "NecroDemon",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "e394d2ba-8e9a-4d4f-9f3a-105f43ab7cb5",
+   "integerId": 118,
+   "name": "SummonHuginnMinion",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f15c3e8b-cd56-48e4-b7b8-622a3e756658",
+   "brainName": "UniqueItemHuginn",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "45cf3de6-bca8-4935-a4a3-9fa1469ab89d",
+   "integerId": 120,
+   "name": "SummonMuninnMinion",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "7246198b-4f5f-4b88-8adb-f14c943d1445",
+   "brainName": "UniqueItemMuninn",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "0acadaf2-4480-42bf-ba07-fe6d886cfd46",
+   "integerId": 130,
+   "name": "SummonSkeletonMinion",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "d8afd581-efb4-49fe-ab5a-7481b9af5ca5",
+   "brainName": "NecroSkeleton",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "6d653649-853b-4fea-9274-6a6cb0ed42f5",
+   "integerId": 86,
+   "name": "SummonWolfMinion",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "1727d960-9d1e-43e9-a6a7-17981b27526d",
+   "brainName": "SummonWolf",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "83b925b7-4f27-448e-ae81-2005aed05cbe",
+   "integerId": 94,
+   "name": "SummonWolfSpiritMinion",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "1727d960-9d1e-43e9-a6a7-17981b27526d",
+   "brainName": "SummonWolf",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "bca42cc5-08ad-482f-bb4d-75842b8e6a98",
+   "integerId": 124,
+   "name": "UniqueBearMinion",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    3
+   ],
+   "brainId": "1727d960-9d1e-43e9-a6a7-17981b27526d",
+   "brainName": "SummonWolf",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 3）"
+  },
+  {
+   "guid": "5947caad-1d26-449a-bc1f-8b334ca024cf",
+   "integerId": 87,
+   "name": "WolfKingMinion",
+   "typeName": "BaseMinion",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "ba6816d1-b04c-4fbb-9aa6-9a8f255a6c01",
+   "brainName": "AggressiveMinion",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "57efe34e-f3d8-4144-a142-896a4cf89b0c",
+   "integerId": 25,
+   "name": "ArcticWolf",
+   "typeName": "Beast",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "0bcdd66e-7fe6-41ad-a8bb-d1a767301a87",
+   "brainName": "StandardCurseAmplifyDamageTaken",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "3a737a86-e82a-494b-b609-054be9e984db",
+   "integerId": 59,
+   "name": "ArmoredLarva",
+   "typeName": "Beast",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "brainId": "0bcdd66e-7fe6-41ad-a8bb-d1a767301a87",
+   "brainName": "StandardCurseAmplifyDamageTaken",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic,Rare,Normal）"
+  },
+  {
+   "guid": "f380ebbc-bb35-4dee-bf06-0ab6b74b9888",
+   "integerId": 0,
+   "name": "Bat",
+   "typeName": "Beast",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "a735adf3-4655-4951-aedf-f3b730c81fd8",
+   "integerId": 56,
+   "name": "BigBiter",
+   "typeName": "Beast",
+   "availableRarities": [
+    1,
+    2
+   ],
+   "brainId": "0bcdd66e-7fe6-41ad-a8bb-d1a767301a87",
+   "brainName": "StandardCurseAmplifyDamageTaken",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic,Rare）"
+  },
+  {
+   "guid": "9ade0f05-ca04-4653-8465-7fa91c8a55d3",
+   "integerId": 32,
+   "name": "BlackHawk",
+   "typeName": "Beast",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "cf7f47e8-a52c-4a02-bbf5-7ff9830905e0",
+   "integerId": 18,
+   "name": "Boss_WolfKing",
+   "typeName": "Beast",
+   "availableRarities": [
+    6
+   ],
+   "brainId": "f193a821-06a4-4845-bf55-2ac26eedfdea",
+   "brainName": "Boss_WolfKing",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Boss）"
+  },
+  {
+   "guid": "4c3233b3-e662-4206-b863-2cbb86a5d243",
+   "integerId": 26,
+   "name": "BrownBear",
+   "typeName": "Beast",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "0bcdd66e-7fe6-41ad-a8bb-d1a767301a87",
+   "brainName": "StandardCurseAmplifyDamageTaken",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "9790654a-0227-483a-b774-eba3aa5d02b6",
+   "integerId": 57,
+   "name": "BrownSpider",
+   "typeName": "Beast",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "brainId": "0bcdd66e-7fe6-41ad-a8bb-d1a767301a87",
+   "brainName": "StandardCurseAmplifyDamageTaken",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic,Rare,Normal）"
+  },
+  {
+   "guid": "a864b651-6a4d-4813-8ae9-d2e4ad20c7fb",
+   "integerId": 58,
+   "name": "EvilPlant",
+   "typeName": "Beast",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic,Rare,Normal）"
+  },
+  {
+   "guid": "9f068113-acc9-42d7-bc8d-c0e1bdfcda48",
+   "integerId": 27,
+   "name": "GrayWolf",
+   "typeName": "Beast",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "0bcdd66e-7fe6-41ad-a8bb-d1a767301a87",
+   "brainName": "StandardCurseAmplifyDamageTaken",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "e9def0d3-5003-45c2-9e92-26563758e840",
+   "integerId": 28,
+   "name": "IceBear",
+   "typeName": "Beast",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "0bcdd66e-7fe6-41ad-a8bb-d1a767301a87",
+   "brainName": "StandardCurseAmplifyDamageTaken",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "065de2be-c08c-45e7-ad7d-887f8ba73cf7",
+   "integerId": 60,
+   "name": "MagicalInsect",
+   "typeName": "Beast",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "brainId": "8ba10d11-d675-4c18-a230-843b507cfd5a",
+   "brainName": "StandardFleeingWhenCloseCurseLowerResist",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic,Rare,Normal）"
+  },
+  {
+   "guid": "4ccab4e5-7642-4af1-9bc0-3722cdc45a91",
+   "integerId": 61,
+   "name": "MagicalOwl",
+   "typeName": "Beast",
+   "availableRarities": [
+    1
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic）"
+  },
+  {
+   "guid": "7404c9f7-0c67-42c5-87cb-f0aee0a68139",
+   "integerId": 29,
+   "name": "RabidRat",
+   "typeName": "Beast",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "0bcdd66e-7fe6-41ad-a8bb-d1a767301a87",
+   "brainName": "StandardCurseAmplifyDamageTaken",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "688633dc-219a-4b47-a78d-0e5bf52ac4ad",
+   "integerId": 30,
+   "name": "Spider",
+   "typeName": "Beast",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "c4d9acd8-2cec-42ee-8734-b819ea7ceb44",
+   "integerId": 33,
+   "name": "SpiderQueen",
+   "typeName": "Beast",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "0bcdd66e-7fe6-41ad-a8bb-d1a767301a87",
+   "brainName": "StandardCurseAmplifyDamageTaken",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "64d51833-765c-46ee-a3dd-3e11e9aa1fc4",
+   "integerId": 31,
+   "name": "Spiderling",
+   "typeName": "Beast",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "919a0b94-11e3-4a63-9e2b-a357ea6d94a9",
+   "integerId": 9,
+   "name": "SpittingParasite",
+   "typeName": "Beast",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "d9328344-6129-41f7-8388-9f9a01407d94",
+   "integerId": 69,
+   "name": "Blacksmith",
+   "typeName": "Blacksmith",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f9771917-3ef8-42d5-b3f5-5827590038f4",
+   "brainName": "Wander",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "36dc9054-b279-48df-9932-071b8f085f0d",
+   "integerId": 92,
+   "name": "Changer",
+   "typeName": "Changer",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f9771917-3ef8-42d5-b3f5-5827590038f4",
+   "brainName": "Wander",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "c44ff3bc-e074-4626-86ca-6f9edf3c07d0",
+   "integerId": 174,
+   "name": "HeavySnowman",
+   "typeName": "ChristmasMonster",
+   "availableRarities": [
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Rare）"
+  },
+  {
+   "guid": "bcd6db77-8236-4a89-88ad-d5be78fe1abb",
+   "integerId": 176,
+   "name": "LegendarySnowman",
+   "typeName": "ChristmasMonster",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "1d8c9201-1d45-47ff-9852-381358b05c15",
+   "integerId": 178,
+   "name": "Snowman",
+   "typeName": "ChristmasMonster",
+   "availableRarities": [
+    1
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic）"
+  },
+  {
+   "guid": "292dc314-d9f4-4db6-9723-eefc7d1d5158",
+   "integerId": 186,
+   "name": "CombatPetDurnir",
+   "typeName": "CombatPet",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "a67f5b83-cfad-4dd0-bd6b-643657aaf5e0",
+   "brainName": "CombatPet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "3f96b1c0-260b-445a-9ae4-a38b7cd16e93",
+   "integerId": 189,
+   "name": "CombatPetEggther",
+   "typeName": "CombatPet",
+   "availableRarities": null,
+   "brainId": "a67f5b83-cfad-4dd0-bd6b-643657aaf5e0",
+   "brainName": "CombatPet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "696f9942-aaf0-4cb3-afb1-f17c7265f202",
+   "integerId": 191,
+   "name": "CombatPetFossegrim",
+   "typeName": "CombatPet",
+   "availableRarities": null,
+   "brainId": "a67f5b83-cfad-4dd0-bd6b-643657aaf5e0",
+   "brainName": "CombatPet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "6ed5d27e-a332-47c4-9159-b2f3a627fd13",
+   "integerId": 188,
+   "name": "CombatPetHala",
+   "typeName": "CombatPet",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "a67f5b83-cfad-4dd0-bd6b-643657aaf5e0",
+   "brainName": "CombatPet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "5cca962f-80c7-4cf8-ba15-34e670d93e75",
+   "integerId": 190,
+   "name": "CombatPetHraesvelgr",
+   "typeName": "CombatPet",
+   "availableRarities": null,
+   "brainId": "a67f5b83-cfad-4dd0-bd6b-643657aaf5e0",
+   "brainName": "CombatPet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "8f6acab8-8d9b-4df4-90f6-1886ee6d5370",
+   "integerId": 187,
+   "name": "CombatPetkeeper",
+   "typeName": "CombatPetkeeper",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f9771917-3ef8-42d5-b3f5-5827590038f4",
+   "brainName": "Wander",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "7005a332-7055-4f06-b3e5-2e2dee4ecfcd",
+   "integerId": 5,
+   "name": "Boss_Bolomahl",
+   "typeName": "Demon",
+   "availableRarities": [
+    6
+   ],
+   "brainId": "cc0c2064-578f-49c3-98f3-bb01b9852312",
+   "brainName": "Boss_Bolomahl",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Boss）"
+  },
+  {
+   "guid": "8a2937e6-3cb1-4880-b51f-d307cae95e30",
+   "integerId": 168,
+   "name": "Boss_Kibu",
+   "typeName": "Demon",
+   "availableRarities": [
+    6
+   ],
+   "brainId": "da6c0708-db40-4df5-af8a-e40eec2efea4",
+   "brainName": "Boss_Kibu",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Boss）"
+  },
+  {
+   "guid": "d325bf28-33fc-4a97-b066-3410b702d19b",
+   "integerId": 36,
+   "name": "CasterDemon1",
+   "typeName": "Demon",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "6811697b-cf94-42ba-998e-4e362eabcbbd",
+   "brainName": "StandardCurseSlow",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "41130674-37ba-440f-b534-e9157d2795bc",
+   "integerId": 37,
+   "name": "CasterDemon2",
+   "typeName": "Demon",
+   "availableRarities": [],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "b79b0821-9215-437b-a673-e60f6add3205",
+   "integerId": 38,
+   "name": "CasterDemon3",
+   "typeName": "Demon",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "77f4624c-d82c-4261-bb25-c3c4d26b8c9e",
+   "integerId": 34,
+   "name": "Demon1",
+   "typeName": "Demon",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "6811697b-cf94-42ba-998e-4e362eabcbbd",
+   "brainName": "StandardCurseSlow",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "86f8b085-3a7d-4889-a7e3-002d6a365d25",
+   "integerId": 35,
+   "name": "Demon2",
+   "typeName": "Demon",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "6811697b-cf94-42ba-998e-4e362eabcbbd",
+   "brainName": "StandardCurseSlow",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "8de1c7bb-a1d9-4236-9bd3-0f615ad38188",
+   "integerId": 52,
+   "name": "Demon3",
+   "typeName": "Demon",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "6811697b-cf94-42ba-998e-4e362eabcbbd",
+   "brainName": "StandardCurseSlow",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "ff349a85-4267-4ae2-a5aa-11821a0abe35",
+   "integerId": 53,
+   "name": "Demon4",
+   "typeName": "Demon",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "6811697b-cf94-42ba-998e-4e362eabcbbd",
+   "brainName": "StandardCurseSlow",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "248cb9a4-1ceb-407f-a2b2-8243eab7bf86",
+   "integerId": 54,
+   "name": "Demon5",
+   "typeName": "Demon",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "brainId": "6811697b-cf94-42ba-998e-4e362eabcbbd",
+   "brainName": "StandardCurseSlow",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic,Rare,Normal）"
+  },
+  {
+   "guid": "c194bba5-7763-4ac6-9da4-63def947eda6",
+   "integerId": 1,
+   "name": "DemonOrc",
+   "typeName": "Demon",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "2d2d9461-7995-49c6-93de-7dd621db6bde",
+   "integerId": 24,
+   "name": "EvilEye",
+   "typeName": "Demon",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "6811697b-cf94-42ba-998e-4e362eabcbbd",
+   "brainName": "StandardCurseSlow",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "1ec949c9-7c64-45e5-9191-b604a7bed198",
+   "integerId": 55,
+   "name": "RangedDemon1",
+   "typeName": "Demon",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "brainId": "8ba10d11-d675-4c18-a230-843b507cfd5a",
+   "brainName": "StandardFleeingWhenCloseCurseLowerResist",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic,Rare,Normal）"
+  },
+  {
+   "guid": "6071b3b5-b736-4342-8325-1f2ba631eee0",
+   "integerId": 23,
+   "name": "Succubus",
+   "typeName": "Demon",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "6811697b-cf94-42ba-998e-4e362eabcbbd",
+   "brainName": "StandardCurseSlow",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "d6cf54e5-244a-4737-87fd-bb7607e0fef4",
+   "integerId": 22,
+   "name": "VoidSpawn",
+   "typeName": "Demon",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "6811697b-cf94-42ba-998e-4e362eabcbbd",
+   "brainName": "StandardCurseSlow",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "a4b83c30-40f2-4f00-8bb9-4ceb93e2707c",
+   "integerId": 81,
+   "name": "Disassembler",
+   "typeName": "Disassembler",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f9771917-3ef8-42d5-b3f5-5827590038f4",
+   "brainName": "Wander",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "61b7eb87-3af5-4be6-813f-e5ce8bed0fb9",
+   "integerId": 19,
+   "name": "Boss_AncientDragon",
+   "typeName": "Dragon",
+   "availableRarities": [
+    6
+   ],
+   "brainId": "8141a9d4-e659-4b86-a15c-60feff64c3f3",
+   "brainName": "Boss_AncientDragon",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Boss）"
+  },
+  {
+   "guid": "69446377-268e-4a87-aed2-b55d47c021d0",
+   "integerId": 17,
+   "name": "Boss_BoneDragon",
+   "typeName": "Dragon",
+   "availableRarities": [
+    6
+   ],
+   "brainId": "ed47f4d8-c439-4375-b644-9182f83a8811",
+   "brainName": "Boss_BoneDragon",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Boss）"
+  },
+  {
+   "guid": "6eb21ec1-6698-4ec1-9bdb-6d097f5668b2",
+   "integerId": 83,
+   "name": "Boss_VileDragon",
+   "typeName": "Dragon",
+   "availableRarities": [
+    6
+   ],
+   "brainId": "4727c304-ae4b-4381-875f-497d1a30ee7b",
+   "brainName": "Boss_VileDragon",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Boss）"
+  },
+  {
+   "guid": "266d1b50-b0cc-4cb6-993d-7b93af5b975c",
+   "integerId": 71,
+   "name": "Elder",
+   "typeName": "Elder",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f9771917-3ef8-42d5-b3f5-5827590038f4",
+   "brainName": "Wander",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "35a2f2f6-83e1-4eb8-8cf3-ac2b046ede9f",
+   "integerId": 79,
+   "name": "EvilChest",
+   "typeName": "EvilChest",
+   "availableRarities": [
+    4,
+    2,
+    1
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion,Rare,Magic）"
+  },
+  {
+   "guid": "a634528d-7131-49f3-8579-002d737d8417",
+   "integerId": 190,
+   "name": "Bergsra",
+   "typeName": "FallMonster",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "5add52ec-d046-4ff6-8dbc-ca11b6158b5d",
+   "integerId": 187,
+   "name": "Draugr",
+   "typeName": "FallMonster",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "6e4f41c2-ec60-4908-8972-f218b8385197",
+   "integerId": 189,
+   "name": "Huldra",
+   "typeName": "FallMonster",
+   "availableRarities": [
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Rare）"
+  },
+  {
+   "guid": "86fafda1-1aba-436d-b917-c273b3206ab4",
+   "integerId": 188,
+   "name": "Nokken",
+   "typeName": "FallMonster",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "3a2424da-67ed-421a-a390-09da5d75d8ab",
+   "integerId": 186,
+   "name": "Pesta",
+   "typeName": "FallMonster",
+   "availableRarities": [
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Rare）"
+  },
+  {
+   "guid": "22f1a881-694f-400f-a730-27458c68b80a",
+   "integerId": 210,
+   "name": "GiftStatue",
+   "typeName": "GiftStatue",
+   "availableRarities": null,
+   "brainId": "47c52043-f03b-4714-8506-62c41ea2b775",
+   "brainName": "NoAI",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "ecea135b-ad98-478d-b1b7-a1fbdeb08a9b",
+   "integerId": 2,
+   "name": "Goblin1",
+   "typeName": "Goblin",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "ed9b268e-834b-43ff-8353-a44682e0e69f",
+   "integerId": 39,
+   "name": "Goblin2",
+   "typeName": "Goblin",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "23d1f671-d3ba-4bf5-bfa1-eef0e6d9de31",
+   "integerId": 42,
+   "name": "Goblin3",
+   "typeName": "Goblin",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "brainId": "8ba10d11-d675-4c18-a230-843b507cfd5a",
+   "brainName": "StandardFleeingWhenCloseCurseLowerResist",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic,Rare,Normal）"
+  },
+  {
+   "guid": "9bae0fd8-7f99-4c47-bb4b-7b3bd33d2d4a",
+   "integerId": 13,
+   "name": "GoblinArcher1",
+   "typeName": "Goblin",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "9f592231-8fe7-4d3f-9be5-5e5803b92386",
+   "integerId": 8,
+   "name": "CrystalGolem",
+   "typeName": "Golem",
+   "availableRarities": null,
+   "brainId": null,
+   "brainName": null,
+   "brainDangling": false,
+   "brainMissing": true,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "80d8e29e-d21d-4661-a528-e63e4946bb96",
+   "integerId": 6,
+   "name": "FireGolem",
+   "typeName": "Golem",
+   "availableRarities": null,
+   "brainId": null,
+   "brainName": null,
+   "brainDangling": false,
+   "brainMissing": true,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "1f4318d0-7a9d-48aa-85ee-dfa9e1d4341a",
+   "integerId": 7,
+   "name": "StoneGolem",
+   "typeName": "Golem",
+   "availableRarities": null,
+   "brainId": null,
+   "brainName": null,
+   "brainDangling": false,
+   "brainMissing": true,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "2df092ed-ef2a-4952-a0f0-ff8ce3ef320f",
+   "integerId": 51,
+   "name": "CrystalGolemTrigger",
+   "typeName": "GolemTrigger",
+   "availableRarities": null,
+   "brainId": "cc9ea1a9-91a1-47f9-a88c-524c0aec3a23",
+   "brainName": "GolemTrigger",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "975921f5-4365-4930-9b9e-2f2e23b9720a",
+   "integerId": 49,
+   "name": "FireGolemTrigger",
+   "typeName": "GolemTrigger",
+   "availableRarities": null,
+   "brainId": "cc9ea1a9-91a1-47f9-a88c-524c0aec3a23",
+   "brainName": "GolemTrigger",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "55988748-0f46-498a-8131-6b52f910a8fe",
+   "integerId": 50,
+   "name": "StoneGolemTrigger",
+   "typeName": "GolemTrigger",
+   "availableRarities": null,
+   "brainId": "cc9ea1a9-91a1-47f9-a88c-524c0aec3a23",
+   "brainName": "GolemTrigger",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "86a734ba-f3b0-428e-ac14-890fb64b30d2",
+   "integerId": 126,
+   "name": "GuildDefenseMaster",
+   "typeName": "GuildDefenseMaster",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f9771917-3ef8-42d5-b3f5-5827590038f4",
+   "brainName": "Wander",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "618216a0-48c4-4c5a-a465-1509c9b1aa1b",
+   "integerId": 85,
+   "name": "Merchant",
+   "typeName": "Merchant",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f9771917-3ef8-42d5-b3f5-5827590038f4",
+   "brainName": "Wander",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "efa3718e-c0a5-4162-9efc-ad7ba19fca26",
+   "integerId": 112,
+   "name": "Offering",
+   "typeName": "Offering",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f9771917-3ef8-42d5-b3f5-5827590038f4",
+   "brainName": "Wander",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "e6e72a8e-50f6-4c4b-8df7-b23683e73df3",
+   "integerId": 16,
+   "name": "Boss_TheWarchief",
+   "typeName": "Orc",
+   "availableRarities": [
+    6
+   ],
+   "brainId": "dcfcaedc-db98-42d7-b490-6755a361a072",
+   "brainName": "Boss_Warchief",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Boss）"
+  },
+  {
+   "guid": "00d46afc-6dca-44d7-bffa-62d8a25506ac",
+   "integerId": 62,
+   "name": "EnragedOrc",
+   "typeName": "Orc",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "a0479b91-c82d-416b-8bfb-8f825978ae86",
+   "brainName": "StandardCurseLivingLeech",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "146104fa-b551-4669-ae1f-eb1b1fe76a0a",
+   "integerId": 40,
+   "name": "Ogre",
+   "typeName": "Orc",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "brainId": "a0479b91-c82d-416b-8bfb-8f825978ae86",
+   "brainName": "StandardCurseLivingLeech",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic,Rare,Normal）"
+  },
+  {
+   "guid": "5607da0f-6df7-46bc-996d-713a63a22652",
+   "integerId": 15,
+   "name": "Orc1",
+   "typeName": "Orc",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "a0479b91-c82d-416b-8bfb-8f825978ae86",
+   "brainName": "StandardCurseLivingLeech",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "26a220b2-d8b0-4efc-9f65-054667ec160d",
+   "integerId": 21,
+   "name": "Orc2",
+   "typeName": "Orc",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "22ba1522-63e6-4929-a2f3-95b6a13772e0",
+   "integerId": 41,
+   "name": "Orc3",
+   "typeName": "Orc",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "a0479b91-c82d-416b-8bfb-8f825978ae86",
+   "brainName": "StandardCurseLivingLeech",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "10801a45-6460-430b-8077-32aacd1ed45d",
+   "integerId": 43,
+   "name": "Orc4",
+   "typeName": "Orc",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "a0479b91-c82d-416b-8bfb-8f825978ae86",
+   "brainName": "StandardCurseLivingLeech",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "9bd10555-d3bd-43a0-b7a9-f89c88ba52b4",
+   "integerId": 14,
+   "name": "Troll1",
+   "typeName": "Orc",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "d420d7cc-54e3-456d-879f-ee5eb2b63ece",
+   "integerId": 20,
+   "name": "WildShaman",
+   "typeName": "Orc",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "23870a02-e1b1-4f8a-a7a0-d4bfb78b340a",
+   "integerId": 63,
+   "name": "WiseOrc",
+   "typeName": "Orc",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "864af96f-52f0-4737-a081-0bdf40d65e05",
+   "integerId": 158,
+   "name": "PetBabyDragon",
+   "typeName": "Pet",
+   "availableRarities": null,
+   "brainId": "04ea97e7-3f7a-4edb-9824-e3f65b563bc2",
+   "brainName": "Pet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "e26ca27f-dc75-4ab3-b2e9-c7e3f74e7665",
+   "integerId": 98,
+   "name": "PetCrow",
+   "typeName": "Pet",
+   "availableRarities": null,
+   "brainId": "04ea97e7-3f7a-4edb-9824-e3f65b563bc2",
+   "brainName": "Pet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "79d51d58-1a4f-4551-a92d-507686efd196",
+   "integerId": 89,
+   "name": "PetDog",
+   "typeName": "Pet",
+   "availableRarities": null,
+   "brainId": "04ea97e7-3f7a-4edb-9824-e3f65b563bc2",
+   "brainName": "Pet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "f1ea7cda-b8ed-4f75-9fc5-cff0c80d3b9f",
+   "integerId": 156,
+   "name": "PetEagle",
+   "typeName": "Pet",
+   "availableRarities": null,
+   "brainId": "04ea97e7-3f7a-4edb-9824-e3f65b563bc2",
+   "brainName": "Pet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "890773df-6a46-4621-b5f2-1ff0974e1bc8",
+   "integerId": 160,
+   "name": "PetLarva",
+   "typeName": "Pet",
+   "availableRarities": null,
+   "brainId": "04ea97e7-3f7a-4edb-9824-e3f65b563bc2",
+   "brainName": "Pet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "08262913-9c6c-4f0a-b892-408df35d08bd",
+   "integerId": 162,
+   "name": "PetSnake",
+   "typeName": "Pet",
+   "availableRarities": null,
+   "brainId": "04ea97e7-3f7a-4edb-9824-e3f65b563bc2",
+   "brainName": "Pet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "408a7679-de0c-4bd4-bb4b-0c5426978f74",
+   "integerId": 96,
+   "name": "PetSnowOxe",
+   "typeName": "Pet",
+   "availableRarities": null,
+   "brainId": "04ea97e7-3f7a-4edb-9824-e3f65b563bc2",
+   "brainName": "Pet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "db4188d6-758f-4ac7-b0a5-83a8000dcb29",
+   "integerId": 100,
+   "name": "PetTurtle",
+   "typeName": "Pet",
+   "availableRarities": null,
+   "brainId": "04ea97e7-3f7a-4edb-9824-e3f65b563bc2",
+   "brainName": "Pet",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "非野外生成（Boss/召唤物/触发器，待逐条核实）"
+  },
+  {
+   "guid": "ef6d28b7-4e43-475d-872b-732ee77b597f",
+   "integerId": 102,
+   "name": "Petkeeper",
+   "typeName": "Petkeeper",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f9771917-3ef8-42d5-b3f5-5827590038f4",
+   "brainName": "Wander",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "1a42c80a-9f9c-4817-81a8-e04f9cd91521",
+   "integerId": 108,
+   "name": "PortalMaster",
+   "typeName": "PortalMaster",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f9771917-3ef8-42d5-b3f5-5827590038f4",
+   "brainName": "Wander",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "0dd94e7c-2bce-4d6e-af71-bb0f2d500919",
+   "integerId": 166,
+   "name": "SetItemMerchant",
+   "typeName": "SetItemMerchant",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f9771917-3ef8-42d5-b3f5-5827590038f4",
+   "brainName": "Wander",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "da815fb4-a100-4750-9d15-ce318181f749",
+   "integerId": 179,
+   "name": "Boar",
+   "typeName": "SpringMonster",
+   "availableRarities": [
+    1
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic）"
+  },
+  {
+   "guid": "f223ad2f-6dab-40a5-957d-56d84c0c7ecf",
+   "integerId": 193,
+   "name": "Eirwyn_1",
+   "typeName": "SpringMonster",
+   "availableRarities": [
+    1
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic）"
+  },
+  {
+   "guid": "66e804a8-4d79-4da9-97b5-2ba55e8c249f",
+   "integerId": 199,
+   "name": "Eirwyn_3",
+   "typeName": "SpringMonster",
+   "availableRarities": [
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Rare）"
+  },
+  {
+   "guid": "0e4fb97c-ef0f-4486-9c24-c721c4687db6",
+   "integerId": 205,
+   "name": "Eirwyn_5",
+   "typeName": "SpringMonster",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "188bc703-201e-4d82-9a48-ff5da0ff98fd",
+   "integerId": 181,
+   "name": "HeavyBoar",
+   "typeName": "SpringMonster",
+   "availableRarities": [
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Rare）"
+  },
+  {
+   "guid": "479ad76c-815c-4a34-b47a-c3e039f7f81d",
+   "integerId": 195,
+   "name": "Karnyx_1",
+   "typeName": "SpringMonster",
+   "availableRarities": [
+    1
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic）"
+  },
+  {
+   "guid": "a1a2ba8d-8e10-4317-b3f4-ce8364d97f13",
+   "integerId": 201,
+   "name": "Karnyx_3",
+   "typeName": "SpringMonster",
+   "availableRarities": [
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Rare）"
+  },
+  {
+   "guid": "25b30e75-c9b5-4240-878d-fd1246674c0f",
+   "integerId": 207,
+   "name": "Karnyx_5",
+   "typeName": "SpringMonster",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "85e730e6-a325-4d78-bf36-d65b27a5b063",
+   "integerId": 180,
+   "name": "LegendaryBoar",
+   "typeName": "SpringMonster",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "3c5329b7-e390-4b03-a9e9-65a51678e1d9",
+   "integerId": 197,
+   "name": "Vyrmuld_1",
+   "typeName": "SpringMonster",
+   "availableRarities": [
+    1
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Magic）"
+  },
+  {
+   "guid": "df0cbeda-95e2-4237-8a08-9b927a52ff4c",
+   "integerId": 203,
+   "name": "Vyrmuld_3",
+   "typeName": "SpringMonster",
+   "availableRarities": [
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Rare）"
+  },
+  {
+   "guid": "05c8b11d-fe15-48b8-9441-f5beddd5388f",
+   "integerId": 209,
+   "name": "Vyrmuld_5",
+   "typeName": "SpringMonster",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "6c133583-5674-40da-bb34-c614de974626",
+   "integerId": 75,
+   "name": "Tutorial",
+   "typeName": "Tutorial",
+   "availableRarities": [
+    0
+   ],
+   "brainId": "f9771917-3ef8-42d5-b3f5-5827590038f4",
+   "brainName": "Wander",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal）"
+  },
+  {
+   "guid": "5a39151d-946e-4416-8089-45a82a9264d9",
+   "integerId": 4,
+   "name": "ArmoredSkeleton1",
+   "typeName": "Undead",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "5a8f3653-5957-44a8-8c0a-2d42608a59c8",
+   "integerId": 11,
+   "name": "Banshee",
+   "typeName": "Undead",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "f896baa0-aaf0-41e4-a238-c6b708c04d55",
+   "brainName": "StandardCurseReducedWeaponDamage",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "48005b44-484a-4ff8-b311-e25bfa5f48cf",
+   "integerId": 45,
+   "name": "BoneBeast",
+   "typeName": "Undead",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "f896baa0-aaf0-41e4-a238-c6b708c04d55",
+   "brainName": "StandardCurseReducedWeaponDamage",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "8a9fdc76-7f3c-49ae-b9f3-45ff256f6298",
+   "integerId": 104,
+   "name": "Boss_Hel",
+   "typeName": "Undead",
+   "availableRarities": [
+    6
+   ],
+   "brainId": "d89c9bd7-ddd6-4985-84c0-ed173ee74299",
+   "brainName": "Boss_Hel",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Boss）"
+  },
+  {
+   "guid": "553db156-cd3d-481c-8379-cbe821e65734",
+   "integerId": 48,
+   "name": "Boss_Knight1",
+   "typeName": "Undead",
+   "availableRarities": [
+    6
+   ],
+   "brainId": "f9251beb-bbd6-42fe-be0a-a52a6e0f092b",
+   "brainName": "Boss_FallenAngel",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Boss）"
+  },
+  {
+   "guid": "21f8f7c6-d049-41df-8447-3201a943c682",
+   "integerId": 114,
+   "name": "Boss_Odr",
+   "typeName": "Undead",
+   "availableRarities": [
+    6
+   ],
+   "brainId": "7ca03954-d416-4d25-aad3-b82622df702f",
+   "brainName": "Boss_Odr",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Boss）"
+  },
+  {
+   "guid": "c30fb602-da7f-47b1-89c1-da118bf12ae2",
+   "integerId": 65,
+   "name": "DarkKnight",
+   "typeName": "Undead",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "f896baa0-aaf0-41e4-a238-c6b708c04d55",
+   "brainName": "StandardCurseReducedWeaponDamage",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "2888b49a-9d36-4bc7-8918-e824632c2f46",
+   "integerId": 47,
+   "name": "DeathKnight",
+   "typeName": "Undead",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "f896baa0-aaf0-41e4-a238-c6b708c04d55",
+   "brainName": "StandardCurseReducedWeaponDamage",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "e2e3f38b-2358-41d9-865d-c62af5fe2738",
+   "integerId": 67,
+   "name": "Ghoul",
+   "typeName": "Undead",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "ec65199c-7789-4ff8-b7b7-429572f1bba5",
+   "integerId": 68,
+   "name": "Ghoul2",
+   "typeName": "Undead",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "f896baa0-aaf0-41e4-a238-c6b708c04d55",
+   "brainName": "StandardCurseReducedWeaponDamage",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "c632539c-c84d-4c5c-a4c2-e351f29798c9",
+   "integerId": 3,
+   "name": "Skeleton1",
+   "typeName": "Undead",
+   "availableRarities": [
+    0,
+    2,
+    1
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Rare,Magic）"
+  },
+  {
+   "guid": "4a276f1b-0688-4449-b6a2-f3b101c3cb66",
+   "integerId": 10,
+   "name": "SkeletonArcher1",
+   "typeName": "Undead",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "143780ed-8fc4-4c4d-bb87-e89148a72588",
+   "brainName": "StandardFleeingWhenClose",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "b0ebbe48-5e9a-4e80-a984-e7475cc979c8",
+   "integerId": 66,
+   "name": "SkeletonArcher2",
+   "typeName": "Undead",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "0998d7db-f5c5-4294-80ea-d9475721706a",
+   "integerId": 64,
+   "name": "SkeletonCleric",
+   "typeName": "Undead",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "197a529b-169c-4ae9-a598-dc98c4930370",
+   "brainName": "StandardFleeingWhenCloseCursingSlowProj",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "e1e58bcf-9e76-45e7-b99c-1ef85aa72bee",
+   "integerId": 12,
+   "name": "SkeletonCommander",
+   "typeName": "Undead",
+   "availableRarities": [
+    4
+   ],
+   "brainId": "5d9feacb-e6d6-4945-9c19-118b33253422",
+   "brainName": "Standard",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Champion）"
+  },
+  {
+   "guid": "fcbbc425-21d5-4e9a-a4a9-eebdc687dacd",
+   "integerId": 46,
+   "name": "SkeletonMage",
+   "typeName": "Undead",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "8ba10d11-d675-4c18-a230-843b507cfd5a",
+   "brainName": "StandardFleeingWhenCloseCurseLowerResist",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  },
+  {
+   "guid": "e48b7a04-99e1-4e4f-a063-71e1b98c5d28",
+   "integerId": 44,
+   "name": "UndeadBear",
+   "typeName": "Undead",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "brainId": "f896baa0-aaf0-41e4-a238-c6b708c04d55",
+   "brainName": "StandardCurseReducedWeaponDamage",
+   "brainDangling": false,
+   "brainMissing": false,
+   "status": "正式",
+   "availability": "野外/地牢生成（稀有度 Normal,Magic,Rare）"
+  }
+ ]
+}

@@ -478,6 +478,15 @@ public sealed class CombatRegistry
         var current = ranks.TryGetValue(masteryId, out var r) ? r : 0;
         if (current >= found.MaxPoints) return (false, "mastery_maxed");
         if (ranks.Values.Sum() >= MasteryBudget(entry)) return (false, "no_mastery_points");
+        // C07: prerequisites — all dependencies must have at least 1 rank.
+        if (MasteryDependencies.Map.TryGetValue(masteryId, out var deps))
+        {
+            foreach (var depId in deps)
+            {
+                if (!ranks.TryGetValue(depId, out var depRank) || depRank <= 0)
+                    return (false, "missing_prerequisite");
+            }
+        }
 
         store.SetMasteryRank(owner, characterId, masteryId, current + 1);
         ranks[masteryId] = current + 1;
@@ -492,7 +501,8 @@ public sealed class CombatRegistry
         foreach (var skill in entry.BasePowers.Active.Take(PowerCatalog.MaxActiveSkills))
         {
             var masteries = PowerCatalog.MasteriesFor(skill.Name)
-                .Select(m => new MasteryView(m.Name, m.IntegerId, ranks.TryGetValue(m.IntegerId, out var rank) ? rank : 0, m.MaxPoints, m.Specs))
+                .Select(m => new MasteryView(m.Name, m.IntegerId, ranks.TryGetValue(m.IntegerId, out var rank) ? rank : 0, m.MaxPoints, m.Specs,
+                    MasteryDependencies.Map.TryGetValue(m.IntegerId, out var deps) ? deps : Array.Empty<int>()))
                 .ToList();
             rows.Add(new SkillMasteryView(skill.Name, slot++, masteries.Sum(m => m.Rank), masteries.Sum(m => m.MaxPoints), masteries));
         }

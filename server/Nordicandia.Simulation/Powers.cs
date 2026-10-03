@@ -69,4 +69,4 @@ public readonly record struct SkillStatus(int Slot, string Name, string Effect, 
 /// <summary>Per-skill mastery view for the web client.</summary>
 public sealed record SkillMasteryView(string SkillName, int Slot, int Rank, int MaxPoints, IReadOnlyList<MasteryView> Masteries);
 
-public sealed record MasteryView(string Name, int IntegerId, int Rank, int MaxPoints, IReadOnlyList<MasterySpec> Specs);
+public sealed record MasteryView(string Name, int IntegerId, int Rank, int MaxPoints, IReadOnlyList<MasterySpec> Specs, IReadOnlyList<int> Dependencies);

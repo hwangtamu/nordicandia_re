@@ -144,6 +144,7 @@ export interface MasteryView {
   rank: number;
   maxPoints: number;
   specs: MasterySpec[];
+  dependencies: number[];
 }
 
 export interface SkillMasteryView {

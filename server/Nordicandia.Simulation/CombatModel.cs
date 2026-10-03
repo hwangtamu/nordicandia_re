@@ -55,7 +55,10 @@ public readonly record struct CombatantStats(double Offense, double Defense, dou
     double HitChanceBonus = 0, double HitChanceCap = 1, bool AlwaysHits = false, bool IgnoresCrits = false,
     // Deadly strike: on a crit, roll Deadly_Strike_Chance_Total (0x1C90, axes) and
     // Constants.Deadly_Strike_Crit_Multiplier = 2.0.
-    double DeadlyStrikeChance = 0)
+    double DeadlyStrikeChance = 0,
+    // Amplify_Damage_Taken_Percent (attribute 6, e.g. Mark of the Chosen): scales the
+    // defender's taken damage after mitigation. Inferred placement; C01.
+    double DamageTakenAmplifyPercent = 0)
 {
     public const double DeadlyStrikeCritMultiplier = 2.0;
     public static CombatantStats FromRealtime(double offense, double defense, double recovery, int level)
@@ -94,7 +97,8 @@ public readonly record struct DamageConfidence(
     RuleConfidence Execution,
     bool AssumedReductionCap,
     bool AssumedVariance,
-    bool AssumedMinDamage)
+    bool AssumedMinDamage,
+    bool AssumedAmplifyPlacement = true)
 {
     /// <summary>Weakest link of the three layers (the enum is ordered best-first, so the
     /// weakest link is the largest numeric value).</summary>
@@ -310,7 +314,10 @@ public static class CombatModel
         var mitigated = MitigateDamage(converted, armor, resistances);
         var variance = 1.0 + (rng.NextDouble() * 2.0 - 1.0) * Math.Max(0, profile.Variance);
         var blockFactor = blocked ? Math.Max(0.0, defender.BlockedDamageMultiplier) : 1.0;
-        var damage = Math.Max(1.0, mitigated * blockFactor * Math.Max(0.05, variance));
+        // C01: Amplify_Damage_Taken_Percent (attribute 6) scales taken damage after
+        // mitigation. Inferred placement (defender-side, before the 1.0 floor).
+        var amplify = 1.0 + defender.DamageTakenAmplifyPercent / 100.0;
+        var damage = Math.Max(1.0, mitigated * amplify * blockFactor * Math.Max(0.05, variance));
         return new DamageResult(damage, critical, confidence, true);
     }
 

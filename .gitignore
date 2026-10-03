@@ -60,3 +60,6 @@ server/certs/
 /deploy/lightsail/certs/
 /deploy/lightsail/backups/
 /deploy/lightsail/bundle/
+
+# B05 generated fidelity reports (regenerate via StoreTests)
+/server/fidelity-reports/

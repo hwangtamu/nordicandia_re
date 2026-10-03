@@ -49,3 +49,41 @@ cd server
 DOTNET_ROOT="$PWD/../.tools/dotnet" ../.tools/dotnet/dotnet run --project Nordicandia.StoreTests
 ```
 当前 **479 PASS**；回放 21/21。
+
+---
+
+## C01 第二轮（2026-10-03）：管线顺序定死 + 放大接入
+
+### 完整管线顺序（`CombatModel.ResolveBundleAttack`）
+
+| # | 步骤 | 证据等级 | 说明 |
+|---|---|---|---|
+| 1 | 命中掷骰 | ClientVerified | `AlwaysHits` 或 `CalculateChanceToHit`（1.05·atk/(pow(def/2,0.75)+atk)，钳制 [0.05,1]，`Hit_Chance_Cap`） |
+| 2 | 闪避 | ClientVerified | `Dodge_Chance_Total`（0x1310） |
+| 3 | 格挡掷骰 | ClientVerified | `Block_Chance_Total`（0x1278）；倍率后乘（`Blocked_Damage_Taken_Multiplier_Total` 0x12D8） |
+| 4 | 暴击 | ClientVerified | `Ignores_Critical_Hits`（0x1168）免疫；致命打击（0x1C90，×2）仅暴击后掷骰 |
+| 5 | 技能/暴击倍率 | ClientVerified | skillMultiplier × crit × deadly，作用于转换前 |
+| 6 | 伤害转换 | ClientVerified | 0x02BABF3C+0x02BAC1F8；总量超 1 时归一化 |
+| 7 | 穿透 | ClientVerified | 攻击方穿透减防御方抗性；可为负（易伤增伤） |
+| 8 | 护甲减伤 | ClientVerified | `armor/(armor+50·damage)`，上限 0.9；护甲穿透降低有效护甲 |
+| 9 | 元素减伤 | ClientVerified | 抗性先钳制 1.0，再 `ApplyDamageReduction`（0x02BAF34C）；**无取整**（反汇编 6 条指令，无 frint/lrint） |
+| 10 | 承受放大 | **Inferred** | `Amplify_Damage_Taken_Percent`（attribute 6，如 Mark of the Chosen）；防御方，减伤后乘区，位置为推断 |
+| 11 | 格挡倍率 | Inferred | 步骤 3 的掷骰结果在此应用；与方差的先后为推断 |
+| 12 | 方差 | Provisional | `1 ± variance` 均匀抖动 |
+| 13 | 最低下限 | Provisional | `Max(1.0, …)`；客户端下限待反汇编确认 |
+
+### 本轮变更
+
+- `CombatantStats` 新增 `DamageTakenAmplifyPercent`（attribute 6）。
+- 步骤 10 落子：`mitigated × (1+amplify/100)`；`DamageConfidence` 新增
+  `AssumedAmplifyPlacement=true`。
+- 吸血：客户端是完整 Buff 子系统（`LifeLeechBuff`/`LeechInstance`，属性 313–317
+  按伤害类型、`Base_Life_Leech_Rate` 等），**未实现**，归 C02（Buff 生命周期）。
+
+### 新增样本（39/39 pass）
+
+| 样本 | 覆盖 |
+|---|---|
+| `dmg.amplify-taken` | 放大：+50% 承受 → 100→150 |
+| `dmg.zero-floor` | 零伤害：0.5 伤害经护甲 → 下限 1.0（注：物理减伤上限 0.9，故用小额伤害触发下限） |
+| `dmg.no-rounding` | 取整：97.5 伤害经 33% 抗性 = 65.32499999999999（无取整） |

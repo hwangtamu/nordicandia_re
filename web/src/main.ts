@@ -499,14 +499,31 @@ function renderPowers(rows: SkillMasteryView[], onAllocate: (masteryId: number) 
       const row = document.createElement("div");
       row.className = "inv-row power-row";
       const specs = mastery.specs.map((s) => `${s.attributeName} ${s.value >= 0 ? "+" : ""}${s.value}`).join(", ");
+      // C07: show prerequisite names if any.
+      const depNames = (mastery.dependencies || [])
+        .map((depId) => {
+          const dep = skill.masteries.find((m) => m.integerId === depId);
+          return dep ? prettyMastery(dep.name) : `#${depId}`;
+        })
+        .join(", ");
+      const prereqHint = depNames ? ` <span class="inv-affixes">需要: ${escapeHtml(depNames)}</span>` : "";
       row.innerHTML = `
         <span class="power-rank">${mastery.rank}/${mastery.maxPoints}</span>
-        <span class="inv-name">${escapeHtml(prettyMastery(mastery.name))}<span class="inv-affixes">${escapeHtml(specs)}</span></span>
+        <span class="inv-name">${escapeHtml(prettyMastery(mastery.name))}<span class="inv-affixes">${escapeHtml(specs)}</span>${prereqHint}</span>
       `;
       const button = document.createElement("button");
       button.className = "inv-btn";
       button.textContent = "+";
-      button.disabled = mastery.rank >= mastery.maxPoints;
+      // C07: disable if maxed OR prerequisites not met.
+      const prereqMet = (mastery.dependencies || []).every((depId) => {
+        const dep = skill.masteries.find((m) => m.integerId === depId);
+        return dep && dep.rank > 0;
+      });
+      button.disabled = mastery.rank >= mastery.maxPoints || !prereqMet;
+      if (!prereqMet) {
+        button.title = "需要先点前置精通";
+        row.style.opacity = "0.5";
+      }
       button.addEventListener("click", () => onAllocate(mastery.integerId));
       row.appendChild(button);
       powersItemsEl.appendChild(row);

@@ -38,9 +38,11 @@ DOTNET_ROOT="$PWD/../.tools/dotnet" ../.tools/dotnet/dotnet run --project Nordic
 2. 在 `samples/fidelity_samples.json` 加一条，`status` 先写 `已还原`。
 3. 跑回放；通过后把 `status` 改为 `对照通过`，并在 [B03 差异台账](B03_DIFFERENCE_LEDGER.md) 把对应条目降级为已对照。
 
-## 现状与后续
+## 现状与后续（2026-10-03 更新）
 
-* 已覆盖命中之外的基础规则；**技能/精通、Buff 叠加/驱散、掉落与词缀、地图生成、怪物缩放** 尚无样本。
-* 这些是 C01–C06、E01–E02、W01–W04 的下一步：每移植一个规则/技能，先落样本再改实现。
-* 无法控制原版随机种子的规则（掉落、词缀、地图），回放比较**条件分布/边界**而非逐次抽签；
-  当前样本只收确定性规则，分布类样本待补。
+* 样本库 30 条（21 + 新增 9）：`hit_chance`（公式/下限/上限）、`damage_reduction`、
+  `poison_dot`（20% 系数；状态`已还原`，行为仍是"最高 DPS 加刷新"近似，见 D07）、
+  `blessing`（4 档时长 + 幅度 0.4）。回放 `fidelity replay: 30/30 pass`，全套件 exit 0。
+* 样本清单与采集计划见 [B04_SAMPLE_PLAN.md](B04_SAMPLE_PLAN.md)。
+* 仍缺（需实机采集，见清单 #13–#17）：分叉/链弹体碰撞、Buff 叠加/替换/驱散、
+  掉落与词缀分布（统计类）、地图生成、怪物缩放。

@@ -963,6 +963,16 @@ public sealed class GameStore : IDisposable
         }
     }
 
+    /// <summary>C07: clears mastery ranks for the given IntegerIds (null = all).</summary>
+    public void ResetMasteryRanks(Guid owner, Guid id, IEnumerable<int> masteryIds = null) => Change<bool>(s =>
+    {
+        var c = Owned(s, owner, id);
+        if (c.MasteryRanks is null) return false;
+        if (masteryIds is null) c.MasteryRanks.Clear();
+        else foreach (var mid in masteryIds) c.MasteryRanks.Remove(mid);
+        return true;
+    });
+
     /// <summary>Looks up a previous web command. <c>OldestBoundaryVersion</c> is the persisted
     /// stale floor: a command whose id is gone and whose expected version is below it is
     /// outside the retry window and must be rejected rather than re-executed (R4/P2).</summary>

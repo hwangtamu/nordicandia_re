@@ -13,7 +13,7 @@
 | 主动技能 | 51 |
 | 被动技能 | 42 |
 | **玩家技能合计** | **93** |
-| 精通 | 318 |
+| 精通 | 297 |（B02 原写 318 系笔误，PowerMasteries.json 实际 297，2026-10-03 核对） |
 
 ## 当前网页执行方式（不是逐技能移植）
 
@@ -168,10 +168,19 @@
 
 每个技能条目需分别记录：原版证据 / 已提取数据 / 运行时接入 / 原版对照结果。当前整体状态：**已定位 + 已提取数据**，运行时接入仅到原型级别，**对照未通过**。
 
-## 待补目录（B02 其余部分）
+## 待补目录（B02 其余部分）— 2026-10-03 已全部完成
 
-* 装备/词缀/套装：458 物品定义、18 词缀族、11 套装（`item_catalog.json`/`affix_catalog.json`/`set_catalog.json`）需扩到基线全量并标注来源/部位/等级限制。
-* 怪物/精英/Boss：`Monsters.json` 136 条 + 34 `Brains` + Power，需列可获得性与缩放。
+* 装备：✅ [B02_ITEM_CATALOG.md](B02_ITEM_CATALOG.md)（全量 608，机读 `item_catalog_full.json`；48 条可掉落缺口待接入）。
+* 词缀：✅ [B02_AFFIX_CATALOG.md](B02_AFFIX_CATALOG.md)（全量 1837，机读 `affix_catalog_full.json`；115 重名变体已定性；138 地图词缀归 W06）。
+* 套装：`set_catalog.json` 11 套（源 ItemSets.json 也是 11，已全量；触发效果接入见 E03）。
+* 怪物：✅ [B02_MONSTER_CATALOG.md](B02_MONSTER_CATALOG.md)（全量 136，机读 `monster_catalog_full.json`；兼 NPC/宠物底表）。
+* 宠物：✅ 数据源已定位（怪物表内 CombatPet 5 + Pet 8），见怪物目录。
+* 世界：✅ [B02_WORLD_CATALOG.md](B02_WORLD_CATALOG.md)（全量 36，机读 `world_catalog_full.json`）。
+* NPC/对话/任务：✅ [B02_NPC_CATALOG.md](B02_NPC_CATALOG.md)（14 NPC 类型；66 对话全挂 Tutorial，4 条废弃；47 任务全是教程触发器，无剧情任务系统）。
+* 模式：✅ [B02_MODE_CATALOG.md](B02_MODE_CATALOG.md)（协议 7 模式；实际开放状态待 O01）。
+* 判据：✅ [B02_DEPRECATION_RULES.md](B02_DEPRECATION_RULES.md)。
+
+导出脚本（可复现）：`tools/web-content/export_{item,affix,monster,world,npc}_catalog_full.py`。
 * 地图/世界：原版世界图结构、场景块、刷怪区（当前仅 1 张手工地牢）。
 * 宠物/召唤/图腾、NPC、模式（Normal/Season/Hardcore 等）。
 

@@ -33,8 +33,40 @@ public sealed partial class CharacterPowerServiceApiImpl
         => UnaryResult.FromResult(new LevelUpCharacterSkillMasteryResponse { NewMasteryLevel = 1 });
 
     public UnaryResult<ResetCharacterSkillMasteryTreeResponse> ResetSkillMastery(ResetCharacterSkillMasteryTreeRequest req)
-        => UnaryResult.FromResult(new ResetCharacterSkillMasteryTreeResponse());
+    {
+        // C07: deduct OpalCost, reset all mastery ranks for the character.
+        // (PowerId-specific reset requires client metadata Guid mapping; we reset all
+        // for now and document the simplification.)
+        var store = GameStore.Instance;
+        var opals = store.GetOpals(Owner, req.CharacterId);
+        if (opals < req.OpalCost)
+            return UnaryResult.FromResult(new ResetCharacterSkillMasteryTreeResponse { NewOpals = opals });
+        var spent = store.MasteryPointsSpent(Owner, req.CharacterId);
+        if (req.OpalCost > 0)
+            opals = store.AddOpals(Owner, req.CharacterId, -req.OpalCost);
+        store.ResetMasteryRanks(Owner, req.CharacterId);
+        return UnaryResult.FromResult(new ResetCharacterSkillMasteryTreeResponse
+        {
+            GainedMasteryPoints = spent,
+            NewOpals = opals,
+        });
+    }
 
     public UnaryResult<ResetAllCharacterSkillMasteryTreesResponse> ResetAllSkillMasteries(ResetAllCharacterSkillMasteryTreesRequest req)
-        => UnaryResult.FromResult(new ResetAllCharacterSkillMasteryTreesResponse());
+    {
+        // C07: deduct OpalCost, reset all mastery ranks.
+        var store = GameStore.Instance;
+        var opals = store.GetOpals(Owner, req.CharacterId);
+        if (opals < req.OpalCost)
+            return UnaryResult.FromResult(new ResetAllCharacterSkillMasteryTreesResponse { NewOpals = opals });
+        var spent = store.MasteryPointsSpent(Owner, req.CharacterId);
+        if (req.OpalCost > 0)
+            opals = store.AddOpals(Owner, req.CharacterId, -req.OpalCost);
+        store.ResetMasteryRanks(Owner, req.CharacterId);
+        return UnaryResult.FromResult(new ResetAllCharacterSkillMasteryTreesResponse
+        {
+            GainedMasteryPoints = spent,
+            NewOpals = opals,
+        });
+    }
 }

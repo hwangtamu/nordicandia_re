@@ -10,7 +10,14 @@ LuckAndOnHitRecoveryTests.RangedKiting();
 LuckAndOnHitRecoveryTests.BrainSelection();
 LuckAndOnHitRecoveryTests.BossPowers();
 LuckAndOnHitRecoveryTests.Curses();
-FidelityReplayTests.Run();
+var fidelityResults = FidelityReplayTests.EvaluateAll();
+var fidelityFailures = fidelityResults.Where(r => !r.Ok).ToList();
+foreach (var r in fidelityResults)
+    Console.WriteLine((r.Ok ? "PASS " : "FAIL ") + $"fidelity[{r.Id}]");
+Console.WriteLine($"fidelity replay: {fidelityResults.Count - fidelityFailures.Count}/{fidelityResults.Count} pass");
+FidelityReport.Generate(fidelityResults);
+if (fidelityFailures.Count > 0)
+    throw new Exception("fidelity replay failures: " + string.Join(", ", fidelityFailures.Select(f => f.Error is null ? f.Id : $"{f.Id}: {f.Error}")));
 LuckAndOnHitRecoveryTests.SkillMechanics();
 LuckAndOnHitRecoveryTests.DodgeBlock();
 
@@ -80,3 +87,15 @@ AcceptanceRegressionTests.Run();
 AttributeFormulaTests.Run();
 
 CharacterAttributeChainTests.Run();
+
+SkillSpecTests.Run();
+
+C05SkillTests.Run();
+
+C06SkillTests.Run();
+
+C06Batch2Tests.Run();
+
+C06Batch3Tests.Run();
+
+C07MasteryTests.Run();

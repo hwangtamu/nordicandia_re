@@ -36,20 +36,20 @@
 | B02 | 建立全量功能与内容目录 | 为技能/精通/装备/词缀/怪物/地图/宠物/NPC/模式列 ID、来源、可获得性、网页接入位置；区分正式内容、废弃定义和重复条目 | B01 |
 | B03 | 建立差异台账 | 为全部 Provisional/Interim/Inferred、默认回退和硬编码近似建条目；每项关联代码、证据、影响及验证方法；清理文档中失效结论 | B01–B02 |
 | B04 | 建立原版对照样本库 | 保存测试角色副本、装备/技能/目标/地图输入、原版输出或录像；先覆盖命中、毒、分叉、Buff、掉落和离线；样本绑定版本 | B01 |
-| B05 | 建立回放与差异报告 | 网页确定性回放输出事件/属性/奖励；与 B04 比较；测试既覆盖正常路径，也覆盖免疫、边界、重复命令、重登 | B04 |
-| B06 | 统一效果与状态接口 | 把伤害、治疗、弹体、Buff、召唤、死亡触发和战斗事件从原型分支组织为可复用执行单元；按技能逐个迁移，保留已有回归 | B03，结合首批技能实现 |
+| B05 | 建立回放与差异报告 | ✅ 2026-10-03：回放器输出逐样本 actual/expected；`FidelityReport` 生成 JSON + Markdown 差异报告（失败关联 B03 diffId）；36/36 pass，含免疫/边界/重复命令/重登 6 个新样本。见 `docs/web/B05_DIFF_REPORT.md` | B04 |
+| B06 | 统一效果与状态接口 | ✅ 2026-10-03：`CombatInstance.Effects.cs`（partial）收拢伤害/治疗/Buff/召唤/死亡触发/战斗事件为可复用单元，`UseSkill` 5 个原型分支已迁移；全回归 exit 0（495 PASS，fidelity 36/36）。见 `docs/web/B06_EFFECT_UNITS.md` | B03，结合首批技能实现 |
 
 ## P1：战斗规则与真实技能
 
 | ID | 任务 | 交付与验收 | 依赖 |
 |---|---|---|---|
-| C01 | 校准完整伤害管线 | 核对命中/闪避/格挡/暴击、转换、减伤、穿透、放大、吸血和死亡触发的先后；覆盖转换总量超限、负抗性、免疫、零伤害、上限和取整 | B04–B05 |
-| C02 | 还原 Buff 生命周期 | 唯一键、来源、叠加、替换、刷新、强弱比较、驱散、死亡/换图移除；毒不再使用“最高 DPS 加刷新”近似；临界 tick 不多算或漏算 | B06、C01 |
-| C03 | 还原弹体与空间命中 | 飞行速度、寿命、碰撞体、目标过滤、视线、散射、分叉/链/穿透、已命中集合；取消用附近敌人直接替代分叉碰撞；次级效果事件可供渲染 | B06、C01 |
-| C04 | 逐技能/精通建立行为规格 | 按 B02 目录记录施法条件、目标、资源、冷却、等级曲线、效果时间线、Buff、弹体/召唤及精通改写；缺项不得静默映射到 strike/nova/rally | B02、B04 |
-| C05 | 首批 4 个代表技能贯通 | 每职业选择一个，合计覆盖直接攻击、弹体、持续/范围效果、召唤；从原版规格到服务端结算、前端表现、成长、重登完成对照 | B06、C01–C04 |
-| C06 | 补全四职业全部可用技能 | 按机制家族分批实现 B02 中玩家可获得的主动/被动技能；每个技能有等级/装备/目标边界样本；生产技能池不再走暂定行为回退 | C05 |
-| C07 | 补全全部精通与组合效应 | 前置条件、互斥、PerLevel/SpecificLevel、加减/覆盖顺序、重置费用；选取会互相改写的技能/精通组合做交互验证 | C04、C06 |
+| C01 | 校准完整伤害管线 | ✅ 2026-10-03：13 步管线顺序定死（含每步证据等级）；补 `Amplify_Damage_Taken_Percent`（attribute 6，推断位置）；确认无取整（0x02BAF34C 无 frint）；吸血为 Buff 子系统归 C02；新增放大/零伤害/无取整 3 样本，39/39 pass。见 `docs/web/C01_DAMAGE_PIPELINE.md` | B04–B05 |
+| C02 | 还原 Buff 生命周期 | ✅ 2026-10-03：BuffManager 落地（唯一键 DefinitionId\|Source、Stack/IsStrongerThan 反汇编规则、时长只延长不缩短、驱散、死亡/换图移除、临界 tick 钳制）；毒/玩家增益/诅咒全迁移，毒弃用"最高 DPS+刷新"近似；新增 9 样本，48/48 pass，全回归 507 PASS。见 `docs/web/C02_BUFF_LIFECYCLE.md` | B06、C01 |
+| C03 | 还原弹体与空间命中 | ✅ 2026-10-03：真实弹体飞行（0.25y 步进、圆形碰撞、已命中集合）；分叉=2 支 0.5x 子弹 ±(45°–90°) 散布、子弹不递归；连锁=同一弹体转向 10 码内最近敌人、全伤害、一跳后清除几率；删除 SecondaryTargets 占位（D08 关闭）；projectile 事件供渲染。速度/碰撞半径/射程暂定。新增 3 样本，51/51 pass，全回归 513 PASS。见 `docs/web/C03_PROJECTILES.md` | B06、C01 |
+| C04 | 逐技能/精通建立行为规格 | ✅ 2026-10-03：93 技能行为规格生成器（`tools/web-content/export_skill_specs.py`→`skill_specs.json`）：施法条件/目标/资源/冷却/等级曲线/效果时间线/Buff/弹体/召唤/精通改写；反静默映射清单 29 技能（原型未实现属性逐条列出）；可疑映射 Teleport→rally、ImpalingTrap→strike 记入 C06；SkillSpecTests 守卫（93 规格/无 unknown/29 gaps）。见 `docs/web/C04_SKILL_SPECS.md` | B02、B04 |
+| C05 | 首批 4 个代表技能贯通 | ✅ 2026-10-03：Shatter（Warrior 直接攻击）/ PowerShot（Hunter 弹体）/ PoisonCloud（Mage 持续范围）/ SummonSkeleton（Necromancer 召唤）四技能贯通：原版规格→服务端结算→前端事件→成长（精通→EffectivePowers→伤害）→重登（精通/装配保留，冷却/毒云/骷髅重置）。PoisonCloud 实现为 6s 毒云实体（1s tick 0.9x 毒伤 + 20% 减速，关闭 C04 gaps×2）；SummonSkeleton 生成 3 只骷髅实体（Minion_Inheritance 继承，寻敌/转火）。附带修复 SetLoadout 后 skillCooldowns 越界真 bug。C05SkillTests 20 条，全回归 537 PASS，fidelity 51/51。见 `docs/web/C05_SKILLS.md` | B06、C01–C04 |
+| C06 | 补全四职业全部可用技能 | ✅ 2026-10-03 完成：第一批（5 技能）：ImpalingTrap（陷阱实体）/ Teleport（rally→位移修正）/ Whirlwind（5s 引导）/ MarkOfTheChosen（易伤 debuff）/ Thorns（200% 反射+减伤）；边界样本 18 条；修复 BuffManager Source 键读取、浮点到期两系统 bug。全回归 555 PASS，fidelity 51/51。剩余 22 gaps 技能待后续批次。第二批（2026-10-03）：Blizzard/ElementalSeal（持久 AoE 云泛化）/ FrozenArrow（爆炸弹体）/ Tornado（移动涡流）/ Slam（直线修正）；20 条测试，全回归 575 PASS。剩余 17 gaps。第三批（2026-10-03）：17 技能全部实现，51 技能 gaps 清零。全回归 614 PASS。见 `docs/web/C06_SKILLS.md` | C05 |
+| C07 | 补全全部精通与组合效应 | 前置条件、互斥、PerLevel/SpecificLevel、加减/覆盖顺序、重置费用；选取会互相改写的技能/精通组合做交互验证 | C04、C06 | ✅
 | C08 | 校准角色成长与操作规则 | 职业/种族基础值、属性来源、加点、装备需求、技能槽解锁、自动施法、锁定目标、死亡/复活及原版存在的惩罚；属性面板与结算一致 | C01、C06–C07 |
 
 ## P1：装备、掉落与经济

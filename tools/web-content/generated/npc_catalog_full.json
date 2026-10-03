@@ -1,0 +1,813 @@
+{
+ "baseline": "android-1.9.3 (versionCode 507033)",
+ "generatedAt": "2026-10-03",
+ "counts": {
+  "npcs": 1,
+  "conversations": 66,
+  "conversationsDeprecated": 4,
+  "quests": 47
+ },
+ "npcs": [
+  {
+   "npcName": "Tutorial",
+   "conversations": [
+    "Tutorial_Introduction",
+    "Tutorial_Attacking_UnitFrameTips",
+    "Tutorial_Attacking",
+    "Tutorial_Location_UNUSED",
+    "Tutorial_Location_Clicked",
+    "Tutorial_ActiveSkills",
+    "Tutorial_ActiveSkills_Used1",
+    "Tutorial_ActiveSkills_Used3_UNUSED",
+    "Tutorial_HealthPotion",
+    "Tutorial_ActiveTargetedSkills",
+    "Tutorial_ActiveSkills_Que",
+    "Tutorial_HealthPotion_Used",
+    "Tutorial_ForceField",
+    "Tutorial_ForceField_Charges",
+    "Tutorial_LevelCheckpointPassed",
+    "Tutorial_Buffs",
+    "Tutorial_Ability",
+    "Tutorial_Portal",
+    "Tutorial_FrostRunProgress",
+    "Tutorial_Pet",
+    "Tutorial_Loot",
+    "Tutorial_Loot_PickupAll",
+    "Tutorial_Loot_ItemDirectUpgrade",
+    "Tutorial_Portal_Entered",
+    "Tutorial_ItemTooltip",
+    "Tutorial_ItemTooltip_Implicit",
+    "Tutorial_ItemTooltip_Affixes",
+    "Tutorial_CharacterWindow",
+    "Tutorial_ItemTooltip_Type_UNUSED",
+    "Tutorial_Inventory",
+    "Tutorial_Equipment",
+    "Tutorial_Equipment_EquippedUpgrade",
+    "Tutorial_EquipNewItem",
+    "Tutorial_OverallStats",
+    "Tutorial_EquippedNewItem",
+    "Tutorial_ItemTooltip_PrefixAndSuffix_UNUSED",
+    "Tutorial_ActiveSkills_Tooltip",
+    "Tutorial_ManualMoving",
+    "Tutorial_Died",
+    "Tutorial_Resurrect_Option1",
+    "Tutorial_Resurrect_Option2",
+    "Tutorial_Resurrect_Option3",
+    "Tutorial_Concluded",
+    "Tutorial_Attributes",
+    "Tutorial_Attribute_Allocation",
+    "Tutorial_ManualTargeting",
+    "Tutorial_AttributesConfirmAllocation",
+    "Tutorial_Attribute_Stats",
+    "Tutorial_SkillsTab",
+    "Tutorial_PassiveSkillsClick",
+    "Tutorial_ActiveSkills_Management",
+    "Tutorial_PassiveSkills_Management",
+    "Tutorial_ActiveSkills_Assigned",
+    "Tutorial_PassiveSkills_Training",
+    "Tutorial_PassiveSkills_Assigned",
+    "Tutorial_PassiveSkills_StartedTraining",
+    "Tutorial_PassiveSkills_TrainingTrigger",
+    "Tutorial_CraftableItemUpgrade",
+    "Tutorial_Blacksmith",
+    "Tutorial_Blacksmith_Merging",
+    "Tutorial_Blacksmith_Merging_SuggestedItems",
+    "Tutorial_Blacksmith_Merging_SuggestedItemClicked",
+    "Tutorial_Blacksmith_SuccessRate",
+    "Tutorial_BlacksmithMerge_Complete",
+    "Tutorial_Blacksmith_EssenceUpgrade",
+    "Tutorial_Disassembling_General"
+   ],
+   "conversationCount": 66
+  }
+ ],
+ "conversations": [
+  {
+   "guid": "c043ba6a-d2fa-4be7-b0c8-4a267657f9b5",
+   "name": "Tutorial_Ability",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "00661dd0-55ea-4678-881e-cc9dc0f94395",
+   "name": "Tutorial_ActiveSkills",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "a4561682-64b3-479c-8220-89daf31cc007",
+   "name": "Tutorial_ActiveSkills_Assigned",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "7deebc75-4dd1-4b1b-bdf2-7a8b18ea4216",
+   "name": "Tutorial_ActiveSkills_Management",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "6cb75a98-76e7-407e-b6b9-98a200d1c5a3",
+   "name": "Tutorial_ActiveSkills_Que",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "ac468662-1dbf-4bb1-afb8-16bdb8c808ab",
+   "name": "Tutorial_ActiveSkills_Tooltip",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "cc9f08a6-3e82-43b1-beb0-bce3c6f2a4ef",
+   "name": "Tutorial_ActiveSkills_Used1",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "0b6d4b37-3960-4673-8532-513a578b356b",
+   "name": "Tutorial_ActiveSkills_Used3_UNUSED",
+   "npcName": "Tutorial",
+   "status": "废弃"
+  },
+  {
+   "guid": "ff782a51-1110-4b33-83ea-31856be77f2e",
+   "name": "Tutorial_ActiveTargetedSkills",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "ba695d7f-95eb-4cbb-86ee-53307c9bef74",
+   "name": "Tutorial_Attacking",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "ce9cd366-8e7d-476c-8428-7ae6e90599e5",
+   "name": "Tutorial_Attacking_UnitFrameTips",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "3c63e4b7-83b7-4b56-9e6e-cf1614e8791f",
+   "name": "Tutorial_Attribute_Allocation",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "8423bf91-0122-4245-a789-a4de173f474d",
+   "name": "Tutorial_Attribute_Stats",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "8cf49bdc-757a-4019-9ebe-7d7d59402666",
+   "name": "Tutorial_Attributes",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "4daa1828-7a04-491c-98fb-307d2cb6472b",
+   "name": "Tutorial_AttributesConfirmAllocation",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "76b01fda-523a-4b7d-8ba1-0b1b879cd4db",
+   "name": "Tutorial_Blacksmith",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "2ee74cff-73f1-4b72-a1fb-122696b877bb",
+   "name": "Tutorial_BlacksmithMerge_Complete",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "21c77316-3dc9-4326-97a9-cf022f73e7dc",
+   "name": "Tutorial_Blacksmith_EssenceUpgrade",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "10e0b7bc-90c7-43a9-8e6f-4ec76a7f55df",
+   "name": "Tutorial_Blacksmith_Merging",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "9d00c3fa-d3d8-4bf5-b0c2-d3b2059a1017",
+   "name": "Tutorial_Blacksmith_Merging_SuggestedItemClicked",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "d08f6ce9-62ee-4b79-aa1c-440cf1580dbc",
+   "name": "Tutorial_Blacksmith_Merging_SuggestedItems",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "f006433e-527d-407d-987c-9dbebbbce0e7",
+   "name": "Tutorial_Blacksmith_SuccessRate",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "c138f519-44bd-4a64-9690-a8f452c3fab6",
+   "name": "Tutorial_Buffs",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "dcea6925-3f25-4b47-9d6e-6a247fb12b5e",
+   "name": "Tutorial_CharacterWindow",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "113fa10d-dbea-49ad-b0ee-e368b12d125a",
+   "name": "Tutorial_Concluded",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "ea13aa24-b5da-4b22-ab52-9830003a57d0",
+   "name": "Tutorial_CraftableItemUpgrade",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "683332c6-a171-4721-b70c-eb6150e2e18c",
+   "name": "Tutorial_Died",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "88b78f32-0af8-40a0-a8d8-c732aa8c5496",
+   "name": "Tutorial_Disassembling_General",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "10078639-5d67-4995-960c-c769184b9a43",
+   "name": "Tutorial_EquipNewItem",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "fccee001-a0c5-4740-8055-e40e97e1cd10",
+   "name": "Tutorial_Equipment",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "3b6c8d20-a485-4ff2-912c-111953e68307",
+   "name": "Tutorial_Equipment_EquippedUpgrade",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "0bd05d5a-1177-46ec-b30a-e9cecd218a04",
+   "name": "Tutorial_EquippedNewItem",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "98c16fe5-4943-4a75-9768-4862e635a103",
+   "name": "Tutorial_ForceField",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "466b1955-8eea-426b-9677-729f1d0f48ed",
+   "name": "Tutorial_ForceField_Charges",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "55323317-3cfe-4408-8c07-a1a7c02b1b8b",
+   "name": "Tutorial_FrostRunProgress",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "c557540d-19b4-4897-944e-a9cacfe0e0b9",
+   "name": "Tutorial_HealthPotion",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "ec53f382-65cb-425c-ba48-fbcd1e8f95e2",
+   "name": "Tutorial_HealthPotion_Used",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "98e6d50b-e591-4a27-9244-7a03e1afa0ea",
+   "name": "Tutorial_Introduction",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "1363d259-70cd-450a-8427-f0fe63f351d3",
+   "name": "Tutorial_Inventory",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "5a16adb3-e8d4-4cd1-a7e2-26dfc2323053",
+   "name": "Tutorial_ItemTooltip",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "abcf359f-648a-47ef-8d19-77c813d175d1",
+   "name": "Tutorial_ItemTooltip_Affixes",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "e546020b-57dd-4da7-8d49-0cd5edf3334b",
+   "name": "Tutorial_ItemTooltip_Implicit",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "951fbe8e-8de3-4380-a27b-f4a213669f4d",
+   "name": "Tutorial_ItemTooltip_PrefixAndSuffix_UNUSED",
+   "npcName": "Tutorial",
+   "status": "废弃"
+  },
+  {
+   "guid": "919f794d-d3ef-4545-a18e-c9f6a5c1a79d",
+   "name": "Tutorial_ItemTooltip_Type_UNUSED",
+   "npcName": "Tutorial",
+   "status": "废弃"
+  },
+  {
+   "guid": "7cf01d48-d376-42eb-8238-417c0382e28a",
+   "name": "Tutorial_LevelCheckpointPassed",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "b479ac2a-c61b-4cd2-9263-65c981abb507",
+   "name": "Tutorial_Location_Clicked",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "1809a511-aeae-47f1-ab0c-f2dcd42f4c05",
+   "name": "Tutorial_Location_UNUSED",
+   "npcName": "Tutorial",
+   "status": "废弃"
+  },
+  {
+   "guid": "737e30e2-c9ec-4685-b03b-56757b5d5737",
+   "name": "Tutorial_Loot",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "0ad056fa-b39d-4148-a43f-d7a2e5244a9d",
+   "name": "Tutorial_Loot_ItemDirectUpgrade",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "4e153c09-018d-418b-83c7-af6302213dba",
+   "name": "Tutorial_Loot_PickupAll",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "38f6a98e-ef3a-47b7-b51a-619a712e25da",
+   "name": "Tutorial_ManualMoving",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "96c37da9-63bc-4163-9ded-d856a0bea583",
+   "name": "Tutorial_ManualTargeting",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "f517cb36-8bdc-4321-b288-1fa06cbd53df",
+   "name": "Tutorial_OverallStats",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "dbb7bb2f-b305-4a5a-a390-4ab56a22c540",
+   "name": "Tutorial_PassiveSkillsClick",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "4fef06f6-73d7-4aa6-a1b9-4d8bb932538b",
+   "name": "Tutorial_PassiveSkills_Assigned",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "f249cae4-1693-4c8a-a06e-6a6c9a82a251",
+   "name": "Tutorial_PassiveSkills_Management",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "f0aecb26-802d-4839-87a8-8036256bcdce",
+   "name": "Tutorial_PassiveSkills_StartedTraining",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "8c474e02-155d-429b-9580-6a2ab6210a53",
+   "name": "Tutorial_PassiveSkills_Training",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "547757aa-b565-40f2-8499-9f4d609c6d27",
+   "name": "Tutorial_PassiveSkills_TrainingTrigger",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "c7fbe5a3-7ce1-4b20-bb02-30a6ad56fdb4",
+   "name": "Tutorial_Pet",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "2b442913-a3f0-46ab-b96a-cc31f4d64bef",
+   "name": "Tutorial_Portal",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "617e654c-33a8-425f-af8a-f53da9e90b79",
+   "name": "Tutorial_Portal_Entered",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "321a04ef-8a10-4d8f-a0f3-38be08696995",
+   "name": "Tutorial_Resurrect_Option1",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "b2e30178-f61d-47a9-bdb6-d1fd55eecb8f",
+   "name": "Tutorial_Resurrect_Option2",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "5a891714-11bb-4777-9d4c-a8dcf9950077",
+   "name": "Tutorial_Resurrect_Option3",
+   "npcName": "Tutorial",
+   "status": "正式"
+  },
+  {
+   "guid": "e60316e4-2b19-4150-9079-16dc00e66440",
+   "name": "Tutorial_SkillsTab",
+   "npcName": "Tutorial",
+   "status": "正式"
+  }
+ ],
+ "quests": [
+  {
+   "guid": "9702b57f-e86d-46e1-afad-64519a6ee8a9",
+   "name": "ActiveSkillQueuedTrigger",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "01044548-57cb-4be1-baec-e95e2a5ad9af",
+   "name": "AllocateAttributes",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "045c800d-ff21-4d41-9529-f07489cc81f6",
+   "name": "AssignPassiveSkill",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "f3d8d535-08fa-48ad-8008-03d15ce9442e",
+   "name": "AttributesTabTrigger",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "bad2e7c7-54bd-479f-8b48-ff7b2ac7b4c4",
+   "name": "BlacksmithClickMerge",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "82cc19b3-3ceb-4afe-a91e-e38b314519af",
+   "name": "BlacksmithMoveSuccessSliderToMax",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "578848cb-5e64-4a8d-8ded-60e279493ddf",
+   "name": "ClickOnSuggestedMergeItem",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "ab00a30e-1cd6-450c-bb9e-de0ce7d73928",
+   "name": "ClickPassiveSkills",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "79ac9a06-6488-4b4b-868d-ecd14589ac9f",
+   "name": "ClickSkillsTab",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "8e4b0e86-1325-43a4-b98f-6ea5f3ff5d74",
+   "name": "ClickedActiveTargetedSkillTrigger",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "ea82d751-5451-46a3-8a28-a6d9fe830e69",
+   "name": "ConcludeTutorialTrigger",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "41996fdc-a2c7-4ca9-8563-f5b4ce557ac2",
+   "name": "ConfirmAttributeAllocation",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "c1dde848-f983-482c-9a6e-81d3632e58be",
+   "name": "DebuffGainedTrigger",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "a38cb365-d691-401d-a348-d6d8f2c5aeef",
+   "name": "DiscardInventoryItem",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "62ba2264-1e15-4901-81f6-6ca6a36d2de9",
+   "name": "EquipNewItem",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "100e2e9e-caf0-4c16-b63e-20a7502cfc5f",
+   "name": "FindCraftableItemUpgrade",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "7e96e2a1-8d44-4dde-98ff-3169fb8a2537",
+   "name": "GotoBlacksmith",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "0f389336-9543-4a9d-bd83-7b7e84b63a0f",
+   "name": "GotoDisassembler",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "388e15af-5769-480e-9032-52b15b651840",
+   "name": "HalfWayThroughFrostRunTrigger",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "1efe6c2d-a608-4ac0-8218-6e4b0176e841",
+   "name": "HoldOverActiveSkill",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "ca5e3331-dc23-4694-904f-9957c6542999",
+   "name": "KillMonsterPack",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "37a69943-a633-44c0-868d-f9adeee4d215",
+   "name": "LevelGainedTrigger",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "fd2d1a6f-5271-47d7-b87b-69954590c98b",
+   "name": "LocationCloseLocation",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "8dfb517d-c232-4b3b-995f-6e7b0a3c6412",
+   "name": "LocationOpenLocation",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "e854090e-74f2-49b3-ac51-0b7575d92a71",
+   "name": "LootItemClicked",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "2adf0d84-cf90-4daa-8b11-36e39f3e85a8",
+   "name": "LootOpenLoot",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "c321ee57-49d0-47c0-98c2-e1b845d7f5a6",
+   "name": "LootPickedUpAll",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "8516628e-aed8-4ee0-8e2f-a5576dfd72f2",
+   "name": "ManuallyTargetMonster",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "3e164bb0-7484-4c94-80e9-a7cc2301b100",
+   "name": "MoveManuallyTrigger",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "af30f2ef-4158-4d55-9b17-0d19205c6004",
+   "name": "OpenCharacterWindow",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "2e27668a-d4c5-47aa-bf50-40d58ce67588",
+   "name": "OpenCharacterWindowAfterLevelingUp",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "d0d59a71-a772-4fc0-897d-f0588a3b9b14",
+   "name": "OpenCharacterWindowToTalkAboutSkillTraining",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "24b25a26-e087-4fe6-8e21-84d8b82d09b6",
+   "name": "PassiveSkillTrainingTrigger",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "8ad99b1a-521c-49d7-aa3a-6c08ae0803fb",
+   "name": "PetLootTrigger",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "fb4c986a-d0c9-4e1f-8a48-c1ecd49b1470",
+   "name": "PlaceSuggestedItemInBlacksmithSourceSlot",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "6e48236e-2264-4e42-8442-3a5af5ace926",
+   "name": "PlaceUpgradableItemInBlacksmithTargetSlot",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "bbfec24c-f1ef-4f84-a9b2-5bf48f728c65",
+   "name": "PlayerDiedTrigger",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "52c89173-7a95-4301-ad7d-307def2c75f1",
+   "name": "PortalClicked",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "8b2f2f9e-3095-4108-a28b-ecc4552502c2",
+   "name": "PortalEntered",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "259fdba7-8d9c-4fa9-b1e0-6293de4823a0",
+   "name": "ReassignActiveSkill",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "70d5253c-005f-47eb-9e16-07ea61db6192",
+   "name": "ShowItemDirectUpgrade",
+   "category": 4,
+   "presentationType": 2,
+   "status": "正式"
+  },
+  {
+   "guid": "d0158f4d-794d-4b55-b8a5-2aa082c2f803",
+   "name": "StartTrainingPassiveSkill",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "806c5b1b-1321-4099-8dfd-8be3a52df0e2",
+   "name": "TargetForceFieldEnemy",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "08fe6554-0aa7-49b9-b618-56bc79f4713d",
+   "name": "UseActiveSkill1",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "f8c19e3a-57b1-4d45-8fe3-3ad1e40556e6",
+   "name": "UseActiveSkill2",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "b921ea9b-fc2d-4586-9819-667ef4f2e4ee",
+   "name": "UseActiveSkill3",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  },
+  {
+   "guid": "c53b2c34-130b-472e-a720-dd69434c9d5f",
+   "name": "UseHealthPotion",
+   "category": 4,
+   "presentationType": null,
+   "status": "正式"
+  }
+ ]
+}

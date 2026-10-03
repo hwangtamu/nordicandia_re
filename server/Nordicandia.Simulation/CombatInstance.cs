@@ -48,10 +48,10 @@ public sealed class CombatMonster
     /// <summary>Remaining seconds of an ongoing boss power (nova sequence / beam / charge).</summary>
     public double SpecialTimer { get; set; }
     public double StunTimer { get; set; }
-    /// <summary>Remaining poison duration; while &gt; 0 the target counts as poisoned.</summary>
-    public double PoisonTimer { get; set; }
-    /// <summary>Poison damage per second while <see cref="PoisonTimer"/> is active.</summary>
-    public double PoisonDps { get; set; }
+    /// <summary>C02: per-monster buff container (poison, stuns-as-buffs, ...).
+    /// Replaces the old PoisonTimer/PoisonDps pair; poison is now a "poison" buff
+    /// instance keyed by source.</summary>
+    public BuffManager Buffs { get; } = new();
     public bool Alive { get; set; } = true;
     public double RespawnTimer { get; set; }
     public double WanderTimer { get; set; }
@@ -104,7 +104,7 @@ public readonly record struct SkillOutcome(bool Cast, double Damage, int TargetI
 /// boss; killing the boss clears the dungeon and starts the next cycle. Progression is
 /// written back through the host (see the server's CombatRegistry).
 /// </summary>
-public sealed class CombatInstance
+public sealed partial class CombatInstance
 {
     public const double StepSeconds = 0.05;
     public const double PlayerAttackRange = 3.6;
@@ -155,11 +155,13 @@ public sealed class CombatInstance
     private double targetZ;
     private bool hasTarget;
     private double attackCooldown;
-    private readonly double[] skillCooldowns;
-    private double offenseBuffTimer;
-    private double offenseBuffBonus;
-    private double moveSpeedBuffTimer;
-    private double moveSpeedBuffBonus;
+    private double[] skillCooldowns;
+    // C02: player buffs live in PlayerBuffs (offense, movespeed, curses). The old
+    // per-buff timer/amount field pairs are gone; see BuffManager for the recovered
+    // stacking/refresh/strength rules.
+    /// <summary>C02: the player's buff container (self-buffs keyed "offense|", "movespeed|",
+    /// curses "curse-*|").</summary>
+    public BuffManager PlayerBuffs { get; } = new();
     private double playerRespawnTimer;
     private int dungeonKills;
     private CombatMonster boss;
@@ -187,14 +189,12 @@ public sealed class CombatInstance
     private int pendingSummons;
     private string pendingSummonMinion;
 
-    // Recovered MonsterCurse* debuffs on the player. Each has a remaining duration and magnitude;
-    // the strongest active curse wins. Attributes/targets are ClientVerified, magnitudes/durations
+    // Recovered MonsterCurse* debuffs on the player. Each curse is one BuffManager
+    // instance ("curse-slow|", "curse-resist|", ...); the strongest active curse of each
+    // kind wins per Buff.IsStrongerThan (duration, then stacks). Magnitudes/durations
     // are Provisional (they come from monster-skill definitions).
-    private double curseSlowTimer, curseSlowAmount;
-    private double curseResistTimer, curseResistAmount;
-    private double curseAmplifyTimer, curseAmplifyAmount;
-    private double curseReduceDamageTimer, curseReduceDamageAmount;
-    private double curseLeechTimer, curseLeechAmount;
+    // The leech curse additionally needs the exact monster reference, kept here and
+    // cleared when the curse buff expires.
     private CombatMonster curseLeechSource;
 
     public int TotalPacks => totalPacks;
@@ -308,8 +308,8 @@ public sealed class CombatInstance
     {
         var baseBundle = Damage.Total > 0 ? Damage : new DamageBundle(Offense);
         // Weapon_Damage_Percent_Bonus_Final reduction from MonsterCurseReducedWeaponDamage.
-        return baseBundle.Scale((1 + PassiveOffense() + (offenseBuffTimer > 0 ? offenseBuffBonus : 0))
-            * (1 - curseReduceDamageAmount));
+        return baseBundle.Scale((1 + PassiveOffense() + PlayerBuffs.MagnitudeOf("offense"))
+            * (1 - PlayerBuffs.MagnitudeOf("curse-reducedmg")));
     }
 
     private static CombatantStats MonsterStats(CombatMonster monster)
@@ -326,13 +326,17 @@ public sealed class CombatInstance
     private double PassiveHealth() => passives.Sum(p => p.HealthBonus);
 
     private double EffectiveOffense() => (Damage.Total > 0 ? Damage.Total : Offense)
-        * (1 + PassiveOffense() + (offenseBuffTimer > 0 ? offenseBuffBonus : 0));
+        * (1 + PassiveOffense() + PlayerBuffs.MagnitudeOf("offense"));
 
     /// <summary>Replace the equipped loadout (e.g. after a mastery point or loadout change).</summary>
     public void UpdatePowers(ClassPowerPool powers)
     {
         skills = powers.Active.Take(MaxActiveSkills).ToArray();
         passives = powers.Passive.Take(MaxPassiveSkills).ToArray();
+        // Cooldown slots follow the skill list; preserve running cooldowns by slot.
+        var resized = new double[skills.Length];
+        Array.Copy(skillCooldowns, resized, Math.Min(skillCooldowns.Length, resized.Length));
+        skillCooldowns = resized;
         PlayerMaxHp = EffectiveMaxHealth();
         PlayerHp = Math.Min(PlayerHp, PlayerMaxHp);
         Version++;
@@ -513,8 +517,11 @@ public sealed class CombatInstance
         if (PlayerHp > 0) UpdatePlayer(dt);
         UpdateMonsters(dt);
         if (boss is { Alive: true } && PlayerHp > 0) UpdateBoss(dt);
-        TickPoison(dt);
-        TickCurses(dt);
+        TickMonsterBuffs(dt);
+        TickClouds(dt);
+        TickMinions(dt);
+        TickTraps(dt);
+        TickChannel(dt);
         if (pendingPackSize > 0)
         {
             packSpawnTimer += dt;
@@ -545,8 +552,8 @@ public sealed class CombatInstance
     {
         attackCooldown -= dt;
         for (var i = 0; i < skillCooldowns.Length; i++) skillCooldowns[i] = Math.Max(0, skillCooldowns[i] - dt);
-        offenseBuffTimer = Math.Max(0, offenseBuffTimer - dt);
-        moveSpeedBuffTimer = Math.Max(0, moveSpeedBuffTimer - dt);
+        PlayerBuffs.Tick(dt);
+        if (!PlayerBuffs.Has("curse-leech")) curseLeechSource = null;
         if (PlayerHp > 0)
             PlayerMana = Math.Min(PlayerMaxMana, PlayerMana + (4 + PlayerLevel) * dt);
         if (Recovery > 0 && PlayerHp > 0)
@@ -560,7 +567,7 @@ public sealed class CombatInstance
             if (distance < 0.15) hasTarget = false;
             else
             {
-                var speed = playerSpeed * (1 + (moveSpeedBuffTimer > 0 ? moveSpeedBuffBonus : 0)) * (1 - curseSlowAmount);
+                var speed = playerSpeed * (1 + PlayerBuffs.MagnitudeOf("movespeed")) * (1 - CurseSlow);
                 var step = Math.Min(distance, speed * dt);
                 PlayerX += dx / distance * step;
                 PlayerZ += dz / distance * step;
@@ -572,11 +579,32 @@ public sealed class CombatInstance
         if (target is not null && attackCooldown <= 0)
         {
             attackCooldown = PlayerAttackInterval;
-            var hit = CombatModel.ResolveBundleAttack(
-                PlayerStats(), PlayerDamageBundle(), MonsterStats(target), target.Resistances,
-                new AttackProfile(1.0, 0.08, 1.6, 0.12),
-                rng);
-            DamageMonster(target, ApplyOnHit(target, hit, autoAttack: true));
+            if (ProjectileAutoAttack)
+            {
+                // C03: real projectile — flies from the player, collides geometrically,
+                // fork/chain per HandleForkAndChain (no more nearest-enemy substitution).
+                FireProjectiles(
+                    new Projectile { X = PlayerX, Z = PlayerZ, Source = "autoattack" },
+                    target.X, target.Z,
+                    (m, mult) =>
+                    {
+                        var h = CombatModel.ResolveBundleAttack(
+                            PlayerStats(), PlayerDamageBundle(), MonsterStats(m), m.Resistances,
+                            new AttackProfile(mult, 0.08, 1.6, 0.12), rng);
+                        var dealt = ApplyOnHit(m, h, autoAttack: false);
+                        DamageMonster(m, dealt);
+                        return dealt;
+                    },
+                    () => ForkChance, () => ChainChance, () => 0.0);
+            }
+            else
+            {
+                var hit = CombatModel.ResolveBundleAttack(
+                    PlayerStats(), PlayerDamageBundle(), MonsterStats(target), target.Resistances,
+                    new AttackProfile(1.0, 0.08, 1.6, 0.12),
+                    rng);
+                DamageMonster(target, ApplyOnHit(target, hit, autoAttack: true));
+            }
         }
     }
 
@@ -597,8 +625,7 @@ public sealed class CombatInstance
                     monster.Z = Math.Sin(angle) * radius;
                     monster.Hp = monster.MaxHp;
                     monster.Alive = true;
-                    monster.PoisonTimer = 0;
-                    monster.PoisonDps = 0;
+                    monster.Buffs.Clear();
                 }
                 continue;
             }
@@ -731,68 +758,74 @@ public sealed class CombatInstance
         }
     }
 
-    /// <summary>Applies a {@link MonsterCurse*} debuff to the player. The strongest active curse
-    /// of each kind wins and refreshes the duration.</summary>
+    /// <summary>Applies a {@link MonsterCurse*} debuff to the player as a BuffManager
+    /// instance. Same-kind curses share one key; the stronger instance wins per the
+    /// recovered Buff.IsStrongerThan rules (duration, then stacks).</summary>
     private void ApplyCurse(CombatMonster monster, MonsterPower power)
     {
-        switch (power.Curse)
+        var def = power.Curse switch
         {
-            case CurseEffect.Slow:
-            case CurseEffect.SlowProjectiles:
-                curseSlowAmount = Math.Max(curseSlowAmount, power.DamageMultiplier);
-                curseSlowTimer = Math.Max(curseSlowTimer, power.Duration);
-                break;
-            case CurseEffect.LowerResistances:
-                curseResistAmount = Math.Max(curseResistAmount, power.DamageMultiplier);
-                curseResistTimer = Math.Max(curseResistTimer, power.Duration);
-                break;
-            case CurseEffect.AmplifyDamageTaken:
-                curseAmplifyAmount = Math.Max(curseAmplifyAmount, power.DamageMultiplier);
-                curseAmplifyTimer = Math.Max(curseAmplifyTimer, power.Duration);
-                break;
-            case CurseEffect.ReducedWeaponDamage:
-                curseReduceDamageAmount = Math.Max(curseReduceDamageAmount, power.DamageMultiplier);
-                curseReduceDamageTimer = Math.Max(curseReduceDamageTimer, power.Duration);
-                break;
-            case CurseEffect.Leech:
-                curseLeechAmount = Math.Max(curseLeechAmount, power.DamageMultiplier);
-                curseLeechTimer = Math.Max(curseLeechTimer, power.Duration);
+            CurseEffect.Slow => "curse-slow",
+            CurseEffect.SlowProjectiles => "curse-slow",
+            CurseEffect.LowerResistances => "curse-resist",
+            CurseEffect.AmplifyDamageTaken => "curse-amplify",
+            CurseEffect.ReducedWeaponDamage => "curse-reducedmg",
+            CurseEffect.Leech => "curse-leech",
+            _ => "",
+        };
+        if (def.Length > 0)
+        {
+            if (PlayerBuffs.Add(new BuffInstance
+                {
+                    DefinitionId = def,
+                    Duration = power.Duration,
+                    Remaining = power.Duration,
+                    Magnitude = power.DamageMultiplier,
+                }) && def == "curse-leech")
                 curseLeechSource = monster;
-                break;
         }
         monster.SpecialCooldown = power.Cooldown;
     }
 
-    private void TickCurses(double dt)
-    {
-        curseSlowTimer = Math.Max(0, curseSlowTimer - dt);
-        if (curseSlowTimer <= 0) curseSlowAmount = 0;
-        curseResistTimer = Math.Max(0, curseResistTimer - dt);
-        if (curseResistTimer <= 0) curseResistAmount = 0;
-        curseAmplifyTimer = Math.Max(0, curseAmplifyTimer - dt);
-        if (curseAmplifyTimer <= 0) curseAmplifyAmount = 0;
-        curseReduceDamageTimer = Math.Max(0, curseReduceDamageTimer - dt);
-        if (curseReduceDamageTimer <= 0) curseReduceDamageAmount = 0;
-        curseLeechTimer = Math.Max(0, curseLeechTimer - dt);
-        if (curseLeechTimer <= 0) { curseLeechAmount = 0; curseLeechSource = null; }
-    }
-
-    public double CurseSlow => curseSlowTimer > 0 ? curseSlowAmount : 0;
-    public double CurseResistancePenalty => curseResistTimer > 0 ? curseResistAmount : 0;
-    public double CurseAmplifyDamageTaken => curseAmplifyTimer > 0 ? curseAmplifyAmount : 0;
-    public double CurseWeaponDamageReduction => curseReduceDamageTimer > 0 ? curseReduceDamageAmount : 0;
+    public double CurseSlow => PlayerBuffs.MagnitudeOf("curse-slow");
+    public double CurseResistancePenalty => PlayerBuffs.MagnitudeOf("curse-resist");
+    public double CurseAmplifyDamageTaken => PlayerBuffs.MagnitudeOf("curse-amplify");
+    public double CurseWeaponDamageReduction => PlayerBuffs.MagnitudeOf("curse-reducedmg");
 
     private ResistanceBundle EffectivePlayerResistances()
-        => curseResistTimer > 0
+    {
+        var penalty = PlayerBuffs.MagnitudeOf("curse-resist");
+        return penalty > 0
             ? new ResistanceBundle(
-                Resistances.Fire - curseResistAmount, Resistances.Cold - curseResistAmount,
-                Resistances.Lightning - curseResistAmount, Resistances.Poison - curseResistAmount)
+                Resistances.Fire - penalty, Resistances.Cold - penalty,
+                Resistances.Lightning - penalty, Resistances.Poison - penalty)
             : Resistances;
+    }
 
     /// <summary>Shield, amplify-damage-taken, leech and death for one hit on the player.</summary>
     private void ApplyPlayerDamage(CombatMonster source, double incoming)
     {
-        if (curseAmplifyTimer > 0) incoming *= 1 + curseAmplifyAmount;
+        incoming *= 1 + PlayerBuffs.MagnitudeOf("curse-amplify");
+        // C06 batch 3: Intimidate — source monster deals 10% less.
+        if (source is not null)
+        {
+            var intimidate = source.Buffs.MagnitudeOf("intimidate", "Intimidate");
+            if (intimidate > 0) incoming *= 1 - intimidate;
+        }
+        // C06 batch 3: BoneLink — player takes 30% less.
+        var bonelink = PlayerBuffs.MagnitudeOf("bonelink", "BoneLink");
+        if (bonelink > 0) incoming *= 1 - bonelink;
+        // C06: Thorns physical damage reduction.
+        var thornsReduction = PlayerBuffs.MagnitudeOf("thorns-reduction", "Thorns");
+        if (thornsReduction > 0) incoming *= 1 - thornsReduction;
+        // C06 batch 3: ManaShield absorption — 20% of damage to shield (provisional).
+        var manaShield = PlayerBuffs.MagnitudeOf("manashield", "ManaShield");
+        if (manaShield > 0 && PlayerShield > 0)
+        {
+            var toShield = Math.Min(PlayerShield, incoming * manaShield);
+            PlayerShield -= toShield;
+            incoming -= toShield;
+        }
         if (PlayerShield > 0)
         {
             var absorbed = Math.Min(PlayerShield, incoming);
@@ -800,10 +833,31 @@ public sealed class CombatInstance
             incoming -= absorbed;
         }
         PlayerHp = Math.Max(0, PlayerHp - incoming);
-        if (source is not null && curseLeechTimer > 0 && ReferenceEquals(curseLeechSource, source))
-            source.Hp = Math.Min(source.MaxHp, source.Hp + incoming * curseLeechAmount);
+        // C06: Thorns reflects melee damage back to the attacker.
+        var thorns = PlayerBuffs.MagnitudeOf("thorns", "Thorns");
+        if (thorns > 0 && source is not null && source.Alive)
+        {
+            var reflected = incoming * thorns;
+            DamageMonster(source, reflected);
+            EmitEvent("damage", source.Index, reflected, "thorns reflect");
+        }
+        // C06 batch 3: Retaliation — 0.3x weapon damage to attacker.
+        var retaliation = PlayerBuffs.MagnitudeOf("retaliation", "Retaliation");
+        if (retaliation > 0 && source is not null && source.Alive)
+        {
+            var retSkill = new SkillProfile(0, "Retaliation", "", "", "strike",
+                retaliation, 0, 0, 0, 0, 0, 0, "c06", new Dictionary<string, double>());
+            var retDealt = HitTarget(source, retSkill, retaliation);
+            EmitEvent("damage", source.Index, retDealt, "retaliation");
+        }
+        var leech = PlayerBuffs.Get("curse-leech");
+        if (leech is not null && source is not null && ReferenceEquals(curseLeechSource, source))
+            source.Hp = Math.Min(source.MaxHp, source.Hp + incoming * leech.Magnitude);
         if (PlayerHp <= 0)
         {
+            // Death clears non-persistent buffs (client rule); the leech source dies with it.
+            PlayerBuffs.Clear();
+            curseLeechSource = null;
             playerRespawnTimer = PlayerRespawnSeconds;
             hasTarget = false;
         }
@@ -819,7 +873,7 @@ public sealed class CombatInstance
         var dz = PlayerZ - monster.Z;
         var dist = Math.Max(1e-6, Math.Sqrt(dx * dx + dz * dz));
         if (dist <= MonsterAttackRange) return true;
-        var step = Math.Min(dist, monster.Speed * 3 * dt);
+        var step = Math.Min(dist, EffectiveMonsterSpeed(monster) * 3 * dt);
         monster.X = Math.Clamp(monster.X + dx / dist * step, -ArenaHalf, ArenaHalf);
         monster.Z = Math.Clamp(monster.Z + dz / dist * step, -ArenaHalf, ArenaHalf);
         return dist - step <= MonsterAttackRange;
@@ -894,7 +948,7 @@ public sealed class CombatInstance
         var gz = goalZ - monster.Z;
         var gdist = Math.Sqrt(gx * gx + gz * gz);
         if (gdist <= 0.3) return;
-        var step = Math.Min(gdist, monster.Speed * dt);
+        var step = Math.Min(gdist, EffectiveMonsterSpeed(monster) * dt);
         monster.X = Math.Clamp(monster.X + gx / gdist * step, -ArenaHalf, ArenaHalf);
         monster.Z = Math.Clamp(monster.Z + gz / gdist * step, -ArenaHalf, ArenaHalf);
     }
@@ -917,7 +971,9 @@ public sealed class CombatInstance
         {
             if (monster.AttackCooldown <= 0)
             {
-                monster.AttackCooldown = monster.AttackInterval;
+                // C06 batch 3: Decay slows attack speed by 20%.
+                var atkSlow = monster.Buffs.MagnitudeOf("decay-slow", "Decay");
+                monster.AttackCooldown = monster.AttackInterval * (1 + atkSlow);
                 var monsterDamage = monster.Damage.Total > 0 ? monster.Damage : new DamageBundle(monster.Offense);
                 var hit = CombatModel.ResolveBundleAttack(
                     MonsterStats(monster), monsterDamage, PlayerStats(), EffectivePlayerResistances(),
@@ -928,7 +984,7 @@ public sealed class CombatInstance
             // Kiting: a ranged monster inside its preferred distance backs away.
             if (monster.Ranged && distance < monster.PreferredDistance)
             {
-                var step = Math.Min(monster.PreferredDistance - distance + 1.0, monster.Speed * dt);
+                var step = Math.Min(monster.PreferredDistance - distance + 1.0, EffectiveMonsterSpeed(monster) * dt);
                 monster.X = Math.Clamp(monster.X - dx / distance * step, -ArenaHalf, ArenaHalf);
                 monster.Z = Math.Clamp(monster.Z - dz / distance * step, -ArenaHalf, ArenaHalf);
             }
@@ -961,7 +1017,7 @@ public sealed class CombatInstance
         var gdist = Math.Sqrt(gx * gx + gz * gz);
         if (gdist > 0.3)
         {
-            var step = Math.Min(gdist, monster.Speed * dt);
+            var step = Math.Min(gdist, EffectiveMonsterSpeed(monster) * dt);
             monster.X += gx / gdist * step;
             monster.Z += gz / gdist * step;
             monster.X = Math.Clamp(monster.X, -ArenaHalf, ArenaHalf);
@@ -1001,62 +1057,51 @@ public sealed class CombatInstance
     {
         if (!hit.Hit || !target.Alive) return 0;
         var damage = hit.Damage;
-        if (hit.Critical && target.PoisonTimer > 0 && CombatModel.RollChance(DoubleDamageOnCritPoisoned, rng))
+        if (hit.Critical && target.Buffs.Has("poison", "player") && CombatModel.RollChance(DoubleDamageOnCritPoisoned, rng))
             damage *= 2;
         if (damage > 0 && (PoisonOnHit || CombatModel.RollChance(PoisonChance, rng)))
         {
             // Native: Buff_Duration=1 and Tick_Damage_Per_Second=TotalDamage*0.2.
-            // The web retains one strongest poison; full BuffManager replacement is not ported.
-            target.PoisonTimer = Math.Max(target.PoisonTimer, PoisonSeconds);
-            target.PoisonDps = Math.Max(target.PoisonDps, damage * PoisonHitDamageFactor);
+            // C02: one "poison" instance per source; a fresh instance (full 1s) is
+            // stronger by duration than a partially ticked one, so re-application
+            // replaces it (new DPS, full duration) per Buff.IsStrongerThan.
+            target.Buffs.Add(new BuffInstance
+            {
+                DefinitionId = "poison",
+                Source = "player",
+                Duration = PoisonSeconds,
+                Remaining = PoisonSeconds,
+                TickDps = damage * PoisonHitDamageFactor,
+            });
         }
-        if (autoAttack && ProjectileAutoAttack)
-        {
-            var fork = CombatModel.RollChance(ForkChance, rng);
-            var chain = CombatModel.RollChance(ChainChance, rng);
-            // Native forks twice at 0.5x and disables recursion. A successful fork takes
-            // precedence over chain. Selection of nearby targets is still a web approximation
-            // of the two moving projectiles' collision geometry.
-            if (fork || chain)
-                foreach (var secondary in SecondaryTargets(target).Take(fork ? 2 : 1).ToArray())
-                {
-                    var next = CombatModel.ResolveBundleAttack(PlayerStats(), PlayerDamageBundle(),
-                        MonsterStats(secondary), secondary.Resistances,
-                        new AttackProfile(fork ? 0.5 : 1, 0.08, 1.6, 0.12), rng);
-                    DamageMonster(secondary, ApplyOnHit(secondary, next, autoAttack: false));
-                }
-        }
+        // C03: fork/chain now live in the projectile flight sim (CombatInstance.Projectiles);
+        // ApplyOnHit no longer substitutes nearby enemies.
         return damage;
-    }
-
-    private IEnumerable<CombatMonster> SecondaryTargets(CombatMonster primary)
-    {
-        var candidates = boss is { Alive: true } ? monsters.Append(boss) : monsters;
-        return candidates.Where(m => m.Alive && m != primary)
-            .Select(m => (Monster: m, Distance: Math.Sqrt(Math.Pow(m.X - primary.X, 2) + Math.Pow(m.Z - primary.Z, 2))))
-            .Where(x => x.Distance <= 10).OrderBy(x => x.Distance).ThenBy(x => x.Monster.Index)
-            .Select(x => x.Monster);
     }
 
     public const double PoisonSeconds = 1.0;
     public const double PoisonHitDamageFactor = 0.2;
 
-    private void TickPoison(double dt)
+    /// <summary>C02: ticks every monster's buff container. DoT buffs deal their
+    /// TickDps*elapsed as damage; elapsed is clamped to the remaining duration so a
+    /// critical tick never double-counts or drops the partial tick.</summary>
+    private void TickMonsterBuffs(double dt)
     {
-        foreach (var monster in monsters) TickMonsterPoison(monster, dt);
-        if (boss is { Alive: true }) TickMonsterPoison(boss, dt);
+        foreach (var monster in monsters) TickOneMonsterBuffs(monster, dt);
+        if (boss is { Alive: true }) TickOneMonsterBuffs(boss, dt);
     }
 
-    private void TickMonsterPoison(CombatMonster monster, double dt)
+    private void TickOneMonsterBuffs(CombatMonster monster, double dt)
     {
-        if (monster is null || !monster.Alive || monster.PoisonTimer <= 0) return;
-        var elapsed = Math.Min(dt, monster.PoisonTimer);
-        monster.PoisonTimer = Math.Max(0, monster.PoisonTimer - elapsed);
-        // DebuffPoisoned.DoWork sends Tick_Damage_Per_Second*dt as poison damage.
-        // DoT cannot roll a new hit/crit, poison, fork or chain, or use the one-damage hit floor.
-        var damage = CombatModel.EffectiveElementalDamage(monster.PoisonDps * elapsed, monster.Resistances.Poison);
-        DamageMonster(monster, damage);
-        if (monster.PoisonTimer <= 0) monster.PoisonDps = 0;
+        if (monster is null || !monster.Alive) return;
+        monster.Buffs.Tick(dt, (buff, elapsed) =>
+        {
+            if (buff.DefinitionId != "poison") return;
+            // DebuffPoisoned.DoWork sends Tick_Damage_Per_Second*dt as poison damage.
+            // DoT cannot roll a new hit/crit, poison, fork or chain, or use the one-damage hit floor.
+            var damage = CombatModel.EffectiveElementalDamage(buff.TickDps * elapsed, monster.Resistances.Poison);
+            DamageMonster(monster, damage);
+        });
     }
 
     private void DamageMonster(CombatMonster monster, double damage)
@@ -1066,56 +1111,8 @@ public sealed class CombatInstance
         if (monster.Hp > 0) return;
         monster.Alive = false;
         monster.Hp = 0;
-        monster.PoisonTimer = 0;
-        monster.PoisonDps = 0;
-        Kills++;
-        Experience += CombatModel.ExperienceReward(monster.Level);
-        LevelUpIfNeeded();
-
-        if (monster.IsBoss)
-        {
-            boss = null;
-            DungeonsCleared++;
-            Silver += 50 + monster.Level * 25;
-            pendingDrops.Add(RollDrop(monster.Level, minRarity: 4));
-            pendingDrops.Add(RollDrop(monster.Level + 2, minRarity: 5));
-            dungeonKills = 0;
-            return;
-        }
-
-        if (rng.NextDouble() < TrashDropChance)
-            pendingDrops.Add(RollDrop(monster.Level, minRarity: 0));
-
-        if (packMode)
-        {
-            // The pack is over once its last member dies (and every member has spawned);
-            // then spawn the next pack or finish the run.
-            if (pendingPackSize == 0 && monsters.All(m => !m.Alive))
-            {
-                packsCleared++;
-                if (packsCleared >= totalPacks)
-                {
-                    DungeonsCleared++;
-                    Silver += 50 + monster.Level * 25;
-                    pendingDrops.Add(RollDrop(monster.Level, minRarity: 4));
-                    pendingDrops.Add(RollDrop(monster.Level + 2, minRarity: 5));
-                    packMode = false;
-                    totalPacks = 0;
-                    packsCleared = 0;
-                }
-                else
-                {
-                    pendingPackSpawn = true;
-                }
-            }
-            return;
-        }
-
-        dungeonKills++;
-        if (dungeonKills >= BossKillGoal && boss is null)
-            boss = CreateBoss();
-
-        monster.RespawnTimer = MonsterRespawnSeconds;
+        monster.Buffs.Clear();
+        OnMonsterDeath(monster);
     }
 
     private LootDrop RollDrop(int level, int minRarity)
@@ -1209,50 +1206,109 @@ public sealed class CombatInstance
         if (skillCooldowns[skillId] > 0) return new SkillOutcome(false, 0, -1, "cooldown");
         var skill = skills[skillId];
         if (PlayerMana < skill.ManaCost) return new SkillOutcome(false, 0, -1, "no_mana");
+        // C06 batch 3: Sacrifice — next offensive spell +40% (consumed).
+        var sacrifice = PlayerBuffs.MagnitudeOf("sacrifice-dmg", "Sacrifice");
+        if (sacrifice > 0 && skill.Effect is "strike" or "nova" or "projectile" or "chain")
+        {
+            skill = skill with { Multiplier = skill.Multiplier * (1 + sacrifice) };
+            PlayerBuffs.Remove("sacrifice-dmg", "Sacrifice");
+            EmitEvent("buff", -1, 0, "consume sacrifice");
+        }
 
         switch (skill.Effect)
         {
             case "nova":
             {
-                var inRange = AliveMonstersInRadius(skill.Radius);
-                if (inRange.Count == 0) return new SkillOutcome(false, 0, -1, "no_target");
-                BeginCast(skillId, skill);
-                double total = 0;
-                var first = inRange[0].Index;
-                var stun = StunSecondsOf(skill);
-                foreach (var monster in inRange)
+                // C05: PoisonCloud is a persistent cloud, not an instant nova.
+                if (skill.Name == "PoisonCloud")
                 {
-                    var hit = ResolveSkill(monster, skill, skill.Multiplier);
-                    var dealt = ApplyOnHit(monster, hit, autoAttack: false);
-                    total += dealt;
-                    DamageMonster(monster, dealt);
-                    if (stun > 0) monster.StunTimer = Math.Max(monster.StunTimer, stun);
+                    var cloudTarget = NearestAliveMonster(Math.Max(skill.Radius, 8));
+                    if (cloudTarget is null) return new SkillOutcome(false, 0, -1, "no_target");
+                    BeginCast(skillId, skill);
+                    SpawnPoisonCloud(skill, cloudTarget.X, cloudTarget.Z);
+                    Version++;
+                    return new SkillOutcome(true, 0, cloudTarget.Index, "ok");
                 }
+                // C06: Whirlwind is a channeled AoE, not an instant nova.
+                if (skill.Name == "Whirlwind")
+                {
+                    BeginCast(skillId, skill);
+                    StartWhirlwind(skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
+                }
+                // C06: Blizzard/ElementalSeal are persistent ground effects.
+                if (skill.Name == "Blizzard" || skill.Name == "ElementalSeal")
+                {
+                    var groundTarget = NearestAliveMonster(Math.Max(skill.Radius, 8));
+                    if (groundTarget is null) return new SkillOutcome(false, 0, -1, "no_target");
+                    BeginCast(skillId, skill);
+                    SpawnGroundEffect(skill, groundTarget.X, groundTarget.Z, skill.Name);
+                    Version++;
+                    return new SkillOutcome(true, 0, groundTarget.Index, "ok");
+                }
+                // C06: Slam is a line attack (15y), not a circular nova.
+                if (skill.Name == "Slam")
+                {
+                    var slamTarget = NearestAliveMonster(15);
+                    if (slamTarget is null) return new SkillOutcome(false, 0, -1, "no_target");
+                    BeginCast(skillId, skill);
+                    var lineTotal = HitLine(skill, slamTarget, 15.0, 1.0);
+                    Version++;
+                    return new SkillOutcome(true, lineTotal, slamTarget.Index, "ok");
+                }
+                // C06 batch 3: Retaliation (buff), Intimidate (AoE debuff), Decay (ground AoE).
+                if (skill.Name == "Retaliation")
+                {
+                    BeginCast(skillId, skill);
+                    ApplyRetaliation(skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
+                }
+                if (skill.Name == "Intimidate")
+                {
+                    BeginCast(skillId, skill);
+                    ApplyIntimidate(skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
+                }
+                if (skill.Name == "Decay")
+                {
+                    var decayTarget = NearestAliveMonster(Math.Max(skill.Radius, 8));
+                    if (decayTarget is null) return new SkillOutcome(false, 0, -1, "no_target");
+                    BeginCast(skillId, skill);
+                    SpawnGroundEffect(skill, decayTarget.X, decayTarget.Z, "Decay");
+                    Version++;
+                    return new SkillOutcome(true, 0, decayTarget.Index, "ok");
+                }
+                // C06 batch 3: Thunderstrike — 4s storm, 30y radius. No damage multiplier
+                // recovered; uses provisional 1.0x per strike (needs client research).
+                if (skill.Name == "Thunderstrike")
+                {
+                    BeginCast(skillId, skill);
+                    SpawnGroundEffect(skill, PlayerX, PlayerZ, "Thunderstrike");
+                    // Override to 1.0x provisional (no multiplier in data).
+                    var storm = clouds[^1];
+                    storm.DamageMult = 1.0;
+                    storm.TickInterval = 1.0;
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
+                }
+                var (total, first, hit) = HitNova(skill, skill.Radius);
+                if (first < 0) return new SkillOutcome(false, 0, -1, "no_target");
+                BeginCast(skillId, skill);
+                var stun = StunSecondsOf(skill);
+                if (stun > 0)
+                    foreach (var monster in hit)
+                        monster.StunTimer = Math.Max(monster.StunTimer, stun);
                 Version++;
                 return new SkillOutcome(true, total, first, "ok");
             }
             case "chain":
             {
-                var candidates = AliveMonstersInRadius(Math.Max(skill.Radius, 8));
-                if (candidates.Count == 0) return new SkillOutcome(false, 0, -1, "no_target");
+                var (total, first) = HitChain(skill, Math.Max(skill.Radius, 8), Math.Max(1, ChainsOf(skill)));
+                if (first < 0) return new SkillOutcome(false, 0, -1, "no_target");
                 BeginCast(skillId, skill);
-                candidates.Sort((a, b) => Distance(a).CompareTo(Distance(b)));
-                var maxTargets = Math.Max(1, ChainsOf(skill));
-                // ChainLightning._DamageReductionPerJump = 0.25 (client default), so each jump keeps 75%.
-                var decay = skill.Values.TryGetValue("Power_Chain_Lightning_Damage_Reduction_Percent", out var d)
-                    ? Math.Clamp(1 - d, 0.1, 1.0)
-                    : 0.75;
-                double total = 0;
-                var first = candidates[0].Index;
-                var currentMultiplier = skill.Multiplier;
-                foreach (var monster in candidates.Take(maxTargets))
-                {
-                    var hit = ResolveSkill(monster, skill, currentMultiplier);
-                    var dealt = ApplyOnHit(monster, hit, autoAttack: false);
-                    total += dealt;
-                    DamageMonster(monster, dealt);
-                    currentMultiplier *= decay;
-                }
                 Version++;
                 return new SkillOutcome(true, total, first, "ok");
             }
@@ -1263,63 +1319,220 @@ public sealed class CombatInstance
             case "rally":
             {
                 BeginCast(skillId, skill);
-                if (skill.HealPercent > 0)
-                    PlayerHp = Math.Min(PlayerMaxHp, PlayerHp + PlayerMaxHp * skill.HealPercent);
-                if (skill.Effect == "shield" && skill.Values.TryGetValue("Mana_Shield_Life_Factor", out var lifeFactor))
-                    PlayerShield += PlayerMaxHp * lifeFactor;
-                var bonus = skill.BuffBonus;
-                if (bonus <= 0 && skill.Effect == "summon")
-                    bonus = skill.Values.TryGetValue("Minion_Inheritance_Weapon_Damage_Bonus_Percent", out var b) ? b : 0.15;
-                if (bonus > 0)
+                // C06: Teleport is a blink, not a rally buff (fixes the C04 suspicious mapping).
+                if (skill.Name == "Teleport")
                 {
-                    offenseBuffTimer = Math.Max(offenseBuffTimer, skill.BuffSeconds);
-                    offenseBuffBonus = bonus;
+                    Blink(skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
                 }
+                // C06: Mark of the Chosen is a damage-taken debuff on a target.
+                if (skill.Name == "MarkOfTheChosen")
+                {
+                    var markTarget = NearestAliveMonster(14);
+                    if (markTarget is null) return new SkillOutcome(false, 0, -1, "no_target");
+                    ApplyMark(markTarget, skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, markTarget.Index, "ok");
+                }
+                // C06: Thorns is a reflect + damage-reduction buff.
+                if (skill.Name == "Thorns")
+                {
+                    ApplyThorns(skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
+                }
+                // C06 batch 3: Fade (evasion buff), AstralWalk (move buff), Backflip (mirror).
+                if (skill.Name == "Fade")
+                {
+                    ApplyFade(skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
+                }
+                if (skill.Name == "AstralWalk")
+                {
+                    ApplyAstralWalk(skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
+                }
+                if (skill.Name == "Backflip")
+                {
+                    Backflip(skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
+                }
+                // C06 batch 3: Necromancer buffs.
+                if (skill.Name == "BoneLink")
+                {
+                    ApplyBoneLink(skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
+                }
+                if (skill.Name == "DemonicPresence")
+                {
+                    ApplyDemonicPresence(skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
+                }
+                if (skill.Name == "Sacrifice")
+                {
+                    ApplySacrifice(skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
+                }
+                if (skill.Name == "UnholyFocus")
+                {
+                    ApplyUnholyFocus(skill);
+                    Version++;
+                    return new SkillOutcome(true, 0, -1, "ok");
+                }
+                // C06 batch 3: DrainLife is a channeled drain (not a summon).
+                if (skill.Name == "DrainLife")
+                {
+                    var drainTarget = NearestAliveMonster(14);
+                    if (drainTarget is null) return new SkillOutcome(false, 0, -1, "no_target");
+                    BeginCast(skillId, skill);
+                    StartDrainLife(skill, drainTarget);
+                    Version++;
+                    return new SkillOutcome(true, 0, drainTarget.Index, "ok");
+                }
+                HealPercent(skill.HealPercent);
+                if (skill.Effect == "shield" && skill.Values.TryGetValue("Mana_Shield_Life_Factor", out var lifeFactor))
+                {
+                    GainShield(lifeFactor);
+                    // C06 batch 3: ManaShield absorption factor.
+                    if (skill.Name == "ManaShield" && skill.Values.TryGetValue("Mana_Shield_Damage_Absorbtion_Factor", out var absorb))
+                    {
+                        PlayerBuffs.Add(new BuffInstance
+                        {
+                            DefinitionId = "manashield",
+                            Source = "ManaShield",
+                            Duration = 30, // Provisional: until shield depleted.
+                            Remaining = 30,
+                            Magnitude = absorb,
+                        });
+                    }
+                }
+                if (skill.Effect == "summon")
+                {
+                    // C05: SummonSkeleton spawns real minion entities; other summon
+                    // skills keep the provisional offense-buff fallback (C06).
+                    if (skill.Name == "SummonSkeleton")
+                        SpawnSkeletons(skill);
+                    else
+                        SummonMinions(skill);
+                }
+                else
+                    ApplyOffenseBuff(skill.BuffBonus, skill.BuffSeconds);
                 if (skill.Effect == "mobility")
                 {
                     var speed = skill.Values.TryGetValue("Movement_Speed_Bonus_Percent", out var s) ? s / 100.0 : 0.25;
-                    moveSpeedBuffTimer = Math.Max(moveSpeedBuffTimer, skill.BuffSeconds);
-                    moveSpeedBuffBonus = speed;
+                    ApplyMoveSpeedBuff(speed, skill.BuffSeconds);
                 }
                 Version++;
                 return new SkillOutcome(true, 0, -1, "ok");
             }
             case "projectile":
             {
-                // Ranged shot. PowerShot rolls its recovered pierce chance; a success keeps the
-                // projectile going to the next nearby enemy (client: per-hit pierce roll).
-                var target = NearestAliveMonster(14);
-                if (target is null) return new SkillOutcome(false, 0, -1, "no_target");
-                BeginCast(skillId, skill);
-                var hit = ResolveSkill(target, skill, skill.Multiplier);
-                var total = ApplyOnHit(target, hit, autoAttack: false);
-                DamageMonster(target, total);
-                var pierceChance = skill.Values.TryGetValue("Power_Power_Shot_Pierce_Chance_Percent", out var pc)
-                    ? pc
-                    : skill.Values.TryGetValue("Power_Projectile_Pierce_Chance", out var ppc) ? ppc : 0.0;
-                pierceChance = Math.Clamp(pierceChance, 0, 1);
-                var hitIndices = new HashSet<int> { target.Index };
-                foreach (var extra in AliveMonstersInRadius(Math.Max(skill.Radius, 8)).OrderBy(Distance))
+                // C06: Tornado is a persistent moving vortex (2y radius, 7s).
+                if (skill.Name == "Tornado")
                 {
-                    if (hitIndices.Contains(extra.Index)) continue;
-                    if (pierceChance <= 0 || !CombatModel.RollChance(pierceChance, rng)) break;
-                    var pierce = ResolveSkill(extra, skill, skill.Multiplier);
-                    var dealt = ApplyOnHit(extra, pierce, autoAttack: false);
-                    total += dealt;
-                    DamageMonster(extra, dealt);
-                    hitIndices.Add(extra.Index);
+                    var tornadoTarget = NearestAliveMonster(14);
+                    if (tornadoTarget is null) return new SkillOutcome(false, 0, -1, "no_target");
+                    BeginCast(skillId, skill);
+                    var tornadoTotal = HitTornado(skill, tornadoTarget);
+                    Version++;
+                    return new SkillOutcome(true, tornadoTotal, tornadoTarget.Index, "ok");
+                }
+                // C06 batch 3: IceBlast/Shadowbolt/InfernalBlast are explosive.
+                if (skill.Name == "IceBlast" || skill.Name == "Shadowbolt" || skill.Name == "InfernalBlast")
+                {
+                    BeginCast(skillId, skill);
+                    var explosionMult = skill.Values.TryGetValue("Power_Weapon_Damage_Multiplier_2", out var m2) ? m2 : skill.Multiplier;
+                    var (expTotal, expFirst) = HitExplosiveProjectile(skill, explosionMult);
+                    if (expFirst < 0) return new SkillOutcome(false, 0, -1, "no_target");
+                    // InfernalBlast: 4s burn (poison DoT mechanics, fire flavor).
+                    if (skill.Name == "InfernalBlast")
+                    {
+                        var target = monsters.FirstOrDefault(m => m.Index == expFirst)
+                            ?? (boss is { Alive: true } && boss.Index == expFirst ? boss : null);
+                        if (target is not null && target.Alive)
+                        {
+                            target.Buffs.Add(new BuffInstance
+                            {
+                                DefinitionId = "poison",
+                                Source = "InfernalBlast",
+                                Duration = 4.0,
+                                Remaining = 4.0,
+                                TickDps = PlayerDamageBundle().Total * 0.2,
+                            });
+                            EmitEvent("debuff", target.Index, 0, "burn InfernalBlast");
+                        }
+                    }
+                    Version++;
+                    return new SkillOutcome(true, expTotal, expFirst, "ok");
+                }
+                // C06 batch 3: ManaArrows grants charges; the projectile consumes one.
+                if (skill.Name == "ManaArrows")
+                {
+                    var charges = PlayerBuffs.MagnitudeOf("manaarrows", "ManaArrows");
+                    if (charges <= 0)
+                    {
+                        // No charges: grant them (first cast) instead of firing.
+                        BeginCast(skillId, skill);
+                        ApplyManaArrows(skill);
+                        Version++;
+                        return new SkillOutcome(true, 0, -1, "ok");
+                    }
+                    // Consume a charge and fire.
+                    var buff = PlayerBuffs.Get("manaarrows", "ManaArrows");
+                    if (buff is not null) buff.Magnitude -= 1;
+                }
+                var (total, first) = HitProjectile(skill, 14);
+                if (first < 0) return new SkillOutcome(false, 0, -1, "no_target");
+                BeginCast(skillId, skill);
+                // C06 batch 3: ManaArrows grants 4 mana per hit (provisional: per cast).
+                if (skill.Name == "ManaArrows")
+                {
+                    var manaPerHit = skill.Values.TryGetValue("Power_Mana_Arrows_Mana_Per_Hit", out var mph) ? mph : 4.0;
+                    PlayerMana = Math.Min(PlayerMaxMana, PlayerMana + manaPerHit);
+                }
+                // C06: FrozenArrow explodes in 4y on hit (primary excluded, already hit).
+                if (skill.Name == "FrozenArrow")
+                {
+                    var primary = monsters.FirstOrDefault(m => m.Index == first)
+                        ?? (boss is { Alive: true } && boss.Index == first ? boss : null);
+                    if (primary is not null)
+                    {
+                        foreach (var m in AllCombatMonsters())
+                        {
+                            if (!m.Alive || ReferenceEquals(m, primary)) continue;
+                            var d = Math.Sqrt(Math.Pow(m.X - primary.X, 2) + Math.Pow(m.Z - primary.Z, 2));
+                            if (d > skill.Radius) continue;
+                            total += HitTarget(m, skill, skill.Multiplier);
+                        }
+                        EmitEvent("projectile", first, 0, $"explode FrozenArrow {primary.X:F1},{primary.Z:F1}");
+                    }
                 }
                 Version++;
-                return new SkillOutcome(true, total, target.Index, "ok");
+                return new SkillOutcome(true, total, first, "ok");
             }
             default:
             {
+                // C06: ImpalingTrap places a trap, it is not a direct strike.
+                if (skill.Name == "ImpalingTrap")
+                {
+                    var trapTarget = NearestAliveMonster(14);
+                    if (trapTarget is null) return new SkillOutcome(false, 0, -1, "no_target");
+                    BeginCast(skillId, skill);
+                    PlaceTrap(skill, trapTarget.X, trapTarget.Z);
+                    Version++;
+                    return new SkillOutcome(true, 0, trapTarget.Index, "ok");
+                }
                 var target = NearestAliveMonster(8);
                 if (target is null) return new SkillOutcome(false, 0, -1, "no_target");
                 BeginCast(skillId, skill);
-                var hit = ResolveSkill(target, skill, skill.Multiplier);
-                var dealt = ApplyOnHit(target, hit, autoAttack: false);
-                DamageMonster(target, dealt);
+                var dealt = HitTarget(target, skill, skill.Multiplier);
                 var stun = StunSecondsOf(skill);
                 if (stun > 0) target.StunTimer = Math.Max(target.StunTimer, stun);
                 Version++;
@@ -1353,8 +1566,13 @@ public sealed class CombatInstance
             "Poison" => new DamageBundle(Poison: weapon.Total),
             _ => weapon,
         };
+        // C06: Mark of the Chosen amplifies the target's taken damage.
+        var defender = MonsterStats(target) with
+        {
+            DamageTakenAmplifyPercent = target.Buffs.MagnitudeOf("mark", "MarkOfTheChosen") * 100.0,
+        };
         return CombatModel.ResolveBundleAttack(
-            PlayerStats(), bundle, MonsterStats(target), target.Resistances,
+            PlayerStats(), bundle, defender, target.Resistances,
             new AttackProfile(multiplier, 0.15, 2.0, 0.08),
             rng);
     }
@@ -1414,7 +1632,7 @@ public sealed class CombatInstance
             PlayerLevel, Experience, Silver, Opals,
             Kills,
             skills.Select((s, i) => new SkillStatus(s.Slot, s.Name, s.Effect, Math.Round(skillCooldowns[i], 2), s.Cooldown, s.ManaCost, s.Confidence, ChainsOf(s), SpecialOf(s))).ToList(),
-            Math.Round(offenseBuffTimer, 2),
+            Math.Round(PlayerBuffs.RemainingOf("offense"), 2),
             DungeonsCleared, Math.Max(0, BossKillGoal - dungeonKills), boss is { Alive: true }, rows,
             PacksRemaining, TotalPacks);
     }

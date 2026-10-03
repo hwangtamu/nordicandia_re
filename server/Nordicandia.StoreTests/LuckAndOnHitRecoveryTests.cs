@@ -98,14 +98,16 @@ static class LuckAndOnHitRecoveryTests
         var monster = poison.Monsters[0];
         monster.Resistances = new ResistanceBundle(Poison: 0.5);
         var cast = poison.UseSkill(0);
-        Check(cast.Cast && cast.Damage > 0 && monster.PoisonTimer == 1 &&
-            Math.Abs(monster.PoisonDps - cast.Damage * 0.2) < 1e-9,
+        var applied = monster.Buffs.Get("poison", "player");
+        Check(cast.Cast && cast.Damage > 0 && applied is not null && applied.Remaining == 1 &&
+            Math.Abs(applied.TickDps - cast.Damage * 0.2) < 1e-9,
             "poison: physical hit creates 1s poison at 20% of hit damage (no weapon-poison dependency)");
         var hp = monster.Hp;
         poison.Advance(1.25);
-        Check(Math.Abs(hp - monster.Hp - cast.Damage * 0.2 * 0.5) < 1e-8 && monster.PoisonTimer == 0 && monster.PoisonDps == 0,
+        Check(Math.Abs(hp - monster.Hp - cast.Damage * 0.2 * 0.5) < 1e-8 && !monster.Buffs.Has("poison", "player"),
             "poison: exactly 1s damage, respects resistance, expires without further procs");
-        monster.PoisonTimer = 0.0125; monster.PoisonDps = 100; hp = monster.Hp;
+        monster.Buffs.Add(new BuffInstance { DefinitionId = "poison", Source = "player", Duration = 0.0125, Remaining = 0.0125, TickDps = 100 });
+        hp = monster.Hp;
         poison.Advance(0.05);
         Check(Math.Abs(hp - monster.Hp - 0.625) < 1e-8, "poison: final fractional tick never exceeds remaining duration");
 
@@ -121,13 +123,14 @@ static class LuckAndOnHitRecoveryTests
             "poison crit: newly applied poison does not double the same hit");
         var bonus = Create(Stats with { DoubleDamageOnCritPoisoned = 1 });
         var noBonus = Create(Stats);
-        bonus.Monsters[0].PoisonTimer = noBonus.Monsters[0].PoisonTimer = 1;
+        foreach (var m in new[] { bonus.Monsters[0], noBonus.Monsters[0] })
+            m.Buffs.Add(new BuffInstance { DefinitionId = "poison", Source = "player", Duration = 1, Remaining = 1 });
         Check(bonus.UseSkill(0).Damage == 2 * noBonus.UseSkill(0).Damage,
             "poison crit: pre-existing poison enables double damage");
 
         var kill = Create(Stats with { PoisonOnHit = true });
         kill.Monsters[0].Hp = 1; kill.UseSkill(0); kill.Advance(1.1);
-        Check(kill.Kills == 1 && kill.Monsters[0].PoisonTimer == 0 && kill.Monsters[0].PoisonDps == 0,
+        Check(kill.Kills == 1 && !kill.Monsters[0].Buffs.Has("poison", "player"),
             "poison: killing blow clears status and rewards only once");
 
         var foundMiss = false;
@@ -137,25 +140,53 @@ static class LuckAndOnHitRecoveryTests
             miss.Monsters[0].Defense = 1e30;
             if (miss.UseSkill(0).Damage != 0) continue;
             foundMiss = true;
-            Check(miss.Monsters[0].PoisonTimer == 0, "poison: a missed attack never applies poison");
+            Check(!miss.Monsters[0].Buffs.Has("poison", "player"), "poison: a missed attack never applies poison");
         }
         Check(foundMiss, "poison: miss branch exercised");
 
-        var fork = Create(Stats with { ProjectileAutoAttack = true, ForkChance = 1, ChainChance = 1 }, count: 4);
-        for (var i = 0; i < 4; i++) fork.Monsters[i].X = 1 + i;
-        fork.Monsters[2].Armor = 1e9;
+        // C03: fork children are real projectiles at ±(45°–90°) scatter. Ring formation:
+        // the fork point is ~(0.5, 0); ring monsters at r=1.5 every 15° always intercept
+        // a child (|angle diff| <= 7.5° < hit threshold ~19.5°).
+        var fork = Create(Stats with { ProjectileAutoAttack = true, ForkChance = 1, ChainChance = 1 }, count: 11);
+        fork.Monsters[0].X = 1; fork.Monsters[0].Z = 0;
+        var angles = new[] { 30, 45, 60, 75, 90, -30, -45, -60, -75, -90 };
+        for (var i = 0; i < 10; i++)
+        {
+            var a = angles[i] * Math.PI / 180;
+            fork.Monsters[i + 1].X = 0.5 + 1.5 * Math.Cos(a);
+            fork.Monsters[i + 1].Z = 1.5 * Math.Sin(a);
+            fork.Monsters[i + 1].Armor = 1e9;
+        }
         fork.Advance(0.05);
         var losses = fork.Monsters.Select(m => m.MaxHp - m.Hp).ToArray();
-        Check(losses[0] > 130 && losses[1] > 60 && losses[1] < 100 && losses[2] > 0 && losses[2] < 15 && losses[3] == 0,
-            "fork: two 50% children resolve their own armor; no chain or recursive extra hits");
+        var victims = Enumerable.Range(1, 10).Where(i => losses[i] > 0).ToArray();
+        Check(losses[0] > 130, "fork: primary takes the full hit");
+        Check(victims.Length == 2 && victims.All(i => losses[i] < 15),
+            "fork: two 0.5x children each resolve the victim's own armor; hit-set prevents double-hits");
+        var forkEvents = fork.DrainEvents();
+        Check(forkEvents.Count(e => e.Type == "projectile" && e.Detail.StartsWith("fork")) == 1
+            && !forkEvents.Any(e => e.Type == "projectile" && e.Detail.StartsWith("chain")),
+            "fork: exactly one fork fires and fork takes precedence over chain");
+        var chain = Create(Stats with { ProjectileAutoAttack = true, ForkChance = 0, ChainChance = 1 }, count: 4);
+        for (var i = 0; i < 4; i++) chain.Monsters[i].X = 1 + i;
+        chain.Advance(0.05);
+        var chainLosses = chain.Monsters.Select(m => m.MaxHp - m.Hp).ToArray();
+        Check(chainLosses[0] > 130 && chainLosses[1] > 130 && chainLosses[2] == 0 && chainLosses[3] == 0,
+            "chain: one retarget to the nearest other enemy within 10y at full damage (chance cleared after success)");
         var melee = Create(Stats with { ForkChance = 1, ChainChance = 1 }, count: 4);
         for (var i = 0; i < 4; i++) melee.Monsters[i].X = 1 + i;
         melee.Advance(0.05);
         Check(melee.Monsters.Count(m => m.Hp < m.MaxHp) == 1, "fork: melee attacks cannot fork or chain");
-        var secondaryPoison = Create(Stats with { ProjectileAutoAttack = true, ForkChance = 1, PoisonOnHit = true }, count: 4);
-        for (var i = 0; i < 4; i++) secondaryPoison.Monsters[i].X = 1 + i;
+        var secondaryPoison = Create(Stats with { ProjectileAutoAttack = true, ForkChance = 1, PoisonOnHit = true }, count: 3);
+        secondaryPoison.Monsters[0].X = 1; secondaryPoison.Monsters[0].Z = 0;
+        foreach (var (i, sgn) in new[] { (1, 1.0), (2, -1.0) })
+        {
+            var a = sgn * 60 * Math.PI / 180;
+            secondaryPoison.Monsters[i].X = 0.5 + 0.8 * Math.Cos(a);
+            secondaryPoison.Monsters[i].Z = 0.8 * Math.Sin(a);
+        }
         secondaryPoison.Advance(0.05);
-        Check(secondaryPoison.Monsters.Count(m => m.PoisonTimer > 0) == 3,
+        Check(secondaryPoison.Monsters.Count(m => m.Buffs.Has("poison", "player")) == 3,
             "fork: child hits apply on-hit poison without recursively forking");
     }
 

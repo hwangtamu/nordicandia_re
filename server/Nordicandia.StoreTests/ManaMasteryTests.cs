@@ -115,24 +115,28 @@ static class ManaMasteryTests
             var baseline = registry.Advance(owner, characterId).Combat.Skills.First(s => s.Name == "ChainLightning");
             Check(baseline.Chains == 4, "m3 mastery: ChainLightning starts at 4 chains");
 
+            // C07: Chains requires ImprovedChainLightning (prerequisite).
+            var improved = chain.Masteries.First(m => m.Name == "MasteryChainLightningImprovedChainLightning");
+            var pre = registry.ApplyCommand(owner, characterId, "m0", 0, new WebCommandRequest("mastery", MasteryId: improved.IntegerId));
+            Check(pre.Applied && pre.Reason == "ok", "m3 mastery: prerequisite allocates");
             var alloc = registry.ApplyCommand(owner, characterId, "m1", 0, new WebCommandRequest("mastery", MasteryId: chains.IntegerId));
             Check(alloc.Applied && alloc.Reason == "ok", "m3 mastery: allocation applies");
             var after = alloc.State.Combat.Skills.First(s => s.Name == "ChainLightning");
             Check(after.Chains == 5, "m3 mastery: mastery raises chains to 5");
 
-            // Budget at level 1 is 3; spend the remaining two then confirm the gate.
-            registry.ApplyCommand(owner, characterId, "m2", 0, new WebCommandRequest("mastery", MasteryId: chains.IntegerId));
+            // Budget at level 1 is 3; spend the remaining one then confirm the gate.
+            // (m0 + m1 used 2, one left)
             var third = registry.ApplyCommand(owner, characterId, "m3", 0, new WebCommandRequest("mastery", MasteryId: chains.IntegerId));
             Check(third.Applied, "m3 mastery: third point fits the budget");
             var fourth = registry.ApplyCommand(owner, characterId, "m4", 0, new WebCommandRequest("mastery", MasteryId: chains.IntegerId));
             Check(!fourth.Applied && fourth.Reason == "no_mastery_points", "m3 mastery: budget is enforced");
             Check(registry.MasteryView(owner, characterId).First(v => v.SkillName == "ChainLightning").Masteries
-                .First(m => m.Name == "MasteryChainLightningChains").Rank == 3, "m3 mastery: rank persists");
+                .First(m => m.Name == "MasteryChainLightningChains").Rank == 2, "m3 mastery: rank persists");
 
             // Simulate a restart: ranks are re-read from the store and re-applied.
             registry.Reset();
             var restored = registry.Advance(owner, characterId).Combat.Skills.First(s => s.Name == "ChainLightning");
-            Check(restored.Chains == 7, "m3 mastery: 4 base + 3 allocated chains after restart");
+            Check(restored.Chains == 6, "m3 mastery: 4 base + 2 allocated chains after restart");
         }
     }
 

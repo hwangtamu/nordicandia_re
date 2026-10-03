@@ -1,196 +1,924 @@
 {
-  "schemaVersion": 1,
-  "baseline": { "platform": "android", "version": "1.9.3", "versionCode": 507033 },
-  "note": "B04 sample library. Each sample is a fixed input and the expected output recovered from the client (or the documented reference). B05 replays these deterministically. Add skills/buffs/loot here as they are ported.",
-  "samples": [
-    {
-      "id": "mf.weights.0.3",
-      "kind": "rarity_weights",
-      "rule": "ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes",
-      "inputs": { "magicFind": 0.3, "factor": 1.0 },
-      "expected": { "normal": 9904153, "unique": 549, "set": 399 },
-      "source": "LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md",
-      "status": "对照通过"
-    },
-    {
-      "id": "mf.weights.1.0",
-      "kind": "rarity_weights",
-      "rule": "ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes",
-      "inputs": { "magicFind": 1.0, "factor": 1.0 },
-      "expected": { "normal": 9901961, "unique": 655, "set": 452 },
-      "source": "LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md",
-      "status": "对照通过"
-    },
-    {
-      "id": "mf.weights.100",
-      "kind": "rarity_weights",
-      "rule": "ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes",
-      "inputs": { "magicFind": 100.0, "factor": 1.0 },
-      "expected": { "normal": 9901000, "unique": 2482, "set": 1218 },
-      "source": "LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md",
-      "status": "对照通过"
-    },
-    {
-      "id": "mf.weights.factor2",
-      "kind": "rarity_weights",
-      "rule": "ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes",
-      "inputs": { "magicFind": 10.0, "factor": 2.0 },
-      "expected": { "normal": 9804305, "unique": 1716, "set": 952 },
-      "source": "LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md",
-      "status": "对照通过"
-    },
-    {
-      "id": "conversion.split",
-      "kind": "damage_conversion",
-      "rule": "GameCalculator.ApplyWeaponDamageConversion / InternalApplyDamageConversion",
-      "inputs": { "physical": 100.0, "fire": 0.2, "cold": 0.3 },
-      "expected": { "physical": 50.0, "fire": 20.0, "cold": 30.0 },
-      "source": "ELF 0x02BABF3C + 0x02BAC1F8",
-      "status": "对照通过"
-    },
-    {
-      "id": "conversion.over100",
-      "kind": "damage_conversion",
-      "rule": "GameCalculator.ApplyWeaponDamageConversion (normalise when sum > 1)",
-      "inputs": { "physical": 100.0, "fire": 0.8, "cold": 0.8 },
-      "expected": { "physical": 0.0, "fire": 50.0, "cold": 50.0 },
-      "source": "ELF 0x02BABFBC (FCMP 1.0 + FDIV)",
-      "status": "对照通过"
-    },
-    {
-      "id": "penetration.negative",
-      "kind": "resistance_penetration",
-      "rule": "Fire_Resistance_Penetration_Total subtracted from resistance",
-      "inputs": { "resistance": 0.5, "penetration": 0.75 },
-      "expected": { "fire": -0.25 },
-      "source": "attribute_ids 98 + ApplyDamageReduction 0x02BAF34C",
-      "status": "对照通过"
-    },
-    {
-      "id": "offline.tier1",
-      "kind": "offline_rate",
-      "rule": "WindowWelcomeBack.Start killsPerMinute",
-      "inputs": { "efficiency": 1.5, "tier": 1 },
-      "expected": { "killsPerMinute": 15 },
-      "source": "ELF 0x02678C10/0x02678D1C + 0x13872D8",
-      "status": "对照通过"
-    },
-    {
-      "id": "offline.tier10",
-      "kind": "offline_rate",
-      "rule": "WindowWelcomeBack.Start killsPerMinute",
-      "inputs": { "efficiency": 1.5, "tier": 10 },
-      "expected": { "killsPerMinute": 22 },
-      "source": "ELF 0x02678D1C/0x02678D24",
-      "status": "对照通过"
-    },
-    {
-      "id": "offline.tier30",
-      "kind": "offline_rate",
-      "rule": "WindowWelcomeBack.Start killsPerMinute",
-      "inputs": { "efficiency": 1.5, "tier": 30 },
-      "expected": { "killsPerMinute": 67 },
-      "source": "ELF 0x13872D8 (clamp 45)",
-      "status": "对照通过"
-    },
-    {
-      "id": "brain.standard.combat",
-      "kind": "brain_choice",
-      "rule": "Game.AI.WeightedActionBrain weighted pick",
-      "inputs": { "brain": "Standard", "conditions": ["StateCombat"], "roll": 0.0 },
-      "expected": { "power": "DefaultAttackProxy" },
-      "source": "Brains.json + StringHashHelper",
-      "status": "对照通过"
-    },
-    {
-      "id": "brain.standard.wander",
-      "kind": "brain_choice",
-      "rule": "Game.AI.WeightedActionBrain weighted pick",
-      "inputs": { "brain": "Standard", "conditions": ["StateWander"], "roll": 0.0 },
-      "expected": { "power": "Wander" },
-      "source": "Brains.json + StringHashHelper",
-      "status": "对照通过"
-    },
-    {
-      "id": "item_quantity.remainder50",
-      "kind": "item_quantity",
-      "rule": "DeathPayload.Apply item count (floor with remainder)",
-      "inputs": { "itemQuantity": 0.5, "draws": 4 },
-      "expected": { "counts": [1, 2, 1, 2] },
-      "source": "ELF 0x02C21730 (FRINTM + remainder)",
-      "status": "对照通过"
-    },
-    {
-      "id": "skill.shatter.damage",
-      "kind": "skill_param",
-      "rule": "Shatter.InternalInitializePowerParameters",
-      "inputs": { "classId": 0, "skill": "Shatter", "field": "Multiplier" },
-      "expected": { "value": 9.0 },
-      "source": "disasm_powers.py Shatter @ 0x2d48348",
-      "status": "对照通过"
-    },
-    {
-      "id": "skill.shatter.cooldown",
-      "kind": "skill_param",
-      "rule": "Shatter.InternalInitializePowerParameters",
-      "inputs": { "classId": 0, "skill": "Shatter", "field": "Cooldown" },
-      "expected": { "value": 5.0 },
-      "source": "disasm_powers.py Shatter",
-      "status": "对照通过"
-    },
-    {
-      "id": "skill.powershot.pierce",
-      "kind": "skill_param",
-      "rule": "PowerShot.InternalInitializePowerParameters",
-      "inputs": { "classId": 4, "skill": "PowerShot", "field": "Power_Power_Shot_Pierce_Chance_Percent" },
-      "expected": { "value": 0.95 },
-      "source": "disasm_powers.py PowerShot @ 0x2d21498",
-      "status": "对照通过"
-    },
-    {
-      "id": "skill.chainlightning.chains",
-      "kind": "skill_param",
-      "rule": "ChainLightning.InternalInitializePowerParameters",
-      "inputs": { "classId": 5, "skill": "ChainLightning", "field": "ChainLightning_Max_Num_Chains" },
-      "expected": { "value": 4.0 },
-      "source": "disasm_powers.py ChainLightning @ 0x2d27cd0",
-      "status": "对照通过"
-    },
-    {
-      "id": "skill.icenova.freeze",
-      "kind": "skill_param",
-      "rule": "IceNova.InternalInitializePowerParameters",
-      "inputs": { "classId": 5, "skill": "IceNova", "field": "Power_Freeze_Duration" },
-      "expected": { "value": 2.0 },
-      "source": "disasm_powers.py IceNova @ 0x2d2cd04",
-      "status": "对照通过"
-    },
-    {
-      "id": "skill.summon_skeleton.inheritance_life",
-      "kind": "skill_param",
-      "rule": "SummonSkeleton.InternalInitializePowerParameters",
-      "inputs": { "classId": 6, "skill": "SummonSkeleton", "field": "Minion_Inheritance_Life_Bonus_Percent" },
-      "expected": { "value": 0.5 },
-      "source": "disasm_powers.py SummonSkeleton @ 0x2a536f8",
-      "status": "对照通过"
-    },
-    {
-      "id": "damage_order.dodge",
-      "kind": "damage_order",
-      "rule": "AttackPayload.Resolve: IsDodged (Dodge_Chance_Total 0x1310)",
-      "inputs": { "dodge": 1.0 },
-      "expected": { "hit": false },
-      "source": "AttackPayload.Resolve IsDodged + attribute 0x1310 (Dodge_Chance_Total)",
-      "status": "对照通过"
-    },
-    {
-      "id": "damage_order.block",
-      "kind": "damage_order",
-      "rule": "AttackPayload.Resolve: IsBlocked + Blocked_Damage_Taken_Multiplier_Total (0x12D8)",
-      "inputs": { "block": 1.0, "blockMultiplier": 0.5 },
-      "expected": { "hit": true, "ratio": 0.5 },
-      "source": "AttackPayload.txt IsBlocked + attribute 0x1278/0x12D8",
-      "status": "对照通过"
-    }
-  ]
+ "schemaVersion": 1,
+ "baseline": {
+  "platform": "android",
+  "version": "1.9.3",
+  "versionCode": 507033
+ },
+ "note": "B04 sample library. Each sample is a fixed input and the expected output recovered from the client (or the documented reference). B05 replays these deterministically. Add skills/buffs/loot here as they are ported.",
+ "samples": [
+  {
+   "id": "mf.weights.0.3",
+   "kind": "rarity_weights",
+   "rule": "ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes",
+   "inputs": {
+    "magicFind": 0.3,
+    "factor": 1.0
+   },
+   "expected": {
+    "normal": 9904153,
+    "unique": 549,
+    "set": 399
+   },
+   "source": "LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md",
+   "status": "对照通过"
+  },
+  {
+   "id": "mf.weights.1.0",
+   "kind": "rarity_weights",
+   "rule": "ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes",
+   "inputs": {
+    "magicFind": 1.0,
+    "factor": 1.0
+   },
+   "expected": {
+    "normal": 9901961,
+    "unique": 655,
+    "set": 452
+   },
+   "source": "LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md",
+   "status": "对照通过"
+  },
+  {
+   "id": "mf.weights.100",
+   "kind": "rarity_weights",
+   "rule": "ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes",
+   "inputs": {
+    "magicFind": 100.0,
+    "factor": 1.0
+   },
+   "expected": {
+    "normal": 9901000,
+    "unique": 2482,
+    "set": 1218
+   },
+   "source": "LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md",
+   "status": "对照通过"
+  },
+  {
+   "id": "mf.weights.factor2",
+   "kind": "rarity_weights",
+   "rule": "ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes",
+   "inputs": {
+    "magicFind": 10.0,
+    "factor": 2.0
+   },
+   "expected": {
+    "normal": 9804305,
+    "unique": 1716,
+    "set": 952
+   },
+   "source": "LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md",
+   "status": "对照通过"
+  },
+  {
+   "id": "conversion.split",
+   "kind": "damage_conversion",
+   "rule": "GameCalculator.ApplyWeaponDamageConversion / InternalApplyDamageConversion",
+   "inputs": {
+    "physical": 100.0,
+    "fire": 0.2,
+    "cold": 0.3
+   },
+   "expected": {
+    "physical": 50.0,
+    "fire": 20.0,
+    "cold": 30.0
+   },
+   "source": "ELF 0x02BABF3C + 0x02BAC1F8",
+   "status": "对照通过"
+  },
+  {
+   "id": "conversion.over100",
+   "kind": "damage_conversion",
+   "rule": "GameCalculator.ApplyWeaponDamageConversion (normalise when sum > 1)",
+   "inputs": {
+    "physical": 100.0,
+    "fire": 0.8,
+    "cold": 0.8
+   },
+   "expected": {
+    "physical": 0.0,
+    "fire": 50.0,
+    "cold": 50.0
+   },
+   "source": "ELF 0x02BABFBC (FCMP 1.0 + FDIV)",
+   "status": "对照通过"
+  },
+  {
+   "id": "penetration.negative",
+   "kind": "resistance_penetration",
+   "rule": "Fire_Resistance_Penetration_Total subtracted from resistance",
+   "inputs": {
+    "resistance": 0.5,
+    "penetration": 0.75
+   },
+   "expected": {
+    "fire": -0.25
+   },
+   "source": "attribute_ids 98 + ApplyDamageReduction 0x02BAF34C",
+   "status": "对照通过"
+  },
+  {
+   "id": "offline.tier1",
+   "kind": "offline_rate",
+   "rule": "WindowWelcomeBack.Start killsPerMinute",
+   "inputs": {
+    "efficiency": 1.5,
+    "tier": 1
+   },
+   "expected": {
+    "killsPerMinute": 15
+   },
+   "source": "ELF 0x02678C10/0x02678D1C + 0x13872D8",
+   "status": "对照通过"
+  },
+  {
+   "id": "offline.tier10",
+   "kind": "offline_rate",
+   "rule": "WindowWelcomeBack.Start killsPerMinute",
+   "inputs": {
+    "efficiency": 1.5,
+    "tier": 10
+   },
+   "expected": {
+    "killsPerMinute": 22
+   },
+   "source": "ELF 0x02678D1C/0x02678D24",
+   "status": "对照通过"
+  },
+  {
+   "id": "offline.tier30",
+   "kind": "offline_rate",
+   "rule": "WindowWelcomeBack.Start killsPerMinute",
+   "inputs": {
+    "efficiency": 1.5,
+    "tier": 30
+   },
+   "expected": {
+    "killsPerMinute": 67
+   },
+   "source": "ELF 0x13872D8 (clamp 45)",
+   "status": "对照通过"
+  },
+  {
+   "id": "brain.standard.combat",
+   "kind": "brain_choice",
+   "rule": "Game.AI.WeightedActionBrain weighted pick",
+   "inputs": {
+    "brain": "Standard",
+    "conditions": [
+     "StateCombat"
+    ],
+    "roll": 0.0
+   },
+   "expected": {
+    "power": "DefaultAttackProxy"
+   },
+   "source": "Brains.json + StringHashHelper",
+   "status": "对照通过"
+  },
+  {
+   "id": "brain.standard.wander",
+   "kind": "brain_choice",
+   "rule": "Game.AI.WeightedActionBrain weighted pick",
+   "inputs": {
+    "brain": "Standard",
+    "conditions": [
+     "StateWander"
+    ],
+    "roll": 0.0
+   },
+   "expected": {
+    "power": "Wander"
+   },
+   "source": "Brains.json + StringHashHelper",
+   "status": "对照通过"
+  },
+  {
+   "id": "item_quantity.remainder50",
+   "kind": "item_quantity",
+   "rule": "DeathPayload.Apply item count (floor with remainder)",
+   "inputs": {
+    "itemQuantity": 0.5,
+    "draws": 4
+   },
+   "expected": {
+    "counts": [
+     1,
+     2,
+     1,
+     2
+    ]
+   },
+   "source": "ELF 0x02C21730 (FRINTM + remainder)",
+   "status": "对照通过"
+  },
+  {
+   "id": "skill.shatter.damage",
+   "kind": "skill_param",
+   "rule": "Shatter.InternalInitializePowerParameters",
+   "inputs": {
+    "classId": 0,
+    "skill": "Shatter",
+    "field": "Multiplier"
+   },
+   "expected": {
+    "value": 9.0
+   },
+   "source": "disasm_powers.py Shatter @ 0x2d48348",
+   "status": "对照通过"
+  },
+  {
+   "id": "skill.shatter.cooldown",
+   "kind": "skill_param",
+   "rule": "Shatter.InternalInitializePowerParameters",
+   "inputs": {
+    "classId": 0,
+    "skill": "Shatter",
+    "field": "Cooldown"
+   },
+   "expected": {
+    "value": 5.0
+   },
+   "source": "disasm_powers.py Shatter",
+   "status": "对照通过"
+  },
+  {
+   "id": "skill.powershot.pierce",
+   "kind": "skill_param",
+   "rule": "PowerShot.InternalInitializePowerParameters",
+   "inputs": {
+    "classId": 4,
+    "skill": "PowerShot",
+    "field": "Power_Power_Shot_Pierce_Chance_Percent"
+   },
+   "expected": {
+    "value": 0.95
+   },
+   "source": "disasm_powers.py PowerShot @ 0x2d21498",
+   "status": "对照通过"
+  },
+  {
+   "id": "skill.chainlightning.chains",
+   "kind": "skill_param",
+   "rule": "ChainLightning.InternalInitializePowerParameters",
+   "inputs": {
+    "classId": 5,
+    "skill": "ChainLightning",
+    "field": "ChainLightning_Max_Num_Chains"
+   },
+   "expected": {
+    "value": 4.0
+   },
+   "source": "disasm_powers.py ChainLightning @ 0x2d27cd0",
+   "status": "对照通过"
+  },
+  {
+   "id": "skill.icenova.freeze",
+   "kind": "skill_param",
+   "rule": "IceNova.InternalInitializePowerParameters",
+   "inputs": {
+    "classId": 5,
+    "skill": "IceNova",
+    "field": "Power_Freeze_Duration"
+   },
+   "expected": {
+    "value": 2.0
+   },
+   "source": "disasm_powers.py IceNova @ 0x2d2cd04",
+   "status": "对照通过"
+  },
+  {
+   "id": "skill.summon_skeleton.inheritance_life",
+   "kind": "skill_param",
+   "rule": "SummonSkeleton.InternalInitializePowerParameters",
+   "inputs": {
+    "classId": 6,
+    "skill": "SummonSkeleton",
+    "field": "Minion_Inheritance_Life_Bonus_Percent"
+   },
+   "expected": {
+    "value": 0.5
+   },
+   "source": "disasm_powers.py SummonSkeleton @ 0x2a536f8",
+   "status": "对照通过"
+  },
+  {
+   "id": "damage_order.dodge",
+   "kind": "damage_order",
+   "rule": "AttackPayload.Resolve: IsDodged (Dodge_Chance_Total 0x1310)",
+   "inputs": {
+    "dodge": 1.0
+   },
+   "expected": {
+    "hit": false
+   },
+   "source": "AttackPayload.Resolve IsDodged + attribute 0x1310 (Dodge_Chance_Total)",
+   "status": "对照通过"
+  },
+  {
+   "id": "damage_order.block",
+   "kind": "damage_order",
+   "rule": "AttackPayload.Resolve: IsBlocked + Blocked_Damage_Taken_Multiplier_Total (0x12D8)",
+   "inputs": {
+    "block": 1.0,
+    "blockMultiplier": 0.5
+   },
+   "expected": {
+    "hit": true,
+    "ratio": 0.5
+   },
+   "source": "AttackPayload.txt IsBlocked + attribute 0x1278/0x12D8",
+   "status": "对照通过"
+  },
+  {
+   "id": "hit_chance.formula",
+   "kind": "hit_chance",
+   "rule": "Game.Calculator.CalculateChanceToHit",
+   "inputs": {
+    "attack": 100,
+    "defense": 100
+   },
+   "expected": {
+    "chance": 0.8838159501982656
+   },
+   "source": "AcceptanceRegressionTests.ChanceToHitMatchesClient（反汇编公式）",
+   "status": "对照通过"
+  },
+  {
+   "id": "hit_chance.floor",
+   "kind": "hit_chance",
+   "rule": "Game.Calculator.CalculateChanceToHit",
+   "inputs": {
+    "attack": 0,
+    "defense": 100
+   },
+   "expected": {
+    "chance": 0.05
+   },
+   "source": "AcceptanceRegressionTests.ChanceToHitMatchesClient（反汇编公式）",
+   "status": "对照通过"
+  },
+  {
+   "id": "hit_chance.cap",
+   "kind": "hit_chance",
+   "rule": "Game.Calculator.CalculateChanceToHit",
+   "inputs": {
+    "attack": 100000,
+    "defense": 1
+   },
+   "expected": {
+    "chance": 1.0
+   },
+   "source": "AcceptanceRegressionTests.ChanceToHitMatchesClient（反汇编公式）",
+   "status": "对照通过"
+  },
+  {
+   "id": "damage_reduction.formula",
+   "kind": "damage_reduction",
+   "rule": "Game.Calculator.CalculatePhysicalDamageReduction",
+   "inputs": {
+    "armor": 100,
+    "damage": 1
+   },
+   "expected": {
+    "reduction": 0.6666666666666666
+   },
+   "source": "AcceptanceRegressionTests.DamageReductionMatchesClient（反汇编公式）",
+   "status": "对照通过"
+  },
+  {
+   "id": "poison_dot.factor",
+   "kind": "poison_dot",
+   "rule": "HitPayload poison application / DebuffPoisoned.DoWork",
+   "inputs": {
+    "hitDamage": 250
+   },
+   "expected": {
+    "poisonDps": 50.0
+   },
+   "source": "docs/web/B03_DIFFERENCE_LEDGER.md D07（反汇编：1s tick / 命中总伤害20%）",
+   "status": "已还原"
+  },
+  {
+   "id": "blessing.small",
+   "kind": "blessing",
+   "rule": "WindowAesirOffering.CreateAesirBuffOffline (0x0255FAE8)",
+   "inputs": {
+    "size": 1
+   },
+   "expected": {
+    "minutes": 10,
+    "magnitude": 0.4
+   },
+   "source": "docs/web/M3_STATUS.md（反汇编常量 .so 0x1387368）",
+   "status": "对照通过"
+  },
+  {
+   "id": "blessing.medium",
+   "kind": "blessing",
+   "rule": "WindowAesirOffering.CreateAesirBuffOffline (0x0255FAE8)",
+   "inputs": {
+    "size": 2
+   },
+   "expected": {
+    "minutes": 30,
+    "magnitude": 0.4
+   },
+   "source": "docs/web/M3_STATUS.md（反汇编常量 .so 0x1387368）",
+   "status": "对照通过"
+  },
+  {
+   "id": "blessing.large",
+   "kind": "blessing",
+   "rule": "WindowAesirOffering.CreateAesirBuffOffline (0x0255FAE8)",
+   "inputs": {
+    "size": 3
+   },
+   "expected": {
+    "minutes": 60,
+    "magnitude": 0.4
+   },
+   "source": "docs/web/M3_STATUS.md（反汇编常量 .so 0x1387368）",
+   "status": "对照通过"
+  },
+  {
+   "id": "blessing.xlarge",
+   "kind": "blessing",
+   "rule": "WindowAesirOffering.CreateAesirBuffOffline (0x0255FAE8)",
+   "inputs": {
+    "size": 4
+   },
+   "expected": {
+    "minutes": 240,
+    "magnitude": 0.4
+   },
+   "source": "docs/web/M3_STATUS.md（反汇编常量 .so 0x1387368）",
+   "status": "对照通过"
+  },
+  {
+   "id": "edge.resist-cap",
+   "kind": "boundary_resistance_cap",
+   "rule": "CombatModel.EffectiveElementalDamage (resistance cap 1.0, 0x02BAF34C)",
+   "inputs": {
+    "rawDamage": 100,
+    "resistance": 1.5
+   },
+   "expected": {
+    "damage": 0
+   },
+   "source": "attribute_ids 98 + ApplyDamageReduction 0x02BAF34C",
+   "diffId": "D02",
+   "status": "对照通过"
+  },
+  {
+   "id": "edge.conv-overflow",
+   "kind": "boundary_conversion_overflow",
+   "rule": "CombatModel.ConvertDamage normalisation (0x02BABF3C + 0x02BAC1F8)",
+   "inputs": {
+    "physical": 100,
+    "fire": 0.9,
+    "cold": 0.6
+   },
+   "expected": {
+    "physical": 0,
+    "fire": 60,
+    "cold": 40
+   },
+   "source": "ELF 0x02BABF3C + 0x02BAC1F8",
+   "diffId": "D02",
+   "status": "对照通过"
+  },
+  {
+   "id": "edge.immune-crit",
+   "kind": "immune_crit",
+   "rule": "AttackPayload.Resolve Ignores_Critical_Hits (0x1168)",
+   "inputs": {
+    "critChance": 1.0,
+    "ignoresCrits": true
+   },
+   "expected": {
+    "critical": false
+   },
+   "source": "AttackPayload.Resolve (反汇编掷骰顺序)",
+   "diffId": "D02",
+   "status": "对照通过"
+  },
+  {
+   "id": "edge.immune-dodge",
+   "kind": "immune_dodge",
+   "rule": "AttackPayload.Resolve Dodge_Chance_Total = 1.0 (0x1310)",
+   "inputs": {
+    "dodgeChance": 1.0
+   },
+   "expected": {
+    "hit": false
+   },
+   "source": "AttackPayload.txt IsDodged + attribute 0x1310 (Dodge_Chance_Total)",
+   "diffId": "D02",
+   "status": "对照通过"
+  },
+  {
+   "id": "edge.replay-deterministic",
+   "kind": "deterministic_replay",
+   "rule": "CombatModel.ResolveBundleAttack same seed => identical result",
+   "inputs": {
+    "seed": 1,
+    "dodge": 0.25,
+    "block": 0.25
+   },
+   "expected": {
+    "damage": 100
+   },
+   "source": "B05 回放确定性（CombatRandom seed 1，命中路径）",
+   "status": "对照通过"
+  },
+  {
+   "id": "edge.relogin-blessing",
+   "kind": "relogin_blessing_roundtrip",
+   "rule": "GameStore Blessings Dictionary<int,DateTime> JSON round-trip",
+   "inputs": {
+    "type": 1,
+    "expiry": "2026-10-03T12:00:00Z"
+   },
+   "expected": {
+    "expiry": "2026-10-03T12:00:00Z"
+   },
+   "source": "GameStore.cs Blessings（服务端扩展字段落盘）",
+   "status": "对照通过"
+  },
+  {
+   "id": "dmg.amplify-taken",
+   "kind": "damage_taken_amplify",
+   "rule": "CombatModel.ResolveBundleAttack Amplify_Damage_Taken_Percent (attribute 6, inferred)",
+   "inputs": {
+    "amplifyPercent": 50
+   },
+   "expected": {
+    "damage": 150
+   },
+   "source": "attribute_ids 6 Amplify_Damage_Taken_Percent（C01 推断位置）",
+   "diffId": "D02",
+   "status": "已还原"
+  },
+  {
+   "id": "dmg.zero-floor",
+   "kind": "zero_damage_floor",
+   "rule": "CombatModel.ResolveBundleAttack min-damage floor 1.0 (provisional; physical reduction caps at 0.9)",
+   "inputs": {
+    "armor": 1000000000.0,
+    "physical": 0.5
+   },
+   "expected": {
+    "damage": 1.0
+   },
+   "source": "C01 零伤害边界（客户端下限待反汇编确认）",
+   "diffId": "D02",
+   "status": "已还原"
+  },
+  {
+   "id": "dmg.no-rounding",
+   "kind": "no_rounding",
+   "rule": "ApplyDamageReduction 0x02BAF34C (6 instrs, no frint/lrint)",
+   "inputs": {
+    "rawDamage": 97.5,
+    "resistance": 0.33
+   },
+   "expected": {
+    "damage": 65.32499999999999
+   },
+   "source": "ELF 0x02BAF34C 反汇编（无取整指令）",
+   "diffId": "D02",
+   "status": "对照通过"
+  },
+  {
+   "id": "buff.stronger-wins",
+   "kind": "buff_lifecycle",
+   "rule": "IsStrongerThan: duration first; weaker re-application is ignored",
+   "inputs": {
+    "ops": [
+     {
+      "add": {
+       "def": "offense",
+       "dur": 10,
+       "mag": 0.3
+      }
+     },
+     {
+      "add": {
+       "def": "offense",
+       "dur": 5,
+       "mag": 0.5
+      }
+     }
+    ]
+   },
+   "expected": {
+    "def": "offense",
+    "check": "magnitude",
+    "value": 0.3
+   },
+   "source": "Buff.Stack 0x2b22f88 / Buff.IsStrongerThan 0x2b21c10 反汇编",
+   "status": "已还原"
+  },
+  {
+   "id": "buff.no-shorten",
+   "kind": "buff_lifecycle",
+   "rule": "Stack: duration replaced only when the new remaining is longer",
+   "inputs": {
+    "ops": [
+     {
+      "add": {
+       "def": "offense",
+       "dur": 10,
+       "mag": 0.5
+      }
+     },
+     {
+      "advance": 1
+     },
+     {
+      "add": {
+       "def": "offense",
+       "dur": 5,
+       "mag": 0.9
+      }
+     }
+    ]
+   },
+   "expected": {
+    "def": "offense",
+    "check": "remaining",
+    "value": 9
+   },
+   "source": "Buff.Stack 0x2b22f88 / Buff.IsStrongerThan 0x2b21c10 反汇编",
+   "status": "已还原"
+  },
+  {
+   "id": "buff.refresh-extends",
+   "kind": "buff_lifecycle",
+   "rule": "Stack: longer new duration refreshes the instance",
+   "inputs": {
+    "ops": [
+     {
+      "add": {
+       "def": "offense",
+       "dur": 5,
+       "mag": 0.5
+      }
+     },
+     {
+      "advance": 4
+     },
+     {
+      "add": {
+       "def": "offense",
+       "dur": 5,
+       "mag": 0.5
+      }
+     }
+    ]
+   },
+   "expected": {
+    "def": "offense",
+    "check": "remaining",
+    "value": 5
+   },
+   "source": "Buff.Stack 0x2b22f88 / Buff.IsStrongerThan 0x2b21c10 反汇编",
+   "status": "已还原"
+  },
+  {
+   "id": "buff.stackable-count",
+   "kind": "buff_lifecycle",
+   "rule": "Stackable re-application increments the stack counter",
+   "inputs": {
+    "ops": [
+     {
+      "add": {
+       "def": "might",
+       "dur": 10,
+       "stackable": true
+      }
+     },
+     {
+      "add": {
+       "def": "might",
+       "dur": 10,
+       "stackable": true
+      }
+     }
+    ]
+   },
+   "expected": {
+    "def": "might",
+    "check": "stacks",
+    "value": 2
+   },
+   "source": "Buff.Stack 0x2b22f88 / Buff.IsStrongerThan 0x2b21c10 反汇编",
+   "status": "已还原"
+  },
+  {
+   "id": "buff.dispel",
+   "kind": "buff_lifecycle",
+   "rule": "Dispel removes every matching buff",
+   "inputs": {
+    "ops": [
+     {
+      "add": {
+       "def": "curse-slow",
+       "dur": 10,
+       "mag": 0.2
+      }
+     },
+     {
+      "add": {
+       "def": "offense",
+       "dur": 10,
+       "mag": 0.5
+      }
+     },
+     {
+      "dispel": "curse-"
+     }
+    ]
+   },
+   "expected": {
+    "def": "",
+    "check": "count",
+    "value": 1
+   },
+   "source": "Buff.Stack 0x2b22f88 / Buff.IsStrongerThan 0x2b21c10 反汇编",
+   "status": "已还原"
+  },
+  {
+   "id": "buff.death-clears",
+   "kind": "buff_lifecycle",
+   "rule": "Death/world change clears non-persistent buffs only",
+   "inputs": {
+    "ops": [
+     {
+      "add": {
+       "def": "poison",
+       "dur": 10,
+       "dps": 50
+      }
+     },
+     {
+      "add": {
+       "def": "aura",
+       "dur": 100,
+       "persistent": true
+      }
+     },
+     {
+      "clear": true
+     }
+    ]
+   },
+   "expected": {
+    "def": "",
+    "check": "count",
+    "value": 1
+   },
+   "source": "Buff.Stack 0x2b22f88 / Buff.IsStrongerThan 0x2b21c10 反汇编",
+   "status": "已还原"
+  },
+  {
+   "id": "buff.critical-tick",
+   "kind": "buff_lifecycle",
+   "rule": "Tick clamps elapsed to the remaining duration (no double-count)",
+   "inputs": {
+    "ops": [
+     {
+      "add": {
+       "def": "poison",
+       "dur": 0.0125,
+       "dps": 100
+      }
+     },
+     {
+      "advance": 0.05
+     }
+    ]
+   },
+   "expected": {
+    "def": "",
+    "check": "ticked",
+    "value": 1.25
+   },
+   "source": "Buff.Stack 0x2b22f88 / Buff.IsStrongerThan 0x2b21c10 反汇编",
+   "status": "已还原"
+  },
+  {
+   "id": "buff.critical-tick-expires",
+   "kind": "buff_lifecycle",
+   "rule": "A fully consumed buff is removed after the critical tick",
+   "inputs": {
+    "ops": [
+     {
+      "add": {
+       "def": "poison",
+       "dur": 0.0125,
+       "dps": 100
+      }
+     },
+     {
+      "advance": 0.05
+     }
+    ]
+   },
+   "expected": {
+    "def": "poison",
+    "check": "has",
+    "value": 0
+   },
+   "source": "Buff.Stack 0x2b22f88 / Buff.IsStrongerThan 0x2b21c10 反汇编",
+   "status": "已还原"
+  },
+  {
+   "id": "buff.poison-reapply-replaces",
+   "kind": "buff_lifecycle",
+   "rule": "Fresh poison (full 1s) outranks a partially ticked one by duration: new DPS wins",
+   "inputs": {
+    "ops": [
+     {
+      "add": {
+       "def": "poison",
+       "dur": 1,
+       "dps": 20
+      }
+     },
+     {
+      "advance": 0.5
+     },
+     {
+      "add": {
+       "def": "poison",
+       "dur": 1,
+       "dps": 30
+      }
+     },
+     {
+      "advance": 1
+     }
+    ]
+   },
+   "expected": {
+    "def": "",
+    "check": "ticked",
+    "value": 40
+   },
+   "source": "Buff.Stack 0x2b22f88 / Buff.IsStrongerThan 0x2b21c10 反汇编",
+   "status": "已还原"
+  },
+  {
+   "id": "proj.chain-range",
+   "kind": "projectile",
+   "rule": "Chain retargets only within 10.0y of the hit point (GetEnemiesInRadius)",
+   "inputs": {
+    "scenario": "chain_range",
+    "forkChance": 0,
+    "chainChance": 1
+   },
+   "expected": {
+    "check": "zero",
+    "value": 0
+   },
+   "source": "HandleForkAndChain 0x029F8DBC 反汇编",
+   "status": "已还原"
+  },
+  {
+   "id": "proj.chain-in-range",
+   "kind": "projectile",
+   "rule": "Chain within 10y retargets the same projectile at full damage",
+   "inputs": {
+    "scenario": "chain_in_range",
+    "forkChance": 0,
+    "chainChance": 1
+   },
+   "expected": {
+    "check": "positive",
+    "value": 1
+   },
+   "source": "HandleForkAndChain 0x029F8DBC 反汇编",
+   "status": "已还原"
+  },
+  {
+   "id": "proj.fork-no-doublehit",
+   "kind": "projectile",
+   "rule": "Hit-set: fork children never re-hit the original target (AddHitActor)",
+   "inputs": {
+    "scenario": "fork_no_doublehit",
+    "forkChance": 1,
+    "chainChance": 0
+   },
+   "expected": {
+    "check": "equal",
+    "value": 1
+   },
+   "source": "HandleForkAndChain 0x029F8DBC 反汇编",
+   "status": "已还原"
+  }
+ ]
 }
