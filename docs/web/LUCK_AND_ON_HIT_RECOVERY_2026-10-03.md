@@ -111,6 +111,6 @@ killsPerMinute = truncate(efficiency * clamp(1.5 * secondHighestReachedTier, 10,
 * **元素转换/穿透**：`ApplyWeaponDamageConversion` / `InternalApplyDamageConversion` 与 `*_Resistance_Penetration_Total` / `Armor_Piercing_Percent_Total` 已接入伤害管线。
 * **物品数量取整**：`floor(remainder + Num_Items_Granted × (Item_Quantity_Final_Multiplier + 1))` 余数累积。
 * **怪物 AI**：`Brains.json` 的完整加权动作树已接入——40 个 `MonsterBrainCondition` 条件名逐一对上 `StringHashHelper.HashNameSafe` 哈希（`tools/web-content/export_brains.py`），`BrainCatalog` 按条件筛选后加权抽取，`CombatInstance.UpdateBrain` 执行攻击/游荡/逃跑；原型指定对应 brain。
-* **Boss 专属 Power**：`MonsterPowerCatalog` 按客户端实现类的参数字段名建立效果描述（ctor 常量原样使用：WolfKingRoar 半径 3/伤害×3/移速+0.2/冷却 8s、SummonPack 3/1/8、VileDragonNova 半径 6），`CombatInstance.ExecuteMonsterPower` 执行 Nova/NovaSequence/Charge/Beam/Summon/TripleStrike；地下城 boss 用 `Boss_WolfKing` brain 施放。未写入 ctor 的乘数/半径为 Provisional，诅咒/图腾/宠物类 debuff 未建模。
+* **Boss 专属 Power**：`MonsterPowerCatalog` 按客户端实现类的参数字段名建立效果描述（ctor 常量原样使用：WolfKingRoar 半径 3/伤害×3/移速+0.2/冷却 8s、SummonPack 3/1/8、VileDragonNova 半径 6），`CombatInstance.ExecuteMonsterPower` 执行 Nova/NovaSequence/Charge/Beam/Summon/TripleStrike；地下城 boss 用 `Boss_WolfKing` brain 施放。未写入 ctor 的乘数/半径为 Provisional。召唤使用对应 gamedata 仆从名；诅咒 debuff（降低移速/全抗、受伤放大、输出降低、吸血）已接入玩家并带时长；Champion 满足 `ImNotNormalMonster`。
 
 服务端套件 **438 PASS**，smoke/npc-smoke 通过。

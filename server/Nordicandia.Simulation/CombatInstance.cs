@@ -8,7 +8,9 @@ public readonly record struct MonsterProfile(
     // AttackRange and back off inside PreferredDistance instead of closing to melee.
     bool Ranged = false, double AttackRange = 0, double PreferredDistance = 0,
     // Brains.json action tree name (Monsters.json BrainId); null uses the Standard brain.
-    string Brain = null);
+    string Brain = null,
+    // Champion/elite monsters satisfy ImNotNormalMonster (needed by the curser brains).
+    bool Champion = false);
 
 /// <summary>One monster inside an authoritative combat instance.</summary>
 public sealed class CombatMonster
@@ -35,6 +37,8 @@ public sealed class CombatMonster
     public double PreferredDistance { get; set; }
     /// <summary>Brains.json action tree name.</summary>
     public string Brain { get; set; }
+    /// <summary>Champion/elite (satisfies ImNotNormalMonster).</summary>
+    public bool Champion { get; set; }
     /// <summary>Power selected by the brain for the current think window.</summary>
     public string BrainAction { get; set; }
     public double ActionTimer { get; set; }
@@ -181,6 +185,17 @@ public sealed class CombatInstance
     private bool pendingPackSpawn;
     // Boss summon powers queue minions here; spawned after the monster loop.
     private int pendingSummons;
+    private string pendingSummonMinion;
+
+    // Recovered MonsterCurse* debuffs on the player. Each has a remaining duration and magnitude;
+    // the strongest active curse wins. Attributes/targets are ClientVerified, magnitudes/durations
+    // are Provisional (they come from monster-skill definitions).
+    private double curseSlowTimer, curseSlowAmount;
+    private double curseResistTimer, curseResistAmount;
+    private double curseAmplifyTimer, curseAmplifyAmount;
+    private double curseReduceDamageTimer, curseReduceDamageAmount;
+    private double curseLeechTimer, curseLeechAmount;
+    private CombatMonster curseLeechSource;
 
     public int TotalPacks => totalPacks;
     public int PacksRemaining => Math.Max(0, totalPacks - packsCleared);
@@ -292,7 +307,9 @@ public sealed class CombatInstance
     private DamageBundle PlayerDamageBundle()
     {
         var baseBundle = Damage.Total > 0 ? Damage : new DamageBundle(Offense);
-        return baseBundle.Scale(1 + PassiveOffense() + (offenseBuffTimer > 0 ? offenseBuffBonus : 0));
+        // Weapon_Damage_Percent_Bonus_Final reduction from MonsterCurseReducedWeaponDamage.
+        return baseBundle.Scale((1 + PassiveOffense() + (offenseBuffTimer > 0 ? offenseBuffBonus : 0))
+            * (1 - curseReduceDamageAmount));
     }
 
     private static CombatantStats MonsterStats(CombatMonster monster)
@@ -407,10 +424,10 @@ public sealed class CombatInstance
         monsters.Add(CreateMonster(index, x, z, alive: true));
     }
 
-    private CombatMonster CreateMonster(int index, double x, double z, bool alive)
+    private CombatMonster CreateMonster(int index, double x, double z, bool alive, MonsterProfile? overrideProfile = null)
     {
         var level = MonsterLevel;
-        var profile = profiles[index % profiles.Length];
+        var profile = overrideProfile ?? profiles[index % profiles.Length];
         var maxHp = (30 + level * 16) * profile.HpMult;
         var offense = (3 + level * 1.2) * profile.OffenseMult;
         // A profile's Damage is a distribution (fractions); scale it by this spawn's offence.
@@ -434,6 +451,7 @@ public sealed class CombatInstance
             AttackRange = profile.AttackRange > 0 ? profile.AttackRange : MonsterAttackRange,
             PreferredDistance = profile.PreferredDistance > 0 ? profile.PreferredDistance : MonsterAttackRange * 0.5,
             Brain = profile.Brain ?? "Standard",
+            Champion = profile.Champion,
             Alive = alive,
             AttackCooldown = rng.NextDouble() * 1.6,
             WanderTimer = rng.NextDouble() * 2,
@@ -496,6 +514,7 @@ public sealed class CombatInstance
         UpdateMonsters(dt);
         if (boss is { Alive: true } && PlayerHp > 0) UpdateBoss(dt);
         TickPoison(dt);
+        TickCurses(dt);
         if (pendingPackSize > 0)
         {
             packSpawnTimer += dt;
@@ -509,8 +528,10 @@ public sealed class CombatInstance
         if (pendingSummons > 0)
         {
             var count = pendingSummons;
+            var minion = pendingSummonMinion;
             pendingSummons = 0;
-            SummonMinions(count);
+            pendingSummonMinion = null;
+            SummonMinions(count, minion);
         }
         if (pendingPackSpawn)
         {
@@ -539,7 +560,8 @@ public sealed class CombatInstance
             if (distance < 0.15) hasTarget = false;
             else
             {
-                var step = Math.Min(distance, (playerSpeed * (1 + (moveSpeedBuffTimer > 0 ? moveSpeedBuffBonus : 0))) * dt);
+                var speed = playerSpeed * (1 + (moveSpeedBuffTimer > 0 ? moveSpeedBuffBonus : 0)) * (1 - curseSlowAmount);
+                var step = Math.Min(distance, speed * dt);
                 PlayerX += dx / distance * step;
                 PlayerZ += dz / distance * step;
                 ClampToArena();
@@ -621,6 +643,9 @@ public sealed class CombatInstance
             "NotIntimidated" => true,
             "TargetNear" => inCombat,
             "TargetFar" => !inCombat,
+            "ImNotNormalMonster" => monster.IsBoss || monster.Champion,
+            // The web slice has no world-tier progression; it represents the endgame.
+            "ImAboveOrEqualToTier4" => true,
             _ => false,
         };
 
@@ -697,8 +722,90 @@ public sealed class CombatInstance
                 break;
             case MonsterPowerKind.Summon:
                 pendingSummons += Math.Max(1, power.Count);
+                pendingSummonMinion = power.Minion;
                 monster.SpecialCooldown = power.Cooldown;
                 break;
+            case MonsterPowerKind.Curse:
+                ApplyCurse(monster, power);
+                break;
+        }
+    }
+
+    /// <summary>Applies a {@link MonsterCurse*} debuff to the player. The strongest active curse
+    /// of each kind wins and refreshes the duration.</summary>
+    private void ApplyCurse(CombatMonster monster, MonsterPower power)
+    {
+        switch (power.Curse)
+        {
+            case CurseEffect.Slow:
+            case CurseEffect.SlowProjectiles:
+                curseSlowAmount = Math.Max(curseSlowAmount, power.DamageMultiplier);
+                curseSlowTimer = Math.Max(curseSlowTimer, power.Duration);
+                break;
+            case CurseEffect.LowerResistances:
+                curseResistAmount = Math.Max(curseResistAmount, power.DamageMultiplier);
+                curseResistTimer = Math.Max(curseResistTimer, power.Duration);
+                break;
+            case CurseEffect.AmplifyDamageTaken:
+                curseAmplifyAmount = Math.Max(curseAmplifyAmount, power.DamageMultiplier);
+                curseAmplifyTimer = Math.Max(curseAmplifyTimer, power.Duration);
+                break;
+            case CurseEffect.ReducedWeaponDamage:
+                curseReduceDamageAmount = Math.Max(curseReduceDamageAmount, power.DamageMultiplier);
+                curseReduceDamageTimer = Math.Max(curseReduceDamageTimer, power.Duration);
+                break;
+            case CurseEffect.Leech:
+                curseLeechAmount = Math.Max(curseLeechAmount, power.DamageMultiplier);
+                curseLeechTimer = Math.Max(curseLeechTimer, power.Duration);
+                curseLeechSource = monster;
+                break;
+        }
+        monster.SpecialCooldown = power.Cooldown;
+    }
+
+    private void TickCurses(double dt)
+    {
+        curseSlowTimer = Math.Max(0, curseSlowTimer - dt);
+        if (curseSlowTimer <= 0) curseSlowAmount = 0;
+        curseResistTimer = Math.Max(0, curseResistTimer - dt);
+        if (curseResistTimer <= 0) curseResistAmount = 0;
+        curseAmplifyTimer = Math.Max(0, curseAmplifyTimer - dt);
+        if (curseAmplifyTimer <= 0) curseAmplifyAmount = 0;
+        curseReduceDamageTimer = Math.Max(0, curseReduceDamageTimer - dt);
+        if (curseReduceDamageTimer <= 0) curseReduceDamageAmount = 0;
+        curseLeechTimer = Math.Max(0, curseLeechTimer - dt);
+        if (curseLeechTimer <= 0) { curseLeechAmount = 0; curseLeechSource = null; }
+    }
+
+    public double CurseSlow => curseSlowTimer > 0 ? curseSlowAmount : 0;
+    public double CurseResistancePenalty => curseResistTimer > 0 ? curseResistAmount : 0;
+    public double CurseAmplifyDamageTaken => curseAmplifyTimer > 0 ? curseAmplifyAmount : 0;
+    public double CurseWeaponDamageReduction => curseReduceDamageTimer > 0 ? curseReduceDamageAmount : 0;
+
+    private ResistanceBundle EffectivePlayerResistances()
+        => curseResistTimer > 0
+            ? new ResistanceBundle(
+                Resistances.Fire - curseResistAmount, Resistances.Cold - curseResistAmount,
+                Resistances.Lightning - curseResistAmount, Resistances.Poison - curseResistAmount)
+            : Resistances;
+
+    /// <summary>Shield, amplify-damage-taken, leech and death for one hit on the player.</summary>
+    private void ApplyPlayerDamage(CombatMonster source, double incoming)
+    {
+        if (curseAmplifyTimer > 0) incoming *= 1 + curseAmplifyAmount;
+        if (PlayerShield > 0)
+        {
+            var absorbed = Math.Min(PlayerShield, incoming);
+            PlayerShield -= absorbed;
+            incoming -= absorbed;
+        }
+        PlayerHp = Math.Max(0, PlayerHp - incoming);
+        if (source is not null && curseLeechTimer > 0 && ReferenceEquals(curseLeechSource, source))
+            source.Hp = Math.Min(source.MaxHp, source.Hp + incoming * curseLeechAmount);
+        if (PlayerHp <= 0)
+        {
+            playerRespawnTimer = PlayerRespawnSeconds;
+            hasTarget = false;
         }
     }
 
@@ -731,37 +838,28 @@ public sealed class CombatInstance
         };
         var bundle = element.Scale(Math.Max(1e-6, monster.Offense) * Math.Max(0.1, power.DamageMultiplier));
         var hit = CombatModel.ResolveBundleAttack(
-            MonsterStats(monster), bundle, PlayerStats(), Resistances,
+            MonsterStats(monster), bundle, PlayerStats(), EffectivePlayerResistances(),
             new AttackProfile(1.0, 0.03, 1.5, 0.0), rng);
         if (!hit.Hit) return;
-        var incoming = hit.Damage;
-        if (PlayerShield > 0)
-        {
-            var absorbed = Math.Min(PlayerShield, incoming);
-            PlayerShield -= absorbed;
-            incoming -= absorbed;
-        }
-        PlayerHp = Math.Max(0, PlayerHp - incoming);
-        if (PlayerHp <= 0)
-        {
-            playerRespawnTimer = PlayerRespawnSeconds;
-            hasTarget = false;
-        }
+        ApplyPlayerDamage(monster, hit.Damage);
     }
 
     /// <summary>Spawns <paramref name="count"/> minions near the pack/boss origin. Deferred so
     /// the monster list is never mutated while it is being iterated.</summary>
-    private void SummonMinions(int count)
+    private void SummonMinions(int count, string minion)
     {
         if (profiles.Length == 0) return;
-        var profile = profiles[0];
+        // Use the summon power's gamedata minion (for its avatar/name); stats stay Provisional.
+        var name = string.IsNullOrEmpty(minion) ? profiles[0].Name : minion;
+        var profile = new MonsterProfile(name, HpMult: 1.0, OffenseMult: 0.8, DefenseMult: 0.8,
+            Speed: 2.6, Brain: "AggressiveMinion");
         for (var i = 0; i < count && monsters.Count < 40; i++)
         {
             var angle = rng.NextDouble() * Math.PI * 2;
             var radius = 2 + rng.NextDouble() * 2;
             monsters.Add(CreateMonster(monsters.Count,
                 Math.Clamp(packOriginX + Math.Cos(angle) * radius, -ArenaHalf, ArenaHalf),
-                Math.Clamp(packOriginZ + Math.Sin(angle) * radius, -ArenaHalf, ArenaHalf), alive: true));
+                Math.Clamp(packOriginZ + Math.Sin(angle) * radius, -ArenaHalf, ArenaHalf), alive: true, profile));
         }
     }
 
@@ -822,22 +920,10 @@ public sealed class CombatInstance
                 monster.AttackCooldown = monster.AttackInterval;
                 var monsterDamage = monster.Damage.Total > 0 ? monster.Damage : new DamageBundle(monster.Offense);
                 var hit = CombatModel.ResolveBundleAttack(
-                    MonsterStats(monster), monsterDamage, PlayerStats(), Resistances,
+                    MonsterStats(monster), monsterDamage, PlayerStats(), EffectivePlayerResistances(),
                     new AttackProfile(1.0, 0.03, 1.5, 0.12),
                     rng);
-                var incoming = hit.Damage;
-                if (PlayerShield > 0)
-                {
-                    var absorbed = Math.Min(PlayerShield, incoming);
-                    PlayerShield -= absorbed;
-                    incoming -= absorbed;
-                }
-                PlayerHp = Math.Max(0, PlayerHp - incoming);
-                if (PlayerHp <= 0)
-                {
-                    playerRespawnTimer = PlayerRespawnSeconds;
-                    hasTarget = false;
-                }
+                ApplyPlayerDamage(monster, hit.Damage);
             }
             // Kiting: a ranged monster inside its preferred distance backs away.
             if (monster.Ranged && distance < monster.PreferredDistance)

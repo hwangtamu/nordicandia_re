@@ -271,5 +271,30 @@ static class LuckAndOnHitRecoveryTests
             summoned = instance.Monsters.Count(m => m.Alive && !m.IsBoss) - 1;
         }
         Check(summoned >= 1, $"boss powers: Boss_WolfKing summons a pack ({summoned} minions)");
+        Check(instance.Monsters.Any(m => m.Name == "WolfKingMinion"),
+            $"boss powers: summons use the gamedata minion ({string.Join(",", instance.Monsters.Select(m => m.Name).Distinct())})");
+    }
+
+    public static void Curses()
+    {
+        Check(MonsterPowerCatalog.For("MonsterCurseSlow")!.Curse == CurseEffect.Slow
+            && MonsterPowerCatalog.For("MonsterCurseLowerResistances")!.Curse == CurseEffect.LowerResistances
+            && MonsterPowerCatalog.For("MonsterCurseAmplifyDamageTaken")!.Curse == CurseEffect.AmplifyDamageTaken
+            && MonsterPowerCatalog.For("MonsterCurseReducedWeaponDamage")!.Curse == CurseEffect.ReducedWeaponDamage
+            && MonsterPowerCatalog.For("MonsterCurseLivingLeech")!.Curse == CurseEffect.Leech,
+            "curses: the recovered target attributes are mapped");
+        // A champion caster uses the StandardCurseSlow brain and slows the player.
+        var stats = CombatantStats.FromRealtime(0, 1e6, 0, 10);
+        var instance = new CombatInstance(stats, 0, 0, 0, 0, seed: 4, monsterCount: 1,
+            monsterProfiles: new[] { new MonsterProfile("Curser", HpMult: 1e6, OffenseMult: 0,
+                Brain: "StandardCurseSlow", Champion: true) });
+        instance.MoveTo(0, 0);
+        var slowed = false;
+        for (var i = 0; i < 3000 && !slowed; i++)
+        {
+            instance.Advance(0.05);
+            slowed = instance.CurseSlow > 0;
+        }
+        Check(slowed, $"curses: a champion curser slows the player ({instance.CurseSlow:F2})");
     }
 }

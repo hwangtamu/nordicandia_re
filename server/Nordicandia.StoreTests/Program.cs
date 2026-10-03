@@ -9,6 +9,7 @@ LuckAndOnHitRecoveryTests.ItemQuantityRemainder();
 LuckAndOnHitRecoveryTests.RangedKiting();
 LuckAndOnHitRecoveryTests.BrainSelection();
 LuckAndOnHitRecoveryTests.BossPowers();
+LuckAndOnHitRecoveryTests.Curses();
 
 var directory = Path.Combine(Path.GetTempPath(), "nord-alias-test-" + Guid.NewGuid());
 Directory.CreateDirectory(directory);

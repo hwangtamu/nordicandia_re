@@ -68,7 +68,7 @@ public sealed class CombatRegistry
         // Caster (gamedata CasterDemon1): long-range elemental attacker.
         new("CasterDemon1", HpMult: 0.9, OffenseMult: 1.1, DefenseMult: 0.8, Speed: 2.0,
             Damage: new DamageBundle(Fire: 0.6), Resistances: new ResistanceBundle(Fire: 0.4, Cold: -0.2),
-            Ranged: true, AttackRange: 9, PreferredDistance: 5, Brain: "StandardCurseSlow"),
+            Ranged: true, AttackRange: 9, PreferredDistance: 5, Brain: "StandardCurseSlow", Champion: true),
     };
 
     /// <summary>Scaled archetypes for a Niflheim run. Provisional: the client's
