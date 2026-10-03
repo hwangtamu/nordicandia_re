@@ -440,6 +440,15 @@ static class AcceptanceRegressionTests
             Check(expected.All(kv => Math.Abs(map.GetValueOrDefault(kv.Key) - kv.Value) < 1e-6),
                 "set: the 2-piece bonus is applied to the attribute map");
 
+            // E03: unequipping a piece drops below the breakpoint, so the bonus must disappear
+            // (the attribute map is recomputed from equipped items, so no residual set bonus).
+            var unequipVersion = registry.Advance(owner, characterId).Combat.Version;
+            registry.ApplyCommand(owner, characterId, "r11-unequip", unequipVersion,
+                new WebCommandRequest("unequip", ItemId: piece2.Id));
+            var afterUnequip = store.GetAttributeMap(owner, characterId);
+            Check(expected.All(kv => Math.Abs(afterUnequip.GetValueOrDefault(kv.Key)) < 1e-6),
+                "set: unequipping a piece removes its breakpoint bonus");
+
             // Level requirement: an item far above the character's level cannot be equipped.
             var highLevel = LootTable.CreateItem(new LootDrop(3, 5, 60, false, 33));
             store.GrantItems(owner, characterId, new List<SerializedItem> { highLevel });

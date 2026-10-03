@@ -27,10 +27,11 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 ASM = ROOT / "tmp/allattrs.asm"
 OUT = ROOT / "tools/web-content/generated/attribute_ids.json"
 
-NAME_LINE = re.compile(r"mov\s+rax, qword ptr \[rip \+ 0x[0-9a-f]+\]\s+(\S.*)$")
+# The attribute name is loaded into rax or r8 depending on the ctor overload.
+NAME_LINE = re.compile(r"mov\s+r(?:ax|8), qword ptr \[rip \+ 0x[0-9a-f]+\]\s+(\S.*)$")
 ID_LINE = re.compile(r"mov\s+dx, (0x[0-9a-fA-F]+|\d+)")
-# Doubles use GameAttributeD, ints/bools use GameAttributeI; both carry the id/name pair.
-CTORS = ("GameAttributeD__ctor_1", "GameAttributeI__ctor_1")
+# GameAttributeD (double), GameAttributeI (int/bool), GameAttributeDA (double, valuetype name reg).
+CTORS = ("GameAttributeD__ctor_1", "GameAttributeDA__ctor_1", "GameAttributeI__ctor_1")
 
 
 def main() -> int:
