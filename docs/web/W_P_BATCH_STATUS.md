@@ -30,10 +30,14 @@
   召唤技能的 `Minion` 全部对应真实 gamedata 怪物（已校验）。
 * 常量仍以客户端实现类为准；未恢复的怪物技能定义参数标 Provisional。
 
-### W04 / W05 世界与进度（数据接入）
+### W04 / W05 世界与进度（数据接入 + 怪物池）
 
 * `world_catalog_full.json`（36 世界：tier/theme/boss/`MonsterTypeSpawnWeights`）嵌入为
   `GameData/world_catalog.json`，新增 `WorldCatalog.cs`（`ForTier`/`ById`/`Entries`）。
+* **怪物池接入战斗**：`CombatRegistry.ProfilesForWorldTier(tier)` 读该 tier 世界的
+  `MonsterTypeSpawnWeights`，用 `MonsterCatalog.ByType` 展开为真实怪物 archetype
+  （名字/伤害类型/远程/Brain）。tier 1（Grasshill，Beast）因此生成真实 Beast 名册，
+  不再用 6 个手工 archetype（类型不足时回退以保证原型稳定）。
 * `W04WorldCatalogTests` 5 条：tier 1 = Grasshill（Beast 权重），boss = Boss_WolfKing，
   35 个 tiered 世界 + 1 城镇。
 
@@ -47,7 +51,7 @@
 
 | 项 | 差距 |
 |---|---|
-| W01 | 运行时仍用 6 个 archetype；接入 136 条真实怪物（怪物池/密度/阶层）需重做战斗生成 |
+| W01 | 怪物池已按世界类型接入；仍缺**密度/阶层**（需要地图与刷怪区） |
 | W02 | 目标丢失、寻路、碰撞、仇恨/逃离时机的**数值**；宠物/图腾动作 |
 | W03 | 各 Power 的精确定量参数（触发/时序/召唤上限）与 Boss **阶段**、清场 |
 | W04 | 地图图结构、场景块、碰撞、出入口、刷怪区体积（`DungeonMonsterSpawnArea` 的 `PathTypeIndex`/`IndexOnPath` 依赖地图路径系统） |
