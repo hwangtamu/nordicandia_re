@@ -239,6 +239,19 @@ public sealed partial class CombatInstance
     public bool PoisonOnHit { get; private set; }
     public bool ProjectileAutoAttack { get; private set; }
     public double DoubleDamageOnCritPoisoned { get; private set; }
+    // C01 damage-pipeline inputs that must reach the resolver (audit F01).
+    public DamageBundle Conversion { get; private set; }
+    public ResistanceBundle Penetration { get; private set; }
+    public double ArmorPenetration { get; private set; }
+    public double DodgeChance { get; private set; }
+    public double BlockChance { get; private set; }
+    public double BlockedDamageMultiplier { get; private set; } = 1;
+    public double HitChanceBonus { get; private set; }
+    public double HitChanceCap { get; private set; } = 1;
+    public bool AlwaysHits { get; private set; }
+    public bool IgnoresCrits { get; private set; }
+    public double DeadlyStrikeChance { get; private set; }
+    public double DamageTakenAmplifyPercent { get; private set; }
     public int PlayerLevel { get; private set; }
     public double Experience { get; private set; }
     public int Silver { get; private set; }
@@ -312,12 +325,37 @@ public sealed partial class CombatInstance
         PoisonOnHit = stats.PoisonOnHit;
         ProjectileAutoAttack = stats.ProjectileAutoAttack;
         DoubleDamageOnCritPoisoned = stats.DoubleDamageOnCritPoisoned;
+        // C01 damage-pipeline ratings (audit F01): keep conversion, penetration and the
+        // hit-resolution rolls so the resolver sees what the attribute engine produced.
+        Conversion = stats.Conversion;
+        Penetration = stats.Penetration;
+        ArmorPenetration = stats.ArmorPenetration;
+        DodgeChance = stats.DodgeChance;
+        BlockChance = stats.BlockChance;
+        BlockedDamageMultiplier = stats.BlockedDamageMultiplier;
+        HitChanceBonus = stats.HitChanceBonus;
+        HitChanceCap = stats.HitChanceCap;
+        AlwaysHits = stats.AlwaysHits;
+        IgnoresCrits = stats.IgnoresCrits;
+        DeadlyStrikeChance = stats.DeadlyStrikeChance;
+        DamageTakenAmplifyPercent = stats.DamageTakenAmplifyPercent;
         // Base 6.5 u/s scaled by the recovered Movement_Speed total (Aesir Tyr +40% etc.).
         playerSpeed = 6.5 * Math.Clamp(stats.MoveSpeedMultiplier, 0.1, 10.0);
     }
 
+    /// <summary>The player's stats as the resolver sees them (F01 verification entry point).</summary>
+    public CombatantStats PlayerStatsSnapshot() => PlayerStats();
+
     private CombatantStats PlayerStats() => new(EffectiveOffense(), Defense, Recovery, PlayerLevel,
-        AttackRating, Armor, Evasion, CritChance, LifeMax, ManaMax, Damage, Resistances);
+        AttackRating, Armor, Evasion, CritChance, LifeMax, ManaMax, Damage, Resistances,
+        ForkChance: ForkChance, ChainChance: ChainChance, PoisonChance: PoisonChance,
+        DoubleDamageOnCritPoisoned: DoubleDamageOnCritPoisoned,
+        ProjectileAutoAttack: ProjectileAutoAttack, PoisonOnHit: PoisonOnHit,
+        Conversion: Conversion, Penetration: Penetration, ArmorPenetration: ArmorPenetration,
+        DodgeChance: DodgeChance, BlockChance: BlockChance, BlockedDamageMultiplier: BlockedDamageMultiplier,
+        HitChanceBonus: HitChanceBonus, HitChanceCap: HitChanceCap, AlwaysHits: AlwaysHits,
+        IgnoresCrits: IgnoresCrits, DeadlyStrikeChance: DeadlyStrikeChance,
+        DamageTakenAmplifyPercent: DamageTakenAmplifyPercent);
 
     /// <summary>The player's typed damage (weapon bundle, or a physical bundle from the
     /// provisional Offense when no weapon attributes are present), including the passive/buff bonus.</summary>

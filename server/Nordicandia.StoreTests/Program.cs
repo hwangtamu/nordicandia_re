@@ -81,6 +81,7 @@ RunSuite("W01MonsterCatalog", W01MonsterCatalogTests.Run);
 RunSuite("W02W03Brain", W02W03BrainTests.Run);
 RunSuite("W04WorldCatalog", W04WorldCatalogTests.Run);
 RunSuite("W04MapLayout", W04MapLayoutTests.Run);
+RunSuite("F01Ratings", F01RatingsTests.Run);
 RunSuite("PowerParameter", PowerParameterTests.Run);
 RunSuite("PowerPool", PowerPoolTests.Run);
 RunSuite("ManaMastery", ManaMasteryTests.Run);
