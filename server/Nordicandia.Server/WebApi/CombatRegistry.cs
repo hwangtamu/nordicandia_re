@@ -206,15 +206,20 @@ public sealed class CombatRegistry
     }
 
     /// <summary>Recovered offline inputs: Offline_Battle_Efficiency_Multiplier (attribute 565,
-    /// which resolves to Base_Stamina_Multiplier) and the character's world tier (attribute 8,
-    /// default 1). The web slice does not track the client's second-highest reached world
-    /// checkpoint history, so tier is an approximation while the scaling/clamp are recovered.</summary>
+    /// which resolves to Base_Stamina_Multiplier) and the reached world tier.
+    ///
+    /// W07: the client's Character.GetSecondHighestReachedWorldCheckpoint reads the
+    /// <c>World_Tier_Unlocked</c> attribute (id 9, offset 0x70) and steps back one checkpoint within
+    /// the tier. The web slice does not yet track per-tier checkpoint progress, so the checkpoint
+    /// step (which only changes the tier when a tier was just unlocked) is not applied; the
+    /// World_Tier attribute (id 8) is kept as a fallback when 9 is unset.</summary>
     private (double Efficiency, int Tier) OfflineRate(Guid owner, Guid characterId, Entry entry)
     {
         var map = CharacterAttributeMap(owner, characterId, entry.BasePowers);
         var eval = CharacterAttributeEngine.Instance.Evaluate(map);
-        var tier = (int)map.GetValueOrDefault(8);
-        return (eval.Resolve("Offline_Battle_Efficiency_Multiplier"), Math.Max(1, tier));
+        var reached = (int)map.GetValueOrDefault(9);
+        if (reached <= 0) reached = (int)map.GetValueOrDefault(8);
+        return (eval.Resolve("Offline_Battle_Efficiency_Multiplier"), Math.Max(1, reached));
     }
 
     // ----- Aesir blessings (M3) -----

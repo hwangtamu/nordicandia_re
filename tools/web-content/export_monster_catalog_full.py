@@ -65,6 +65,13 @@ def main() -> None:
             "brainName": brain_name,
             "brainDangling": brain_id is not None and brain_id not in brains,
             "brainMissing": brain_id is None,
+            # W01 combat-relevant fields (Monsters.json SerializedData).
+            "damageType": data.get("DamageType"),
+            "caster": bool(data.get("Caster")),
+            "ranged": bool(data.get("Ranged")),
+            "size": data.get("Size"),
+            "tagIds": data.get("TagIds") or [],
+            "affixIds": data.get("AffixIds") or [],
             "status": "正式",
             "availability": availability,
         })
@@ -83,6 +90,9 @@ def main() -> None:
             "bossOrSummonOnly": sum(1 for i in items if not i["availableRarities"]),
             "brainDangling": sum(1 for i in items if i["brainDangling"]),
             "brainMissing": sum(1 for i in items if i["brainMissing"]),
+            "withDamageType": sum(1 for i in items if i["damageType"] is not None),
+            "casters": sum(1 for i in items if i["caster"]),
+            "ranged": sum(1 for i in items if i["ranged"]),
         },
         "items": items,
     }

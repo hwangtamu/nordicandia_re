@@ -77,6 +77,7 @@ RunSuite("AffixGeneration", AffixGenerationTests.Run);
 RunSuite("E01AffixCatalog", E01AffixCatalogTests.Run);
 RunSuite("E02DropPipeline", E02DropPipelineTests.Run);
 RunSuite("E03SetAndSlots", E03SetAndSlotsTests.Run);
+RunSuite("W01MonsterCatalog", W01MonsterCatalogTests.Run);
 RunSuite("PowerParameter", PowerParameterTests.Run);
 RunSuite("PowerPool", PowerPoolTests.Run);
 RunSuite("ManaMastery", ManaMasteryTests.Run);
