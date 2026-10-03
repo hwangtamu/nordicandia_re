@@ -9,7 +9,7 @@ M3 目标：事务存档、断线恢复、技能槽扩展、Aesir 祝福、Niflh
 |---|---|---|
 | 事务存档 | `GameStore` 单写者 `lock(gate)` + `world.json.tmp` 原子 `File.Move(...,true)`；命令记录 `world.json` 内一致提交。单机内测级别（未上 SQLite） | ClientVerified 结构 / 单机内测 |
 | 断线恢复 | 权威快照 + 递增 `CombatVersion` + 命令 ID 幂等 + `expectedVersion` 边界；`MaxCatchUpSeconds=5` 防止长时间离线被当成实时战斗快进 | ClientVerified 命令契约 / 阈值 Provisional |
-| 离线收益 | `GET/POST /characters/{id}/offline[/claim]`；`OfflineRewards`：每 30s 一次击杀经验，8h 上限；服务端计算、幂等（第二次领取为 0） | Provisional 规则 |
+| 离线收益 | `GET/POST /characters/{id}/offline[/claim]`；`OfflineRewards`：`(秒/60) * killsPerMinute * 0.15 * 击杀经验`，12h（720min）上限、20000 击杀上限；服务端计算、幂等（第二次领取为 0） | 公式/上限 ClientVerified；killsPerMinute Provisional |
 | 技能槽（6 主动/3 被动） | 已有：`GET/POST /loadout` + UI（`SkillSlotRules` 6/3） | ClientVerified |
 | Aesir 祝福 | `GET/POST /characters/{id}/blessings`；`MakeOffering`（时长 ClientVerified）+ `Blessings` 效果表（Provisional）；购买立即生效、到期剔除、重登由 `EnsureBlessingBuffs` 恢复 | 时长/buff id ClientVerified；cost/效果 Provisional |
 | Niflheim 传送门 | `GET /portal`、`POST /portal/enter`、`POST /portal/return`；消耗 `NiflheimPortal`(159) 一次，`entry.Niflheim` 切换缩放怪物；boss 通关自动返回；重试不重复扣道具；状态持久化（`99020` 角色标记） | 物品/世界类型 ClientVerified；缩放/规则 Provisional |
@@ -37,4 +37,4 @@ M3 目标：事务存档、断线恢复、技能槽扩展、Aesir 祝福、Niflh
 * **断线恢复**：用快照 + 版本，而非计划里写的递增事件序号；网页端靠轮询 `/state` 对齐。
 * **祝福效果**：`Aesir*Buff.Init` 的具体 `GameAttributeDA` 未解码，当前用主题化 Provisional 效果（Odin 魔寻、Tyr 物理伤害、Frigg 护甲、Thor 全抗）注入属性引擎；opal 价格 Provisional。
 * **传送门**：`NiflheimPortalGameMode` 的 “packs”（`NumMonsterPacks` 词缀）未还原，当前用缩放的同类怪物 + 更大波次；`WorldTier`/`WorldWaypoint` 未涉及。
-* **离线收益**：固定 30s/击杀、8h 上限，未接客户端 `CalculateIdleLevelsGained`。
+* **离线收益**：公式与常量已复原（`CalculateIdleLevelsGained`：`(秒/60)·killsPerMinute·0.15·xpPerKill`；`Offline_Base_Battle_Time_Minutes=720`；击杀上限 20000）。仅 `killsPerMinute` 是 Provisional——客户端从角色属性读取（`WindowWelcomeBack.Start`：`(int)(attr·clamp(idle,8,max))`），`GameAttributeDA` 静态字段偏移无法可靠映射到属性 id。
