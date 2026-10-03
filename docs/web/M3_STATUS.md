@@ -11,8 +11,8 @@ M3 目标：事务存档、断线恢复、技能槽扩展、Aesir 祝福、Niflh
 | 断线恢复 | 权威快照 + 递增 `CombatVersion` + 命令 ID 幂等 + `expectedVersion` 边界；`MaxCatchUpSeconds=5` 防止长时间离线被当成实时战斗快进 | ClientVerified 命令契约 / 阈值 Provisional |
 | 离线收益 | `GET/POST /characters/{id}/offline[/claim]`；`OfflineRewards`：`(秒/60) * killsPerMinute * 0.15 * 击杀经验`，12h（720min）上限、20000 击杀上限；服务端计算、幂等（第二次领取为 0） | 公式/上限 ClientVerified；killsPerMinute Provisional |
 | 技能槽（6 主动/3 被动） | 已有：`GET/POST /loadout` + UI（`SkillSlotRules` 6/3） | ClientVerified |
-| Aesir 祝福 | `GET/POST /characters/{id}/blessings`；`MakeOffering`（时长 ClientVerified）+ `Blessings` 效果表（Provisional）；购买立即生效、到期剔除、重登由 `EnsureBlessingBuffs` 恢复 | 时长/buff id ClientVerified；cost/效果 Provisional |
-| Niflheim 传送门 | `GET /portal`、`POST /portal/enter`、`POST /portal/return`；消耗 `NiflheimPortal`(159) 一次，`entry.Niflheim` 切换缩放怪物；boss 通关自动返回；重试不重复扣道具；状态持久化（`99020` 角色标记） | 物品/世界类型 ClientVerified；缩放/规则 Provisional |
+| Aesir 祝福 | `GET/POST /characters/{id}/blessings`；`MakeOffering`（时长 ClientVerified）+ `Blessings` 效果表（类型/目标/幅度全部 ClientVerified，见下） | ClientVerified |
+| Niflheim 传送门 | `GET /portal`、`POST /portal/enter`、`POST /portal/return`；消耗 `NiflheimPortal`(159) 一次，按物品的 `NumMonsterPacks`(133) 设置波次与 boss 目标；重试不重复扣道具；状态持久化（`99020`） | 物品/世界类型/包数 ClientVerified；缩放 Provisional |
 | 客户端 UI | HUD `Offerings (O)`、`Portal (N)`；离线横幅“Claim”；祝福购买窗口；传送门窗口 | — |
 
 ## M3 出口条件对照
@@ -31,10 +31,32 @@ M3 目标：事务存档、断线恢复、技能槽扩展、Aesir 祝福、Niflh
 * `npm run build`、`npm run smoke`、`npm run npc-smoke` 全绿；npc-smoke 断言 `offerings: blessings=4 buttons=16`、`portal: No portal`。
 * 局域网地址冒烟同样通过。
 
+## 祝福效果（本轮从源码完全复原）
+
+`WindowAesirOffering.CreateAesirBuffOffline`（Android `0x0255FAE8`）按 `offeringType` 选择目标属性，
+统一写入常量 **0.4**（.so `0x1387368`）；`offeringSize` 只改时长（10m/30m/1h/4h）：
+
+| 祝福 | 目标属性（`*_Final` id） | 幅度 |
+|---|---|---:|
+| Odin | Strength/Dexterity/Intelligence/Vitality_Bonus_Percent_Final（244/245/246/247） | +40% |
+| Tyr | Movement_Speed_Bonus_Percent_Final（115） | +40% |
+| Frigg | Item_Quantity_Bonus_Percent（367） | +40% |
+| Thor | Weapon_Damage_Percent_Bonus_Final（89） | +40% |
+
+`CharacterAttributeEngine` 之前缺这些 `*_Final` 名称→id 映射（`attribute_ids.json` 不含），已改为从
+`attribute_formulas.json` 的恒等公式补齐，并把 `script == name` 当透传值处理；因此祝福会真正进入
+属性合计（测试：Odin 使 Strength 15→21）。
+
+## Niflheim 包数（本轮复原并接入）
+
+`Affixes.json` 的 `NumMonsterPacks`（IntegerId 747）写属性 id **133**，按稀有度给 11–500 包
+（稀有度 F 用默认 11–20；1→21-30、2→31-40、…）。网页商人把包数写进传送门物品，`EnterPortal` 用它
+设置 Niflheim 波次与 boss 击杀目标。
+
 ## 已知限制 / Interim
 
 * **事务存储**：仍是单进程 `world.json` + 原子替换，不是 SQLite；多进程并发写入不支持（见计划：单机内测可接受）。
 * **断线恢复**：用快照 + 版本，而非计划里写的递增事件序号；网页端靠轮询 `/state` 对齐。
-* **祝福效果**：`Aesir*Buff.Init` 的具体 `GameAttributeDA` 未解码，当前用主题化 Provisional 效果（Odin 魔寻、Tyr 物理伤害、Frigg 护甲、Thor 全抗）注入属性引擎；opal 价格 Provisional。
-* **传送门**：`NiflheimPortalGameMode` 的 “packs”（`NumMonsterPacks` 词缀）未还原，当前用缩放的同类怪物 + 更大波次；`WorldTier`/`WorldWaypoint` 未涉及。
+* **传送门**：`NiflheimPortalGameMode` 的 pack 布局未还原，当前用“击杀数 = 包数、波次 ≈ 包数/2”近似；怪物缩放为 Provisional；`WorldTier`/`WorldWaypoint` 未涉及。
 * **离线收益**：公式与常量已复原（`CalculateIdleLevelsGained`：`(秒/60)·killsPerMinute·0.15·xpPerKill`；`Offline_Base_Battle_Time_Minutes=720`；击杀上限 20000）。仅 `killsPerMinute` 是 Provisional——客户端从角色属性读取（`WindowWelcomeBack.Start`：`(int)(attr·clamp(idle,8,max))`），`GameAttributeDA` 静态字段偏移无法可靠映射到属性 id。
+* **祝福 opal 价格**：`OfflineCatalog.GetOpalPrice(24..27)` 未解码，当前价格 Provisional（时长/效果已 ClientVerified）。

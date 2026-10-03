@@ -88,7 +88,10 @@ public sealed class CombatInstance
     public const double MonsterRespawnSeconds = 6.0;
     public const double PlayerRespawnSeconds = 3.0;
     public const double ArenaHalf = 20.0;
-    public const int BossKillGoal = 8;
+    /// <summary>Trash kills needed to summon the boss. Mutable so a portal run can size the
+    /// dungeon from the portal's recovered <c>NumMonsterPacks</c> attribute.</summary>
+    public int BossKillGoal { get; private set; } = DefaultBossKillGoal;
+    public const int DefaultBossKillGoal = 8;
     public const int BossIndex = 100;
     public const double TrashDropChance = 0.45;
 
@@ -116,8 +119,8 @@ public sealed class CombatInstance
     private static readonly int[] RarityWeights = { 10000, 1100000, 10000, 3000, 1500, 750, 250, 100, 40, 10, 3, 1 };
 
     private readonly CombatRandom rng;
-    private readonly double playerSpeed = 6.5;
-    private readonly int monsterCount;
+    private double playerSpeed = 6.5;
+    private int monsterCount;
     private MonsterProfile[] profiles;
     private SkillProfile[] skills;
     private PassiveProfile[] passives;
@@ -227,6 +230,8 @@ public sealed class CombatInstance
         ChainChance = stats.ChainChance;
         PoisonChance = stats.PoisonChance;
         DoubleDamageOnCritPoisoned = stats.DoubleDamageOnCritPoisoned;
+        // Base 6.5 u/s scaled by the recovered Movement_Speed total (Aesir Tyr +40% etc.).
+        playerSpeed = 6.5 * Math.Clamp(stats.MoveSpeedMultiplier, 0.1, 10.0);
     }
 
     private CombatantStats PlayerStats() => new(EffectiveOffense(), Defense, Recovery, PlayerLevel,
@@ -694,10 +699,22 @@ public sealed class CombatInstance
     }
 
     /// <summary>Switches the monster archetypes (e.g. entering/leaving a Niflheim portal) and
-    /// restarts the current wave. Progress (experience/currency/kills) is preserved.</summary>
-    public void SetWorld(IReadOnlyList<MonsterProfile> worldProfiles)
+    /// restarts the current wave. Progress (experience/currency/kills) is preserved. When
+    /// <paramref name="packs"/> is given it sizes the wave and the boss goal from the portal's
+    /// recovered NumMonsterPacks attribute.</summary>
+    public void SetWorld(IReadOnlyList<MonsterProfile> worldProfiles, int? packs = null)
     {
         if (worldProfiles is { Count: > 0 }) profiles = worldProfiles.ToArray();
+        if (packs is > 0)
+        {
+            BossKillGoal = Math.Clamp(packs.Value, 1, 24);
+            monsterCount = Math.Clamp((packs.Value + 1) / 2, 1, 24);
+        }
+        else
+        {
+            BossKillGoal = DefaultBossKillGoal;
+            monsterCount = 5;
+        }
         boss = null;
         dungeonKills = 0;
         SpawnMonsters();

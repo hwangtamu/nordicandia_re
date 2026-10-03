@@ -96,6 +96,7 @@ public sealed class CombatRegistry
         public long PendingOfflineSeconds;
         // Niflheim portal run: while true the instance uses the scaled monster profiles.
         public bool Niflheim;
+        public int NiflheimPacks;
         public int NiflheimRunsCleared;
         public int LastDungeonsCleared;
         public readonly List<LootDropView> RecentLoot = new();
@@ -243,7 +244,7 @@ public sealed class CombatRegistry
         {
             var entry = GetEntry(owner, characterId);
             var portal = store.GetItems(owner, characterId).FirstOrDefault(i => i != null && i.DefinitionIntegerId == PortalDefinitionIntegerId);
-            return new WebPortalState(entry.Niflheim, portal is not null, portal?.Id ?? Guid.Empty, entry.NiflheimRunsCleared);
+            return new WebPortalState(entry.Niflheim, portal is not null, portal?.Id ?? Guid.Empty, entry.NiflheimRunsCleared, entry.NiflheimPacks);
         }
     }
 
@@ -259,9 +260,11 @@ public sealed class CombatRegistry
             if (portal is null) return (false, "no_portal_item", PeekState(entry));
             var (consumed, _) = store.ConsumeItem(owner, characterId, itemId, 1);
             if (consumed <= 0) return (false, "consume_failed", PeekState(entry));
+            var packs = (int)LootTable.AttributeOf(portal, MerchantCatalog.NumMonsterPacksAttributeId);
             store.SetNiflheimActive(owner, characterId, true);
             entry.Niflheim = true;
-            entry.Instance.SetWorld(NiflheimProfiles());
+            entry.NiflheimPacks = packs;
+            entry.Instance.SetWorld(NiflheimProfiles(), packs > 0 ? packs : null);
             entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
             FlushLocked(owner, characterId, entry);
             return (true, "ok", TakeState(entry));
@@ -394,7 +397,7 @@ public sealed class CombatRegistry
         lock (gate)
         {
             var entry = GetEntry(owner, characterId);
-            var stored = store.GetAttributeMap(owner, characterId);
+            var stored = CharacterAttributeMap(owner, characterId, entry.BasePowers);
             var eval = CharacterAttributeEngine.Instance.Evaluate(stored);
             var (available, str, dex, intel, vit, con, agi, mind) = store.GetAttributeAllocation(owner, characterId);
             return new WebAttributes(available,

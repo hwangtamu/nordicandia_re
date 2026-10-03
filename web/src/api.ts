@@ -381,6 +381,7 @@ export interface WebPortalState {
   hasPortal: boolean;
   portalItemId: string;
   runsCleared: number;
+  packs: number;
 }
 
 export interface MerchantProduct {

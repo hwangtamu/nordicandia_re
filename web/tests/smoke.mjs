@@ -58,6 +58,7 @@ page.on("response", (res) => {
 try {
   await page.goto(url, { waitUntil: "networkidle" });
   await page.waitForSelector("#boot-enter", { timeout: 15000 });
+  await page.fill("#boot-name", "smoke");
   await page.click("#boot-enter");
   await page.waitForSelector("#hud:not([hidden])", { timeout: 20000 });
   await page.waitForTimeout(6000);

@@ -3,20 +3,35 @@ namespace Nordicandia.Server.WebApi;
 /// <summary>
 /// Web-side model of the four Aesir blessings.
 ///
-/// ClientVerified: the four types (Odin/Tyr/Frigg/Thor) and the duration per offering size
-/// (Small 10m, Medium 30m, Large 1h, ExtraLarge 4h) come from <c>GameStore.MakeOffering</c>;
-/// the buff definition ids (276/278/280/282) from <c>BlessingBuffIds</c>.
-///
-/// Provisional: the opal costs (the client reads <c>OfflineCatalog.GetOpalPrice</c> for
-/// product ids 24..27) and the attribute effects (the client applies them inside
-/// <c>Aesir*Buff.Apply</c>; the exact <c>GameAttributeDA</c> fields were not decoded).
-/// The effects are applied to the attribute map so they flow through the recovered engine.
+/// ClientVerified (Android): the four types and the duration per offering size
+/// (Small 10m, Medium 30m, Large 1h, ExtraLarge 4h) come from <c>GameStore.MakeOffering</c>.
+/// The attribute targets and magnitude are recovered from
+/// <c>WindowAesirOffering.CreateAesirBuffOffline</c> (0x0255FAE8) and the matching
+/// <c>Aesir*Buff.Apply</c>: the buff is built with a single constant magnitude
+/// <c>0.4</c> (the .so double at 0x1387368) written to the target <c>*_Final</c> attribute:
+///   * Odin  -> Strength/Dexterity/Intelligence/Vitality_Bonus_Percent_Final (ids 244/245/246/247)
+///   * Tyr   -> Movement_Speed_Bonus_Percent_Final (id 115)
+///   * Frigg -> Item_Quantity_Bonus_Percent (id 367)
+///   * Thor  -> Weapon_Damage_Percent_Bonus_Final (id 89)
+/// Offering size changes only the duration, not the magnitude.
 /// </summary>
 public static class Blessings
 {
     public const int Odin = 1, Tyr = 2, Frigg = 3, Thor = 4;
     public static readonly int[] Types = { Odin, Tyr, Frigg, Thor };
     public static readonly int[] Sizes = { 1, 2, 3, 4 };
+
+    /// <summary>Recovered blessing magnitude (0.4 = +40%), independent of offering size.</summary>
+    public const double Magnitude = 0.4;
+
+    // Recovered *_Bonus_Percent_Final / bonus attribute ids (attribute_formulas.json).
+    private const int StrengthBonusPercentFinal = 244;
+    private const int DexterityBonusPercentFinal = 245;
+    private const int IntelligenceBonusPercentFinal = 246;
+    private const int VitalityBonusPercentFinal = 247;
+    private const int MovementSpeedBonusPercentFinal = 115;
+    private const int ItemQuantityBonusPercent = 367;
+    private const int WeaponDamagePercentBonusFinal = 89;
 
     public static string TypeName(int type) => type switch
     {
@@ -56,8 +71,7 @@ public static class Blessings
         _ => TimeSpan.FromMinutes(10),
     };
 
-    /// <summary>Provisional per-type attribute bonuses, keyed by client attribute id
-    /// (Odin magic find, Tyr physical damage, Frigg armour, Thor all resistance).</summary>
+    /// <summary>Recovered per-type attribute bonuses, keyed by client attribute id (see type doc).</summary>
     public static Dictionary<int, double> AttributeBonuses(IEnumerable<int> activeTypes)
     {
         var map = new Dictionary<int, double>();
@@ -66,22 +80,27 @@ public static class Blessings
             void Add(int id, double value) => map[id] = map.GetValueOrDefault(id) + value;
             switch (type)
             {
-                case Odin: Add(356, 0.25); break;   // Magic_Find_Bonus_Percent
-                case Tyr: Add(504, 0.25); break;    // Weapon_Physical_Damage_Bonus_Percent
-                case Frigg: Add(252, 0.50); break;  // Armor_Bonus_Percent
-                case Thor: Add(1002, 0.15); break;  // Resistance_All
+                case Odin:
+                    Add(StrengthBonusPercentFinal, Magnitude);
+                    Add(DexterityBonusPercentFinal, Magnitude);
+                    Add(IntelligenceBonusPercentFinal, Magnitude);
+                    Add(VitalityBonusPercentFinal, Magnitude);
+                    break;
+                case Tyr: Add(MovementSpeedBonusPercentFinal, Magnitude); break;
+                case Frigg: Add(ItemQuantityBonusPercent, Magnitude); break;
+                case Thor: Add(WeaponDamagePercentBonusFinal, Magnitude); break;
             }
         }
         return map;
     }
 
-    /// <summary>Provisional human-readable effect, for the web tooltip.</summary>
+    /// <summary>Human-readable recovered effect, for the web tooltip.</summary>
     public static string Effect(int type) => type switch
     {
-        Odin => "+25% Magic Find",
-        Tyr => "+25% Physical Damage",
-        Frigg => "+50% Armor",
-        Thor => "+15% All Resistance",
+        Odin => "+40% Strength/Dexterity/Intelligence/Vitality",
+        Tyr => "+40% Movement Speed",
+        Frigg => "+40% Item Quantity",
+        Thor => "+40% Weapon Damage",
         _ => string.Empty,
     };
 }

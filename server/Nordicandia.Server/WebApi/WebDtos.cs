@@ -88,9 +88,9 @@ public sealed record OfferingSize(int Size, string Name, int OpalCost, long Dura
 /// <summary>Blessings window: active blessings, the offerable sizes and the character's opals.</summary>
 public sealed record BlessingsView(IReadOnlyList<BlessingState> Active, IReadOnlyList<OfferingSize> Sizes, int Opals);
 
-/// <summary>Niflheim portal state: whether a run is active, whether the bag holds a portal, and
-/// the id of that portal (for the enter call).</summary>
-public sealed record WebPortalState(bool InNiflheim, bool HasPortal, Guid PortalItemId, int RunsCleared);
+/// <summary>Niflheim portal state: whether a run is active, whether the bag holds a portal, the id
+/// of that portal, the cleared-run count and the active run's pack goal.</summary>
+public sealed record WebPortalState(bool InNiflheim, bool HasPortal, Guid PortalItemId, int RunsCleared, int Packs = 0);
 
 /// <summary>Offering purchase request (type 1..4, size 1..4).</summary>
 public sealed record WebOfferingRequest(int Type, int Size);

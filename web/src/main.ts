@@ -685,7 +685,7 @@ function renderPortal(): void {
   const state = portalCache;
   if (!state) { portalBodyEl.innerHTML = `<div class="inv-empty">Loading…</div>`; return; }
   if (state.inNiflheim) {
-    portalBodyEl.innerHTML = `<div class="inv-row"><span class="inv-name">In Niflheim<span class="inv-affixes">The portal world is active; clear the boss or return to town.</span></span></div>`;
+    portalBodyEl.innerHTML = `<div class="inv-row"><span class="inv-name">In Niflheim<span class="inv-affixes">${state.packs} monster packs; clear the boss or return to town.</span></span></div>`;
     portalActionEl.textContent = "Return to town";
   } else if (state.hasPortal) {
     portalBodyEl.innerHTML = `<div class="inv-row"><span class="inv-name">Niflheim portal ready<span class="inv-affixes">Consumes one portal and starts a run (${state.runsCleared} cleared).</span></span></div>`;

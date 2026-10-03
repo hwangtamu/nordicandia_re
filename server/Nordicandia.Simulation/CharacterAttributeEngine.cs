@@ -64,10 +64,26 @@ public sealed class CharacterAttributeEngine
 
         var formulas = new Dictionary<int, string>();
         foreach (var (id, entry) in ReadJson<Dictionary<string, FormulaEntry>>("attribute_formulas.json"))
+        {
             formulas[int.Parse(id)] = entry.Script;
+            // attribute_ids.json does not list every derived attribute, but the *_Final
+            // formulas are identity passthroughs whose script is the bare attribute name
+            // (e.g. 244 -> "Strength_Bonus_Percent_Final"). Register those names so totals
+            // that are MultiplyWith: / Add: them can resolve the stored input value.
+            if (entry.Name == "?" && IsBareIdentifier(entry.Script)) nameToId.TryAdd(entry.Script, int.Parse(id));
+        }
 
         var constants = ReadJson<Dictionary<string, double>>("constants.json");
         return new CharacterAttributeEngine(nameToId, formulas, constants);
+    }
+
+    private static bool IsBareIdentifier(string script)
+    {
+        if (string.IsNullOrEmpty(script)) return false;
+        if (!(char.IsLetter(script[0]) || script[0] == '_')) return false;
+        foreach (var c in script)
+            if (!(char.IsLetterOrDigit(c) || c == '_')) return false;
+        return true;
     }
 
     private static T ReadJson<T>(string fileName)
@@ -109,7 +125,9 @@ public sealed class CharacterAttributeEngine
 
             double value;
             if (engine.formulas.TryGetValue(id, out var script))
-                value = AttributeFormula.Evaluate(script, Resolve);
+                // An identity formula (script == its own name) is a passthrough of the stored
+                // input value (the client's *_Final attributes), not a recursive reference.
+                value = script == name ? stored.GetValueOrDefault(id) : AttributeFormula.Evaluate(script, Resolve);
             else
                 value = stored.GetValueOrDefault(id);
 

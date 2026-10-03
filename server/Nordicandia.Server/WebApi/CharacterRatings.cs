@@ -29,6 +29,8 @@ internal static class CharacterRatings
             ChainChance = eval.Resolve("Projectile_Auto_Attacks_Chain_Chance"),
             PoisonChance = eval.Resolve("Poison_Chance_On_Hit"),
             DoubleDamageOnCritPoisoned = eval.Resolve("Double_Damage_Chance_On_Crit_On_Poisoned_Target"),
+            // Movement_Speed_Total = Base_Movement_Speed * (1 + ...) * (1 + Final); base is 1.
+            MoveSpeedMultiplier = 1 + eval.Resolve("Movement_Speed_Bonus_Percent_Final"),
         };
     }
 }

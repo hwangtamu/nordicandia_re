@@ -29,14 +29,36 @@ public static class MerchantCatalog
         return null;
     }
 
-    /// <summary>Builds the purchasable item for a product (name + client definition id).</summary>
-    public static SerializedItem CreateItem(ProductView product) => new()
+    /// <summary>Builds the purchasable item for a product (name + client definition id). Portal
+    /// items carry the recovered <c>NumMonsterPacks</c> attribute (id 133); rarity F uses the
+    /// default 11..20 range (gamedata_decrypted/Affixes.json NumMonsterPacks).</summary>
+    public static SerializedItem CreateItem(ProductView product)
     {
-        Id = Guid.NewGuid(),
-        Name = product.Name,
-        Slot = ItemSlotTypes.Inventory,
-        DefinitionIntegerId = product.DefinitionIntegerId,
-        BaseRarity = Rarity.F,
-        Location = new SerializedItemInventoryLocation { Page = 1, Row = 0, Column = 0 },
-    };
+        var item = new SerializedItem
+        {
+            Id = Guid.NewGuid(),
+            Name = product.Name,
+            Slot = ItemSlotTypes.Inventory,
+            DefinitionIntegerId = product.DefinitionIntegerId,
+            BaseRarity = Rarity.F,
+            Location = new SerializedItemInventoryLocation { Page = 1, Row = 0, Column = 0 },
+        };
+        if (product.DefinitionIntegerId == NiflheimPortalDefinitionIntegerId)
+            SetItemAttribute(item, NumMonsterPacksAttributeId, Random.Shared.Next(11, 21));
+        return item;
+    }
+
+    /// <summary>Items.json: NiflheimPortal. Affixes.json NumMonsterPacks (IntegerId 747)
+    /// targets attribute id 133.</summary>
+    public const int NiflheimPortalDefinitionIntegerId = 159;
+    public const int NumMonsterPacksAttributeId = 133;
+
+    public static void SetItemAttribute(SerializedItem item, int attributeId, double value)
+    {
+        item.Attributes ??= new SerializedAttributes { Values = new(), MultiplicativeValues = new() };
+        item.Attributes.Values ??= new();
+        if (!item.Attributes.Values.TryGetValue(AttributeOrigin.Item, out var map) || map == null)
+            item.Attributes.Values[AttributeOrigin.Item] = map = new Dictionary<int, GameAttributeValue>();
+        map[attributeId] = new GameAttributeValue { Value = (int)value, ValueD = value };
+    }
 }

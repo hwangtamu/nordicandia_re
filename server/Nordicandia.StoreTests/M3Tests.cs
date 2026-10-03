@@ -51,11 +51,25 @@ static class M3Tests
                 Check(before.Active.Count(b => b.Type == Blessings.Odin) == 1
                     && before.Active.Single(b => b.Type == Blessings.Odin).Active == false,
                     "m3 blessings: Odin starts inactive");
+                var strengthBefore = registry.Attributes(owner, id).Strength;
                 var open = registry.Offer(owner, id, Blessings.Odin, 1);
                 Check(open.Applied && open.Reason == "ok", "m3 blessings: a small Odin offering is bought");
                 var purchased = registry.ActiveBlessings(owner, id).Active.Single(b => b.Type == Blessings.Odin);
                 Check(purchased.Active && purchased.SecondsRemaining > 0,
                     $"m3 blessings: Odin is active ({purchased.SecondsRemaining:F0}s)");
+                var strengthAfter = registry.Attributes(owner, id).Strength;
+                Check(strengthAfter > strengthBefore * 1.3,
+                    $"m3 blessings: Odin applies +40% Strength to the engine ({strengthBefore:F1} -> {strengthAfter:F1})");
+                var engine = Nordicandia.Simulation.CharacterAttributeEngine.Instance;
+                var tyrEval = engine.Evaluate(Blessings.AttributeBonuses(new[] { Blessings.Tyr }));
+                Check(tyrEval.Resolve("Movement_Speed_Bonus_Percent_Final") == Blessings.Magnitude,
+                    "m3 blessings: Tyr targets Movement_Speed_Bonus_Percent_Final (+40%)");
+                var friggEval = engine.Evaluate(Blessings.AttributeBonuses(new[] { Blessings.Frigg }));
+                Check(friggEval.Resolve("Item_Quantity_Bonus_Percent_Total") == Blessings.Magnitude,
+                    "m3 blessings: Frigg targets Item_Quantity_Bonus_Percent_Total (+40%)");
+                var thorEval = engine.Evaluate(Blessings.AttributeBonuses(new[] { Blessings.Thor }));
+                Check(thorEval.Resolve("Weapon_Damage_Percent_Bonus_Final") == Blessings.Magnitude,
+                    "m3 blessings: Thor targets Weapon_Damage_Percent_Bonus_Final (+40%)");
                 var expensive = registry.Offer(owner, id, Blessings.Thor, 4);
                 Check(expensive.Applied, "m3 blessings: an ExtraLarge offering is affordable at 1000 opals");
                 clock.Current = clock.Current.AddMinutes(11);
@@ -68,6 +82,8 @@ static class M3Tests
                 store.GrantItems(owner, id, new List<SerializedItem> { portalItem });
                 var portalState = registry.Portal(owner, id);
                 Check(portalState.HasPortal && portalState.PortalItemId == portalItem.Id, "m3 portal: the portal is in the bag");
+                var packs = (int)LootTable.AttributeOf(portalItem, MerchantCatalog.NumMonsterPacksAttributeId);
+                Check(packs is >= 11 and <= 20, $"m3 portal: the portal carries a NumMonsterPacks count ({packs})");
 
                 var entered = registry.EnterPortal(owner, id, portalItem.Id);
                 Check(entered.Applied && entered.Reason == "ok", "m3 portal: entering consumes the portal");
@@ -75,6 +91,9 @@ static class M3Tests
                 Check(!retry.Applied && retry.Reason == "already_in_niflheim", "m3 portal: a retry does not consume again");
                 var inside = registry.Portal(owner, id);
                 Check(inside.InNiflheim && !inside.HasPortal, "m3 portal: the run is active and the item is gone");
+                Check(inside.Packs == packs, $"m3 portal: the run uses the portal's pack count ({inside.Packs})");
+                Check(entered.State.Combat.BossKillsRemaining == Math.Clamp(packs, 1, 24),
+                    "m3 portal: the Niflheim boss goal is the pack count");
                 Check(store.GetItems(owner, id).All(i => i.Id != portalItem.Id), "m3 portal: the portal item is not duplicated");
 
                 var returned = registry.ReturnPortal(owner, id);

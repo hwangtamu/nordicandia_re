@@ -49,6 +49,7 @@ page.on("response", (res) => { if (res.status() >= 400) errors.push(`http ${res.
 try {
   await page.goto(url, { waitUntil: "networkidle" });
   await page.waitForSelector("#boot-enter", { timeout: 15000 });
+  await page.fill("#boot-name", "npc-smoke");
   await page.click("#boot-enter");
   await page.waitForSelector("#hud:not([hidden])", { timeout: 20000 });
   await page.waitForTimeout(7000); // let a few kills land so there is loot to work with
