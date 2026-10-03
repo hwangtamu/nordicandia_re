@@ -44,6 +44,16 @@ static class E01AffixCatalogTests
         Check(unresolved.Count == 0,
             $"E01: all affix attribute ids resolve to their client names ({unresolved.Count} unresolved)");
 
+        // E01/E02: item-type eligibility from ItemTypes TagIds/AffixIds (parent-inherited).
+        var localArmor = AffixCatalog.Entries.First(e => e.Name == "LocalArmorPercent");
+        Check(localArmor.EligibleTypes.Count > 0 && localArmor.EligibleTypes.All(t => t.StartsWith("Heavy")),
+            $"E01/E02: LocalArmorPercent only rolls on Heavy armour ({string.Join("/", localArmor.EligibleTypes)})");
+        var lifePercent = AffixCatalog.Entries.First(e => e.Name == "LifePercent");
+        Check(lifePercent.EligibleTypes.Contains("Amulet") && lifePercent.EligibleTypes.Contains("Chest"),
+            "E01/E02: LifePercent rolls on amulets and chests");
+        Check(!localArmor.EligibleFor("Amulet") && lifePercent.EligibleFor("Amulet"),
+            "E01/E02: EligibleFor rejects affixes outside the item type");
+
         // A shared primary attribute must not be treated as a duplicate affix (E01 definition ids).
         var item = LootTable.CreateItem(new LootDrop(12, 3, 10, false, 1010UL), ItemCatalog.RarityType.Normal);
         Check(item.Affixes.Select(a => a.DefinitionIntegerId).Distinct().Count() == item.Affixes.Count,

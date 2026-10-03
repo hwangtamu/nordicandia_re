@@ -49,10 +49,18 @@
 * B04 样本：`affix_catalog.LocalBaseFireDamage`（多属性 2513,2514）、`affix_catalog.LifePercent`。
 * 服务端 **643 PASS**，回放 **58/58**。
 
+## 槽位资格（E01 收尾 / E02 起步，已接入）
+
+`ItemTypes.json` 的 `TagIds`（tag）与 `AffixIds`（显式词缀）沿 `ParentTypeId` 继承。
+导出器为每个 item-domain 词缀计算 `eligibleTypes`：词缀 guid 在类型的 `AffixIds` 中，
+或词缀 `TagData` 的 tag 与类型的 tag 相交。56/56 item-domain 词缀都有可滚类型
+（如 `LocalArmorPercent` 仅 Heavy* 7 类；`LifePercent` 可滚 Amulet/Chest 等）。
+`AffixCatalog.Affix.EligibleFor(itemType)` + `LootTable` 按定义 `Type` 过滤候选池。
+
 ## 未完成 / 后续
 
-* `TagData` 权重与 `ItemAffixDependencies` 已提取但**未用于槽位资格**（哪些词缀能滚到哪类装备）；
-  需先恢复 item-type → tag 的映射，归 **E01 收尾 + E02**。
+* `TagData` 的 `Weight`/`ValueMultiplier`（词缀在类型内的权重与数值倍率）已提取但**未用于加权抽取**；
+  归 **E02**（掉落统计分布）。
 * Implicit/Set/Unique 目录（494/12/9）**未纳入运行时目录**（implicit 已由 `ItemCatalog` 的
   implicit 定义覆盖）——归 **E03**（独特/套装/隐式与开放词缀槽）。
 * `Domain` 2/4 的 27/14 条仅作为目录留存，不参与装备掉落。

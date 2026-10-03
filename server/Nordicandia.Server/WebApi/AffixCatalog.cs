@@ -19,8 +19,13 @@ public static class AffixCatalog
     /// <summary>Per-item-tag weighting from ItemAffixDefinition.TagData.</summary>
     public readonly record struct AffixTag(string? Tag, string Guid, double? Weight, double ValueMultiplier);
     public readonly record struct Affix(string Name, int GenerationType, int Domain, string? Group, string? Guid,
-        int IntegerId, IReadOnlyList<AffixAttribute> Attributes, IReadOnlyList<AffixTag> Tags)
+        int IntegerId, IReadOnlyList<AffixAttribute> Attributes, IReadOnlyList<AffixTag> Tags,
+        IReadOnlyList<string> EligibleTypes)
     {
+        /// <summary>E01: whether this affix can roll on an item of the given type (ItemTypes.json
+        /// TagIds/AffixIds with parent inheritance). An empty list means no restriction is known.</summary>
+        public bool EligibleFor(string? itemType)
+            => EligibleTypes.Count == 0 || itemType is null || EligibleTypes.Contains(itemType);
         /// <summary>Client AffixType: Prefix=0, Suffix=1, Implicit=2, Set=3, Unique=4.</summary>
         public bool IsPrefixOrSuffix => IsRandomAffixType(GenerationType);
         /// <summary>Primary attribute (the first), kept for single-attribute callers.</summary>
@@ -77,7 +82,8 @@ public static class AffixCatalog
             kv.Value.IntegerId,
             (kv.Value.Attributes ?? new()).Select(a => new AffixAttribute(a.AttributeId, a.AttributeName,
                 (a.Ranges ?? new()).Select(r => new Range(r.Rarity, r.Min, r.Max, r.ValueType)).ToList())).ToList(),
-            (kv.Value.Tags ?? new()).Select(t => new AffixTag(t.Tag, t.Guid, t.Weight, t.ValueMultiplier)).ToList()
+            (kv.Value.Tags ?? new()).Select(t => new AffixTag(t.Tag, t.Guid, t.Weight, t.ValueMultiplier)).ToList(),
+            kv.Value.EligibleTypes ?? new()
         )).ToList();
     }
 
@@ -90,7 +96,7 @@ public static class AffixCatalog
         return null;
     }
 
-    private sealed record Raw(int GenerationType, int Domain, string? Group, string? Guid, int IntegerId, List<RawAttribute>? Attributes, List<RawTag>? Tags);
+    private sealed record Raw(int GenerationType, int Domain, string? Group, string? Guid, int IntegerId, List<RawAttribute>? Attributes, List<RawTag>? Tags, List<string>? EligibleTypes);
     private sealed record RawAttribute(int AttributeId, string AttributeName, List<RawRange>? Ranges);
     private sealed record RawRange(int? Rarity, double Min, double Max, int? ValueType);
     private sealed record RawTag(string? Tag, string Guid, double? Weight, double ValueMultiplier);

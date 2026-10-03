@@ -42,11 +42,48 @@ def ranges(spec: dict) -> list[dict]:
     return out
 
 
+def inner(entry: dict) -> dict:
+    sd = entry.get("SerializedData")
+    if isinstance(sd, str):
+        return json.loads(sd)
+    return sd or {k: v for k, v in entry.items() if k != "SerializedData"}
+
+
+def type_eligibility(tags: dict) -> dict[str, tuple[set, set]]:
+    """Item-type name -> (inherited tag names, inherited explicit affix guids)."""
+    item_types = json.loads((GAMEDATA / "ItemTypes.json").read_text())
+    by_id = {t["Id"]: t for t in item_types}
+    cache: dict[str, tuple[set, set]] = {}
+
+    def resolve(gid: str) -> tuple[set, set]:
+        names: set = set()
+        affixes: set = set()
+        seen: set = set()
+        cur = gid
+        while cur and cur not in seen:
+            seen.add(cur)
+            entry = by_id.get(cur)
+            if not entry:
+                break
+            data = inner(entry)
+            names |= {tags.get(t) for t in data.get("TagIds", [])}
+            affixes |= set(data.get("AffixIds", []))
+            cur = data.get("ParentTypeId")
+        return {n for n in names if n}, affixes
+
+    for entry in item_types:
+        name = inner(entry).get("Name")
+        if name:
+            cache[name] = resolve(entry["Id"])
+    return cache
+
+
 def main() -> int:
     affixes = json.loads((GAMEDATA / "ItemAffixes.json").read_text())
     attr_ids = json.loads((GENERATED / "attribute_ids.json").read_text())
     tags = {t["Id"]: t["Tag"] for t in json.loads((GAMEDATA / "Tags.json").read_text()) if "Id" in t}
     groups = {g["Id"]: g["Name"] for g in json.loads((GAMEDATA / "AffixGroups.json").read_text()) if "Id" in g}
+    type_tags = type_eligibility(tags)
 
     unresolved_attr: set = set()
     unresolved_tag: set = set()
@@ -80,8 +117,14 @@ def main() -> int:
                 "weight": (meta or {}).get("Weight"),
                 "valueMultiplier": (meta or {}).get("ValueMultiplier", 1.0),
             })
+        affix_tags = {t["tag"] for t in entry_tags if t["tag"]}
+        affix_guid = x.get("Id")
+        eligible = sorted(
+            type_name for type_name, (names, guids) in type_tags.items()
+            if affix_guid in guids or (affix_tags & names)
+        )
         catalog[x["Name"]] = {
-            "guid": x.get("Id"),
+            "guid": affix_guid,
             "integerId": x.get("IntegerId"),
             "generationType": gen,
             "domain": x.get("Domain"),
@@ -89,6 +132,7 @@ def main() -> int:
             "groupId": x.get("GroupId"),
             "attributes": entry_attrs,
             "tags": entry_tags,
+            "eligibleTypes": eligible,
             "dependencies": x.get("ItemAffixDependencies") or [],
         }
 

@@ -134,8 +134,10 @@ public static class LootTable
         // The client passes excludedAffixDefinitions to GenerateRandomAffix and filters
         // candidates before drawing. A duplicate must not consume a rolled slot. E01: the pool is
         // the full client catalog filtered to item-domain (0) random Prefix/Suffix affixes.
+        // E01: only affixes whose item-type tags match the chosen definition (ItemTypes TagIds/
+        // AffixIds with parent inheritance). A null definition falls back to the whole item pool.
         var pool = AffixCatalog.Entries
-            .Where(a => a.IsPrefixOrSuffix && a.Domain == AffixCatalog.DomainItem)
+            .Where(a => a.IsPrefixOrSuffix && a.Domain == AffixCatalog.DomainItem && a.EligibleFor(definition?.Type))
             .DistinctBy(a => a.Name).ToList();
         var chosen = new List<(AffixCatalog.Affix Affix, List<(AffixCatalog.AffixAttribute Attribute, double Value)> Values)>();
         for (var i = 0; i < affixCount && pool.Count > 0; i++)
