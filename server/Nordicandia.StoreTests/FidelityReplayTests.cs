@@ -412,6 +412,28 @@ static class FidelityReplayTests
                 return (Eq(damage, expected.GetProperty("damage").GetDouble()) && !rounded,
                     $"damage={damage}");
             }
+            case "monster_base_stats":
+            {
+                // D04: Game.Monster.Get* curves. Constants read from the module pool; the
+                // harness compares with a relative tolerance because the values are large.
+                var level = inputs.GetProperty("level").GetDouble();
+                var expMult = inputs.TryGetProperty("expMult", out var em) ? em.GetDouble() : 1.0;
+                var finalMult = inputs.TryGetProperty("finalMult", out var fm) ? fm.GetDouble() : MonsterScaling.FinalStatsMult;
+                var stats = MonsterScaling.Stats(level, expMult, finalMult);
+                static bool Rel(double actual, double expected)
+                    => Math.Abs(actual - expected) <= 1e-6 * Math.Max(1.0, Math.Abs(expected));
+                var ok = Rel(stats.Life, expected.GetProperty("life").GetDouble())
+                    && Rel(stats.Armor, expected.GetProperty("armor").GetDouble())
+                    && Rel(stats.Evasion, expected.GetProperty("evasion").GetDouble())
+                    && Rel(stats.MinAttackRating, expected.GetProperty("minAttackRating").GetDouble())
+                    && Rel(stats.MaxAttackRating, expected.GetProperty("maxAttackRating").GetDouble())
+                    && Rel(stats.WeaponDamage, expected.GetProperty("weaponDamage").GetDouble())
+                    && Rel(stats.Experience, expected.GetProperty("experience").GetDouble())
+                    && Rel(stats.ForceField, expected.GetProperty("forceField").GetDouble());
+                return (ok, $"life={stats.Life:F4} armor={stats.Armor:F4} evasion={stats.Evasion:F4} " +
+                    $"ar={stats.MinAttackRating:F4}/{stats.MaxAttackRating:F4} wdmg={stats.WeaponDamage:F4} " +
+                    $"exp={stats.Experience:F4} ff={stats.ForceField:F4}");
+            }
             default:
                 throw new InvalidOperationException($"unknown sample kind '{kind}'");
         }

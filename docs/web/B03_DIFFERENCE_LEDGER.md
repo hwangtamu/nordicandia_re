@@ -15,8 +15,8 @@
 | D01 | 技能执行 | Provisional | `PowerProfiles.generated.cs`、`CombatInstance` | 93 个玩家技能有真实名/描述/图标/冷却/数值，但执行是 13 类原型（见 [B02](B02_CONTENT_CATALOG.md)） | 具体施法/弹体/时间线/Buff 未移植 | C04–C06 |
 | D02 | 伤害输入/执行 | Interim | `CombatModel.ResolveBundleAttack` | 结算顺序已按 `AttackPayload.Resolve` 修为 miss→dodge→block→crit，dodge/block 已接入（待 B04 样本对照）；公式 ClientVerified；`Inputs=Provisional`、`Execution=Inferred` | 属性来源/合成顺序与 evade 分离未全对照 | C01 |
 | D03 | 生命曲线 | Provisional | `CombatModel.MaxHealth` | `150+50*level` | 客户端 `CalculateCombatAttributes` 未采样 | C01、C08 |
-| D04 | 击杀经验 | Provisional | `CombatModel.ExperienceReward` | `8*level^1.35+5` | 客户端 `Monster.CalculateAttributes` 未采样 | W01、C01 |
-| D05 | 怪物属性缩放 | Provisional | `CombatRegistry.MonsterProfiles` | 5 类通用原型倍率 | 原版怪物各自属性/缩放未接入 | W01 |
+| D04 | 击杀经验 | Inferred | `CombatModel.ExperienceReward` | `8*level^1.35+5` | 客户端 `Monster.GetExperience` 已还原：`(level^(1.33*expMult)*0.1+16)*0.88*0.6`（几乎平坦，疑为分段/附加缩放，见 D04_MONSTER_SCALING）；未替换 | W01、C01 |
+| D05 | 怪物属性缩放 | 公式已还原 / 运行时未接 | `MonsterScaling.cs`、`CombatRegistry.MonsterProfiles` | 客户端 8 条 `Monster.Get*` 曲线 + 常量池已还原（见 [D04_MONSTER_SCALING](D04_MONSTER_SCALING.md)），B04 样本 level10/60 对照通过；`expMult` 默认 1（Provisional）；稀有度系数 v531/v532 为 Inferred | 现有 archetype 仍用手工 `HpMult/OffenseMult/DefenseMult`，切到真实曲线需独立改动+平衡回归 | W01、D04 |
 | D37 | 季节怪未接入 | 未实现 | `gamedata_decrypted/Monsters.json` | SpringMonster 12、FallMonster 5、ChristmasMonster 3 已提取（正式内容），生成条件/活动时间未提取 | 季节内容缺失 | W01 |
 | D06 | 元素穿透应用 | Inferred | `CombatModel.ApplyPenetration`、`CharacterRatings` | 属性名 ClientVerified，应用顺序为推断 | 负抗性/免疫边界未对照；`IsEvaded` 与 `ChanceToHit` 的分离未验证 | C01 |
 | D07 | Buff 生命周期 | 已还原 | `CombatInstance` 毒/诅咒 | 旧近似（毒最高 DPS+刷新、无唯一键）已移除；BuffManager 按 Stack/IsStrongerThan 反汇编规则执行 | C02 已对齐；跨来源毒精确交互待 S-BUFF-1（已推迟） | C02 |

@@ -919,6 +919,46 @@
    },
    "source": "HandleForkAndChain 0x029F8DBC 反汇编",
    "status": "已还原"
+  },
+  {
+   "id": "monster_base_stats.level10",
+   "kind": "monster_base_stats",
+   "rule": "Game.Monster.Get* base-stat curves at level 10",
+   "inputs": {
+    "level": 10
+   },
+   "expected": {
+    "life": 23.32553,
+    "armor": 1264.200951,
+    "evasion": 16.822866,
+    "minAttackRating": 44.831698,
+    "maxAttackRating": 71.730717,
+    "weaponDamage": 5.878048,
+    "experience": 9.576844,
+    "forceField": 92.784839
+   },
+   "source": "Monster.txt GetBaseLife 0x02A7A780 / GetArmor 0x02A7A884 / GetEvasion / GetMin-MaxAttackRating / GetMin-MaxWeaponDamage / GetExperience / GetForceField",
+   "status": "对照通过"
+  },
+  {
+   "id": "monster_base_stats.level60",
+   "kind": "monster_base_stats",
+   "rule": "Game.Monster.Get* base-stat curves at level 60",
+   "inputs": {
+    "level": 60
+   },
+   "expected": {
+    "life": 93.997924,
+    "armor": 7266.46889,
+    "evasion": 97.026576,
+    "minAttackRating": 69.072152,
+    "maxAttackRating": 110.515443,
+    "weaponDamage": 36.164647,
+    "experience": 20.682186,
+    "forceField": 183.976254
+   },
+   "source": "same Get* curves; constants read from the module constant pool",
+   "status": "对照通过"
   }
  ]
 }

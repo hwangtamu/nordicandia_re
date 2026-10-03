@@ -1,0 +1,2464 @@
+{
+ "baseline": "android-1.9.3 (versionCode 507033)",
+ "source": "Game.Monster.Get* (tmp/cpp2il-isil2/.../Monster.txt); constants from tmp/apk-libil2cpp.so",
+ "constants": {
+  "FinalStatsMult": 0.8,
+  "Resistance": 0.05,
+  "MaxPhysicalDamageReduction": 0.9,
+  "VarianceRange": [
+   0.99,
+   1.01
+  ]
+ },
+ "formulaShape": "((a*level + b*level^(e*expMult) + c) * k) * finalMult",
+ "formulas": {
+  "life": {
+   "addr": "0x02A7A780",
+   "e": 1.315,
+   "b": 0.12,
+   "a": 0.41,
+   "c": 8,
+   "k": 2.0,
+   "variance": true,
+   "final": true
+  },
+  "armor": {
+   "addr": "0x02A7A884",
+   "e": 1.4,
+   "b": 0.01,
+   "a": 150,
+   "c": 80,
+   "k": 1.0,
+   "variance": false,
+   "final": true
+  },
+  "evasion": {
+   "addr": "0x02A7A930",
+   "e": 1.28,
+   "b": 0.006,
+   "a": 8,
+   "c": 4,
+   "k": 0.25,
+   "variance": false,
+   "final": true
+  },
+  "minAttackRating": {
+   "addr": "0x02A7A584",
+   "e": 1.2,
+   "b": 0.005,
+   "a": 1.2,
+   "c": 100,
+   "k": 0.5,
+   "variance": false,
+   "final": true
+  },
+  "maxAttackRating": {
+   "addr": "0x02A7A630",
+   "e": 1.2,
+   "b": 0.005,
+   "a": 1.2,
+   "c": 100,
+   "k": 0.8,
+   "variance": false,
+   "final": true
+  },
+  "weaponDamage": {
+   "addr": "0x02A7A424/0x02A7A4D4",
+   "e": 1.24,
+   "b": 0.01,
+   "a": 0.35,
+   "c": 0,
+   "k": 2.0,
+   "variance": false,
+   "final": true
+  },
+  "experience": {
+   "addr": "0x02A7A6E0",
+   "e": 1.33,
+   "b": 0.1,
+   "a": 0,
+   "c": 16,
+   "k": 0.528,
+   "variance": false,
+   "final": false
+  },
+  "forceField": {
+   "addr": "0x02A7A9DC",
+   "e": 1.3,
+   "b": 0.2,
+   "a": 0.4,
+   "c": 50,
+   "k": 2.0,
+   "variance": true,
+   "final": true
+  }
+ },
+ "expMult": {
+  "default": 1.0,
+  "status": "Provisional",
+  "note": "world/global difficulty multiplier; config field not statically resolved"
+ },
+ "rarityCoefficients": {
+  "status": "Inferred",
+  "note": "CalculateAttributes sets v531/v532 min/max multipliers per Rarity; branch->rarity mapping and which attribute each pair drives are not confirmed, so NOT wired to gameplay",
+  "byRarity": {
+   "0": {
+    "v531": 1.4
+   },
+   "2": {
+    "v531": 1.6,
+    "v532": 3.4
+   },
+   "4": {
+    "v531": 1.8,
+    "casterHalved": true
+   },
+   "6": {
+    "v531": 1.2
+   }
+  },
+  "tierScaling": "min=max(v531*(1+(tier-1)*0.005),1); max=min(v532*(1+(tier-1)*0.04),16)"
+ },
+ "monsters": [
+  {
+   "integerId": 0,
+   "name": "Bat",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 1,
+   "name": "DemonOrc",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 2,
+   "name": "Goblin1",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 3,
+   "name": "Skeleton1",
+   "availableRarities": [
+    0,
+    2,
+    1
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Rare",
+    "Magic"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 4,
+   "name": "ArmoredSkeleton1",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 5,
+   "name": "Boss_Bolomahl",
+   "availableRarities": [
+    6
+   ],
+   "rarityLabels": [
+    "Boss"
+   ],
+   "size": 199,
+   "damageType": 0
+  },
+  {
+   "integerId": 6,
+   "name": "FireGolem",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 256,
+   "damageType": null
+  },
+  {
+   "integerId": 7,
+   "name": "StoneGolem",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 256,
+   "damageType": null
+  },
+  {
+   "integerId": 8,
+   "name": "CrystalGolem",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 256,
+   "damageType": null
+  },
+  {
+   "integerId": 9,
+   "name": "SpittingParasite",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": 4
+  },
+  {
+   "integerId": 10,
+   "name": "SkeletonArcher1",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 11,
+   "name": "Banshee",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 12,
+   "name": "SkeletonCommander",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 13,
+   "name": "GoblinArcher1",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 14,
+   "name": "Troll1",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 15,
+   "name": "Orc1",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 16,
+   "name": "Boss_TheWarchief",
+   "availableRarities": [
+    6
+   ],
+   "rarityLabels": [
+    "Boss"
+   ],
+   "size": 199,
+   "damageType": 3
+  },
+  {
+   "integerId": 17,
+   "name": "Boss_BoneDragon",
+   "availableRarities": [
+    6
+   ],
+   "rarityLabels": [
+    "Boss"
+   ],
+   "size": 199,
+   "damageType": 0
+  },
+  {
+   "integerId": 18,
+   "name": "Boss_WolfKing",
+   "availableRarities": [
+    6
+   ],
+   "rarityLabels": [
+    "Boss"
+   ],
+   "size": 199,
+   "damageType": 0
+  },
+  {
+   "integerId": 19,
+   "name": "Boss_AncientDragon",
+   "availableRarities": [
+    6
+   ],
+   "rarityLabels": [
+    "Boss"
+   ],
+   "size": 199,
+   "damageType": 1
+  },
+  {
+   "integerId": 20,
+   "name": "WildShaman",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 21,
+   "name": "Orc2",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 22,
+   "name": "VoidSpawn",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 23,
+   "name": "Succubus",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 24,
+   "name": "EvilEye",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 25,
+   "name": "ArcticWolf",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 26,
+   "name": "BrownBear",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 27,
+   "name": "GrayWolf",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 28,
+   "name": "IceBear",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 29,
+   "name": "RabidRat",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 30,
+   "name": "Spider",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 31,
+   "name": "Spiderling",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 32,
+   "name": "BlackHawk",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 33,
+   "name": "SpiderQueen",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 34,
+   "name": "Demon1",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 35,
+   "name": "Demon2",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 36,
+   "name": "CasterDemon1",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": 2
+  },
+  {
+   "integerId": 37,
+   "name": "CasterDemon2",
+   "availableRarities": [],
+   "rarityLabels": [],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 38,
+   "name": "CasterDemon3",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 39,
+   "name": "Goblin2",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 40,
+   "name": "Ogre",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "rarityLabels": [
+    "Magic",
+    "Rare",
+    "Normal"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 41,
+   "name": "Orc3",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 42,
+   "name": "Goblin3",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "rarityLabels": [
+    "Magic",
+    "Rare",
+    "Normal"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 43,
+   "name": "Orc4",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 44,
+   "name": "UndeadBear",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 45,
+   "name": "BoneBeast",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 46,
+   "name": "SkeletonMage",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 47,
+   "name": "DeathKnight",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 48,
+   "name": "Boss_Knight1",
+   "availableRarities": [
+    6
+   ],
+   "rarityLabels": [
+    "Boss"
+   ],
+   "size": 199,
+   "damageType": 2
+  },
+  {
+   "integerId": 49,
+   "name": "FireGolemTrigger",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 50,
+   "name": "StoneGolemTrigger",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 51,
+   "name": "CrystalGolemTrigger",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 52,
+   "name": "Demon3",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 53,
+   "name": "Demon4",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 54,
+   "name": "Demon5",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "rarityLabels": [
+    "Magic",
+    "Rare",
+    "Normal"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 55,
+   "name": "RangedDemon1",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "rarityLabels": [
+    "Magic",
+    "Rare",
+    "Normal"
+   ],
+   "size": null,
+   "damageType": 0
+  },
+  {
+   "integerId": 56,
+   "name": "BigBiter",
+   "availableRarities": [
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 57,
+   "name": "BrownSpider",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "rarityLabels": [
+    "Magic",
+    "Rare",
+    "Normal"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 58,
+   "name": "EvilPlant",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "rarityLabels": [
+    "Magic",
+    "Rare",
+    "Normal"
+   ],
+   "size": null,
+   "damageType": 0
+  },
+  {
+   "integerId": 59,
+   "name": "ArmoredLarva",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "rarityLabels": [
+    "Magic",
+    "Rare",
+    "Normal"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 60,
+   "name": "MagicalInsect",
+   "availableRarities": [
+    1,
+    2,
+    0
+   ],
+   "rarityLabels": [
+    "Magic",
+    "Rare",
+    "Normal"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 61,
+   "name": "MagicalOwl",
+   "availableRarities": [
+    1
+   ],
+   "rarityLabels": [
+    "Magic"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 62,
+   "name": "EnragedOrc",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 63,
+   "name": "WiseOrc",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 64,
+   "name": "SkeletonCleric",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 65,
+   "name": "DarkKnight",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 66,
+   "name": "SkeletonArcher2",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 67,
+   "name": "Ghoul",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 68,
+   "name": "Ghoul2",
+   "availableRarities": [
+    0,
+    1,
+    2
+   ],
+   "rarityLabels": [
+    "Normal",
+    "Magic",
+    "Rare"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 69,
+   "name": "Blacksmith",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 130,
+   "damageType": null
+  },
+  {
+   "integerId": 71,
+   "name": "Elder",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 130,
+   "damageType": null
+  },
+  {
+   "integerId": 75,
+   "name": "Tutorial",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 130,
+   "damageType": null
+  },
+  {
+   "integerId": 79,
+   "name": "EvilChest",
+   "availableRarities": [
+    4,
+    2,
+    1
+   ],
+   "rarityLabels": [
+    "Champion",
+    "Rare",
+    "Magic"
+   ],
+   "size": null,
+   "damageType": null
+  },
+  {
+   "integerId": 81,
+   "name": "Disassembler",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 130,
+   "damageType": null
+  },
+  {
+   "integerId": 83,
+   "name": "Boss_VileDragon",
+   "availableRarities": [
+    6
+   ],
+   "rarityLabels": [
+    "Boss"
+   ],
+   "size": 199,
+   "damageType": 4
+  },
+  {
+   "integerId": 85,
+   "name": "Merchant",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 130,
+   "damageType": null
+  },
+  {
+   "integerId": 86,
+   "name": "SummonWolfMinion",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 85,
+   "damageType": 0
+  },
+  {
+   "integerId": 87,
+   "name": "WolfKingMinion",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 85,
+   "damageType": 0
+  },
+  {
+   "integerId": 88,
+   "name": "HunterMirrorImageMinion",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 101,
+   "damageType": null
+  },
+  {
+   "integerId": 89,
+   "name": "PetDog",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 77,
+   "damageType": 0
+  },
+  {
+   "integerId": 90,
+   "name": "BoneDragonSkeleton",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 85,
+   "damageType": 0
+  },
+  {
+   "integerId": 92,
+   "name": "Changer",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 130,
+   "damageType": null
+  },
+  {
+   "integerId": 94,
+   "name": "SummonWolfSpiritMinion",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 85,
+   "damageType": 0
+  },
+  {
+   "integerId": 96,
+   "name": "PetSnowOxe",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 77,
+   "damageType": 0
+  },
+  {
+   "integerId": 98,
+   "name": "PetCrow",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 77,
+   "damageType": 0
+  },
+  {
+   "integerId": 100,
+   "name": "PetTurtle",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 77,
+   "damageType": 0
+  },
+  {
+   "integerId": 102,
+   "name": "Petkeeper",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 130,
+   "damageType": null
+  },
+  {
+   "integerId": 104,
+   "name": "Boss_Hel",
+   "availableRarities": [
+    6
+   ],
+   "rarityLabels": [
+    "Boss"
+   ],
+   "size": 219,
+   "damageType": 1
+  },
+  {
+   "integerId": 106,
+   "name": "HelMinion",
+   "availableRarities": [
+    1
+   ],
+   "rarityLabels": [
+    "Magic"
+   ],
+   "size": 85,
+   "damageType": 0
+  },
+  {
+   "integerId": 108,
+   "name": "PortalMaster",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 130,
+   "damageType": null
+  },
+  {
+   "integerId": 112,
+   "name": "Offering",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 130,
+   "damageType": null
+  },
+  {
+   "integerId": 114,
+   "name": "Boss_Odr",
+   "availableRarities": [
+    6
+   ],
+   "rarityLabels": [
+    "Boss"
+   ],
+   "size": 219,
+   "damageType": 0
+  },
+  {
+   "integerId": 116,
+   "name": "OdrTotem",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": 145,
+   "damageType": 0
+  },
+  {
+   "integerId": 118,
+   "name": "SummonHuginnMinion",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 71,
+   "damageType": 0
+  },
+  {
+   "integerId": 120,
+   "name": "SummonMuninnMinion",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 71,
+   "damageType": 0
+  },
+  {
+   "integerId": 122,
+   "name": "ArrowstreamMinion",
+   "availableRarities": [
+    3
+   ],
+   "rarityLabels": [
+    "3"
+   ],
+   "size": 101,
+   "damageType": 0
+  },
+  {
+   "integerId": 124,
+   "name": "UniqueBearMinion",
+   "availableRarities": [
+    3
+   ],
+   "rarityLabels": [
+    "3"
+   ],
+   "size": 101,
+   "damageType": 0
+  },
+  {
+   "integerId": 126,
+   "name": "GuildDefenseMaster",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 130,
+   "damageType": null
+  },
+  {
+   "integerId": 128,
+   "name": "GuidSiegeRunestone",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 85,
+   "damageType": 0
+  },
+  {
+   "integerId": 130,
+   "name": "SummonSkeletonMinion",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 81,
+   "damageType": 0
+  },
+  {
+   "integerId": 132,
+   "name": "SummonDemonMinion",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 94,
+   "damageType": null
+  },
+  {
+   "integerId": 134,
+   "name": "SummonDeathMinion",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 121,
+   "damageType": null
+  },
+  {
+   "integerId": 156,
+   "name": "PetEagle",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 77,
+   "damageType": 0
+  },
+  {
+   "integerId": 158,
+   "name": "PetBabyDragon",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 77,
+   "damageType": 0
+  },
+  {
+   "integerId": 160,
+   "name": "PetLarva",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 77,
+   "damageType": 0
+  },
+  {
+   "integerId": 162,
+   "name": "PetSnake",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 77,
+   "damageType": 0
+  },
+  {
+   "integerId": 166,
+   "name": "SetItemMerchant",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 130,
+   "damageType": null
+  },
+  {
+   "integerId": 168,
+   "name": "Boss_Kibu",
+   "availableRarities": [
+    6
+   ],
+   "rarityLabels": [
+    "Boss"
+   ],
+   "size": 199,
+   "damageType": 3
+  },
+  {
+   "integerId": 170,
+   "name": "KibuElemental",
+   "availableRarities": [
+    1
+   ],
+   "rarityLabels": [
+    "Magic"
+   ],
+   "size": 85,
+   "damageType": 3
+  },
+  {
+   "integerId": 174,
+   "name": "HeavySnowman",
+   "availableRarities": [
+    2
+   ],
+   "rarityLabels": [
+    "Rare"
+   ],
+   "size": null,
+   "damageType": 2
+  },
+  {
+   "integerId": 176,
+   "name": "LegendarySnowman",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": null,
+   "damageType": 2
+  },
+  {
+   "integerId": 178,
+   "name": "Snowman",
+   "availableRarities": [
+    1
+   ],
+   "rarityLabels": [
+    "Magic"
+   ],
+   "size": null,
+   "damageType": 2
+  },
+  {
+   "integerId": 179,
+   "name": "Boar",
+   "availableRarities": [
+    1
+   ],
+   "rarityLabels": [
+    "Magic"
+   ],
+   "size": null,
+   "damageType": 2
+  },
+  {
+   "integerId": 180,
+   "name": "LegendaryBoar",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": null,
+   "damageType": 2
+  },
+  {
+   "integerId": 181,
+   "name": "HeavyBoar",
+   "availableRarities": [
+    2
+   ],
+   "rarityLabels": [
+    "Rare"
+   ],
+   "size": null,
+   "damageType": 2
+  },
+  {
+   "integerId": 186,
+   "name": "Pesta",
+   "availableRarities": [
+    2
+   ],
+   "rarityLabels": [
+    "Rare"
+   ],
+   "size": null,
+   "damageType": 4
+  },
+  {
+   "integerId": 187,
+   "name": "Draugr",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": null,
+   "damageType": 2
+  },
+  {
+   "integerId": 188,
+   "name": "Nokken",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": null,
+   "damageType": 1
+  },
+  {
+   "integerId": 189,
+   "name": "Huldra",
+   "availableRarities": [
+    2
+   ],
+   "rarityLabels": [
+    "Rare"
+   ],
+   "size": null,
+   "damageType": 3
+  },
+  {
+   "integerId": 190,
+   "name": "Bergsra",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": 121,
+   "damageType": 0
+  },
+  {
+   "integerId": 186,
+   "name": "CombatPetDurnir",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 85,
+   "damageType": 0
+  },
+  {
+   "integerId": 187,
+   "name": "CombatPetkeeper",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 130,
+   "damageType": null
+  },
+  {
+   "integerId": 188,
+   "name": "CombatPetHala",
+   "availableRarities": [
+    0
+   ],
+   "rarityLabels": [
+    "Normal"
+   ],
+   "size": 85,
+   "damageType": 3
+  },
+  {
+   "integerId": 189,
+   "name": "CombatPetEggther",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 85,
+   "damageType": 1
+  },
+  {
+   "integerId": 190,
+   "name": "CombatPetHraesvelgr",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 85,
+   "damageType": 4
+  },
+  {
+   "integerId": 191,
+   "name": "CombatPetFossegrim",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 85,
+   "damageType": 2
+  },
+  {
+   "integerId": 193,
+   "name": "Eirwyn_1",
+   "availableRarities": [
+    1
+   ],
+   "rarityLabels": [
+    "Magic"
+   ],
+   "size": null,
+   "damageType": 4
+  },
+  {
+   "integerId": 195,
+   "name": "Karnyx_1",
+   "availableRarities": [
+    1
+   ],
+   "rarityLabels": [
+    "Magic"
+   ],
+   "size": null,
+   "damageType": 0
+  },
+  {
+   "integerId": 197,
+   "name": "Vyrmuld_1",
+   "availableRarities": [
+    1
+   ],
+   "rarityLabels": [
+    "Magic"
+   ],
+   "size": null,
+   "damageType": 2
+  },
+  {
+   "integerId": 199,
+   "name": "Eirwyn_3",
+   "availableRarities": [
+    2
+   ],
+   "rarityLabels": [
+    "Rare"
+   ],
+   "size": null,
+   "damageType": 4
+  },
+  {
+   "integerId": 201,
+   "name": "Karnyx_3",
+   "availableRarities": [
+    2
+   ],
+   "rarityLabels": [
+    "Rare"
+   ],
+   "size": null,
+   "damageType": 0
+  },
+  {
+   "integerId": 203,
+   "name": "Vyrmuld_3",
+   "availableRarities": [
+    2
+   ],
+   "rarityLabels": [
+    "Rare"
+   ],
+   "size": null,
+   "damageType": 2
+  },
+  {
+   "integerId": 205,
+   "name": "Eirwyn_5",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": null,
+   "damageType": 4
+  },
+  {
+   "integerId": 207,
+   "name": "Karnyx_5",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": null,
+   "damageType": 0
+  },
+  {
+   "integerId": 209,
+   "name": "Vyrmuld_5",
+   "availableRarities": [
+    4
+   ],
+   "rarityLabels": [
+    "Champion"
+   ],
+   "size": null,
+   "damageType": 2
+  },
+  {
+   "integerId": 210,
+   "name": "GiftStatue",
+   "availableRarities": null,
+   "rarityLabels": [],
+   "size": 226,
+   "damageType": null
+  }
+ ],
+ "table": {
+  "1": {
+   "life": 13.648,
+   "armor": 184.008,
+   "evasion": 2.4012,
+   "minAttackRating": 40.482,
+   "maxAttackRating": 64.7712,
+   "weaponDamage": 0.576,
+   "experience": 8.5008,
+   "forceField": 80.96
+  },
+  "2": {
+   "life": 14.5897,
+   "armor": 304.021112,
+   "evasion": 4.002914,
+   "minAttackRating": 40.964595,
+   "maxAttackRating": 65.543352,
+   "weaponDamage": 1.157792,
+   "experience": 8.580741,
+   "forceField": 82.067932
+  },
+  "3": {
+   "life": 15.582171,
+   "armor": 424.037244,
+   "evasion": 5.604897,
+   "minAttackRating": 41.447474,
+   "maxAttackRating": 66.315959,
+   "weaponDamage": 1.742481,
+   "experience": 8.675617,
+   "forceField": 83.254774
+  },
+  "4": {
+   "life": 16.61253,
+   "armor": 544.055715,
+   "evasion": 7.207076,
+   "minAttackRating": 41.930556,
+   "maxAttackRating": 67.08889,
+   "weaponDamage": 2.329264,
+   "experience": 8.781713,
+   "forceField": 84.500117
+  },
+  "5": {
+   "life": 17.673848,
+   "armor": 664.076146,
+   "evasion": 8.809416,
+   "minAttackRating": 42.413797,
+   "maxAttackRating": 67.862076,
+   "weaponDamage": 2.917718,
+   "experience": 8.897018,
+   "forceField": 85.793051
+  },
+  "6": {
+   "life": 18.761677,
+   "armor": 784.098288,
+   "evasion": 10.411891,
+   "minAttackRating": 42.897172,
+   "maxAttackRating": 68.635475,
+   "weaponDamage": 3.50758,
+   "experience": 9.020236,
+   "forceField": 87.126598
+  },
+  "7": {
+   "life": 19.872877,
+   "armor": 904.121963,
+   "evasion": 12.014485,
+   "minAttackRating": 43.380661,
+   "maxAttackRating": 69.409057,
+   "weaponDamage": 4.098666,
+   "experience": 9.150448,
+   "forceField": 88.49585
+  },
+  "8": {
+   "life": 21.00509,
+   "armor": 1024.147033,
+   "evasion": 13.617184,
+   "minAttackRating": 43.864251,
+   "maxAttackRating": 70.182802,
+   "weaponDamage": 4.690839,
+   "experience": 9.286965,
+   "forceField": 89.897129
+  },
+  "9": {
+   "life": 22.156472,
+   "armor": 1144.173392,
+   "evasion": 15.219981,
+   "minAttackRating": 44.347933,
+   "maxAttackRating": 70.956693,
+   "weaponDamage": 5.283995,
+   "experience": 9.429243,
+   "forceField": 91.327564
+  },
+  "10": {
+   "life": 23.32553,
+   "armor": 1264.200951,
+   "evasion": 16.822866,
+   "minAttackRating": 44.831698,
+   "maxAttackRating": 71.730717,
+   "weaponDamage": 5.878048,
+   "experience": 9.576844,
+   "forceField": 92.784839
+  },
+  "11": {
+   "life": 24.51103,
+   "armor": 1384.229636,
+   "evasion": 18.425832,
+   "minAttackRating": 45.315539,
+   "maxAttackRating": 72.504862,
+   "weaponDamage": 6.47293,
+   "experience": 9.729404,
+   "forceField": 94.26704
+  },
+  "12": {
+   "life": 25.711931,
+   "armor": 1504.259384,
+   "evasion": 20.028876,
+   "minAttackRating": 45.79945,
+   "maxAttackRating": 73.27912,
+   "weaponDamage": 7.068582,
+   "experience": 9.886616,
+   "forceField": 95.772554
+  },
+  "13": {
+   "life": 26.927339,
+   "armor": 1624.290142,
+   "evasion": 21.631991,
+   "minAttackRating": 46.283427,
+   "maxAttackRating": 74.053484,
+   "weaponDamage": 7.664955,
+   "experience": 10.048216,
+   "forceField": 97.3
+  },
+  "14": {
+   "life": 28.156479,
+   "armor": 1744.321862,
+   "evasion": 23.235174,
+   "minAttackRating": 46.767466,
+   "maxAttackRating": 74.827946,
+   "weaponDamage": 8.262006,
+   "experience": 10.213974,
+   "forceField": 98.848181
+  },
+  "15": {
+   "life": 29.39867,
+   "armor": 1864.354501,
+   "evasion": 24.838422,
+   "minAttackRating": 47.251563,
+   "maxAttackRating": 75.602501,
+   "weaponDamage": 8.859699,
+   "experience": 10.383688,
+   "forceField": 100.416048
+  },
+  "16": {
+   "life": 30.653309,
+   "armor": 1984.388023,
+   "evasion": 26.441731,
+   "minAttackRating": 47.735715,
+   "maxAttackRating": 76.377144,
+   "weaponDamage": 9.457999,
+   "experience": 10.557179,
+   "forceField": 102.002671
+  },
+  "17": {
+   "life": 31.919858,
+   "armor": 2104.422395,
+   "evasion": 28.045098,
+   "minAttackRating": 48.21992,
+   "maxAttackRating": 77.151871,
+   "weaponDamage": 10.056879,
+   "experience": 10.734288,
+   "forceField": 103.607221
+  },
+  "18": {
+   "life": 33.19783,
+   "armor": 2224.457585,
+   "evasion": 29.648521,
+   "minAttackRating": 48.704174,
+   "maxAttackRating": 77.926678,
+   "weaponDamage": 10.656312,
+   "experience": 10.914871,
+   "forceField": 105.228951
+  },
+  "19": {
+   "life": 34.486788,
+   "armor": 2344.493566,
+   "evasion": 31.251998,
+   "minAttackRating": 49.188475,
+   "maxAttackRating": 78.701561,
+   "weaponDamage": 11.256275,
+   "experience": 11.098795,
+   "forceField": 106.867189
+  },
+  "20": {
+   "life": 35.786331,
+   "armor": 2464.530313,
+   "evasion": 32.855526,
+   "minAttackRating": 49.672823,
+   "maxAttackRating": 79.476516,
+   "weaponDamage": 11.856746,
+   "experience": 11.285944,
+   "forceField": 108.521319
+  },
+  "21": {
+   "life": 37.096094,
+   "armor": 2584.567802,
+   "evasion": 34.459105,
+   "minAttackRating": 50.157213,
+   "maxAttackRating": 80.251542,
+   "weaponDamage": 12.457705,
+   "experience": 11.476207,
+   "forceField": 110.190781
+  },
+  "22": {
+   "life": 38.41574,
+   "armor": 2704.606013,
+   "evasion": 36.062731,
+   "minAttackRating": 50.641646,
+   "maxAttackRating": 81.026634,
+   "weaponDamage": 13.059136,
+   "experience": 11.669485,
+   "forceField": 111.87506
+  },
+  "23": {
+   "life": 39.744959,
+   "armor": 2824.644925,
+   "evasion": 37.666404,
+   "minAttackRating": 51.12612,
+   "maxAttackRating": 81.801792,
+   "weaponDamage": 13.661021,
+   "experience": 11.865684,
+   "forceField": 113.573681
+  },
+  "24": {
+   "life": 41.083465,
+   "armor": 2944.684519,
+   "evasion": 39.270122,
+   "minAttackRating": 51.610632,
+   "maxAttackRating": 82.577012,
+   "weaponDamage": 14.263345,
+   "experience": 12.06472,
+   "forceField": 115.286205
+  },
+  "25": {
+   "life": 42.43099,
+   "armor": 3064.72478,
+   "evasion": 40.873883,
+   "minAttackRating": 52.095183,
+   "maxAttackRating": 83.352292,
+   "weaponDamage": 14.866095,
+   "experience": 12.266512,
+   "forceField": 117.012222
+  },
+  "26": {
+   "life": 43.787285,
+   "armor": 3184.765689,
+   "evasion": 42.477687,
+   "minAttackRating": 52.57977,
+   "maxAttackRating": 84.127631,
+   "weaponDamage": 15.469258,
+   "experience": 12.470986,
+   "forceField": 118.751354
+  },
+  "27": {
+   "life": 45.152118,
+   "armor": 3304.807234,
+   "evasion": 44.081532,
+   "minAttackRating": 53.064392,
+   "maxAttackRating": 84.903027,
+   "weaponDamage": 16.07282,
+   "experience": 12.678072,
+   "forceField": 120.503243
+  },
+  "28": {
+   "life": 46.525271,
+   "armor": 3424.849398,
+   "evasion": 45.685417,
+   "minAttackRating": 53.549048,
+   "maxAttackRating": 85.678478,
+   "weaponDamage": 16.676772,
+   "experience": 12.887705,
+   "forceField": 122.267559
+  },
+  "29": {
+   "life": 47.906538,
+   "armor": 3544.892169,
+   "evasion": 47.289341,
+   "minAttackRating": 54.033739,
+   "maxAttackRating": 86.453982,
+   "weaponDamage": 17.281103,
+   "experience": 13.099824,
+   "forceField": 124.043987
+  },
+  "30": {
+   "life": 49.295728,
+   "armor": 3664.935534,
+   "evasion": 48.893303,
+   "minAttackRating": 54.518461,
+   "maxAttackRating": 87.229538,
+   "weaponDamage": 17.885801,
+   "experience": 13.314371,
+   "forceField": 125.832235
+  },
+  "31": {
+   "life": 50.692658,
+   "armor": 3784.979482,
+   "evasion": 50.497303,
+   "minAttackRating": 55.003215,
+   "maxAttackRating": 88.005144,
+   "weaponDamage": 18.490859,
+   "experience": 13.531291,
+   "forceField": 127.632024
+  },
+  "32": {
+   "life": 52.097157,
+   "armor": 3905.024,
+   "evasion": 52.101338,
+   "minAttackRating": 55.488,
+   "maxAttackRating": 88.7808,
+   "weaponDamage": 19.096267,
+   "experience": 13.750533,
+   "forceField": 129.443094
+  },
+  "33": {
+   "life": 53.50906,
+   "armor": 4025.069078,
+   "evasion": 53.705409,
+   "minAttackRating": 55.972815,
+   "maxAttackRating": 89.556504,
+   "weaponDamage": 19.702017,
+   "experience": 13.972048,
+   "forceField": 131.265195
+  },
+  "34": {
+   "life": 54.928215,
+   "armor": 4145.114706,
+   "evasion": 55.309515,
+   "minAttackRating": 56.457659,
+   "maxAttackRating": 90.332254,
+   "weaponDamage": 20.308101,
+   "experience": 14.19579,
+   "forceField": 133.098093
+  },
+  "35": {
+   "life": 56.354474,
+   "armor": 4265.160874,
+   "evasion": 56.913655,
+   "minAttackRating": 56.942532,
+   "maxAttackRating": 91.108051,
+   "weaponDamage": 20.914511,
+   "experience": 14.421714,
+   "forceField": 134.941565
+  },
+  "36": {
+   "life": 57.787697,
+   "armor": 4385.207573,
+   "evasion": 58.517828,
+   "minAttackRating": 57.427432,
+   "maxAttackRating": 91.883892,
+   "weaponDamage": 21.521241,
+   "experience": 14.649778,
+   "forceField": 136.795398
+  },
+  "37": {
+   "life": 59.227752,
+   "armor": 4505.254794,
+   "evasion": 60.122034,
+   "minAttackRating": 57.91236,
+   "maxAttackRating": 92.659777,
+   "weaponDamage": 22.128284,
+   "experience": 14.879943,
+   "forceField": 138.659389
+  },
+  "38": {
+   "life": 60.674511,
+   "armor": 4625.302528,
+   "evasion": 61.726271,
+   "minAttackRating": 58.397315,
+   "maxAttackRating": 93.435704,
+   "weaponDamage": 22.735632,
+   "experience": 15.112171,
+   "forceField": 140.533346
+  },
+  "39": {
+   "life": 62.127853,
+   "armor": 4745.350767,
+   "evasion": 63.33054,
+   "minAttackRating": 58.882296,
+   "maxAttackRating": 94.211673,
+   "weaponDamage": 23.343281,
+   "experience": 15.346423,
+   "forceField": 142.417084
+  },
+  "40": {
+   "life": 63.587661,
+   "armor": 4865.399503,
+   "evasion": 64.93484,
+   "minAttackRating": 59.367302,
+   "maxAttackRating": 94.987684,
+   "weaponDamage": 23.951223,
+   "experience": 15.582667,
+   "forceField": 144.310427
+  },
+  "41": {
+   "life": 65.053825,
+   "armor": 4985.44873,
+   "evasion": 66.53917,
+   "minAttackRating": 59.852334,
+   "maxAttackRating": 95.763734,
+   "weaponDamage": 24.559455,
+   "experience": 15.820868,
+   "forceField": 146.213207
+  },
+  "42": {
+   "life": 66.526238,
+   "armor": 5105.498439,
+   "evasion": 68.143529,
+   "minAttackRating": 60.33739,
+   "maxAttackRating": 96.539824,
+   "weaponDamage": 25.167969,
+   "experience": 16.060994,
+   "forceField": 148.125261
+  },
+  "43": {
+   "life": 68.004797,
+   "armor": 5225.548623,
+   "evasion": 69.747918,
+   "minAttackRating": 60.82247,
+   "maxAttackRating": 97.315952,
+   "weaponDamage": 25.776762,
+   "experience": 16.303014,
+   "forceField": 150.046434
+  },
+  "44": {
+   "life": 69.489405,
+   "armor": 5345.599277,
+   "evasion": 71.352335,
+   "minAttackRating": 61.307574,
+   "maxAttackRating": 98.092119,
+   "weaponDamage": 26.385827,
+   "experience": 16.546899,
+   "forceField": 151.976578
+  },
+  "45": {
+   "life": 70.979967,
+   "armor": 5465.650394,
+   "evasion": 72.956781,
+   "minAttackRating": 61.792701,
+   "maxAttackRating": 98.868322,
+   "weaponDamage": 26.995161,
+   "experience": 16.79262,
+   "forceField": 153.915549
+  },
+  "46": {
+   "life": 72.476391,
+   "armor": 5585.701966,
+   "evasion": 74.561254,
+   "minAttackRating": 62.277852,
+   "maxAttackRating": 99.644562,
+   "weaponDamage": 27.604759,
+   "experience": 17.04015,
+   "forceField": 155.863209
+  },
+  "47": {
+   "life": 73.978591,
+   "armor": 5705.753989,
+   "evasion": 76.165755,
+   "minAttackRating": 62.763024,
+   "maxAttackRating": 100.420838,
+   "weaponDamage": 28.214617,
+   "experience": 17.289462,
+   "forceField": 157.819426
+  },
+  "48": {
+   "life": 75.486481,
+   "armor": 5825.806457,
+   "evasion": 77.770283,
+   "minAttackRating": 63.248219,
+   "maxAttackRating": 101.19715,
+   "weaponDamage": 28.824729,
+   "experience": 17.540531,
+   "forceField": 159.784072
+  },
+  "49": {
+   "life": 76.999981,
+   "armor": 5945.859364,
+   "evasion": 79.374837,
+   "minAttackRating": 63.733435,
+   "maxAttackRating": 101.973496,
+   "weaponDamage": 29.435093,
+   "experience": 17.793331,
+   "forceField": 161.757023
+  },
+  "50": {
+   "life": 78.519011,
+   "armor": 6065.912705,
+   "evasion": 80.979417,
+   "minAttackRating": 64.218672,
+   "maxAttackRating": 102.749876,
+   "weaponDamage": 30.045704,
+   "experience": 18.047841,
+   "forceField": 163.738161
+  },
+  "51": {
+   "life": 80.043496,
+   "armor": 6185.966474,
+   "evasion": 82.584023,
+   "minAttackRating": 64.703931,
+   "maxAttackRating": 103.52629,
+   "weaponDamage": 30.656559,
+   "experience": 18.304035,
+   "forceField": 165.72737
+  },
+  "52": {
+   "life": 81.573362,
+   "armor": 6306.020667,
+   "evasion": 84.188654,
+   "minAttackRating": 65.18921,
+   "maxAttackRating": 104.302736,
+   "weaponDamage": 31.267653,
+   "experience": 18.561893,
+   "forceField": 167.724539
+  },
+  "53": {
+   "life": 83.108538,
+   "armor": 6426.075278,
+   "evasion": 85.79331,
+   "minAttackRating": 65.67451,
+   "maxAttackRating": 105.079216,
+   "weaponDamage": 31.878984,
+   "experience": 18.821393,
+   "forceField": 169.729561
+  },
+  "54": {
+   "life": 84.648955,
+   "armor": 6546.130302,
+   "evasion": 87.397991,
+   "minAttackRating": 66.159829,
+   "maxAttackRating": 105.855727,
+   "weaponDamage": 32.490548,
+   "experience": 19.082513,
+   "forceField": 171.742332
+  },
+  "55": {
+   "life": 86.194546,
+   "armor": 6666.185736,
+   "evasion": 89.002696,
+   "minAttackRating": 66.645169,
+   "maxAttackRating": 106.63227,
+   "weaponDamage": 33.102341,
+   "experience": 19.345235,
+   "forceField": 173.762752
+  },
+  "56": {
+   "life": 87.745247,
+   "armor": 6786.241575,
+   "evasion": 90.607425,
+   "minAttackRating": 67.130528,
+   "maxAttackRating": 107.408844,
+   "weaponDamage": 33.714361,
+   "experience": 19.609537,
+   "forceField": 175.790721
+  },
+  "57": {
+   "life": 89.300996,
+   "armor": 6906.297814,
+   "evasion": 92.212178,
+   "minAttackRating": 67.615906,
+   "maxAttackRating": 108.185449,
+   "weaponDamage": 34.326605,
+   "experience": 19.875401,
+   "forceField": 177.826147
+  },
+  "58": {
+   "life": 90.86173,
+   "armor": 7026.354448,
+   "evasion": 93.816955,
+   "minAttackRating": 68.101303,
+   "maxAttackRating": 108.962084,
+   "weaponDamage": 34.939069,
+   "experience": 20.14281,
+   "forceField": 179.868937
+  },
+  "59": {
+   "life": 92.427392,
+   "armor": 7146.411475,
+   "evasion": 95.421754,
+   "minAttackRating": 68.586718,
+   "maxAttackRating": 109.738749,
+   "weaponDamage": 35.55175,
+   "experience": 20.411744,
+   "forceField": 181.919001
+  },
+  "60": {
+   "life": 93.997924,
+   "armor": 7266.46889,
+   "evasion": 97.026576,
+   "minAttackRating": 69.072152,
+   "maxAttackRating": 110.515443,
+   "weaponDamage": 36.164647,
+   "experience": 20.682186,
+   "forceField": 183.976254
+  }
+ }
+}
