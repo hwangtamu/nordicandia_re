@@ -60,7 +60,7 @@ public sealed class CombatRegistry
     private sealed class Entry
     {
         public CombatInstance Instance = null!;
-        public ClassPowers BasePowers = null!;
+        public ClassPowerPool BasePowers = null!;
         public DateTime LastAdvanceUtc;
         // Equipment bonus currently folded into the instance, so a recompute can swap it
         // out without discarding the level-up growth that lives only in the instance.
@@ -93,7 +93,8 @@ public sealed class CombatRegistry
                     (int)persisted.Level),
                 store.GetAttributeMap(owner, characterId));
             var seed = (ulong)(uint)characterId.GetHashCode() << 32 | (uint)characterId.GetHashCode();
-            var basePowers = PowerCatalog.ForClass(persisted.Class);
+            var loadout = store.GetLoadout(owner, characterId);
+            var basePowers = PowerCatalog.BuildPool(persisted.Class, loadout.Active, loadout.Passive);
             var ranks = store.GetMasteryRanks(owner, characterId);
             // P1: seed the instance's version from the persisted counter so it never resets
             // to 1 across a restart (which would make the command log boundary reject fresh
@@ -240,11 +241,35 @@ public sealed class CombatRegistry
         }
     }
 
+    /// <summary>Equips a 6-active / 3-passive loadout from the class pool and rebuilds the instance.
+    /// Unknown or out-of-class names are dropped; an empty active selection is rejected.</summary>
+    public (bool Applied, string Reason) SetLoadout(Guid owner, Guid characterId, IList<string> active, IList<string> passive)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            var persisted = store.ProjectWebSnapshot(owner, characterId);
+            if (!PowerCatalog.PoolByClass.TryGetValue(persisted.Class, out var pool))
+                return (false, "no_pool");
+            var activeNames = (active ?? Array.Empty<string>())
+                .Where(n => pool.Active.Any(x => x.Name == n)).Distinct()
+                .Take(PowerCatalog.MaxActiveSkills).ToList();
+            var passiveNames = (passive ?? Array.Empty<string>())
+                .Where(n => pool.Passive.Any(x => x.Name == n)).Distinct()
+                .Take(PowerCatalog.MaxPassiveSkills).ToList();
+            if (activeNames.Count == 0) return (false, "need_active_skill");
+            var (storedActive, storedPassive) = store.SetLoadout(owner, characterId, activeNames, passiveNames);
+            entry.BasePowers = PowerCatalog.BuildPool(persisted.Class, storedActive, storedPassive);
+            entry.Instance.UpdatePowers(EffectivePowers(entry.BasePowers, store.GetMasteryRanks(owner, characterId)));
+            return (true, "ok");
+        }
+    }
+
     private (bool, string) AllocateMastery(Guid owner, Guid characterId, Entry entry, int masteryId)
     {
         var ranks = store.GetMasteryRanks(owner, characterId);
         MasteryProfile found = null;
-        foreach (var skill in entry.BasePowers.Active.Take(3))
+        foreach (var skill in entry.BasePowers.Active.Take(PowerCatalog.MaxActiveSkills))
         {
             found = PowerCatalog.MasteriesFor(skill.Name).FirstOrDefault(m => m.IntegerId == masteryId);
             if (found is not null) break;
@@ -264,7 +289,7 @@ public sealed class CombatRegistry
     {
         var rows = new List<SkillMasteryView>();
         var slot = 0;
-        foreach (var skill in entry.BasePowers.Active.Take(3))
+        foreach (var skill in entry.BasePowers.Active.Take(PowerCatalog.MaxActiveSkills))
         {
             var masteries = PowerCatalog.MasteriesFor(skill.Name)
                 .Select(m => new MasteryView(m.Name, m.IntegerId, ranks.TryGetValue(m.IntegerId, out var rank) ? rank : 0, m.MaxPoints, m.Specs))
@@ -277,10 +302,10 @@ public sealed class CombatRegistry
     private static int MasteryBudget(Entry entry) => Math.Max(0, 3 + entry.Instance.PlayerLevel - 1);
 
     /// <summary>Apply allocated mastery specs to the class kit's base values.</summary>
-    private static ClassPowers EffectivePowers(ClassPowers basePowers, Dictionary<int, int> ranks)
+    private static ClassPowerPool EffectivePowers(ClassPowerPool basePowers, Dictionary<int, int> ranks)
     {
         var active = new List<SkillProfile>();
-        foreach (var skill in basePowers.Active)
+        foreach (var skill in basePowers.Active.Take(PowerCatalog.MaxActiveSkills))
         {
             var values = new Dictionary<string, double>(skill.Values);
             var modified = false;
@@ -295,20 +320,19 @@ public sealed class CombatRegistry
                     modified = true;
                 }
             }
-            if (!modified)
-            {
-                active.Add(skill);
-                continue;
-            }
-            active.Add(skill with
-            {
-                Multiplier = values.TryGetValue("Base_Power_Weapon_Damage_Multiplier", out var m) ? m : skill.Multiplier,
-                Cooldown = Math.Max(1, values.TryGetValue("Base_Cooldown", out var cd) ? cd : skill.Cooldown),
-                Radius = values.TryGetValue("Base_Power_Radius", out var r) ? r : skill.Radius,
-                ManaCost = Math.Max(0, values.TryGetValue("Base_Mana_Cost", out var mc) ? mc : skill.ManaCost),
-                Values = values,
-                Confidence = "mastery-modified",
-            });
+            var updated = modified
+                ? skill with
+                {
+                    Multiplier = values.TryGetValue("Base_Power_Weapon_Damage_Multiplier", out var m) ? m : skill.Multiplier,
+                    Cooldown = Math.Max(1, values.TryGetValue("Base_Cooldown", out var cd) ? cd : skill.Cooldown),
+                    Radius = values.TryGetValue("Base_Power_Radius", out var r) ? r : skill.Radius,
+                    ManaCost = Math.Max(0, values.TryGetValue("Base_Mana_Cost", out var mc) ? mc : skill.ManaCost),
+                    Values = values,
+                    Confidence = "mastery-modified",
+                }
+                : skill;
+            // Re-slot the equipped subset so the client's skill ids stay 0..N-1.
+            active.Add(updated with { Slot = active.Count });
         }
         return basePowers with { Active = active };
     }

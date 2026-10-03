@@ -112,6 +112,10 @@ public sealed class GameStore : IDisposable
         public HashSet<string> Achievements { get; set; } = new();
         // Allocated skill-tree mastery ranks, keyed by PowerMasteries IntegerId.
         public Dictionary<int, int> MasteryRanks { get; set; } = new();
+        // Web loadout: selected active/passive power names (empty = the class starter kit).
+        // The client caps these at SkillSlotRules 6/3.
+        public List<string> LoadoutActive { get; set; } = new();
+        public List<string> LoadoutPassive { get; set; } = new();
         // Recent processed web commands, oldest first. Bounded by MaxCommandLog.
         public List<CommandRecord> CommandLog { get; set; } = new();
         // Persistent, monotonically increasing combat version. Restored into the in-memory
@@ -904,6 +908,29 @@ public sealed class GameStore : IDisposable
         c.Data = Pack(data);
         return (true, new SerializedItems { Items = offer.Select(CloneItem).ToList() },
             new SerializedItems { Items = data.Items.Items.ToList() });
+    });
+
+    /// <summary>Selected active/passive power names for a character (empty = class starter kit).</summary>
+    public (List<string> Active, List<string> Passive) GetLoadout(Guid owner, Guid id)
+    {
+        lock (gate)
+        {
+            var c = Owned(state, owner, id);
+            return (new List<string>(c.LoadoutActive ?? new()),
+                new List<string>(c.LoadoutPassive ?? new()));
+        }
+    }
+
+    /// <summary>Stores a loadout, de-duplicating and capping at the client 6 active / 3 passive slots.</summary>
+    public (List<string> Active, List<string> Passive) SetLoadout(Guid owner, Guid id,
+        IList<string> active, IList<string> passive) => Change(s =>
+    {
+        var c = Owned(s, owner, id);
+        static List<string> Clean(IList<string> rows, int cap) => (rows ?? Array.Empty<string>())
+            .Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().Take(cap).ToList();
+        c.LoadoutActive = Clean(active, WebApi.PowerCatalog.MaxActiveSkills);
+        c.LoadoutPassive = Clean(passive, WebApi.PowerCatalog.MaxPassiveSkills);
+        return (new List<string>(c.LoadoutActive), new List<string>(c.LoadoutPassive));
     });
 
     /// <summary>Allocated mastery ranks for a character (mastery integerId -> rank).</summary>

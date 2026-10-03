@@ -70,3 +70,6 @@ public sealed record WebAllocateAttributesRequest(
 public sealed record NpcBuyRequest(Guid CatalogItemId, bool UseOpals = false);
 
 public sealed record NpcSetTradeRequest(Guid OfferItemId);
+
+/// <summary>Equipped loadout: up to 6 active skill names and 3 passive (mastery) skill names.</summary>
+public sealed record WebLoadoutRequest(List<string> Active, List<string> Passive);

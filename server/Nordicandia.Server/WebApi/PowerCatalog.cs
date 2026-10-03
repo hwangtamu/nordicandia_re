@@ -24,6 +24,36 @@ public static partial class PowerCatalog
     public static IReadOnlyList<MasteryProfile> MasteriesFor(string skillName)
         => MasteriesByPower.TryGetValue(skillName, out var rows) ? rows : Array.Empty<MasteryProfile>();
 
+    /// <summary>The starter kit (first active skills + the class passive) as a loadout pool.</summary>
+    public static ClassPowerPool DefaultPoolFor(int classId)
+    {
+        var kit = ForClass(classId);
+        return new ClassPowerPool(kit.ClassName, kit.Active, new[] { kit.Passive });
+    }
+
+    /// <summary>Builds the equipped loadout from selected power names (6 active / 3 passive max).
+    /// Unknown names are dropped; an empty selection falls back to the class starter kit.</summary>
+    public static ClassPowerPool BuildPool(int classId, IReadOnlyList<string> activeNames, IReadOnlyList<string> passiveNames)
+    {
+        var kit = DefaultPoolFor(classId);
+        if (!PoolByClass.TryGetValue(classId, out var pool)) return kit;
+        var active = new List<SkillProfile>();
+        foreach (var name in activeNames ?? Array.Empty<string>())
+        {
+            var skill = pool.Active.FirstOrDefault(x => x.Name == name);
+            if (skill is not null && active.Count < MaxActiveSkills) active.Add(skill with { Slot = active.Count });
+        }
+        var passives = new List<PassiveProfile>();
+        foreach (var name in passiveNames ?? Array.Empty<string>())
+        {
+            var passive = pool.Passive.FirstOrDefault(x => x.Name == name);
+            if (passive is not null && passives.Count < MaxPassiveSkills) passives.Add(passive);
+        }
+        if (active.Count == 0) active = kit.Active.ToList();
+        if (passives.Count == 0) passives = kit.Passive.ToList();
+        return new ClassPowerPool(kit.ClassName, active, passives);
+    }
+
     /// <summary>One selectable power from a class pool (name/description/icon are ClientVerified).</summary>
     public readonly record struct PowerPoolEntry(
         Guid Id, int IntegerId, string Name, string Description, string Icon, string Type, string? ImplementedBy);

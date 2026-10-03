@@ -105,7 +105,7 @@ static class AcceptanceRegressionTests
         {
             var instance = new CombatInstance(
                 CombatantStats.FromRealtime(Nordicandia.Server.WebApi.WebApiEndpoints.StarterOffense, Nordicandia.Server.WebApi.WebApiEndpoints.StarterDefense, Nordicandia.Server.WebApi.WebApiEndpoints.StarterRecovery, 1), 0, 0, 0, 0, seed: 777,
-                classPowers: Nordicandia.Server.WebApi.PowerCatalog.ForClass(classId));
+                classPowers: Nordicandia.Server.WebApi.PowerCatalog.DefaultPoolFor(classId));
             var seconds = 0.0;
             while (instance.DungeonsCleared == 0 && seconds < 300)
             {

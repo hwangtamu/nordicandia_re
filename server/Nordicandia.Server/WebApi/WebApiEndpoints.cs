@@ -206,6 +206,26 @@ public static class WebApiEndpoints
             return Results.Ok(CombatRegistry.Instance.MasteryView(user.UserId, id));
         });
 
+        // Equipped loadout (6 active / 3 passive) chosen from the class pool.
+        group.MapGet("/characters/{id:guid}/loadout", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var (active, passive) = GameStore.Instance.GetLoadout(user.UserId, id);
+            return Results.Ok(new { active, passive, maxActive = PowerCatalog.MaxActiveSkills, maxPassive = PowerCatalog.MaxPassiveSkills });
+        });
+
+        group.MapPost("/characters/{id:guid}/loadout", (HttpContext ctx, Guid id, WebLoadoutRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var (applied, reason) = CombatRegistry.Instance.SetLoadout(user.UserId, id, req?.Active, req?.Passive);
+            return Results.Ok(new { applied, reason });
+        });
+
         // ----- NPC windows (blacksmith / merchant) -----
 
         // Blacksmith operations. Items are placed into the Blacksmith slots, the operation runs,

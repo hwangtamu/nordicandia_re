@@ -88,7 +88,11 @@ public sealed class CombatInstance
     public const int BossIndex = 100;
     public const double TrashDropChance = 0.45;
 
-    private static readonly ClassPowers DefaultPowers = new(
+    /// <summary>Maximum equipped active skills / passive skills (client SkillSlotRules 6/3).</summary>
+    public const int MaxActiveSkills = 6;
+    public const int MaxPassiveSkills = 3;
+
+    private static readonly ClassPowerPool DefaultPool = new(
         "Basic",
         new[]
         {
@@ -96,7 +100,7 @@ public sealed class CombatInstance
             new SkillProfile(1, "Nova", "", "", "nova", 1.5, 8.0, 5.5, 0, 0, 0, 0, "provisional-behaviour", new Dictionary<string, double>()),
             new SkillProfile(2, "Rally", "", "", "rally", 0, 20.0, 0, 0, 0.30, 0.25, 6.0, "provisional-behaviour", new Dictionary<string, double>()),
         },
-        new PassiveProfile("Might", "", "", "might", 0.10, 0.10, "provisional-behaviour"));
+        new[] { new PassiveProfile("Might", "", "", "might", 0.10, 0.10, "provisional-behaviour") });
 
     private static readonly int[] DropSlots =
     {
@@ -112,7 +116,7 @@ public sealed class CombatInstance
     private readonly int monsterCount;
     private readonly MonsterProfile[] profiles;
     private SkillProfile[] skills;
-    private PassiveProfile passive;
+    private PassiveProfile[] passives;
 
     private double targetX;
     private double targetZ;
@@ -167,7 +171,7 @@ public sealed class CombatInstance
         ulong seed,
         int monsterCount = 5,
         IReadOnlyList<MonsterProfile> monsterProfiles = null,
-        ClassPowers classPowers = null,
+        ClassPowerPool classPowers = null,
         long initialVersion = 1)
     {
         PlayerLevel = stats.Level;
@@ -183,9 +187,9 @@ public sealed class CombatInstance
         profiles = monsterProfiles is { Count: > 0 }
             ? monsterProfiles.ToArray()
             : new[] { new MonsterProfile("Draugr") };
-        var powers = classPowers ?? DefaultPowers;
-        skills = powers.Active.Take(3).ToArray();
-        passive = powers.Passive;
+        var powers = classPowers ?? DefaultPool;
+        skills = powers.Active.Take(MaxActiveSkills).ToArray();
+        passives = powers.Passive.Take(MaxPassiveSkills).ToArray();
         skillCooldowns = new double[skills.Length];
         PlayerMaxHp = EffectiveMaxHealth();
         PlayerHp = PlayerMaxHp;
@@ -219,26 +223,30 @@ public sealed class CombatInstance
     private DamageBundle PlayerDamageBundle()
     {
         var baseBundle = Damage.Total > 0 ? Damage : new DamageBundle(Offense);
-        return baseBundle.Scale(1 + passive.OffenseBonus + (offenseBuffTimer > 0 ? offenseBuffBonus : 0));
+        return baseBundle.Scale(1 + PassiveOffense() + (offenseBuffTimer > 0 ? offenseBuffBonus : 0));
     }
 
     private static CombatantStats MonsterStats(CombatMonster monster)
         => new(monster.Offense, monster.Defense, 0, monster.Level, Armor: monster.Armor, Resistances: monster.Resistances);
 
     private double EffectiveMaxHealth() => CombatModel.MaxHealth(PlayerStats())
-        * (1 + passive.HealthBonus);
+        * (1 + PassiveHealth());
 
     /// <summary>Mana pool: the recovered Mana_Max_Total when available, else 40 + 10/level.</summary>
     private double EffectiveMaxMana() => ManaMax > 0 ? ManaMax : 40 + 10 * Math.Max(1, PlayerLevel);
 
-    private double EffectiveOffense() => (Damage.Total > 0 ? Damage.Total : Offense)
-        * (1 + passive.OffenseBonus + (offenseBuffTimer > 0 ? offenseBuffBonus : 0));
+    private double PassiveOffense() => passives.Sum(p => p.OffenseBonus);
 
-    /// <summary>Replace the class kit (e.g. after a mastery point is allocated).</summary>
-    public void UpdatePowers(ClassPowers powers)
+    private double PassiveHealth() => passives.Sum(p => p.HealthBonus);
+
+    private double EffectiveOffense() => (Damage.Total > 0 ? Damage.Total : Offense)
+        * (1 + PassiveOffense() + (offenseBuffTimer > 0 ? offenseBuffBonus : 0));
+
+    /// <summary>Replace the equipped loadout (e.g. after a mastery point or loadout change).</summary>
+    public void UpdatePowers(ClassPowerPool powers)
     {
-        skills = powers.Active.Take(3).ToArray();
-        passive = powers.Passive;
+        skills = powers.Active.Take(MaxActiveSkills).ToArray();
+        passives = powers.Passive.Take(MaxPassiveSkills).ToArray();
         PlayerMaxHp = EffectiveMaxHealth();
         PlayerHp = Math.Min(PlayerHp, PlayerMaxHp);
         Version++;
