@@ -57,9 +57,19 @@
 `EconomyRecoveryTests` 含独立十进制 goldens、D 阈值、2.25 距离惩罚、禁用饱和因子避免 0/0、
 30 万次种子分布检验与真实掉落验证。
 
+## 物品类型抽取权重（已接入）
+
+`Droprates.LootTables`（Default/Helheim/RegularBoss/Niflheim）的 `ItemTypeWeights` 与
+`ItemTypeCharacterClassWeightMultipliers` 经 `export_loot_tables.py` 导出为
+`GameData/loot_table_item_types.json`（类型 guid → 名称、职业 `IntegerId`、以及
+`ItemTypes` 父链）。`LootTableCatalog.Weight(table, type, classId)` = 表权重 × 职业乘子，
+**沿父链解析**（`Axe2H`→`TwoHandMeleeWeapon`、`ElementalStaff2H`→`Staff2H`）。
+`ItemCatalog.Pick` 改为按此权重抽取（无权重时回退均分）；`CombatInstance` 携带
+`ClassId` 与 `LootTableName`（普通=Default、Niflheim=Niflheim），每件掉落按其表抽取。
+
 ## 未完成 / 待办
 
 * **TagData 权重聚合**：`GetSpawnWeights…ByTag` 的逐 tag 聚合（sum vs max）未确认，当前 best-match（Interim）。
-* **物品类型抽取**：`LootTables.ItemTypeWeights` 与职业乘子已提取但未接入（当前用 `ItemCatalog` 的槽位类型均分）。
-* **怪物/容器掉落资格**：`LootTables`/`MonsterDefinition` 的掉落表绑定未恢复。
-* **统计分布对照**：词缀稀有度已做种子分布检验；物体类型/怪物掉落分布仍待对照。
+* **掉落表绑定**：表已按游戏上下文选择（Default/Niflheim）；`RegularBoss`(HelheimKey) 与
+  `Helheim` 的**保证掉落**、以及 `MonsterDefinition`/容器的具体掉落表绑定未接。
+* **统计分布对照**：词缀稀有度、物品类型权重已做种子分布检验；按怪物的掉落分布仍待对照。

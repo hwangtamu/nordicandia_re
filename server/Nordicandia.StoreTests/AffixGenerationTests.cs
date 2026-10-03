@@ -31,9 +31,10 @@ static class AffixGenerationTests
             histogram[item.Affixes.Count]++;
         }
         Check(histogram.All(n => n > 0), "affix count: all 0–6 outcomes exercised without lost slots or duplicates (20,000 seeds)");
-        // Golden values from 1250f56, before changing candidate selection. The affix stream
-        // must not perturb definition or base rolls; pre-1250f56 used a different RNG layout.
-        var fixtures = new[] { (1UL,45,10.9384,11.4575), (2UL,300,13.8253,5.9826), (3UL,375,9.6811,1.8589) };
+        // Golden values re-derived after switching item-type selection to the client's loot-table
+        // weights (E02, via the ItemTypes parent chain). The affix stream must not perturb
+        // definition or base rolls.
+        var fixtures = new[] { (1UL,42,12.0909,11.4575), (2UL,300,13.8253,5.9826), (3UL,375,9.6811,1.8589) };
         foreach (var (seed, definition, min, delta) in fixtures)
         {
             var item = LootTable.CreateItem(new LootDrop(12, 3, 10, false, seed), ItemCatalog.RarityType.Normal);

@@ -190,7 +190,9 @@ public sealed class CombatRegistry
             var instance = new CombatInstance(stats, persisted.Experience, persisted.Silver, persisted.Opals,
                 (int)persisted.MonsterKills, seed,
                 monsterProfiles: niflheim ? NiflheimProfiles(worldTier) : ProfilesForWorldTier(worldTier),
-                classPowers: EffectivePowers(basePowers, ranks), initialVersion: persistedVersion, layout: layout);
+                classPowers: EffectivePowers(basePowers, ranks), initialVersion: persistedVersion, layout: layout,
+                classId: (int)persisted.Class);
+            instance.LootTableName = niflheim ? "Niflheim" : "Default";
             entries[characterId] = new Entry
             {
                 Instance = instance,
@@ -345,6 +347,7 @@ public sealed class CombatRegistry
             entry.NiflheimPacks = packs;
             var portalTier = WorldTier(CharacterAttributeMap(owner, characterId, entry.BasePowers));
             entry.Instance.SetWorld(NiflheimProfiles(portalTier), packs > 0 ? packs : null);
+            entry.Instance.LootTableName = "Niflheim";
             entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
             FlushLocked(owner, characterId, entry);
             return (true, "ok", TakeState(entry));
@@ -386,6 +389,7 @@ public sealed class CombatRegistry
         // Return to the world-tier pool (not the default archetypes), matching the entry's world.
         var map = CharacterAttributeMap(owner, characterId, entry.BasePowers);
         entry.Instance.SetWorld(ProfilesForWorldTier(WorldTier(map)));
+        entry.Instance.LootTableName = "Default";
         entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
     }
 

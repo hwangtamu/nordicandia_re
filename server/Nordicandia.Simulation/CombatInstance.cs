@@ -73,7 +73,9 @@ public sealed class CombatMonster
 
 /// <summary>A drop rolled on a kill. Slot/rarity/level are resolved into a concrete item by
 /// the host's loot table so this layer stays content-free and deterministic.</summary>
-public readonly record struct LootDrop(int Slot, int Rarity, int Level, bool Boss, ulong Seed);
+public readonly record struct LootDrop(int Slot, int Rarity, int Level, bool Boss, ulong Seed,
+    // E02: the loot table (Droprates.LootTables name) and the player's class for weighting.
+    string Table = "Default", int ClassId = -1);
 
 /// <summary>Read-only projection of an <see cref="CombatInstance"/> handed to callers/tests.</summary>
 public readonly record struct MonsterSnapshot(
@@ -268,6 +270,10 @@ public sealed partial class CombatInstance
 
     /// <summary>W04: the dungeon layout whose spawn areas the packs use (null = the arena ring).</summary>
     public MapLayout Layout { get; }
+    /// <summary>E02: the player's class (CharacterClass) for loot item-type weighting.</summary>
+    public int ClassId { get; private set; }
+    /// <summary>E02: the loot table (Droprates.LootTables name) new drops draw from.</summary>
+    public string LootTableName { get; set; } = "Default";
 
     public CombatInstance(
         CombatantStats stats,
@@ -280,7 +286,8 @@ public sealed partial class CombatInstance
         IReadOnlyList<MonsterProfile> monsterProfiles = null,
         ClassPowerPool classPowers = null,
         long initialVersion = 1,
-        MapLayout layout = null)
+        MapLayout layout = null,
+        int classId = -1)
     {
         PlayerLevel = stats.Level;
         Offense = stats.Offense;
@@ -303,6 +310,7 @@ public sealed partial class CombatInstance
         PlayerHp = PlayerMaxHp;
         PlayerMaxMana = EffectiveMaxMana();
         PlayerMana = PlayerMaxMana;
+        ClassId = classId;
         Layout = layout;
         // W04: if the arena centre is a wall in this layout, start the player at the first room so
         // monsters can path to it (otherwise auto-battle stalls outside the walls).
@@ -1317,7 +1325,7 @@ public sealed partial class CombatInstance
     {
         var slot = DropSlots[(int)(rng.NextDouble() * DropSlots.Length) % DropSlots.Length];
         var rarity = RollRarity(minRarity);
-        return new LootDrop(slot, rarity, Math.Max(1, level), false, rng.NextUInt64());
+        return new LootDrop(slot, rarity, Math.Max(1, level), false, rng.NextUInt64(), LootTableName, ClassId);
     }
 
     private int RollRarity(int minRarity)

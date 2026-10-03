@@ -122,7 +122,8 @@ public static class ItemCatalog
 
     /// <summary>Picks a definition matching the equip slot and rarity type (Normal excludes
     /// unique/set items); falls back to any matching-slot definition.</summary>
-    public static Definition? Pick(int slot, RarityType rarityType, CombatRandom rng)
+    public static Definition? Pick(int slot, RarityType rarityType, CombatRandom rng,
+        int classId = -1, string lootTable = LootTableCatalog.DefaultTable)
     {
         var all = All.Value;
         bool Matches(Definition d) => rarityType switch
@@ -135,9 +136,32 @@ public static class ItemCatalog
         if (slot >= 0 && slot < SlotTypes.Length)
         {
             var bySlot = candidates.Where(d => SlotTypes[slot].Contains(d.Type)).ToList();
-            if (bySlot.Count > 0) return bySlot[(int)(rng.NextDouble() * bySlot.Count) % bySlot.Count];
+            if (bySlot.Count > 0) return WeightedPick(bySlot, rng, classId, lootTable);
         }
-        return candidates.Count > 0 ? candidates[(int)(rng.NextDouble() * candidates.Count) % candidates.Count] : null;
+        return candidates.Count > 0 ? WeightedPick(candidates, rng, classId, lootTable) : null;
+    }
+
+    /// <summary>E02: pick by the loot table's item-type weight (x the class multiplier), falling
+    /// back to a uniform draw when the table has no weight for any candidate.</summary>
+    private static Definition WeightedPick(IReadOnlyList<Definition> candidates, CombatRandom rng,
+        int classId, string lootTable)
+    {
+        var weights = new double[candidates.Count];
+        var total = 0.0;
+        for (var i = 0; i < candidates.Count; i++)
+        {
+            weights[i] = LootTableCatalog.Weight(lootTable, candidates[i].Type, classId);
+            total += weights[i];
+        }
+        if (total <= 0)
+            return candidates[(int)(rng.NextDouble() * candidates.Count) % candidates.Count];
+        var roll = rng.NextDouble() * total;
+        for (var i = 0; i < candidates.Count; i++)
+        {
+            roll -= weights[i];
+            if (roll <= 0) return candidates[i];
+        }
+        return candidates[^1];
     }
 
     private static IReadOnlyList<Definition> Load()

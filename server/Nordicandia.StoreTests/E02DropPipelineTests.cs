@@ -57,5 +57,30 @@ static class E02DropPipelineTests
         Check(rolls > 0, $"E02: amulet drops roll affixes ({rolls} rolls over 500 seeds)");
         Check(allEligible, "E02: every rolled amulet affix is eligible for the Amulet type");
         Check(allHaveAttributes, "E02: every rolled affix carries its client attributes");
+
+        // E02: item-type spawn weights come from Droprates.LootTables (x the class multiplier).
+        Check(LootTableCatalog.Weight("Default", "Belt", -1) == 400000,
+            "E02: the Default table weight resolves for a known item type");
+        Check(LootTableCatalog.Weight("Default", "Axe1H", 4) == 300000 * 0.25,
+            "E02: the per-class multiplier scales the type weight (Axe1H -> Hunter 0.25)");
+        Check(LootTableCatalog.Weight("Default", "Axe2H", -1) == 300000
+            && LootTableCatalog.Weight("Default", "NoSuchItemType", -1) == 0,
+            "E02: a child type resolves through its parent; an unknown type has no weight");
+        Check(LootTableCatalog.Weight("NoSuchTable", "Belt", -1) == 0,
+            "E02: an unknown loot table has no weights");
+
+        // Weighted type pick: slot 12 under the Default table favours the high-weight types
+        // (Bow/Crossbow1H 300000 over the class-reduced Axe1H/Sword1H/Mace1H 75000).
+        var pickRng = new CombatRandom(2024);
+        var typeCounts = new Dictionary<string, int>();
+        for (var i = 0; i < 4000; i++)
+        {
+            var definition = ItemCatalog.Pick(12, ItemCatalog.RarityType.Normal, pickRng, classId: 4, lootTable: "Default");
+            if (definition is null) continue;
+            typeCounts[definition.Value.Type] = typeCounts.GetValueOrDefault(definition.Value.Type) + 1;
+        }
+        Check(typeCounts.GetValueOrDefault("Bow") > typeCounts.GetValueOrDefault("Axe1H")
+            && typeCounts.GetValueOrDefault("Axe1H") > 0,
+            "E02: weighted item-type selection favours the higher loot-table weight");
     }
 }

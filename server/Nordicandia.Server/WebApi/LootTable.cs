@@ -108,7 +108,7 @@ public static class LootTable
         // Roll Normal/Unique/Set using the client weights (or use the forced type, e.g. a set
         // merchant offer or a pity-guaranteed unique), then pick a matching definition.
         var rarityType = forceRarityType ?? ItemCatalog.RollRarityType(rng, magicFind);
-        var definition = ItemCatalog.Pick(drop.Slot, rarityType, rng);
+        var definition = ItemCatalog.Pick(drop.Slot, rarityType, rng, drop.ClassId, drop.Table);
         var fallbackNames = SlotNames.TryGetValue(drop.Slot, out var list) ? list : new[] { "Trinket" };
         var name = definition?.Name ?? fallbackNames[Math.Abs(Hash(drop.Level, drop.Slot)) % fallbackNames.Length];
         var definitionId = definition?.IntegerId ?? 0;
