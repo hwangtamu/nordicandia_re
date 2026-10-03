@@ -50,6 +50,11 @@ internal static class CharacterRatings
             DodgeChance = Math.Max(eval.Resolve("Dodge_Chance_Total"), eval.Resolve("Dodge_Chance_Spell_Total")),
             BlockChance = Math.Max(eval.Resolve("Block_Chance_Total"), eval.Resolve("Block_Chance_Spell_Total")),
             BlockedDamageMultiplier = eval.Resolve("Blocked_Damage_Taken_Multiplier_Total"),
+            // IsEvaded inputs and crit immunity.
+            HitChanceBonus = eval.Resolve("Hit_Chance_Bonus_Percent"),
+            HitChanceCap = eval.Resolve("Hit_Chance_Cap") is var cap && cap > 0 ? cap : 1.0,
+            AlwaysHits = eval.Resolve("Always_Hits") > 0 || eval.Resolve("Always_Hits_Global") > 0,
+            IgnoresCrits = eval.Resolve("Ignores_Critical_Hits") > 0,
         };
     }
 }

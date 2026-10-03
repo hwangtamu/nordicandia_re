@@ -48,7 +48,11 @@ public readonly record struct CombatantStats(double Offense, double Defense, dou
     // AttackPayload.Resolve order: miss -> dodge -> evade -> block -> crit. Dodge_Chance_Total
     // (0x1310) and Block_Chance_Total (0x1278); a block scales the hit by
     // Blocked_Damage_Taken_Multiplier_Total (0x12D8, default 0.5).
-    double DodgeChance = 0, double BlockChance = 0, double BlockedDamageMultiplier = 1)
+    double DodgeChance = 0, double BlockChance = 0, double BlockedDamageMultiplier = 1,
+    // IsEvaded: CalculateChanceToHit(AttackRating_Total, Evasion_Total, Hit_Chance_Bonus_Percent
+    // (0x608), Hit_Chance_Cap (0x680)); Always_Hits (0x5C8) bypasses the roll. Ignores_Critical_Hits
+    // (0x1168) on the defender prevents crits.
+    double HitChanceBonus = 0, double HitChanceCap = 1, bool AlwaysHits = false, bool IgnoresCrits = false)
 {
     public static CombatantStats FromRealtime(double offense, double defense, double recovery, int level)
         => new(Math.Max(0, offense), Math.Max(0, defense), Math.Max(0, recovery), Math.Max(1, level));
@@ -67,7 +71,11 @@ public readonly record struct AttackProfile(
     double SkillMultiplier = 1.0,
     double CritChance = 0.05,
     double CritMultiplier = 1.5,
-    double Variance = 0.10);
+    double Variance = 0.10,
+    // HitPayload ctor flags (client): a skill can ignore armour / resistances / force field.
+    bool IgnoreArmor = false,
+    bool IgnoreResistances = false,
+    bool IgnoreForceField = false);
 
 /// <summary>
 /// Confidence of one resolved hit, deliberately split so a verified formula is never
@@ -271,21 +279,26 @@ public static class CombatModel
             AssumedVariance: profile.Variance > 0,
             AssumedMinDamage: true);
 
-        // AttackPayload.Resolve order: miss -> dodge -> block -> crit.
-        var hit = RollChance(ChanceToHit(attacker.EffectiveAttackRating, defender.EffectiveEvasion), rng);
+        // AttackPayload.Resolve order: miss -> dodge -> block -> crit. IsEvaded is the
+        // CalculateChanceToHit roll (with Hit_Chance_Bonus_Percent / Hit_Chance_Cap) unless
+        // the attacker Always_Hits.
+        var cap = attacker.HitChanceCap > 0 ? attacker.HitChanceCap : 1.0;
+        var hit = attacker.AlwaysHits ||
+            RollChance(ChanceToHit(attacker.EffectiveAttackRating, defender.EffectiveEvasion,
+                attacker.HitChanceBonus, cap), rng);
         if (!hit) return new DamageResult(0.0, false, confidence, false);
         if (RollChance(defender.DodgeChance, rng))
             return new DamageResult(0.0, false, confidence, false);
         var blocked = RollChance(defender.BlockChance, rng);
         var critChance = attacker.CritChance > 0 ? attacker.CritChance : profile.CritChance;
-        var critical = RollChance(critChance, rng);
+        var critical = !defender.IgnoresCrits && RollChance(critChance, rng);
 
         var scale = Math.Max(0, profile.SkillMultiplier) * (critical ? Math.Max(1.0, profile.CritMultiplier) : 1.0);
         // Client order: convert the weapon's physical damage, then mitigate with armour and
         // resistances reduced by the attacker's penetration.
         var converted = ConvertDamage(bundle.Scale(scale), attacker.Conversion);
-        var resistances = ApplyPenetration(defenderResistances, attacker.Penetration);
-        var armor = defender.EffectiveArmor * Math.Max(0, 1 - attacker.ArmorPenetration);
+        var resistances = profile.IgnoreResistances ? default : ApplyPenetration(defenderResistances, attacker.Penetration);
+        var armor = profile.IgnoreArmor ? 0.0 : defender.EffectiveArmor * Math.Max(0, 1 - attacker.ArmorPenetration);
         var mitigated = MitigateDamage(converted, armor, resistances);
         var variance = 1.0 + (rng.NextDouble() * 2.0 - 1.0) * Math.Max(0, profile.Variance);
         var blockFactor = blocked ? Math.Max(0.0, defender.BlockedDamageMultiplier) : 1.0;

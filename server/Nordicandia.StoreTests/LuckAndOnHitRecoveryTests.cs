@@ -335,5 +335,26 @@ static class LuckAndOnHitRecoveryTests
             CombatantStats.FromRealtime(1000, 0, 0, 10), default, new AttackProfile(1.0, 0, 0, 0), rng);
         Check(blocked.Hit && Math.Abs(blocked.Damage - plain.Damage * 0.5) < 1e-9,
             $"damage order: a 100% block halves the hit ({plain.Damage:F1} -> {blocked.Damage:F1})");
+        // Ignores_Critical_Hits (0x1168) on the defender prevents crits.
+        var critter = CombatantStats.FromRealtime(1000, 0, 0, 10) with { CritChance = 1.0 };
+        var immune = CombatantStats.FromRealtime(1000, 0, 0, 10) with { IgnoresCrits = true };
+        var noCrit = CombatModel.ResolveBundleAttack(critter, new DamageBundle(Physical: 100), immune,
+            default, new AttackProfile(1.0, 0, 2.0, 0), new CombatRandom(3));
+        Check(noCrit.Hit && !noCrit.Critical, "damage order: Ignores_Critical_Hits prevents a crit");
+        // Always_Hits (0x5C8) bypasses the hit roll.
+        var always = CombatantStats.FromRealtime(0, 0, 0, 1) with { AlwaysHits = true };
+        var evasive = CombatantStats.FromRealtime(0, 0, 0, 50) with { Evasion = 1e9 };
+        var guaranteed = CombatModel.ResolveBundleAttack(always, new DamageBundle(Physical: 100), evasive,
+            default, new AttackProfile(1.0, 0, 0, 0), new CombatRandom(3));
+        Check(guaranteed.Hit, "damage order: Always_Hits bypasses the hit roll");
+        // IgnoreArmor / IgnoreResistances bypass the defender's mitigation (HitPayload ctor flags).
+        var armored = CombatantStats.FromRealtime(1000, 0, 0, 10) with { Armor = 1000 };
+        var mixed = new DamageBundle(Physical: 100, Fire: 100);
+        var mitigated = CombatModel.ResolveBundleAttack(attacker, mixed, armored, new ResistanceBundle(Fire: 0.9),
+            new AttackProfile(1.0, 0, 0, 0), new CombatRandom(3));
+        var bypassed = CombatModel.ResolveBundleAttack(attacker, mixed, armored, new ResistanceBundle(Fire: 0.9),
+            new AttackProfile(1.0, 0, 0, 0, IgnoreArmor: true, IgnoreResistances: true), new CombatRandom(3));
+        Check(bypassed.Damage > mitigated.Damage,
+            $"damage order: IgnoreArmor/IgnoreResistances bypass mitigation ({mitigated.Damage:F1} -> {bypassed.Damage:F1})");
     }
 }
