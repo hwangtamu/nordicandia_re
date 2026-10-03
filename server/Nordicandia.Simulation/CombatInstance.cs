@@ -75,7 +75,9 @@ public sealed class CombatMonster
 /// the host's loot table so this layer stays content-free and deterministic.</summary>
 public readonly record struct LootDrop(int Slot, int Rarity, int Level, bool Boss, ulong Seed,
     // E02: the loot table (Droprates.LootTables name) and the player's class for weighting.
-    string Table = "Default", int ClassId = -1);
+    string Table = "Default", int ClassId = -1,
+    // E02: a guaranteed item type (e.g. the boss's RegularBoss HelheimKey), bypassing slot pick.
+    string ForceType = "");
 
 /// <summary>Read-only projection of an <see cref="CombatInstance"/> handed to callers/tests.</summary>
 public readonly record struct MonsterSnapshot(

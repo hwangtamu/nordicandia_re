@@ -67,9 +67,15 @@
 `ItemCatalog.Pick` 改为按此权重抽取（无权重时回退均分）；`CombatInstance` 携带
 `ClassId` 与 `LootTableName`（普通=Default、Niflheim=Niflheim），每件掉落按其表抽取。
 
+## 保证掉落（已接入）
+
+Boss 死亡额外产生 `RegularBoss` 表的保证掉落：`LootDrop.ForceType = "HelheimKey"`，
+`LootTable.CreateTypeItem` 按定义类型直接构建（跳过槽位隐式 roll）。普通怪 / Niflheim 包
+分别用 `Default` / `Niflheim` 表。
+
 ## 未完成 / 待办
 
 * **TagData 权重聚合**：`GetSpawnWeights…ByTag` 的逐 tag 聚合（sum vs max）未确认，当前 best-match（Interim）。
-* **掉落表绑定**：表已按游戏上下文选择（Default/Niflheim）；`RegularBoss`(HelheimKey) 与
-  `Helheim` 的**保证掉落**、以及 `MonsterDefinition`/容器的具体掉落表绑定未接。
+* **掉落表绑定**：表已按上下文选（Default/RegularBoss/Niflheim）；`Helheim` 模式表与
+  `MonsterDefinition`/容器的具体绑定未接。`HelheimKey` 等 48 条非掉落池物品不在网页物品目录（D33）。
 * **统计分布对照**：词缀稀有度、物品类型权重已做种子分布检验；按怪物的掉落分布仍待对照。

@@ -82,5 +82,11 @@ static class E02DropPipelineTests
         Check(typeCounts.GetValueOrDefault("Bow") > typeCounts.GetValueOrDefault("Axe1H")
             && typeCounts.GetValueOrDefault("Axe1H") > 0,
             "E02: weighted item-type selection favours the higher loot-table weight");
+
+        // E02: guaranteed typed drops (the boss's RegularBoss table -> HelheimKey).
+        // HelheimKey (Items.json 338) is not in the web item catalog yet (backlog D33), so only the
+        // guaranteed type/name is asserted here.
+        var key = LootTable.CreateItem(new LootDrop(0, 0, 10, true, 5UL, "RegularBoss", -1, ForceType: "HelheimKey"));
+        Check(key.Name == "HelheimKey", $"E02: the guaranteed boss drop is a HelheimKey ({key.Name})");
     }
 }

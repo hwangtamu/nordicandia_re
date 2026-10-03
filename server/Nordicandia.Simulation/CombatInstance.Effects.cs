@@ -193,6 +193,9 @@ public sealed partial class CombatInstance
             Silver += 50 + monster.Level * 25;
             pendingDrops.Add(RollDrop(monster.Level, minRarity: 4));
             pendingDrops.Add(RollDrop(monster.Level + 2, minRarity: 5));
+            // E02: the RegularBoss table's guaranteed drop is a HelheimKey.
+            pendingDrops.Add(new LootDrop(0, 0, monster.Level, true, rng.NextUInt64(), "RegularBoss", ClassId,
+                ForceType: "HelheimKey"));
             dungeonKills = 0;
             return;
         }

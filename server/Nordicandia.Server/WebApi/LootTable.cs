@@ -101,6 +101,9 @@ public static class LootTable
     public static SerializedItem CreateItem(LootDrop drop, ItemCatalog.RarityType? forceRarityType = null,
         double magicFind = 0)
     {
+        // E02: a guaranteed item type (the boss's RegularBoss drop, e.g. HelheimKey) is not a slot
+        // pick, so build it directly from the definition.
+        if (!string.IsNullOrEmpty(drop.ForceType)) return CreateTypeItem(drop);
         var rng = new CombatRandom(drop.Seed == 0 ? 0x2545F4914F6CDD1DUL : drop.Seed);
         // A separate stream for affix generation, so the count/values don't shift the base item's
         // weapon/armour rolls (the client uses one global Rand; the web keeps its seeded streams).
@@ -268,6 +271,32 @@ public static class LootTable
             }).ToList(),
         };
         return item;
+    }
+
+    /// <summary>E02: a definition-typed item with no slot implicit rolls (guaranteed drops such as
+    /// the boss's HelheimKey / Helheim's Bless+portals).</summary>
+    private static SerializedItem CreateTypeItem(LootDrop drop)
+    {
+        var definition = ItemCatalog.Definitions.FirstOrDefault(d => d.Type == drop.ForceType);
+        var resolved = definition.Name is not null;
+        return new SerializedItem
+        {
+            Id = Guid.NewGuid(),
+            Name = resolved ? definition.Name : drop.ForceType,
+            Slot = ItemSlotTypes.Inventory,
+            DefinitionIntegerId = resolved ? definition.IntegerId : 0,
+            BaseRarity = (Rarity)Math.Clamp(drop.Rarity, 0, 11),
+            Location = new SerializedItemInventoryLocation { Page = 1, Row = 0, Column = 0 },
+            Attributes = new SerializedAttributes
+            {
+                Values = new Dictionary<AttributeOrigin, Dictionary<int, GameAttributeValue>>
+                {
+                    [AttributeOrigin.Item] = new() { [AttrRequiredLevel] = Value(Math.Max(1, drop.Level)) },
+                },
+                MultiplicativeValues = new(),
+            },
+            Affixes = new List<SerializedAffix>(),
+        };
     }
 
     private static GameAttributeValue Value(double v) => new() { Value = (int)Math.Round(v), ValueD = v };
