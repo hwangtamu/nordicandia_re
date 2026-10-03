@@ -3,7 +3,10 @@ namespace Nordicandia.Simulation;
 /// <summary>Per-archetype monster tuning so an instance can spawn several kinds of enemy.</summary>
 public readonly record struct MonsterProfile(
     string Name, double HpMult = 1.0, double OffenseMult = 1.0, double DefenseMult = 1.0, double Speed = 2.4,
-    DamageBundle Damage = default, ResistanceBundle Resistances = default);
+    DamageBundle Damage = default, ResistanceBundle Resistances = default,
+    // Data-driven behaviour (Monsters.json Ranged/Caster): ranged/caster packs stop at
+    // AttackRange and back off inside PreferredDistance instead of closing to melee.
+    bool Ranged = false, double AttackRange = 0, double PreferredDistance = 0);
 
 /// <summary>One monster inside an authoritative combat instance.</summary>
 public sealed class CombatMonster
@@ -24,6 +27,10 @@ public sealed class CombatMonster
     public double Speed { get; set; } = 2.4;
     public double AttackInterval { get; set; } = 1.6;
     public double AttackCooldown { get; set; }
+    /// <summary>True for Ranged/Caster monsters (they keep distance instead of meleeing).</summary>
+    public bool Ranged { get; set; }
+    public double AttackRange { get; set; }
+    public double PreferredDistance { get; set; }
     public double StunTimer { get; set; }
     /// <summary>Remaining poison duration; while &gt; 0 the target counts as poisoned.</summary>
     public double PoisonTimer { get; set; }
@@ -150,6 +157,13 @@ public sealed class CombatInstance
     private int packsCleared;
     private double packSizeRemainder;
     private int packIndex;
+    // Pack members spawn in one at a time (client: _SpawnDelay >= 0.1s), so a pack is not a
+    // single instantaneous wave.
+    private int pendingPackSize;
+    private double packSpawnTimer;
+    private double packOriginX;
+    private double packOriginZ;
+    private const double PackMemberSpawnInterval = 0.1;
     // Deferred so a pack is never cleared/respawned while an iteration over `monsters` is live.
     private bool pendingPackSpawn;
 
@@ -342,25 +356,40 @@ public sealed class CombatInstance
         return Math.Max(1, size);
     }
 
-    /// <summary>Clears the arena and spawns the next Niflheim pack, clustered around one point.
-    /// The client spaces pack members in by 0.1s; the web spawns the whole pack at once.</summary>
+    /// <summary>Clears the arena and starts the next Niflheim pack in a spawn zone. The first
+    /// member appears immediately; the rest follow every 0.1s (client _SpawnDelay step).</summary>
     private void SpawnPack()
     {
         if (packsCleared >= totalPacks) return;
         monsters.Clear();
-        var size = NextPackSize();
-        var arenaAngle = rng.NextDouble() * Math.PI * 2;
-        var radius = 6 + rng.NextDouble() * 7;
-        var cx = Math.Cos(arenaAngle) * radius;
-        var cz = Math.Sin(arenaAngle) * radius;
-        for (var i = 0; i < size; i++)
-        {
-            var angle = (i / (double)size) * Math.PI * 2;
-            var x = Math.Clamp(cx + Math.Cos(angle) * 2.5, -ArenaHalf, ArenaHalf);
-            var z = Math.Clamp(cz + Math.Sin(angle) * 2.5, -ArenaHalf, ArenaHalf);
-            monsters.Add(CreateMonster(i, x, z, alive: true));
-        }
+        // Client packs spawn inside one of the dungeon's spawn areas; the web picks one of a
+        // ring of zones and clusters the pack there.
+        var zone = (int)(rng.NextDouble() * SpawnZones.Length) % SpawnZones.Length;
+        var (cx, cz) = SpawnZones[zone];
+        packOriginX = cx;
+        packOriginZ = cz;
+        pendingPackSize = NextPackSize();
+        packSpawnTimer = 0;
+        pendingPackSize--;
+        SpawnOnePackMember();
         packIndex++;
+    }
+
+    /// <summary>Positions of the Niflheim spawn zones (the web stand-in for the client's
+    /// DungeonMonsterSpawnArea volumes).</summary>
+    private static readonly (double X, double Z)[] SpawnZones =
+    {
+        (0, 12), (11, 6), (11, -6), (0, -12), (-11, -6), (-11, 6),
+    };
+
+    private void SpawnOnePackMember()
+    {
+        var index = monsters.Count;
+        var angle = rng.NextDouble() * Math.PI * 2;
+        var r = 1.5 + rng.NextDouble() * 2.0;
+        var x = Math.Clamp(packOriginX + Math.Cos(angle) * r, -ArenaHalf, ArenaHalf);
+        var z = Math.Clamp(packOriginZ + Math.Sin(angle) * r, -ArenaHalf, ArenaHalf);
+        monsters.Add(CreateMonster(index, x, z, alive: true));
     }
 
     private CombatMonster CreateMonster(int index, double x, double z, bool alive)
@@ -386,6 +415,9 @@ public sealed class CombatInstance
             Damage = damage,
             Resistances = profile.Resistances,
             Speed = profile.Speed,
+            Ranged = profile.Ranged,
+            AttackRange = profile.AttackRange > 0 ? profile.AttackRange : MonsterAttackRange,
+            PreferredDistance = profile.PreferredDistance > 0 ? profile.PreferredDistance : MonsterAttackRange * 0.5,
             Alive = alive,
             AttackCooldown = rng.NextDouble() * 1.6,
             WanderTimer = rng.NextDouble() * 2,
@@ -447,6 +479,16 @@ public sealed class CombatInstance
         UpdateMonsters(dt);
         if (boss is { Alive: true } && PlayerHp > 0) UpdateBoss(dt);
         TickPoison(dt);
+        if (pendingPackSize > 0)
+        {
+            packSpawnTimer += dt;
+            while (pendingPackSize > 0 && packSpawnTimer >= PackMemberSpawnInterval)
+            {
+                packSpawnTimer -= PackMemberSpawnInterval;
+                pendingPackSize--;
+                SpawnOnePackMember();
+            }
+        }
         if (pendingPackSpawn)
         {
             pendingPackSpawn = false;
@@ -531,9 +573,11 @@ public sealed class CombatInstance
         monster.AttackCooldown -= dt;
         var dx = PlayerX - monster.X;
         var dz = PlayerZ - monster.Z;
-        var distance = Math.Sqrt(dx * dx + dz * dz);
+        var distance = Math.Max(1e-6, Math.Sqrt(dx * dx + dz * dz));
+        // Ranged/Caster monsters attack from their own range; melee use the global range.
+        var attackRange = monster.Ranged ? monster.AttackRange : MonsterAttackRange;
 
-        if (distance <= MonsterAttackRange)
+        if (distance <= attackRange)
         {
             if (monster.AttackCooldown <= 0)
             {
@@ -556,6 +600,13 @@ public sealed class CombatInstance
                     playerRespawnTimer = PlayerRespawnSeconds;
                     hasTarget = false;
                 }
+            }
+            // Kiting: a ranged monster inside its preferred distance backs away.
+            if (monster.Ranged && distance < monster.PreferredDistance)
+            {
+                var step = Math.Min(monster.PreferredDistance - distance + 1.0, monster.Speed * dt);
+                monster.X = Math.Clamp(monster.X - dx / distance * step, -ArenaHalf, ArenaHalf);
+                monster.Z = Math.Clamp(monster.Z - dz / distance * step, -ArenaHalf, ArenaHalf);
             }
             return;
         }
@@ -713,8 +764,9 @@ public sealed class CombatInstance
 
         if (packMode)
         {
-            // The pack is over once its last member dies; then spawn the next or finish.
-            if (monsters.All(m => !m.Alive))
+            // The pack is over once its last member dies (and every member has spawned);
+            // then spawn the next pack or finish the run.
+            if (pendingPackSize == 0 && monsters.All(m => !m.Alive))
             {
                 packsCleared++;
                 if (packsCleared >= totalPacks)

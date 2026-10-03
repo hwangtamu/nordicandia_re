@@ -158,4 +158,61 @@ static class LuckAndOnHitRecoveryTests
         Check(secondaryPoison.Monsters.Count(m => m.PoisonTimer > 0) == 3,
             "fork: child hits apply on-hit poison without recursively forking");
     }
+
+    public static void ConversionPenetration()
+    {
+        // ApplyWeaponDamageConversion: source reduced by exactly the moved amount.
+        var split = CombatModel.ConvertDamage(new DamageBundle(Physical: 100), new DamageBundle(Fire: 0.2, Cold: 0.3));
+        Check(Math.Abs(split.Physical - 50) < 1e-9 && Math.Abs(split.Fire - 20) < 1e-9 && Math.Abs(split.Cold - 30) < 1e-9,
+            "conversion: 100 physical becomes 50 physical + 20 fire + 30 cold");
+        // Sum above 1 normalises to a full split.
+        var over = CombatModel.ConvertDamage(new DamageBundle(Physical: 100), new DamageBundle(Fire: 0.8, Cold: 0.8));
+        Check(Math.Abs(over.Physical) < 1e-9 && Math.Abs(over.Fire - 50) < 1e-9 && Math.Abs(over.Cold - 50) < 1e-9,
+            "conversion: percentages above 100% normalise before applying");
+        Check(CombatModel.ConvertDamage(new DamageBundle(Physical: 10), default) == new DamageBundle(Physical: 10),
+            "conversion: no conversion leaves the bundle unchanged");
+
+        // Penetration subtracts from resistance; a weakness (negative) raises damage.
+        var pen = CombatModel.ApplyPenetration(new ResistanceBundle(Fire: 0.5), new ResistanceBundle(Fire: 0.75));
+        Check(Math.Abs(pen.Fire + 0.25) < 1e-9, "penetration: 0.5 - 0.75 = -0.25");
+        var withPen = CombatModel.MitigateDamage(new DamageBundle(Fire: 100), 0, pen);
+        var without = CombatModel.MitigateDamage(new DamageBundle(Fire: 100), 0, new ResistanceBundle(Fire: 0.5));
+        Check(Math.Abs(without - 50) < 1e-9 && withPen > 120,
+            $"penetration: negative resistance raises fire damage ({without:F1} -> {withPen:F1})");
+    }
+
+    public static void ItemQuantityRemainder()
+    {
+        var remainder = 0.0;
+        var counts = new int[4];
+        for (var i = 0; i < 4; i++) counts[i] = CombatRegistry.RollItemsPerDrop(0.5, ref remainder);
+        Check(counts.SequenceEqual(new[] { 1, 2, 1, 2 }),
+            "item quantity: +50% carries the fraction across drops (1,2,1,2)");
+        var zero = 0.0;
+        Check(CombatRegistry.RollItemsPerDrop(0, ref zero) == 1 && zero == 0,
+            "item quantity: no bonus drops exactly one and keeps no remainder");
+        var high = 0.0;
+        Check(CombatRegistry.RollItemsPerDrop(100, ref high) == 5,
+            "item quantity: capped at MaxQuantityFromMagicFindMultiplier = 5");
+    }
+
+    public static void RangedKiting()
+    {
+        var stats = CombatantStats.FromRealtime(0, 100000, 0, 1);
+        var profile = new MonsterProfile("Archer", HpMult: 1e6, OffenseMult: 0, Speed: 4,
+            Ranged: true, AttackRange: 8, PreferredDistance: 4);
+        var instance = new CombatInstance(stats, 0, 0, 0, 0, seed: 5, monsterCount: 1,
+            monsterProfiles: new[] { profile });
+        instance.MoveTo(0, 0);
+        var archer = instance.Monsters[0];
+        archer.X = 2;
+        archer.Z = 0;
+        instance.Advance(0.05);
+        var afterClose = Math.Sqrt(archer.X * archer.X + archer.Z * archer.Z);
+        Check(afterClose > 2, $"ai: a ranged monster backs off when the player is inside its preferred distance ({afterClose:F2})");
+        archer.X = 20;
+        archer.Z = 0;
+        instance.Advance(0.05);
+        Check(archer.X < 20, $"ai: a ranged monster closes in while outside its attack range ({archer.X:F2})");
+    }
 }

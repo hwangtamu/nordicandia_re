@@ -43,7 +43,8 @@ public readonly record struct CombatantStats(double Offense, double Defense, dou
     double AttackRating = 0, double Armor = 0, double Evasion = 0, double CritChance = 0,
     double LifeMax = 0, double ManaMax = 0, DamageBundle Damage = default, ResistanceBundle Resistances = default,
     double ForkChance = 0, double ChainChance = 0, double PoisonChance = 0, double DoubleDamageOnCritPoisoned = 0,
-    double MoveSpeedMultiplier = 1, bool ProjectileAutoAttack = false, bool PoisonOnHit = false)
+    double MoveSpeedMultiplier = 1, bool ProjectileAutoAttack = false, bool PoisonOnHit = false,
+    DamageBundle Conversion = default, ResistanceBundle Penetration = default, double ArmorPenetration = 0)
 {
     public static CombatantStats FromRealtime(double offense, double defense, double recovery, int level)
         => new(Math.Max(0, offense), Math.Max(0, defense), Math.Max(0, recovery), Math.Max(1, level));
@@ -146,6 +147,31 @@ public static class CombatModel
     public static double EffectiveElementalDamage(double rawDamage, double resistance)
         => ApplyDamageReduction(Math.Min(ResistanceCap, resistance), rawDamage);
 
+    /// <summary>ClientVerified Elemental/ApplyWeaponDamageConversion (0x02BABF3C + 0x02BAC1F8).
+    /// Moves <c>physical * percent</c> into each element, normalising when the percentages sum
+    /// above 1 and only reducing the source by the amount actually moved.</summary>
+    public static DamageBundle ConvertDamage(DamageBundle damage, DamageBundle conversion)
+    {
+        if (damage.Physical <= 0) return damage;
+        var total = conversion.Fire + conversion.Cold + conversion.Lightning + conversion.Poison;
+        if (total <= 0) return damage;
+        var scale = total > 1 ? 1.0 / total : 1.0;
+        var fire = damage.Physical * conversion.Fire * scale;
+        var cold = damage.Physical * conversion.Cold * scale;
+        var lightning = damage.Physical * conversion.Lightning * scale;
+        var poison = damage.Physical * conversion.Poison * scale;
+        var moved = fire + cold + lightning + poison;
+        return new DamageBundle(Math.Max(0, damage.Physical - moved),
+            damage.Fire + fire, damage.Cold + cold, damage.Lightning + lightning, damage.Poison + poison);
+    }
+
+    /// <summary>Elemental resistance penetration (the attacker's <c>*_Resistance_Penetration_Total</c>).
+    /// Subtracted from the defender's resistance before mitigation; a negative resistance (weakness)
+    /// increases the damage per <see cref="ApplyDamageReduction"/>.</summary>
+    public static ResistanceBundle ApplyPenetration(ResistanceBundle resistances, ResistanceBundle penetration)
+        => new(resistances.Fire - penetration.Fire, resistances.Cold - penetration.Cold,
+            resistances.Lightning - penetration.Lightning, resistances.Poison - penetration.Poison);
+
     /// <summary>ClientVerified full damage pipeline: physical damage goes through armour
     /// (<see cref="PhysicalDamageReduction"/>), each element through its capped resistance
     /// (<see cref="EffectiveElementalDamage"/>), then the parts are summed.</summary>
@@ -247,7 +273,12 @@ public static class CombatModel
         if (!hit) return new DamageResult(0.0, false, confidence, false);
 
         var scale = Math.Max(0, profile.SkillMultiplier) * (critical ? Math.Max(1.0, profile.CritMultiplier) : 1.0);
-        var mitigated = MitigateDamage(bundle.Scale(scale), defender.EffectiveArmor, defenderResistances);
+        // Client order: convert the weapon's physical damage, then mitigate with armour and
+        // resistances reduced by the attacker's penetration.
+        var converted = ConvertDamage(bundle.Scale(scale), attacker.Conversion);
+        var resistances = ApplyPenetration(defenderResistances, attacker.Penetration);
+        var armor = defender.EffectiveArmor * Math.Max(0, 1 - attacker.ArmorPenetration);
+        var mitigated = MitigateDamage(converted, armor, resistances);
         var variance = 1.0 + (rng.NextDouble() * 2.0 - 1.0) * Math.Max(0, profile.Variance);
         var damage = Math.Max(1.0, mitigated * Math.Max(0.05, variance));
         return new DamageResult(damage, critical, confidence, true);

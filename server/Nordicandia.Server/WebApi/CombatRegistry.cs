@@ -55,12 +55,18 @@ public sealed class CombatRegistry
             Resistances: new ResistanceBundle(Fire: -0.2)),
         new("DemonOrc", HpMult: 1.3, OffenseMult: 1.2, DefenseMult: 1.0, Speed: 2.4,
             Damage: new DamageBundle(Fire: 0.5), Resistances: new ResistanceBundle(Fire: 0.3, Cold: -0.2)),
+        // Ranged (gamedata SkeletonArcher1): attacks from range and backs off when the player closes.
         new("Skeleton", HpMult: 1.0, OffenseMult: 0.9, DefenseMult: 1.1, Speed: 2.2,
-            Damage: new DamageBundle(Cold: 0.4), Resistances: new ResistanceBundle(Poison: 0.5, Fire: -0.3)),
+            Damage: new DamageBundle(Cold: 0.4), Resistances: new ResistanceBundle(Poison: 0.5, Fire: -0.3),
+            Ranged: true, AttackRange: 8, PreferredDistance: 4),
         new("BloodHound", HpMult: 0.8, OffenseMult: 1.4, DefenseMult: 0.6, Speed: 3.0,
             Damage: new DamageBundle(Poison: 0.5), Resistances: new ResistanceBundle(Poison: 0.4)),
         new("StoneGolem", HpMult: 1.8, OffenseMult: 0.8, DefenseMult: 1.6, Speed: 1.6,
             Resistances: new ResistanceBundle(Lightning: -0.2, Fire: 0.2)),
+        // Caster (gamedata CasterDemon1): long-range elemental attacker.
+        new("CasterDemon1", HpMult: 0.9, OffenseMult: 1.1, DefenseMult: 0.8, Speed: 2.0,
+            Damage: new DamageBundle(Fire: 0.6), Resistances: new ResistanceBundle(Fire: 0.4, Cold: -0.2),
+            Ranged: true, AttackRange: 9, PreferredDistance: 5),
     };
 
     /// <summary>Scaled archetypes for a Niflheim run. Provisional: the client's
@@ -92,6 +98,8 @@ public sealed class CombatRegistry
         public long FlushedVersion;
         // Drops since the last unique/set; at the threshold the next drop is forced unique.
         public int UniquePity;
+        // Carries the fractional part of the recovered item-quantity roll between drops.
+        public double ItemQuantityRemainder;
         // Wall-clock seconds the player was away when this entry was created; claimed once.
         public long PendingOfflineSeconds;
         // Niflheim portal run: while true the instance uses the scaled monster profiles.
@@ -629,11 +637,11 @@ public sealed class CombatRegistry
     {
         var drops = entry.Instance.DrainDrops();
         if (drops.Count == 0) return;
-        // Magic find uses recovered per-type saturation; item quantity still uses an Interim
-        // floor rule for extra rolls, capped at GameParameters'
-        // MaxQuantityFromMagicFindMultiplier = 5.
+        // Magic find uses the recovered per-type saturation. Item quantity uses the recovered
+        // floor-with-remainder rule (Num_Items_Granted * (Item_Quantity_Final_Multiplier + 1)),
+        // capped at GameParameters.MaxQuantityFromMagicFindMultiplier = 5.
         var (magicFind, itemQuantity) = LootLuck(owner, characterId, entry);
-        var rollsPerDrop = Math.Clamp(1 + (int)Math.Floor(itemQuantity), 1, MaxQuantityFromMagicFindMultiplier);
+        var rollsPerDrop = RollItemsPerDrop(itemQuantity, ref entry.ItemQuantityRemainder);
         // Drop pity: force a unique once enough drops have gone by without one, so the rarest
         // tier is reachable in a session. Set items also reset the counter.
         var items = new List<SerializedItem>();
@@ -659,6 +667,16 @@ public sealed class CombatRegistry
                 LootTable.AttributeOf(item, LootTable.AttrRecovery),
                 AffixNames(item)));
         }
+    }
+
+    /// <summary>Recovered per-drop item count: the fractional quantity carries into the next drop
+    /// instead of being discarded, matching the client's <c>PlayerItemQuantityRemainder</c>.</summary>
+    public static int RollItemsPerDrop(double itemQuantity, ref double remainder)
+    {
+        var raw = 1 + itemQuantity + remainder;
+        var count = (int)Math.Floor(raw);
+        remainder = raw - count;
+        return Math.Clamp(count, 1, MaxQuantityFromMagicFindMultiplier);
     }
 
     /// <summary>Character magic find (Magic_Find_Percent_Total) and item quantity

@@ -102,3 +102,14 @@ killsPerMinute = truncate(efficiency * clamp(1.5 * secondHighestReachedTier, 10,
 
 物品数量仍使用 `1 + floor(itemQuantity)`、最多 5 次重抽，**其精确取整未恢复**。
 此轮没有恢复完整元素转换/穿透、AI、Niflheim pack 布局，也没有部署线上服务。
+
+## 后续补充（同日）
+
+本轮修复之后又补齐了：
+
+* **Niflheim pack 布局**：`NiflheimPortalGameMode` 的 `TotalPacks`、`GetRandomPackSize`、0.1s 逐个生成、刷怪区与顺序刷新已接入网页（详见 `M3_STATUS.md`）。
+* **元素转换/穿透**：`ApplyWeaponDamageConversion` / `InternalApplyDamageConversion` 与 `*_Resistance_Penetration_Total` / `Armor_Piercing_Percent_Total` 已接入伤害管线。
+* **物品数量取整**：`floor(remainder + Num_Items_Granted × (Item_Quantity_Final_Multiplier + 1))` 余数累积。
+* **怪物 AI**：按 gamedata `Ranged`/`Caster` 分化为远程保持距离/近战追打；完整 Brain 动作树未移植。
+
+服务端套件 **438 PASS**，smoke/npc-smoke 通过。

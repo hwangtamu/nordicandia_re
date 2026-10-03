@@ -100,8 +100,8 @@ static class M3Tests
                 Check(entered.State.Combat.TotalPacks == Math.Max(2, packs)
                     && entered.State.Combat.PacksRemaining == Math.Max(2, packs),
                     $"m3 portal: the run is {entered.State.Combat.PacksRemaining}/{entered.State.Combat.TotalPacks} packs");
-                Check(entered.State.Combat.Monsters.Count is >= 2 and <= 4,
-                    $"m3 portal: the first pack holds 2..4 monsters ({entered.State.Combat.Monsters.Count})");
+                Check(entered.State.Combat.Monsters.Count is >= 1 and <= 4,
+                    $"m3 portal: the first pack starts with 2..4 monsters ({entered.State.Combat.Monsters.Count} so far)");
                 Check(store.GetItems(owner, id).All(i => i.Id != portalItem.Id), "m3 portal: the portal item is not duplicated");
 
                 var returned = registry.ReturnPortal(owner, id);
