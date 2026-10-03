@@ -721,6 +721,14 @@ public sealed partial class CombatInstance
             "ImNotNormalMonster" => monster.IsBoss || monster.Champion,
             // The web slice has no world-tier progression; it represents the endgame.
             "ImAboveOrEqualToTier4" => true,
+            // W03: Boss phase conditions. CanEnrage is Inferred (life threshold not recovered);
+            // StateIdle is the pre-combat idle state; the minion checks reuse hasMinions.
+            "StateIdle" => stateWander,
+            "AliveIdleNonBossMonstersExist" => hasMinions,
+            "CanEnrage" => monster.IsBoss && monster.Hp <= 0.5 * monster.MaxHp,
+            // Summon lifetime / totem / pet conditions belong to P01-P04; hostile monsters ignore them.
+            "ImExpired" => false,
+            "WorldLootExists" => false,
             _ => false,
         };
 
