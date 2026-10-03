@@ -83,6 +83,31 @@ public sealed class CombatRegistry
     private static MonsterProfile[] NiflheimProfiles() =>
         MonsterProfiles.Select(p => p with { ExpMult = 1.8 }).ToArray();
 
+    /// <summary>W01/W04: the spawn pool for a world tier, built from that world's
+    /// MonsterTypeSpawnWeights and the real monster roster (name, damage type, ranged, brain).
+    /// Falls back to the small default archetype set when the world or its types are unknown.</summary>
+    private static MonsterProfile[] ProfilesForWorldTier(int tier)
+    {
+        var world = WorldCatalog.ForTier(tier);
+        if (world is null) return MonsterProfiles;
+        var pool = new List<MonsterProfile>();
+        foreach (var typeName in world.Value.SpawnWeights.Keys.OrderBy(k => k, StringComparer.Ordinal))
+            foreach (var monster in MonsterCatalog.ByType(typeName))
+                pool.Add(new MonsterProfile(monster.Name, Speed: 2.4,
+                    Damage: MonsterCatalog.DamageBundle(monster.Name),
+                    Ranged: monster.Ranged, Brain: monster.BrainName));
+        return pool.Count >= 3 ? pool.ToArray() : MonsterProfiles;
+    }
+
+    /// <summary>The reached world tier from the character's attribute map (W07: World_Tier_Unlocked
+    /// id 9, falling back to World_Tier id 8).</summary>
+    private static int WorldTier(IReadOnlyDictionary<int, double> map)
+    {
+        var tier = (int)map.GetValueOrDefault(9);
+        if (tier <= 0) tier = (int)map.GetValueOrDefault(8);
+        return Math.Max(1, tier);
+    }
+
     private sealed class Entry
     {
         public CombatInstance Instance = null!;
@@ -125,19 +150,21 @@ public sealed class CombatRegistry
             var basePowers = PowerCatalog.BuildPool(persisted.Class, loadout.Active, loadout.Passive);
             var ranks = store.GetMasteryRanks(owner, characterId);
             var niflheim = store.IsNiflheimActive(owner, characterId);
+            var attributeMap = CharacterAttributeMap(owner, characterId, basePowers);
             var stats = CharacterRatings.Apply(
                 CombatantStats.FromRealtime(
                     persisted.Offense + equipOffense,
                     persisted.Defense + equipDefense,
                     persisted.Recovery + equipRecovery,
                     (int)persisted.Level) with { ProjectileAutoAttack = UsesRangedAutoAttack(items) },
-                CharacterAttributeMap(owner, characterId, basePowers));
+                attributeMap);
             // P1: seed the instance's version from the persisted counter so it never resets
             // to 1 across a restart (which would make the command log boundary reject fresh
             // commands from a client that already saw a higher version).
             var persistedVersion = store.GetCombatVersion(owner, characterId);
             var instance = new CombatInstance(stats, persisted.Experience, persisted.Silver, persisted.Opals,
-                (int)persisted.MonsterKills, seed, monsterProfiles: niflheim ? NiflheimProfiles() : MonsterProfiles,
+                (int)persisted.MonsterKills, seed,
+                monsterProfiles: niflheim ? NiflheimProfiles() : ProfilesForWorldTier(WorldTier(attributeMap)),
                 classPowers: EffectivePowers(basePowers, ranks), initialVersion: persistedVersion);
             entries[characterId] = new Entry
             {
@@ -219,9 +246,7 @@ public sealed class CombatRegistry
     {
         var map = CharacterAttributeMap(owner, characterId, entry.BasePowers);
         var eval = CharacterAttributeEngine.Instance.Evaluate(map);
-        var reached = (int)map.GetValueOrDefault(9);
-        if (reached <= 0) reached = (int)map.GetValueOrDefault(8);
-        return (eval.Resolve("Offline_Battle_Efficiency_Multiplier"), Math.Max(1, reached));
+        return (eval.Resolve("Offline_Battle_Efficiency_Multiplier"), WorldTier(map));
     }
 
     // ----- Aesir blessings (M3) -----

@@ -31,5 +31,9 @@ static class W01MonsterCatalogTests
             "W01: CasterDemon1 deals cold (DamageType 2), not the hand-set fire");
         Check(MonsterCatalog.DamageBundle("Bat") == new DamageBundle(Physical: 1),
             "W01: a monster without an explicit DamageType deals physical");
+
+        // World spawn pools group spawnable monsters by type.
+        Check(MonsterCatalog.ByType("Beast").Count() >= 5 && MonsterCatalog.ByType("Undead").Any(),
+            "W01: spawnable monsters are grouped by type (Beast/Undead) for world pools");
     }
 }

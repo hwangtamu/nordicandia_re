@@ -12,8 +12,8 @@ namespace Nordicandia.Server.WebApi;
 /// </summary>
 public static class MonsterCatalog
 {
-    public readonly record struct Monster(string Name, int IntegerId, string? TypeName, int? DamageType,
-        bool Caster, bool Ranged, int? Size, IReadOnlyList<int> AvailableRarities);
+    public readonly record struct Monster(string Name, int IntegerId, string? TypeName, string? BrainName,
+        int? DamageType, bool Caster, bool Ranged, int? Size, IReadOnlyList<int> AvailableRarities);
 
     private static readonly Lazy<IReadOnlyDictionary<string, Monster>> All = new(Load);
 
@@ -56,12 +56,17 @@ public static class MonsterCatalog
         var result = new Dictionary<string, Monster>();
         foreach (var item in raw.Items)
             if (item.Name is not null)
-                result[item.Name] = new Monster(item.Name, item.IntegerId, item.TypeName, item.DamageType,
-                    item.Caster, item.Ranged, item.Size, item.AvailableRarities ?? new List<int>());
+                result[item.Name] = new Monster(item.Name, item.IntegerId, item.TypeName, item.BrainName,
+                    item.DamageType, item.Caster, item.Ranged, item.Size, item.AvailableRarities ?? new List<int>());
         return result;
     }
 
+    /// <summary>W01: monsters of a monster type (Beast/Demon/Undead/...), spawnable first.</summary>
+    public static IEnumerable<Monster> ByType(string typeName)
+        => All.Value.Values.Where(m => m.TypeName == typeName && m.AvailableRarities.Count > 0)
+            .OrderBy(m => m.IntegerId);
+
     private sealed record RawCatalog(List<RawMonster> Items);
-    private sealed record RawMonster(string? Name, int IntegerId, string? TypeName, int? DamageType,
+    private sealed record RawMonster(string? Name, int IntegerId, string? TypeName, string? BrainName, int? DamageType,
         bool Caster, bool Ranged, int? Size, List<int>? AvailableRarities);
 }
