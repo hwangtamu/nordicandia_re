@@ -80,8 +80,8 @@ public sealed class CombatRegistry
     /// NiflheimPortalGameMode spawns "packs" sized by the portal affix (NumMonsterPacks); the
     /// exact per-pack scaling was not decoded, so the same archetypes raise ExpMult (the client's
     /// global monster difficulty multiplier).</summary>
-    private static MonsterProfile[] NiflheimProfiles() =>
-        MonsterProfiles.Select(p => p with { ExpMult = 1.8 }).ToArray();
+    private static MonsterProfile[] NiflheimProfiles(int tier) =>
+        ProfilesForWorldTier(tier).Select(p => p with { ExpMult = 1.8 }).ToArray();
 
     /// <summary>W01/W04: the spawn pool for a world tier, built from that world's
     /// MonsterTypeSpawnWeights and the real monster roster (name, damage type, ranged, brain).
@@ -193,7 +193,7 @@ public sealed class CombatRegistry
             var layout = MapLayout.Generate(21, 21, 5, seed ^ 0x4D41504C41594F55UL, ThemeForTier(worldTier));
             var instance = new CombatInstance(stats, persisted.Experience, persisted.Silver, persisted.Opals,
                 (int)persisted.MonsterKills, seed,
-                monsterProfiles: niflheim ? NiflheimProfiles() : ProfilesForWorldTier(worldTier),
+                monsterProfiles: niflheim ? NiflheimProfiles(worldTier) : ProfilesForWorldTier(worldTier),
                 classPowers: EffectivePowers(basePowers, ranks), initialVersion: persistedVersion, layout: layout);
             entries[characterId] = new Entry
             {
@@ -347,7 +347,8 @@ public sealed class CombatRegistry
             store.SetNiflheimActive(owner, characterId, true);
             entry.Niflheim = true;
             entry.NiflheimPacks = packs;
-            entry.Instance.SetWorld(NiflheimProfiles(), packs > 0 ? packs : null);
+            var portalTier = WorldTier(CharacterAttributeMap(owner, characterId, entry.BasePowers));
+            entry.Instance.SetWorld(NiflheimProfiles(portalTier), packs > 0 ? packs : null);
             entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
             FlushLocked(owner, characterId, entry);
             return (true, "ok", TakeState(entry));
@@ -386,7 +387,9 @@ public sealed class CombatRegistry
         store.SetNiflheimActive(owner, characterId, false);
         entry.Niflheim = false;
         entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
-        entry.Instance.SetWorld(MonsterProfiles);
+        // Return to the world-tier pool (not the default archetypes), matching the entry's world.
+        var map = CharacterAttributeMap(owner, characterId, entry.BasePowers);
+        entry.Instance.SetWorld(ProfilesForWorldTier(WorldTier(map)));
         entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
     }
 
