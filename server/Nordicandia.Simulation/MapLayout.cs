@@ -40,6 +40,70 @@ public sealed class MapLayout
         return ((gx - Width / 2.0 + 0.5) * tile, (gz - Height / 2.0 + 0.5) * tile);
     }
 
+    /// <summary>World position -> nearest grid cell.</summary>
+    public (int X, int Z) Cell(double x, double z, double arenaHalf)
+    {
+        var tile = 2 * arenaHalf / Math.Max(Width, Height);
+        return ((int)Math.Floor(x / tile + Width / 2.0), (int)Math.Floor(z / tile + Height / 2.0));
+    }
+
+    private static readonly (int X, int Z)[] Neighbours = { (-1, 0), (1, 0), (0, -1), (0, 1) };
+
+    /// <summary>W02: A* over the floor grid (4-connected). Returns cell centres after the start,
+    /// or an empty list when the target is unreachable (e.g. off the floor).</summary>
+    public List<(int X, int Z)> FindPath((int X, int Z) from, (int X, int Z) to)
+    {
+        var result = new List<(int X, int Z)>();
+        if (!IsFloor(from.X, from.Z) || !IsFloor(to.X, to.Z)) return result;
+        var size = Width * Height;
+        var cameFrom = new int[size];
+        var gScore = new int[size];
+        var fScore = new int[size];
+        for (var i = 0; i < size; i++) { cameFrom[i] = -1; gScore[i] = int.MaxValue; fScore[i] = int.MaxValue; }
+        int Index(int x, int z) => z * Width + x;
+        int H(int x, int z) => Math.Abs(x - to.X) + Math.Abs(z - to.Z);
+        var start = Index(from.X, from.Z);
+        var goal = Index(to.X, to.Z);
+        gScore[start] = 0;
+        fScore[start] = H(from.X, from.Z);
+        var open = new List<int> { start };
+        while (open.Count > 0)
+        {
+            var bestAt = 0;
+            for (var i = 1; i < open.Count; i++)
+                if (fScore[open[i]] < fScore[open[bestAt]]) bestAt = i;
+            var current = open[bestAt];
+            if (current == goal)
+            {
+                var node = current;
+                while (node != start && node >= 0)
+                {
+                    result.Add((node % Width, node / Width));
+                    node = cameFrom[node];
+                }
+                result.Reverse();
+                return result;
+            }
+            open.RemoveAt(bestAt);
+            var cx = current % Width;
+            var cz = current / Width;
+            foreach (var (dx, dz) in Neighbours)
+            {
+                var nx = cx + dx;
+                var nz = cz + dz;
+                if (!IsFloor(nx, nz)) continue;
+                var neighbour = Index(nx, nz);
+                var tentative = gScore[current] + 1;
+                if (tentative >= gScore[neighbour]) continue;
+                cameFrom[neighbour] = current;
+                gScore[neighbour] = tentative;
+                fScore[neighbour] = tentative + H(nx, nz);
+                if (!open.Contains(neighbour)) open.Add(neighbour);
+            }
+        }
+        return result;
+    }
+
     /// <summary>Compact ASCII rows ('#' floor, '.' void), used by the client to assemble the kit.</summary>
     public string[] ToRows()
     {

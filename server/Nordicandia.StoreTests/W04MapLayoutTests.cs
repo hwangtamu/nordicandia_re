@@ -33,5 +33,13 @@ static class W04MapLayoutTests
         var c = MapLayout.Generate(21, 21, 5, 999UL, "dungeon_grass");
         Check(!a.ToRows().SequenceEqual(c.ToRows()), "W04: different seeds produce different layouts");
         Check(a.Theme == "dungeon_grass", "W04: the layout carries its world theme");
+
+        // W02: A* pathfinding between rooms (walls block, corridors connect).
+        var from = a.RoomCenters[0];
+        var to = a.RoomCenters[^1];
+        var path = a.FindPath(from, to);
+        Check(path.Count > 0, $"W02: A* finds a path across the dungeon ({path.Count} steps)");
+        Check(path.All(p => a.IsFloor(p.X, p.Z)), "W02: every path cell is a floor tile");
+        Check(a.FindPath((-1, -1), to).Count == 0, "W02: A* returns no path from a wall cell");
     }
 }

@@ -57,6 +57,9 @@ public sealed class CombatMonster
     /// <summary>Remaining seconds of an ongoing boss power (nova sequence / beam / charge).</summary>
     public double SpecialTimer { get; set; }
     public double StunTimer { get; set; }
+    /// <summary>W02: A* waypoints toward the player (grid cells), refreshed periodically.</summary>
+    public List<(int X, int Z)>? Path { get; set; }
+    public double PathTimer { get; set; }
     /// <summary>C02: per-monster buff container (poison, stuns-as-buffs, ...).
     /// Replaces the old PoisonTimer/PoisonDps pair; poison is now a "poison" buff
     /// instance keyed by source.</summary>
@@ -450,7 +453,9 @@ public sealed partial class CombatInstance
         var r = 1.5 + rng.NextDouble() * 2.0;
         var x = Math.Clamp(packOriginX + Math.Cos(angle) * r, -ArenaHalf, ArenaHalf);
         var z = Math.Clamp(packOriginZ + Math.Sin(angle) * r, -ArenaHalf, ArenaHalf);
-        monsters.Add(CreateMonster(index, x, z, alive: true));
+        // W02: keep pack members on the floor (a random offset can land in a wall).
+        var (px, pz) = ConstrainMove(packOriginX, packOriginZ, x, z);
+        monsters.Add(CreateMonster(index, px, pz, alive: true));
     }
 
     private CombatMonster CreateMonster(int index, double x, double z, bool alive, MonsterProfile? overrideProfile = null)
@@ -610,8 +615,10 @@ public sealed partial class CombatInstance
             {
                 var speed = playerSpeed * (1 + PlayerBuffs.MagnitudeOf("movespeed")) * (1 - CurseSlow);
                 var step = Math.Min(distance, speed * dt);
-                PlayerX += dx / distance * step;
-                PlayerZ += dz / distance * step;
+                // W02: the player also respects the dungeon walls (slides along them).
+                var (nx, nz) = ConstrainMove(PlayerX, PlayerZ, PlayerX + dx / distance * step, PlayerZ + dz / distance * step);
+                PlayerX = nx;
+                PlayerZ = nz;
                 ClampToArena();
             }
         }
@@ -997,8 +1004,38 @@ public sealed partial class CombatInstance
         var gdist = Math.Sqrt(gx * gx + gz * gz);
         if (gdist <= 0.3) return;
         var step = Math.Min(gdist, EffectiveMonsterSpeed(monster) * dt);
-        monster.X = Math.Clamp(monster.X + gx / gdist * step, -ArenaHalf, ArenaHalf);
-        monster.Z = Math.Clamp(monster.Z + gz / gdist * step, -ArenaHalf, ArenaHalf);
+        MoveMonster(monster, gx / gdist, gz / gdist, step);
+    }
+
+    /// <summary>W02: move a monster along a direction with wall collision. A move into a wall
+    /// slides along the free axis instead of stopping (no A* yet, but rooms/corridors stay usable).</summary>
+    private void MoveMonster(CombatMonster monster, double dirX, double dirZ, double step)
+    {
+        var toX = Math.Clamp(monster.X + dirX * step, -ArenaHalf, ArenaHalf);
+        var toZ = Math.Clamp(monster.Z + dirZ * step, -ArenaHalf, ArenaHalf);
+        var (x, z) = ConstrainMove(monster.X, monster.Z, toX, toZ);
+        monster.X = x;
+        monster.Z = z;
+    }
+
+    private (double X, double Z) ConstrainMove(double fromX, double fromZ, double toX, double toZ)
+    {
+        if (Layout is null) return (toX, toZ);
+        // Already off the floor (e.g. an edge spawn): let it move back toward the floor.
+        if (!IsFloorWorld(fromX, fromZ)) return (toX, toZ);
+        if (IsFloorWorld(toX, toZ)) return (toX, toZ);
+        if (IsFloorWorld(toX, fromZ)) return (toX, fromZ);
+        if (IsFloorWorld(fromX, toZ)) return (fromX, toZ);
+        return (fromX, fromZ);
+    }
+
+    private bool IsFloorWorld(double x, double z)
+    {
+        var layout = Layout!;
+        var tile = 2 * ArenaHalf / Math.Max(layout.Width, layout.Height);
+        var gx = (int)Math.Floor(x / tile + layout.Width / 2.0);
+        var gz = (int)Math.Floor(z / tile + layout.Height / 2.0);
+        return layout.IsFloor(gx, gz);
     }
 
     private void ChaseAndAttack(CombatMonster monster, double dt)
@@ -1033,8 +1070,7 @@ public sealed partial class CombatInstance
             if (monster.Ranged && distance < monster.PreferredDistance)
             {
                 var step = Math.Min(monster.PreferredDistance - distance + 1.0, EffectiveMonsterSpeed(monster) * dt);
-                monster.X = Math.Clamp(monster.X - dx / distance * step, -ArenaHalf, ArenaHalf);
-                monster.Z = Math.Clamp(monster.Z - dz / distance * step, -ArenaHalf, ArenaHalf);
+                MoveMonster(monster, -dx / distance, -dz / distance, step);
             }
             return;
         }
@@ -1044,6 +1080,25 @@ public sealed partial class CombatInstance
         {
             goalX = PlayerX;
             goalZ = PlayerZ;
+            // W02: follow an A* path around the walls, refreshed every 0.4s.
+            if (Layout is not null)
+            {
+                monster.PathTimer -= dt;
+                if (monster.Path is null || monster.PathTimer <= 0)
+                {
+                    var path = Layout.FindPath(Layout.Cell(monster.X, monster.Z, ArenaHalf),
+                        Layout.Cell(PlayerX, PlayerZ, ArenaHalf));
+                    if (path.Count > 0) path.RemoveAt(0);
+                    monster.Path = path;
+                    monster.PathTimer = 0.4;
+                }
+                if (monster.Path is { Count: > 0 })
+                {
+                    var (wx, wz) = Layout.World(monster.Path[0].X, monster.Path[0].Z, ArenaHalf);
+                    goalX = wx;
+                    goalZ = wz;
+                }
+            }
         }
         else
         {
@@ -1066,10 +1121,7 @@ public sealed partial class CombatInstance
         if (gdist > 0.3)
         {
             var step = Math.Min(gdist, EffectiveMonsterSpeed(monster) * dt);
-            monster.X += gx / gdist * step;
-            monster.Z += gz / gdist * step;
-            monster.X = Math.Clamp(monster.X, -ArenaHalf, ArenaHalf);
-            monster.Z = Math.Clamp(monster.Z, -ArenaHalf, ArenaHalf);
+            MoveMonster(monster, gx / gdist, gz / gdist, step);
         }
     }
 

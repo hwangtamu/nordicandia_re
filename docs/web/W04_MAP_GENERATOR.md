@@ -40,9 +40,16 @@
   地板面积、不同种子不同布局、主题携带。
 * 服务端 **687 PASS**，回放 58/58；web build + smoke 绿，截图可见石地板网格 + 边界墙。
 
+## W02 碰撞与寻路（已接入）
+
+* **墙体碰撞 + 贴墙滑动**：`CombatInstance.MoveMonster`/`ConstrainMove` 用 `Layout.IsFloor`
+  判断目标格；撞墙时沿空闲轴滑动。玩家移动同样受墙限制。
+* **A\* 寻路**：`MapLayout.FindPath`（4 连通、地板网格）为追击中的怪物提供路径点，
+  每 0.4s 刷新；刷怪位置也约束到地板上。
+* `W04MapLayoutTests` 新增 3 条：跨房间有路径、路径格全在地板、墙格无路径。
+
 ## 未完成
 
-* 地图**碰撞/寻路**：怪物仍自由移动（不撞墙），玩家也不受墙限制。
 * 世界主题 kit 的**纹理切换**：客户端仍用默认 kit 几何；切主题需按 theme 重载 GLB。
 * 刷怪区体积/密度、`PathTypeIndex`/`IndexOnPath` 的真实路径约束。
 * 城镇/WorldTier/checkpoint 推进（W05）、Niflheim `DungeonMonsterSpawnArea`（W06）。
