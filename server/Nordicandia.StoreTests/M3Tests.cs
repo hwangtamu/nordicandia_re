@@ -1,6 +1,7 @@
 using Game;
 using Nordicandia.Server.State;
 using Nordicandia.Server.WebApi;
+using Nordicandia.Simulation;
 using SharedNet.Api;
 using SharedNet.Constants.Game;
 
@@ -96,8 +97,11 @@ static class M3Tests
                 var inside = registry.Portal(owner, id);
                 Check(inside.InNiflheim && !inside.HasPortal, "m3 portal: the run is active and the item is gone");
                 Check(inside.Packs == packs, $"m3 portal: the run uses the portal's pack count ({inside.Packs})");
-                Check(entered.State.Combat.BossKillsRemaining == Math.Clamp(packs, 1, 24),
-                    "m3 portal: the Niflheim boss goal is the pack count");
+                Check(entered.State.Combat.TotalPacks == Math.Max(2, packs)
+                    && entered.State.Combat.PacksRemaining == Math.Max(2, packs),
+                    $"m3 portal: the run is {entered.State.Combat.PacksRemaining}/{entered.State.Combat.TotalPacks} packs");
+                Check(entered.State.Combat.Monsters.Count is >= 2 and <= 4,
+                    $"m3 portal: the first pack holds 2..4 monsters ({entered.State.Combat.Monsters.Count})");
                 Check(store.GetItems(owner, id).All(i => i.Id != portalItem.Id), "m3 portal: the portal item is not duplicated");
 
                 var returned = registry.ReturnPortal(owner, id);
@@ -119,6 +123,25 @@ static class M3Tests
             {
                 Check(store.IsNiflheimActive(owner, id), "m3 portal: the active run survives a server restart");
             }
+
+            // Niflheim pack layout: TotalPacks packs, 2..4 monsters each, cleared sequentially.
+            var strong = CombatantStats.FromRealtime(3000, 1000, 100, 30);
+            var packRun = new CombatInstance(strong, 0, 0, 0, 0, seed: 123);
+            packRun.SetWorld(new[] { new MonsterProfile("Bat") }, packs: 4);
+            var configured = packRun.TotalPacks;
+            var seen = new HashSet<int>();
+            var maxAlive = 0;
+            for (var i = 0; i < 6000 && packRun.DungeonsCleared == 0; i++)
+            {
+                packRun.Advance(0.05);
+                seen.Add(packRun.PacksRemaining);
+                maxAlive = Math.Max(maxAlive, packRun.Monsters.Count(m => m.Alive));
+            }
+            Check(configured == 4, "m3 pack: the run is configured with four packs");
+            Check(seen.Contains(4) && seen.Contains(3) && seen.Contains(2) && seen.Contains(1) && seen.Contains(0),
+                "m3 pack: packs clear one at a time and the run reaches zero");
+            Check(packRun.DungeonsCleared >= 1, "m3 pack: clearing every pack completes the run");
+            Check(maxAlive <= 4, $"m3 pack: a pack never exceeds four monsters ({maxAlive})");
         }
         finally { Directory.Delete(dir, true); }
     }

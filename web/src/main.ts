@@ -35,6 +35,7 @@ app.innerHTML = `
       <div><span id="hud-silver">0</span> silver · <span id="hud-opals">0</span> opals</div>
       <div><span id="hud-kills">0</span> kills · <span id="hud-alive">0</span> monsters</div>
       <div id="hud-boss" class="boss hidden">Boss in <span id="hud-boss-count">0</span> kills</div>
+      <div id="hud-packs" class="boss hidden">Packs <span id="hud-packs-count">0</span></div>
       <div class="source">content <span id="hud-content">…</span></div>
     </div>
     <div id="loot-feed" class="loot-feed"></div>
@@ -934,8 +935,12 @@ function renderHud(hudState: HudState): void {
   (document.getElementById("hud-kills") as HTMLElement).textContent = String(hudState.monsterKills);
   (document.getElementById("hud-alive") as HTMLElement).textContent = String(hudState.monstersAlive);
   const boss = document.getElementById("hud-boss") as HTMLElement;
-  boss.classList.toggle("hidden", hudState.bossAlive || hudState.bossKillsRemaining <= 0);
+  boss.classList.toggle("hidden", hudState.bossAlive || hudState.bossKillsRemaining <= 0 || hudState.totalPacks > 0);
   (document.getElementById("hud-boss-count") as HTMLElement).textContent = String(hudState.bossKillsRemaining);
+  const packs = document.getElementById("hud-packs") as HTMLElement;
+  packs.classList.toggle("hidden", hudState.totalPacks <= 0);
+  (document.getElementById("hud-packs-count") as HTMLElement).textContent =
+    `${hudState.packsRemaining}/${hudState.totalPacks}`;
   const skillButtons = ["hud-skill", "hud-skill-2", "hud-skill-3", "hud-skill-4", "hud-skill-5", "hud-skill-6"] as const;
   skillButtons.forEach((id, index) => {
     const button = document.getElementById(id) as HTMLButtonElement;

@@ -76,7 +76,17 @@ killsPerMinute = truncate(efficiency * clamp(1.5 * secondHighestReachedTier, 10,
 ```
 
 字段映射及公式已恢复；尚未把原版检查点/阶层进度映射到网页。因此运行时仍用 30 次/分钟，
-不能将此项标为完全接入。`NiflheimPortalGameMode` 的 pack 布局仍未解决。
+不能将此项标为完全接入。
+
+## Niflheim pack 布局（后续补充）
+
+`NiflheimPortalGameMode.InternalStart` @ `0x02BD9xxx`：`TotalPacks = Math.Max(world.Attributes[Num_Monster_Packs(133)], 2)`。
+`GameWorld.GetRandomPackSize(2, 4)` @ `0x02BDDB30`：`size = floor(_PackSizeRemainder + Rand.RangeExclusive(2*mult, 4*mult))`，
+`mult` 来自 `Area_Pack_Size_Bonus_Percent_Final`（偏移 `0x2390`），余数进位到下一包。
+包按清理顺序依次刷新，末包清完完成 run。网页已接入（`CombatInstance.packMode`），
+仅“每包 0.1s 逐个生成/随机刷怪区”与 `Area_Contains_More_Bosses` 分支仍为近似。
+
+`NiflheimPortalGameMode` 的 pack 布局仍未解决的旧说法作废。
 “M3 仅剩两项”只描述该里程碑的范围，不代表整个复刻的其余机制都已完成。
 
 ## 验证与未完成项

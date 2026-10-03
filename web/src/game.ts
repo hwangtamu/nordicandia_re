@@ -44,6 +44,8 @@ export interface HudState {
   dungeonsCleared: number;
   bossAlive: boolean;
   bossKillsRemaining: number;
+  packsRemaining: number;
+  totalPacks: number;
   autoMove: boolean;
   skills: { name: string; effect: string; ready: boolean; cooldown: number; manaCost: number }[];
   message: string;
@@ -500,6 +502,8 @@ export class World {
       dungeonsCleared: state.dungeonsCleared,
       bossAlive: state.bossAlive,
       bossKillsRemaining: state.bossKillsRemaining,
+      packsRemaining: state.packsRemaining,
+      totalPacks: state.totalPacks,
       autoMove: this.autoMove,
       skills: (state.skills ?? []).map((skill) => ({ name: skill.name, effect: skill.effect, ready: skill.cooldown <= 0, cooldown: skill.cooldown, manaCost: skill.manaCost })),
       message: this.elapsed < this.messageUntil ? this.message : "",

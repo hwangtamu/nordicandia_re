@@ -57,6 +57,6 @@ M3 目标：事务存档、断线恢复、技能槽扩展、Aesir 祝福、Niflh
 
 * **事务存储**：仍是单进程 `world.json` + 原子替换，不是 SQLite；多进程并发写入不支持（见计划：单机内测可接受）。
 * **断线恢复**：用快照 + 版本，而非计划里写的递增事件序号；网页端靠轮询 `/state` 对齐。
-* **传送门**：`NiflheimPortalGameMode` 的 pack 布局未还原，当前用“击杀数 = 包数、波次 ≈ 包数/2”近似；怪物缩放为 Provisional；`WorldTier`/`WorldWaypoint` 未涉及。
+* **传送门 / Niflheim pack 布局**：已按 `NiflheimPortalGameMode` + `GameWorld.GetRandomPackSize` 复原：`TotalPacks = max(Num_Monster_Packs, 2)`，每包大小是 `Rand.RangeExclusive(2, 4)` 的随机取整（`Area_Pack_Size_Bonus_Percent_Final` 缩放，余数进位），包按清理顺序依次刷新，清完所有包完成一次 run。`CombatInstance` 以 `packMode` 实现，`CombatSnapshot.PacksRemaining/TotalPacks` + HUD “Packs X/Y”。仍为近似：原版每包成员按压 0.1s 逐个生成、包在随机刷怪区生成，网页整包一次生成并在随机环形位置；“更多 boss”分支（`Area_Contains_More_Bosses`）未接入；怪物数值缩放仍 Provisional；`WorldTier`/`WorldWaypoint` 未涉及。
 * **离线收益**：基础经验公式与常量同前。2026-10-03 直接解码 ELF 后确认 `killsPerMinute = truncate(Offline_Battle_Efficiency_Multiplier · clamp(1.5 · secondHighestReachedTier, 10, 45))`；属性为 **565**（=`Base_Stamina_Multiplier`），阶层来源为 `Character.GetSecondHighestReachedWorldCheckpoint`。现已接入：`CombatRegistry.OfflineRate` 从属性引擎取 `Offline_Battle_Efficiency_Multiplier`，并用角色当前世界阶层（属性 8，默认 1）作为 tier。**仍为近似**：网页不追踪“第二高已到达检查点”历史，tier 输入以当前阶层代替；击杀经验仍取网页 `CombatModel.ExperienceReward(level)`。详见 [恢复报告](LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md)。
 * **祝福 opal 价格**：已从 `LocalCatalog.cctor` 提取 Small/Medium/Large/ExtraLarge = **200/500/800/2500** opals（与 `OfflineCatalog.GetOpalPrice` 一致）。客户端源码明确标注为 "TODO-PRICE: seed values, production export pending"，因此这是客户端实际使用的 seed 值，但预计会在生产导出后变动。

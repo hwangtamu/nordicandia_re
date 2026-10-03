@@ -89,6 +89,8 @@ export interface CombatSnapshot {
   bossKillsRemaining: number;
   bossAlive: boolean;
   monsters: MonsterState[];
+  packsRemaining: number;
+  totalPacks: number;
 }
 
 export interface LootDrop {

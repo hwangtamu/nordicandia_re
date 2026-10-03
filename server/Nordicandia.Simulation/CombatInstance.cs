@@ -63,7 +63,9 @@ public readonly record struct CombatSnapshot(
     int DungeonsCleared,
     int BossKillsRemaining,
     bool BossAlive,
-    IReadOnlyList<MonsterSnapshot> Monsters);
+    IReadOnlyList<MonsterSnapshot> Monsters,
+    int PacksRemaining = 0,
+    int TotalPacks = 0);
 
 /// <summary>Result of a skill command.</summary>
 public readonly record struct SkillOutcome(bool Cast, double Damage, int TargetIndex, string Reason);
@@ -138,6 +140,21 @@ public sealed class CombatInstance
     private int dungeonKills;
     private CombatMonster boss;
     private readonly List<LootDrop> pendingDrops = new();
+
+    // Niflheim portal runs. Recovered from NiflheimPortalGameMode + GameWorld.GetRandomPackSize:
+    // TotalPacks = max(Num_Monster_Packs, 2); every pack's size is a stochastic rounding of
+    // Rand.RangeExclusive(2*mult, 4*mult) (Area_Pack_Size_Bonus_Percent_Final), carrying the
+    // fractional remainder into the next pack.
+    private bool packMode;
+    private int totalPacks;
+    private int packsCleared;
+    private double packSizeRemainder;
+    private int packIndex;
+    // Deferred so a pack is never cleared/respawned while an iteration over `monsters` is live.
+    private bool pendingPackSpawn;
+
+    public int TotalPacks => totalPacks;
+    public int PacksRemaining => Math.Max(0, totalPacks - packsCleared);
 
     public double PlayerX { get; private set; }
     public double PlayerZ { get; private set; }
@@ -302,6 +319,7 @@ public sealed class CombatInstance
 
     private void SpawnMonsters()
     {
+        if (packMode) { SpawnPack(); return; }
         monsters.Clear();
         for (var i = 0; i < monsterCount; i++)
         {
@@ -309,6 +327,40 @@ public sealed class CombatInstance
             var radius = 7 + (i % 3) * 3;
             monsters.Add(CreateMonster(i, Math.Cos(angle) * radius, Math.Sin(angle) * radius, alive: true));
         }
+    }
+
+    /// <summary>Advanced by the client's GetRandomPackSize: next pack size is
+    /// <c>floor(remainder + Rand.RangeExclusive(2*mult, 4*mult))</c> with the fraction carried
+    /// forward, so the long-run mean matches the multiplier. The web multiplier is 1.</summary>
+    private int NextPackSize(double multiplier = 1)
+    {
+        var mult = Math.Max(0, multiplier);
+        var raw = mult * (2 + rng.NextDouble() * 2); // [2*mult, 4*mult)
+        var total = packSizeRemainder + raw;
+        var size = (int)Math.Floor(total);
+        packSizeRemainder = Math.Round(total - size, 4);
+        return Math.Max(1, size);
+    }
+
+    /// <summary>Clears the arena and spawns the next Niflheim pack, clustered around one point.
+    /// The client spaces pack members in by 0.1s; the web spawns the whole pack at once.</summary>
+    private void SpawnPack()
+    {
+        if (packsCleared >= totalPacks) return;
+        monsters.Clear();
+        var size = NextPackSize();
+        var arenaAngle = rng.NextDouble() * Math.PI * 2;
+        var radius = 6 + rng.NextDouble() * 7;
+        var cx = Math.Cos(arenaAngle) * radius;
+        var cz = Math.Sin(arenaAngle) * radius;
+        for (var i = 0; i < size; i++)
+        {
+            var angle = (i / (double)size) * Math.PI * 2;
+            var x = Math.Clamp(cx + Math.Cos(angle) * 2.5, -ArenaHalf, ArenaHalf);
+            var z = Math.Clamp(cz + Math.Sin(angle) * 2.5, -ArenaHalf, ArenaHalf);
+            monsters.Add(CreateMonster(i, x, z, alive: true));
+        }
+        packIndex++;
     }
 
     private CombatMonster CreateMonster(int index, double x, double z, bool alive)
@@ -395,6 +447,11 @@ public sealed class CombatInstance
         UpdateMonsters(dt);
         if (boss is { Alive: true } && PlayerHp > 0) UpdateBoss(dt);
         TickPoison(dt);
+        if (pendingPackSpawn)
+        {
+            pendingPackSpawn = false;
+            SpawnPack();
+        }
         Version++;
     }
 
@@ -442,6 +499,8 @@ public sealed class CombatInstance
         {
             if (!monster.Alive)
             {
+                // Pack members are consumed when the pack is cleared; they do not respawn.
+                if (packMode) continue;
                 monster.RespawnTimer -= dt;
                 if (monster.RespawnTimer <= 0)
                 {
@@ -652,6 +711,30 @@ public sealed class CombatInstance
         if (rng.NextDouble() < TrashDropChance)
             pendingDrops.Add(RollDrop(monster.Level, minRarity: 0));
 
+        if (packMode)
+        {
+            // The pack is over once its last member dies; then spawn the next or finish.
+            if (monsters.All(m => !m.Alive))
+            {
+                packsCleared++;
+                if (packsCleared >= totalPacks)
+                {
+                    DungeonsCleared++;
+                    Silver += 50 + monster.Level * 25;
+                    pendingDrops.Add(RollDrop(monster.Level, minRarity: 4));
+                    pendingDrops.Add(RollDrop(monster.Level + 2, minRarity: 5));
+                    packMode = false;
+                    totalPacks = 0;
+                    packsCleared = 0;
+                }
+                else
+                {
+                    pendingPackSpawn = true;
+                }
+            }
+            return;
+        }
+
         dungeonKills++;
         if (dungeonKills >= BossKillGoal && boss is null)
             boss = CreateBoss();
@@ -708,19 +791,27 @@ public sealed class CombatInstance
     public void SetWorld(IReadOnlyList<MonsterProfile> worldProfiles, int? packs = null)
     {
         if (worldProfiles is { Count: > 0 }) profiles = worldProfiles.ToArray();
+        boss = null;
+        dungeonKills = 0;
+        BossKillGoal = DefaultBossKillGoal;
         if (packs is > 0)
         {
-            BossKillGoal = Math.Clamp(packs.Value, 1, 24);
-            monsterCount = Math.Clamp((packs.Value + 1) / 2, 1, 24);
+            // Recovered Niflheim run: TotalPacks packs, each a stochastic 2..4 monsters.
+            packMode = true;
+            totalPacks = Math.Max(2, packs.Value);
+            packsCleared = 0;
+            packSizeRemainder = 0;
+            packIndex = 0;
+            SpawnPack();
         }
         else
         {
-            BossKillGoal = DefaultBossKillGoal;
+            packMode = false;
+            totalPacks = 0;
+            packsCleared = 0;
             monsterCount = 5;
+            SpawnMonsters();
         }
-        boss = null;
-        dungeonKills = 0;
-        SpawnMonsters();
         Version++;
     }
 
@@ -940,7 +1031,8 @@ public sealed class CombatInstance
             Kills,
             skills.Select((s, i) => new SkillStatus(s.Slot, s.Name, s.Effect, Math.Round(skillCooldowns[i], 2), s.Cooldown, s.ManaCost, s.Confidence, ChainsOf(s), SpecialOf(s))).ToList(),
             Math.Round(offenseBuffTimer, 2),
-            DungeonsCleared, Math.Max(0, BossKillGoal - dungeonKills), boss is { Alive: true }, rows);
+            DungeonsCleared, Math.Max(0, BossKillGoal - dungeonKills), boss is { Alive: true }, rows,
+            PacksRemaining, TotalPacks);
     }
 
     private void ClampToArena()
