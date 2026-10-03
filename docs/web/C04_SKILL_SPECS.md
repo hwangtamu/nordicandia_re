@@ -3,6 +3,10 @@
 日期：2026-10-03。对应 [完整复刻任务清单](FULL_FIDELITY_BACKLOG.md) 的 **C04**（逐技能/精通建立行为规格）。
 基线 Android **1.9.3**（versionCode 507033）。分母见 [B02_CONTENT_CATALOG.md](B02_CONTENT_CATALOG.md)。
 
+> 数值以 `tools/web-content/disasm_powers.py` 的输出为准（它跟踪真实的 `GameAttributeMap.set_Item`
+> 调用）；**不要**手工按 `FMOV`/`LDR` 相邻关系配对，那样会得到错误数值（本项目曾因此误报"网页数值系统性偏高"）。
+> `power_values.json` 中的数值与网页 `PowerProfiles.generated.cs` 一致，均为 ClientVerified。
+
 ## 规格模板（每个技能一份）
 
 ```text
@@ -29,41 +33,23 @@ Buff / 召唤 / 弹体：
 * `InternalInitializePowerParameters(rank)` 用 `SetPowerParameter(value, rank, attribute)` 写入每级参数。
 * 每个技能有 `_Perform_d__<n>` 协程状态机；`<Perform>b__<n>_0` 设置攻击代理，`b__<n>_1` 是命中后处理。
 
-## 首个规格：Shatter（Warrior 主动）
+## 规格：Shatter（Warrior 主动）
 
 | 项 | 值 | 证据 |
 |---|---|---|
-| 实现类 | `Game.Skills.Shatter` | `steam_analysis/dump.cs:115247` |
+| 实现类 | `Game.Skills.Shatter` | `dump.cs:115247` |
 | 整数 ID | 19 | `powers_full.json` |
-| `RequiresTarget` | true | `Shatter.get_RequiresTarget`（`0x02D484xx` 段） |
-| `GetAttackRadius` | `Attack_Range_MainHand_Total`（属性 `0x660`） | `0x02D48748` |
-| `GetActionSpeed` | 0（瞬发） | `0x02D48764`（`MOVI D0, #0`） |
-| `Base_Power_Weapon_Damage_Multiplier` | 客户端默认 **8.0** | `InternalInitializePowerParameters`（`0x13C8`，`FMOV D0, 8.0`） |
-| `Base_Cooldown` | 客户端默认 **4.0** | 同函数（`0x1340`，`FMOV D0, 4.0`） |
+| `RequiresTarget` | true | `get_RequiresTarget` |
+| `GetAttackRadius` | `Attack_Range_MainHand_Total`（`0x660`） | `0x02D48748` |
+| `GetActionSpeed` | 0（瞬发） | `GetActionSpeed`（`MOVI D0, #0`） |
+| 数值 | `Base_Power_Weapon_Damage_Multiplier=9.0`、`Base_Cooldown=5.0`、`Base_Mana_Cost=35.0` | `disasm_powers.py Shatter` @ `0x2d48348` |
 | 伤害类型 | 武器物理（走武器伤害管线） | `Perform` 构造 `AttackPayload` |
 | 目标 | 单体 | `<Perform>b__13_0` |
 | 精通（7） | ImprovedShatter(2)、SplittingPower(6)、Overpower(8)、PrecisionStrike(132)、AutoShatter(225)、CrushingBlow(391)、LightningStrike(393) | `fidelity_catalog.json` |
 
-**网页当前实现**：`new(4, "Shatter", …, "strike", 9.0D, 5.0D, …, "client-verified")`（`PowerProfiles.generated.cs`）。
-
-**差异**：网页倍率 **9.0**/冷却 **5.0** 与客户端默认 **8.0**/4.0 不一致；且网页走 `strike` 原型，
-未实现 `AttackPayload`/`onPostHit`/精通改写。需按 `GetActionSpeed`、`Attack_Range` 和 7 个精通重建。
-（这是 B03/C01 要处理的差异，也是 C05 的目标之一。）
-
-## 待补规格（C05 其余三个代表）
-
-| 职业 | 技能 | 覆盖机制 | 实现类 |
-|---|---|---|---|
-| Hunter | PowerShot | 弹体 | `Game.Skills.PowerShot` |
-| Mage | ChainLightning / IceNova | 链式 / 范围持续 | `Game.Skills.*`（待定位） |
-| Necromancer | SummonSkeleton | 召唤 | `Game.SummonSkeleton` |
-
-每个按上面模板补齐后再改运行时；每改一个先加 B04 样本。
-
-## 现状
-
-* `Shatter`：已定位 + 已提取（参数/条件/精通），运行时未接入（仍原型），对照未通过。
-* 其余 92 个玩家技能：已定位 + 已提取元数据，规格待写（D01）。
+**网页当前**：`new(4, "Shatter", …, "strike", 9.0D, 5.0D, 0.0D, 35.0D, …, "client-verified")`。
+数值已一致；**差异在执行**：走 `strike` 原型，未实现 `AttackPayload`/`onPostHit`/精通改写。
+`GetActionSpeed`、`Attack_Range` 和 7 个精通未接入。→ C05。
 
 ## 规格：PowerShot（Hunter 主动，弹体）
 
@@ -71,13 +57,10 @@ Buff / 召唤 / 弹体：
 |---|---|---|
 | 实现类 | `Game.Skills.PowerShot` | `IsilDump/.../Game/Skills/PowerShot.txt` |
 | `RequiresTarget` / `IsAbility` | true / true | `get_RequiresTarget`/`get_IsAbility` |
-| `GetActionSpeed` | `Base_Action_Speed`（`0xCC8`）= 1.0 | `InternalInitializePowerParameters` |
-| `Base_Power_Weapon_Damage_Multiplier` | 客户端默认 **4.0**（`0x13C8`） | 同上 |
-| `Base_Cooldown` / `Base_Mana_Cost` | **8.0** / **16.0**（`0x1340`/`0x1398`） | 同上 |
-| 穿透 | `Power_Projectile_Pierce_Chance`（`0x1488`）、`Power_Power_Shot_Pierce_Chance_Percent`（`0x2570`） | 同上 |
+| 数值 | mult **4.5**、cd **8.0**、mana **25.0**、`Base_Action_Speed=1.0`、`Power_Power_Shot_Pierce_Chance_Percent=0.95` | `disasm_powers.py PowerShot` @ `0x2d21498` |
 | 弹体 | `CreateProjectile(projectileSpeed, canChain)`、`HandleForkAndChain`、`LaunchProjectile` | 方法表 |
-| 网页当前 | `projectile`, mult **4.5**, cd 8.0, mana **25.0** | `PowerProfiles.generated.cs` |
-| 差异 | 倍率 4.5 vs **4.0**、蓝耗 25 vs **16**；且 `projectile` 原型未接弹速/穿透/分叉 | |
+| 网页当前 | `projectile`, mult 4.5, cd 8.0, mana 25.0 | 数值一致 |
+| 差异 | `projectile` 原型未接弹速/穿透（0.95）/分叉；`IsAbility`/ActionSpeed 未接 | C03、C05 |
 
 ## 规格：ChainLightning（Mage 主动，链式）
 
@@ -85,24 +68,19 @@ Buff / 召唤 / 弹体：
 |---|---|---|
 | 实现类 | `Game.Skills.ChainLightning` | `IsilDump/.../Game/Skills/ChainLightning.txt` |
 | `RequiresTarget` | true | `get_RequiresTarget` |
-| `Base_Power_Weapon_Damage_Multiplier` | **2.0**（`0x13C8`） | `InternalInitializePowerParameters` |
-| `ChainLightning_Max_Num_Chains` | **4**（`0x2528`） | 同上 |
-| `Base_Cooldown` / `Base_Mana_Cost` | **16.0** / **16.0** | 同上 |
+| 数值 | mult **2.5**、`ChainLightning_Max_Num_Chains=4`、cd **20.0**、mana **25.0** | `disasm_powers.py ChainLightning` @ `0x2d27cd0` |
 | 伤害类型 | Lightning（`skill_damage_types.json`） | |
-| 网页当前 | `chain`, mult **2.5**, cd **20.0**, radius 5.5, mana **25.0** | `PowerProfiles.generated.cs` |
-| 差异 | 倍率/冷却/蓝耗/链数均需按客户端重建 | |
+| 网页当前 | `chain`, mult 2.5, cd 20.0, radius 5.5, mana 25.0 | 数值一致 |
+| 差异 | 链式跳数/每跳衰减未按客户端重建 | C03、C05 |
 
 ## 规格：IceNova（Mage 主动，范围 + 冻结）
 
 | 项 | 值 | 证据 |
 |---|---|---|
 | 实现类 | `Game.Skills.IceNova` | `IsilDump/.../Game/Skills/IceNova.txt` |
-| `Base_Power_Radius` | **4.0**（`0x1418`） | `InternalInitializePowerParameters` |
-| `Base_Power_Weapon_Damage_Multiplier` | **0.5**（`0x13C8`） | 同上 |
-| `Power_Freeze_Duration` | **2.0**（`0x1390`） | 同上 |
-| `Base_Cooldown` / `Base_Mana_Cost` | **16.0** / **16.0** | 同上 |
-| 网页当前 | `nova`, mult 0.5, cd **30.0**, radius **6.0**, mana **20.0** | `PowerProfiles.generated.cs` |
-| 差异 | 冷却 30 vs **16**、半径 6 vs **4**、蓝耗 20 vs **16**；冻结时长未接入 | |
+| 数值 | radius **6.0**、mult **0.5**、`Power_Freeze_Duration=2.0`、cd **30.0**、mana **20.0** | `disasm_powers.py IceNova` @ `0x2d2cd04` |
+| 网页当前 | `nova`, mult 0.5, cd 30.0, radius 6.0, mana 20.0 | 数值一致 |
+| 差异 | 冻结时长（2s）与 AoE 命中判定未接入 | C02、C05 |
 
 ## 规格：SummonSkeleton（Necromancer 主动，召唤）
 
@@ -110,22 +88,13 @@ Buff / 召唤 / 弹体：
 |---|---|---|
 | 实现类 | `Game.SummonSkeleton` + `SummonSkeletonMinion` | `IsilDump/.../Game/SummonSkeleton.txt` |
 | `RequiresTarget` | true | `get_RequiresTarget` |
-| 仆从继承 | Life/ArmorEvasion/Resistances **+0.5**；CritChance/CritDamage **+1.0**（`0x1698`/`0x16A8`/`0x16B0`/`0x16B8`/`0x16C0`） | `InternalInitializePowerParameters` |
-| 数量/时长 | `Power_Base_Max_Num_Minions`（`0x1A70`）、`Power_Minion_Duration`（`0x2650`） | 同上 |
-| `Base_Cooldown` / `Base_Mana_Cost` | **8.0** / **16.0** | 同上 |
-| 网页当前 | `summon`, cd **10.0**, mana **20.0** | `PowerProfiles.generated.cs` |
-| 差异 | 冷却/蓝耗偏高；仆从属性用统一倍率而非 `Minion_Inheritance_*` | |
+| 仆从继承 | WeaponDamage **0.15**、AttackSpeed **0.8**、MoveSpeed **1.1**、Life **0.5**、ForceField **0.3**、ArmorEvasion **0.75**、Resistances **0.75**、CritChance **1.0**、CritDamage **1.0** | `disasm_powers.py SummonSkeleton` @ `0x2a536f8` |
+| 数值 | cd **10.0**、mana **20.0**；`Power_Base_Max_Num_Minions`（`0x1A70`）、`Power_Minion_Duration`（`0x2650`） | 同上 |
+| 网页当前 | `summon`, cd 10.0, mana 20.0，数值一致 | |
+| 差异 | 仆从属性用统一倍率，未使用 `Minion_Inheritance_*` 快照 | P01、C05 |
 
-## 系统性发现：网页数值普遍高于客户端 rank-3 默认
+## 结论
 
-| 技能 | 客户端倍率 | 网页倍率 | 客户端冷却 | 网页冷却 | 客户端蓝耗 | 网页蓝耗 |
-|---|---:|---:|---:|---:|---:|---:|
-| Shatter | 8.0 | 9.0 | 4.0 | 5.0 | ? | 35 |
-| PowerShot | 4.0 | 4.5 | 8.0 | 8.0 | 16 | 25 |
-| ChainLightning | 2.0 | 2.5 | 16.0 | 20.0 | 16 | 25 |
-| IceNova | 0.5 | 0.5 | 16.0 | 30.0 | 16 | 20 |
-| SummonSkeleton | — | 0 | 8.0 | 10.0 | 16 | 20 |
-
-网页数值约比客户端 **`SetPowerParameter(..., rank=3, ...)` 默认高 10–56%**，蓝耗差异最大。
-可能原因：网页用了不同 rank 的值，或 `export_powers.py` 的默认回退参与了计算。**这是 C01/C06 的
-系统性差异，必须先定位再逐技能改**，否则 93 个技能都会带着相同偏差。
+* 5 个代表技能的**数值**与客户端一致（ClientVerified），网页差异在**执行**：`strike`/`projectile`/`chain`/`nova`/`summon` 原型、缺少 AttackPayload/onPostHit/弹体/冻结/仆从继承。
+* C05 的目标是把这 5 个（Shatter、PowerShot、ChainLightning、IceNova、SummonSkeleton）从原型改成真实行为，并为每个加 B04 样本。
+* 通用模式（RequiresTarget + AttackPayload + onPostHit）可作为 C06 批量移植的模板。
