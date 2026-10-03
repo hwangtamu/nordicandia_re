@@ -247,6 +247,9 @@ public sealed partial class CombatInstance
     public IReadOnlyList<CombatMonster> Monsters => monsters;
     private readonly List<CombatMonster> monsters = new();
 
+    /// <summary>W04: the dungeon layout whose spawn areas the packs use (null = the arena ring).</summary>
+    public MapLayout Layout { get; }
+
     public CombatInstance(
         CombatantStats stats,
         double experience,
@@ -257,7 +260,8 @@ public sealed partial class CombatInstance
         int monsterCount = 5,
         IReadOnlyList<MonsterProfile> monsterProfiles = null,
         ClassPowerPool classPowers = null,
-        long initialVersion = 1)
+        long initialVersion = 1,
+        MapLayout layout = null)
     {
         PlayerLevel = stats.Level;
         Offense = stats.Offense;
@@ -280,6 +284,7 @@ public sealed partial class CombatInstance
         PlayerHp = PlayerMaxHp;
         PlayerMaxMana = EffectiveMaxMana();
         PlayerMana = PlayerMaxMana;
+        Layout = layout;
         rng = new CombatRandom(seed == 0 ? 0x9E3779B97F4A7C15UL : seed);
         SpawnMonsters();
         // The version is a persistent, monotonically increasing counter. Restoring it from
@@ -408,12 +413,22 @@ public sealed partial class CombatInstance
     {
         if (packsCleared >= totalPacks) return;
         monsters.Clear();
-        // Client packs spawn inside one of the dungeon's spawn areas; the web picks one of a
-        // ring of zones and clusters the pack there.
-        var zone = (int)(rng.NextDouble() * SpawnZones.Length) % SpawnZones.Length;
-        var (cx, cz) = SpawnZones[zone];
-        packOriginX = cx;
-        packOriginZ = cz;
+        // Client packs spawn inside one of the dungeon's spawn areas. W04: when a MapLayout is
+        // supplied, use its room anchors; otherwise fall back to the provisional ring of zones.
+        if (Layout is { SpawnAnchors.Count: > 0 } layout)
+        {
+            var anchor = layout.SpawnAnchors[(int)(rng.NextDouble() * layout.SpawnAnchors.Count) % layout.SpawnAnchors.Count];
+            var (ax, az) = layout.World(anchor.X, anchor.Z, ArenaHalf);
+            packOriginX = ax;
+            packOriginZ = az;
+        }
+        else
+        {
+            var zone = (int)(rng.NextDouble() * SpawnZones.Length) % SpawnZones.Length;
+            var (cx, cz) = SpawnZones[zone];
+            packOriginX = cx;
+            packOriginZ = cz;
+        }
         pendingPackSize = NextPackSize();
         packSpawnTimer = 0;
         pendingPackSize--;

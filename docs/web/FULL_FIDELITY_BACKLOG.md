@@ -71,7 +71,7 @@
 | W01 | 全怪物属性与缩放 | ⏳ 部分：属性曲线/稀有度系数已接入且手工原型倍率已删（D04/D05）；136 条怪物目录已导出战斗字段（damageType/caster/ranged/size/tags/affixes）并嵌入 `MonsterCatalog`。**待办**：运行时用真实怪物（等级/阶层/怪物池）替代 6 个通用 archetype；抗性/经验/掉落关联。`W01MonsterCatalogTests` 5 条。见 `docs/web/W_P_BATCH_STATUS.md` | B02、C01、E02 |
 | W02 | 完整 AI 条件与状态迁移 | ⏳ 部分：Brains.json 的技能与移动动作均落到状态（`MeleeWeaponSwing`/`MinionReturnToMaster`/`PetLoot`/`UniqueItemHuginnPull` 已显式处理），`BrainCatalog` 条件已评估 13 项。**待办**：目标丢失/寻路/碰撞数值、仇恨/逃离时机；宠物/图腾动作 | W01、B05 |
 | W03 | 全怪物技能与 Boss 阶段 | ⏳ 部分：`MonsterPowerCatalog` 35 技能（brain 引用 0 缺失，召唤仆从全部真实）。**待办**：各 Power 精确定量参数、Boss 阶段与清场、多敌并发 | C02–C03、W01–W02 |
-| W04 | 世界/地图生成 | ⏳ 部分：36 世界目录（tier/theme/boss/`MonsterTypeSpawnWeights`）已嵌入 `WorldCatalog`。**待办**：地图图结构/场景块/碰撞/出入口/刷怪区体积/怪物池与密度（`DungeonMonsterSpawnArea` 依赖地图路径） | B02、W01 |
+| W04 | 世界/地图生成 | ⏳ 部分：36 世界目录嵌入 `WorldCatalog`；**程序化地图生成器** `MapLayout`（房间+走廊、确定性）接入服务端刷怪锚点与客户端 kit 渲染；怪物池按世界类型生成。**待办**：碰撞/寻路、主题纹理切换、刷怪区体积/密度、真实路径约束。`W04MapLayoutTests` 7 条。见 `docs/web/W04_MAP_GENERATOR.md` | B02、W01 |
 | W05 | 城镇与完整进度 | ⏳ 部分：世界目录可按 id/tier 寻址。**待办**：城镇/地图解锁/checkpoint/WorldTier 选择、返回路径、跨重登恢复 | W04、C08 |
 | W06 | Niflheim 剩余差异 | 保留已有 pack 数量与逐个生成；补真实 DungeonMonsterSpawnArea、世界修饰符、boss 包、怪物池/缩放、完成/失败/返回规则 | W01、W03–W05 |
 | W07 | 离线收益精确接入 | ⏳ 部分：`GetSecondHighestReachedWorldCheckpoint` 已定位（读 `World_Tier_Unlocked` id 9，同 tier 回退一个 checkpoint，仅在刚解锁 tier 时回退上一 tier）；`OfflineRate` 已改用属性 9。**待办**：逐 tier checkpoint 进度跟踪以应用 tier 回退；多进度样本对照 | W05、E02、C08 |

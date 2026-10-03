@@ -108,6 +108,33 @@ public sealed class CombatRegistry
         return Math.Max(1, tier);
     }
 
+    /// <summary>W04: the theme kit for a world tier. The client ThemeId (1/2/3) selects the
+    /// shipped dungeon theme kits; the exact ThemeId -> kit mapping is Inferred.</summary>
+    private static string ThemeForTier(int tier)
+    {
+        var world = WorldCatalog.ForTier(tier);
+        return (world?.ThemeId ?? 1) switch
+        {
+            2 => "dungeon_sand",
+            3 => "dungeon_undead",
+            1 => "dungeon_grass",
+            _ => "dungeon_default",
+        };
+    }
+
+    private static WebMapLayout? BuildMap(Entry entry)
+    {
+        var layout = entry.Instance.Layout;
+        if (layout is null) return null;
+        var anchors = layout.SpawnAnchors
+            .Select(a =>
+            {
+                var (x, z) = layout.World(a.X, a.Z, CombatInstance.ArenaHalf);
+                return new WebMapAnchor(x, z);
+            }).ToList();
+        return new WebMapLayout(layout.Width, layout.Height, layout.Theme, layout.ToRows(), anchors);
+    }
+
     private sealed class Entry
     {
         public CombatInstance Instance = null!;
@@ -162,10 +189,12 @@ public sealed class CombatRegistry
             // to 1 across a restart (which would make the command log boundary reject fresh
             // commands from a client that already saw a higher version).
             var persistedVersion = store.GetCombatVersion(owner, characterId);
+            var worldTier = WorldTier(attributeMap);
+            var layout = MapLayout.Generate(21, 21, 5, seed ^ 0x4D41504C41594F55UL, ThemeForTier(worldTier));
             var instance = new CombatInstance(stats, persisted.Experience, persisted.Silver, persisted.Opals,
                 (int)persisted.MonsterKills, seed,
-                monsterProfiles: niflheim ? NiflheimProfiles() : ProfilesForWorldTier(WorldTier(attributeMap)),
-                classPowers: EffectivePowers(basePowers, ranks), initialVersion: persistedVersion);
+                monsterProfiles: niflheim ? NiflheimProfiles() : ProfilesForWorldTier(worldTier),
+                classPowers: EffectivePowers(basePowers, ranks), initialVersion: persistedVersion, layout: layout);
             entries[characterId] = new Entry
             {
                 Instance = instance,
@@ -761,12 +790,12 @@ public sealed class CombatRegistry
     {
         var loot = entry.RecentLoot.ToList();
         entry.RecentLoot.Clear();
-        return new WebCombatState(entry.Instance.Snapshot(), loot);
+        return new WebCombatState(entry.Instance.Snapshot(), loot, BuildMap(entry));
     }
 
     /// <summary>Snapshot without consuming pending loot, for duplicate/rejected commands.</summary>
     private static WebCombatState PeekState(Entry entry)
-        => new(entry.Instance.Snapshot(), Array.Empty<LootDropView>());
+        => new(entry.Instance.Snapshot(), Array.Empty<LootDropView>(), BuildMap(entry));
 
     private static WebItemDetail ToItemDetail(SerializedItem item)
     {

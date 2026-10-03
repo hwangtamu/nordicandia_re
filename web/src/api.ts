@@ -108,6 +108,21 @@ export interface LootDrop {
 export interface CombatEnvelope {
   combat: CombatSnapshot;
   loot: LootDrop[];
+  map?: MapLayout;
+}
+
+/** W04: the dungeon layout and its theme kit. */
+export interface MapLayout {
+  width: number;
+  height: number;
+  theme: string;
+  rows: string[];
+  spawnAnchors: MapAnchor[];
+}
+
+export interface MapAnchor {
+  x: number;
+  z: number;
 }
 
 export interface WebItemDetail {

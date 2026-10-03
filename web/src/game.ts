@@ -24,7 +24,7 @@ import {
 } from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
 
-import { CombatEnvelope, CombatSnapshot, LootDrop, MonsterState } from "./api";
+import { CombatEnvelope, CombatSnapshot, LootDrop, MapLayout, MonsterState } from "./api";
 import { ContentManifest, loadManifest, monsterIcon, raceIcon } from "./content";
 
 export interface HudState {
@@ -85,6 +85,8 @@ export class World {
   private readonly hooks: WorldHooks;
   private readonly templates = new Map<string, TransformNode>();
   private readonly monsterEntities = new Map<number, Entity>();
+  private mapTiles: TransformNode[] = [];
+  private mapSignature = "";
   private ground: Nullable<Mesh> = null;
   private player!: Entity;
   private floaters: { el: HTMLDivElement; world: Vector3; born: number; ttl: number }[] = [];
@@ -211,17 +213,48 @@ export class World {
     );
   }
 
-  private instantiate(name: string, position: Vector3, rotationY = 0): TransformNode | null {
+  private instantiate(name: string, position: Vector3, rotationY = 0, scale = 1): TransformNode | null {
     const template = this.templates.get(name);
     if (!template) return null;
     const clone = template.clone(`${name}_instance`, null, false);
     if (!clone) return null;
     clone.position = position;
     clone.rotation = new Vector3(0, rotationY, 0);
+    if (scale !== 1) clone.scaling = new Vector3(scale, scale, scale);
     clone.getChildMeshes().forEach((mesh) => {
       mesh.isPickable = false;
     });
     return clone;
+  }
+
+  /** W04: assemble the dungeon from the authoritative layout (floor cells + wall ring). */
+  private buildMapLayout(layout: MapLayout): void {
+    this.mapTiles.forEach((t) => t.dispose(false, false));
+    this.mapTiles = [];
+    const tile = (2 * ROOM_HALF) / Math.max(layout.width, layout.height);
+    const scale = Math.max(0.2, tile / FLOOR_SPACING);
+    const at = (gx: number, gz: number) =>
+      new Vector3((gx - layout.width / 2 + 0.5) * tile, 0.02, (gz - layout.height / 2 + 0.5) * tile);
+    const floor = (gx: number, gz: number) =>
+      gx >= 0 && gx < layout.width && gz >= 0 && gz < layout.height && layout.rows[gz][gx] === "#";
+    for (let gz = 0; gz < layout.height; gz++) {
+      for (let gx = 0; gx < layout.width; gx++) {
+        if (!floor(gx, gz)) continue;
+        const slab = this.instantiate("Floor_Slab_lrg", at(gx, gz), 0, scale);
+        if (slab) this.mapTiles.push(slab);
+      }
+    }
+    // Wall ring: void cells orthogonally adjacent to floor.
+    for (let gz = 0; gz < layout.height; gz++) {
+      for (let gx = 0; gx < layout.width; gx++) {
+        if (floor(gx, gz)) continue;
+        if (!(floor(gx - 1, gz) || floor(gx + 1, gz) || floor(gx, gz - 1) || floor(gx, gz + 1))) continue;
+        const pos = at(gx, gz);
+        pos.y = 0;
+        const wall = this.instantiate("MOD_Wall_01_O_straight_large", pos, 0, scale);
+        if (wall) this.mapTiles.push(wall);
+      }
+    }
   }
 
   private buildRoom(): void {
@@ -353,6 +386,15 @@ export class World {
     this.latest = state;
     this.version = state.version;
     this.player.target = new Vector3(state.playerX, 0, state.playerZ);
+
+    // W04: rebuild the dungeon when the authoritative layout changes.
+    if (envelope.map) {
+      const signature = `${envelope.map.theme}:${envelope.map.width}x${envelope.map.height}:${envelope.map.rows.join("")}`;
+      if (signature !== this.mapSignature) {
+        this.mapSignature = signature;
+        this.buildMapLayout(envelope.map);
+      }
+    }
 
     if (previous && previous.playerHp > state.playerHp) {
       this.addFloater(this.player.root.position, `-${Math.round(previous.playerHp - state.playerHp)}`, "#ff6b6b");

@@ -25,7 +25,14 @@ public sealed record LootDropView(
 
 /// <summary>Authoritative combat snapshot plus the loot generated since the previous call.</summary>
 public sealed record WebCombatState(
-    Nordicandia.Simulation.CombatSnapshot Combat, IReadOnlyList<LootDropView> Loot);
+    Nordicandia.Simulation.CombatSnapshot Combat, IReadOnlyList<LootDropView> Loot,
+    WebMapLayout? Map = null);
+
+/// <summary>W04: the dungeon layout the client assembles with the world theme kit.</summary>
+public sealed record WebMapLayout(int Width, int Height, string Theme, IReadOnlyList<string> Rows,
+    IReadOnlyList<WebMapAnchor> SpawnAnchors);
+
+public sealed record WebMapAnchor(double X, double Z);
 
 /// <summary>
 /// Compact, authoritative snapshot for the web client. Deliberately not the full internal
