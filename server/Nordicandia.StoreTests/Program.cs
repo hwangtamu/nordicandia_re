@@ -44,6 +44,8 @@ SlotPersistenceTests.Run();
 
 BlessingPersistenceTests.Run();
 
+M3Tests.Run();
+
 ConsumeItemTests.Run();
 
 WebM0Tests.Run();

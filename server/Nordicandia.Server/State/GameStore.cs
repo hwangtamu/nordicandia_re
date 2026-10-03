@@ -209,10 +209,10 @@ public sealed class GameStore : IDisposable
     /// while the character is online — otherwise a brand-new character replays the whole time
     /// since creation as "offline", which is the bug being reported.
     /// </summary>
-    private static void SetLastActiveEpoch(SerializedCharacterData.SerializedData data)
+    private void SetLastActiveEpoch(SerializedCharacterData.SerializedData data)
     {
         data.IdleProgress ??= new SerializedCharacterData.SerializedIdleProgress();
-        data.IdleProgress.LastActiveEpoch = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        data.IdleProgress.LastActiveEpoch = (int)(Now - DateTime.UnixEpoch).TotalSeconds;
     }
 
     private static bool IsSeasonMode(SharedNet.Constants.Game.GameMode mode) =>
@@ -2220,6 +2220,56 @@ public sealed class GameStore : IDisposable
     {
         lock (gate) return state.Characters.TryGetValue(id, out var c) && c.Owner == owner;
     }
+
+    /// <summary>Seconds since the character's <c>IdleProgress.LastActiveEpoch</c>, used by the web
+    /// offline-reward flow. Returns 0 when the character has no recorded progress or a clock skew
+    /// would make the gap negative. Does not mutate.</summary>
+    public long GetOfflineWindow(Guid owner, Guid id)
+    {
+        lock (gate)
+        {
+            var data = Unpack<SerializedCharacterData.SerializedData>(Owned(state, owner, id).Data);
+            var last = data.IdleProgress?.LastActiveEpoch ?? 0;
+            if (last <= 0) return 0;
+            return Math.Max(0, (long)(Now - DateTime.UnixEpoch).TotalSeconds - last);
+        }
+    }
+
+    // Web-only character flags persisted in the Character-origin attribute map under ids >= 99000
+    // (the client attribute engine ignores unknown ids, and they are filtered from the snapshot).
+    private const int WebFlagNiflheimActive = 99020;
+
+    /// <summary>Active Aesir blessings as type -> remaining seconds (1=Odin, 2=Tyr, 3=Frigg,
+    /// 4=Thor), pruning expired ones.</summary>
+    public Dictionary<int, double> GetActiveBlessingSeconds(Guid owner, Guid id) => Change(s =>
+    {
+        var c = Owned(s, owner, id);
+        c.Blessings ??= new();
+        var now = Now;
+        foreach (var expired in c.Blessings.Where(kv => kv.Value <= now).Select(kv => kv.Key).ToList())
+            c.Blessings.Remove(expired);
+        return c.Blessings.ToDictionary(kv => kv.Key, kv => (kv.Value - now).TotalSeconds);
+    });
+
+    /// <summary>Whether the character is currently inside a Niflheim portal run (web-only flag).</summary>
+    public bool IsNiflheimActive(Guid owner, Guid id)
+    {
+        lock (gate)
+        {
+            var data = Unpack<SerializedCharacterData.SerializedData>(Owned(state, owner, id).Data);
+            return (GetAttribute(data, WebFlagNiflheimActive) ?? 0) > 0;
+        }
+    }
+
+    /// <summary>Persists the web-only Niflheim run flag on the character.</summary>
+    public void SetNiflheimActive(Guid owner, Guid id, bool active) => Change(s =>
+    {
+        var c = Owned(s, owner, id);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        SetAttribute(data, WebFlagNiflheimActive, active ? 1 : 0);
+        c.Data = Pack(data);
+        return true;
+    });
 
     /// <summary>Recomputes every character's header level from its persisted experience.
     /// Run once at startup so snapshots written before the level curve existed are fixed.</summary>

@@ -1,5 +1,5 @@
 import "./style.css";
-import { api, AttributeKey, CharacterSummary, CombatEnvelope, Loadout, LootDrop, MerchantProduct, newCommandId, NpcResult, PowerPoolOption, SkillMasteryView, Snapshot, WebAttributes, WebInventory } from "./api";
+import { api, AttributeKey, BlessingsView, CharacterSummary, CombatEnvelope, Loadout, LootDrop, MerchantProduct, newCommandId, NpcResult, OfflineView, PowerPoolOption, SkillMasteryView, Snapshot, WebAttributes, WebInventory, WebPortalState } from "./api";
 import { loadContent, loadPowers, ContentManifest, ClassPowers, className } from "./content";
 import { HudState, World } from "./game";
 
@@ -71,6 +71,29 @@ app.innerHTML = `
       </div>
       <div id="attrs-items" class="inv-items"></div>
     </div>
+    <div id="offline" class="offline-banner hidden">
+      <span id="offline-text"></span>
+      <button id="offline-claim" class="npc-action">Claim</button>
+    </div>
+    <div id="blessings" class="inventory hidden">
+      <div class="inv-head">
+        <span>Offerings <small id="blessings-opals"></small></span>
+        <button id="blessings-close" class="icon-btn">×</button>
+      </div>
+      <div class="npc-hint">Buy an Aesir blessing with opals; the effect is active until it expires.</div>
+      <div id="blessings-items" class="inv-items"></div>
+    </div>
+    <div id="portal" class="inventory hidden">
+      <div class="inv-head">
+        <span>Niflheim Portal</span>
+        <button id="portal-close" class="icon-btn">×</button>
+      </div>
+      <div id="portal-body" class="inv-items"></div>
+      <div class="npc-foot">
+        <button id="portal-action" class="npc-action">Enter Niflheim</button>
+        <span id="portal-status" class="npc-status"></span>
+      </div>
+    </div>
     <div id="npc" class="npc-panel hidden">
       <div class="npc-head">
         <span id="npc-title">Blacksmith</span>
@@ -98,6 +121,8 @@ app.innerHTML = `
       <button id="hud-smith" class="skill alt">Blacksmith <small>K</small></button>
       <button id="hud-merchant" class="skill alt">Merchant <small>M</small></button>
       <button id="hud-attrs" class="skill alt">Attrs <small>C</small></button>
+      <button id="hud-blessings" class="skill alt">Offerings <small>O</small></button>
+      <button id="hud-portal" class="skill alt">Portal <small>N</small></button>
     </div>
     <div id="hud-message" class="toast"></div>
   </div>
@@ -352,6 +377,56 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
       console.warn("allocate failed", error);
     }
   };
+
+  // ----- M3: offline rewards, offerings, Niflheim portal -----
+  document.getElementById("hud-blessings")!.addEventListener("click", () => toggleBlessings());
+  document.getElementById("blessings-close")!.addEventListener("click", () => toggleBlessings(false));
+  blessingsRefreshHandler = async (): Promise<void> => {
+    try { blessingsCache = await api.blessings(characterId); renderBlessings(); }
+    catch (error) { console.warn("blessings failed", error); }
+  };
+  offeringHandler = async (type: number, size: number): Promise<void> => {
+    try {
+      const result = await api.offering(characterId, type, size);
+      blessingsCache = result.view;
+      renderBlessings();
+      await refreshInventory();
+    } catch (error) { console.warn("offering failed", error); }
+  };
+
+  document.getElementById("hud-portal")!.addEventListener("click", () => togglePortal());
+  document.getElementById("portal-close")!.addEventListener("click", () => togglePortal(false));
+  portalActionEl.addEventListener("click", () => void portalActionHandler?.());
+  portalRefreshHandler = async (): Promise<void> => {
+    try { portalCache = await api.portal(characterId); renderPortal(); }
+    catch (error) { console.warn("portal failed", error); }
+  };
+  portalActionHandler = async (): Promise<void> => {
+    try {
+      if (portalCache?.inNiflheim) {
+        world?.pushState((await api.returnPortal(characterId)).state);
+      } else if (portalCache?.hasPortal) {
+        world?.pushState((await api.enterPortal(characterId, portalCache.portalItemId)).state);
+      }
+      portalCache = await api.portal(characterId);
+      renderPortal();
+      await refreshInventory();
+    } catch (error) { console.warn("portal action failed", error); }
+  };
+
+  document.getElementById("offline-claim")!.addEventListener("click", () => void offlineClaimHandler?.());
+  offlineClaimHandler = async (): Promise<void> => {
+    try {
+      offlineCache = await api.claimOffline(characterId);
+      offlineEl.classList.add("hidden");
+      world?.pushState(await api.state(characterId));
+      await refreshInventory();
+    } catch (error) { console.warn("offline claim failed", error); }
+  };
+  try {
+    offlineCache = await api.offline(characterId);
+    renderOffline();
+  } catch (error) { console.warn("offline failed", error); }
   const keyToSkill: Record<string, number> = {
     Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, Digit5: 4, Digit6: 5,
     Numpad1: 0, Numpad2: 1, Numpad3: 2, Numpad4: 3, Numpad5: 4, Numpad6: 5,
@@ -382,6 +457,12 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
     } else if (event.code === "KeyC") {
       event.preventDefault();
       toggleAttrs();
+    } else if (event.code === "KeyO") {
+      event.preventDefault();
+      toggleBlessings();
+    } else if (event.code === "KeyN") {
+      event.preventDefault();
+      togglePortal();
     } else if (event.code === "KeyL") {
       event.preventDefault();
       toggleLoadout();
@@ -521,6 +602,99 @@ function renderAttrs(): void {
     row.appendChild(button);
     attrsItemsEl.appendChild(row);
   }
+}
+
+// ----- offline rewards / offerings / Niflheim portal (M3) -----
+const offlineEl = document.getElementById("offline") as HTMLDivElement;
+const offlineTextEl = document.getElementById("offline-text") as HTMLElement;
+const blessingsEl = document.getElementById("blessings") as HTMLDivElement;
+const blessingsItemsEl = document.getElementById("blessings-items") as HTMLDivElement;
+const blessingsOpalsEl = document.getElementById("blessings-opals") as HTMLElement;
+const portalEl = document.getElementById("portal") as HTMLDivElement;
+const portalBodyEl = document.getElementById("portal-body") as HTMLDivElement;
+const portalActionEl = document.getElementById("portal-action") as HTMLButtonElement;
+const portalStatusEl = document.getElementById("portal-status") as HTMLElement;
+
+let offlineCache: OfflineView | null = null;
+let blessingsCache: BlessingsView | null = null;
+let portalCache: WebPortalState | null = null;
+let offlineClaimHandler: (() => Promise<void>) | null = null;
+let blessingsRefreshHandler: (() => Promise<void>) | null = null;
+let offeringHandler: ((type: number, size: number) => Promise<void>) | null = null;
+let portalRefreshHandler: (() => Promise<void>) | null = null;
+let portalActionHandler: (() => Promise<void>) | null = null;
+
+function renderOffline(): void {
+  const o = offlineCache;
+  if (!o || !o.claimable || o.experience <= 0) { offlineEl.classList.add("hidden"); return; }
+  offlineTextEl.textContent = `Welcome back — ${(o.eligibleSeconds / 3600).toFixed(1)}h away. Claim ${Math.round(o.experience)} XP.`;
+  offlineEl.classList.remove("hidden");
+}
+
+function toggleBlessings(force?: boolean): void {
+  const show = force ?? blessingsEl.classList.contains("hidden");
+  if (show) {
+    inventoryEl.classList.add("hidden");
+    powersEl.classList.add("hidden");
+    attrsEl.classList.add("hidden");
+    loadoutEl.classList.add("hidden");
+    portalEl.classList.add("hidden");
+    closeNpc();
+    void blessingsRefreshHandler?.();
+  }
+  blessingsEl.classList.toggle("hidden", !show);
+}
+
+function renderBlessings(): void {
+  const data = blessingsCache;
+  if (!data) { blessingsItemsEl.innerHTML = `<div class="inv-empty">Loading…</div>`; return; }
+  blessingsOpalsEl.textContent = `${data.opals} opals`;
+  blessingsItemsEl.innerHTML = "";
+  for (const blessing of data.active) {
+    const row = document.createElement("div");
+    row.className = `inv-row bless-row${blessing.active ? " equipped" : ""}`;
+    const remaining = blessing.active ? ` · ${Math.ceil(blessing.secondsRemaining / 60)}m left` : "";
+    row.innerHTML = `<span class="inv-name">${escapeHtml(blessing.name)}<span class="inv-affixes">${escapeHtml(blessing.effect)}${remaining}</span></span>`;
+    for (const size of data.sizes) {
+      const button = document.createElement("button");
+      button.className = "inv-btn";
+      button.textContent = `${size.name} · ${size.opalCost}`;
+      button.disabled = data.opals < size.opalCost;
+      button.addEventListener("click", () => void offeringHandler?.(blessing.type, size.size));
+      row.appendChild(button);
+    }
+    blessingsItemsEl.appendChild(row);
+  }
+}
+
+function togglePortal(force?: boolean): void {
+  const show = force ?? portalEl.classList.contains("hidden");
+  if (show) {
+    inventoryEl.classList.add("hidden");
+    powersEl.classList.add("hidden");
+    attrsEl.classList.add("hidden");
+    loadoutEl.classList.add("hidden");
+    blessingsEl.classList.add("hidden");
+    closeNpc();
+    void portalRefreshHandler?.();
+  }
+  portalEl.classList.toggle("hidden", !show);
+}
+
+function renderPortal(): void {
+  const state = portalCache;
+  if (!state) { portalBodyEl.innerHTML = `<div class="inv-empty">Loading…</div>`; return; }
+  if (state.inNiflheim) {
+    portalBodyEl.innerHTML = `<div class="inv-row"><span class="inv-name">In Niflheim<span class="inv-affixes">The portal world is active; clear the boss or return to town.</span></span></div>`;
+    portalActionEl.textContent = "Return to town";
+  } else if (state.hasPortal) {
+    portalBodyEl.innerHTML = `<div class="inv-row"><span class="inv-name">Niflheim portal ready<span class="inv-affixes">Consumes one portal and starts a run (${state.runsCleared} cleared).</span></span></div>`;
+    portalActionEl.textContent = "Enter Niflheim";
+  } else {
+    portalBodyEl.innerHTML = `<div class="inv-row"><span class="inv-name">No portal<span class="inv-affixes">Buy a NiflheimPortal from the merchant first.</span></span></div>`;
+    portalActionEl.textContent = "Enter Niflheim";
+  }
+  portalActionEl.disabled = !state.inNiflheim && !state.hasPortal;
 }
 
 let loadoutCache: Loadout | null = null;

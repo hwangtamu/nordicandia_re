@@ -305,6 +305,32 @@ export const api = {
 
   attributes: (characterId: string) => request<WebAttributes>(`/characters/${characterId}/attributes`),
 
+  offline: (characterId: string) => request<OfflineView>(`/characters/${characterId}/offline`),
+
+  claimOffline: (characterId: string) =>
+    request<OfflineView>(`/characters/${characterId}/offline/claim`, { method: "POST" }),
+
+  blessings: (characterId: string) => request<BlessingsView>(`/characters/${characterId}/blessings`),
+
+  offering: (characterId: string, type: number, size: number) =>
+    request<{ applied: boolean; reason: string; view: BlessingsView }>(`/characters/${characterId}/blessings`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type, size }),
+    }),
+
+  portal: (characterId: string) => request<WebPortalState>(`/characters/${characterId}/portal`),
+
+  enterPortal: (characterId: string, itemId: string) =>
+    request<{ applied: boolean; reason: string; state: CombatEnvelope }>(`/characters/${characterId}/portal/enter`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ itemId }),
+    }),
+
+  returnPortal: (characterId: string) =>
+    request<{ state: CombatEnvelope }>(`/characters/${characterId}/portal/return`, { method: "POST" }),
+
   allocateAttributes: (characterId: string, deltas: Partial<Record<AttributeKey, number>>) =>
     request<{ available: number; attributes: WebAttributes }>(`/characters/${characterId}/attributes`, {
       method: "POST",
@@ -320,6 +346,41 @@ export interface WebAttributes {
   strengthAllocated: number; dexterityAllocated: number; intelligenceAllocated: number; vitalityAllocated: number;
   constitutionAllocated: number; agilityAllocated: number; mindpowerAllocated: number;
   strength: number; dexterity: number; intelligence: number; vitality: number; constitution: number; agility: number; mindpower: number;
+}
+
+export interface OfflineView {
+  awaySeconds: number;
+  eligibleSeconds: number;
+  experience: number;
+  claimable: boolean;
+}
+
+export interface BlessingState {
+  type: number;
+  name: string;
+  active: boolean;
+  secondsRemaining: number;
+  effect: string;
+}
+
+export interface OfferingSize {
+  size: number;
+  name: string;
+  opalCost: number;
+  durationSeconds: number;
+}
+
+export interface BlessingsView {
+  active: BlessingState[];
+  sizes: OfferingSize[];
+  opals: number;
+}
+
+export interface WebPortalState {
+  inNiflheim: boolean;
+  hasPortal: boolean;
+  portalItemId: string;
+  runsCleared: number;
 }
 
 export interface MerchantProduct {

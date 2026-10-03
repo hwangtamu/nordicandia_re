@@ -18,6 +18,8 @@ public static class MerchantCatalog
         new(Guid.Parse("e43b59b0-60e9-4030-ab60-5a9c449d9f10"), "GreatElixirOfImmortality", 610, 25_000, 50),
         new(Guid.Parse("171ff678-ee17-4bbd-abd1-1b9ddf59e72f"), "GreatElixirOfDreams", 609, 20_000, 40),
         new(Guid.Parse("e10d6f84-8284-44d6-904a-ae5a8452a858"), "GreatElixirOfInsomnia", 614, 10_000, 25),
+        // Consumable Niflheim portal (Items.json IntegerId 159); using it starts a Niflheim run.
+        new(Guid.Parse("15900000-0000-0000-0000-000000000159"), "NiflheimPortal", 159, 50_000, 30),
     };
 
     public static ProductView? Find(Guid itemId)

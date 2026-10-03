@@ -73,3 +73,27 @@ public sealed record NpcSetTradeRequest(Guid OfferItemId);
 
 /// <summary>Equipped loadout: up to 6 active skill names and 3 passive (mastery) skill names.</summary>
 public sealed record WebLoadoutRequest(List<string> Active, List<string> Passive);
+
+/// <summary>Offline reward preview/claim: the raw away window, the capped eligible seconds,
+/// the experience granted, and whether a claim would grant anything.</summary>
+public sealed record OfflineView(long AwaySeconds, int EligibleSeconds, double Experience, bool Claimable);
+
+/// <summary>One Aesir blessing: type id, name, whether it is active, remaining seconds and the
+/// (Provisional) effect description.</summary>
+public sealed record BlessingState(int Type, string Name, bool Active, double SecondsRemaining, string Effect);
+
+/// <summary>A purchasable offering size (cost in opals and ClientVerified duration).</summary>
+public sealed record OfferingSize(int Size, string Name, int OpalCost, long DurationSeconds);
+
+/// <summary>Blessings window: active blessings, the offerable sizes and the character's opals.</summary>
+public sealed record BlessingsView(IReadOnlyList<BlessingState> Active, IReadOnlyList<OfferingSize> Sizes, int Opals);
+
+/// <summary>Niflheim portal state: whether a run is active, whether the bag holds a portal, and
+/// the id of that portal (for the enter call).</summary>
+public sealed record WebPortalState(bool InNiflheim, bool HasPortal, Guid PortalItemId, int RunsCleared);
+
+/// <summary>Offering purchase request (type 1..4, size 1..4).</summary>
+public sealed record WebOfferingRequest(int Type, int Size);
+
+/// <summary>Portal enter request (the portal item to consume).</summary>
+public sealed record WebPortalEnterRequest(Guid ItemId);

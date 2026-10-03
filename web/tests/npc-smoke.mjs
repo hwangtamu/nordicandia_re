@@ -81,6 +81,23 @@ try {
   const attrPoints = await page.textContent("#attrs-points");
   await page.click("#attrs-close");
 
+  // Offerings window (M3): four blessings, each with four offering sizes.
+  await page.click("#hud-blessings");
+  await page.waitForSelector("#blessings:not([hidden])", { timeout: 5000 });
+  await page.waitForSelector("#blessings-items .bless-row", { timeout: 5000 });
+  const blessingRows = await page.$$eval("#blessings-items .bless-row", (rows) => rows.length);
+  const offeringButtons = await page.$$eval("#blessings-items .inv-btn", (rows) => rows.length);
+  const blessingOpals = await page.textContent("#blessings-opals");
+  await page.click("#blessings-close");
+
+  // Niflheim portal window (M3).
+  await page.click("#hud-portal");
+  await page.waitForSelector("#portal:not([hidden])", { timeout: 5000 });
+  await page.waitForTimeout(600);
+  const portalText = await page.textContent("#portal-body");
+  const portalAction = await page.textContent("#portal-action");
+  await page.click("#portal-close");
+
   // Loadout window: choose up to 6 active / 3 passive from the class pool, then save.
   await page.click("#hud-loadout");
   await page.waitForSelector("#loadout:not([hidden])", { timeout: 5000 });
@@ -99,6 +116,8 @@ try {
   console.log(`add-socket hint: ${addSocketHint}`);
   console.log(`merchant: ${merchantTitle} tabs=[${merchantTabs.join(", ")}] products=${merchantRows} buyButtons=${buyButtons}`);
   console.log(`attributes: rows=${attrRows} points=${attrPoints}`);
+  console.log(`offerings: blessings=${blessingRows} buttons=${offeringButtons} opals=${blessingOpals}`);
+  console.log(`portal: action=${portalAction} text=${(portalText ?? "").slice(0, 60)}`);
   console.log(`loadout: rows=${loadoutRows} points=${loadoutPoints} status=${loadoutStatus}`);
   console.log(`screenshot: ${out}`);
   const realErrors = errors.filter((e) => !e.includes("favicon"));
@@ -107,6 +126,9 @@ try {
   if (buyButtons < 2) throw new Error("Merchant Buy tab should offer silver and opal purchases");
   if (merchantTabs.length < 3) throw new Error("Merchant should expose Buy/Trade/Set tabs");
   if (attrRows !== 7) throw new Error("Attribute panel should list the seven attributes");
+  if (blessingRows !== 4) throw new Error("Offerings should list the four Aesir blessings");
+  if (offeringButtons !== 16) throw new Error("Each blessing should offer four offering sizes");
+  if (!portalText || !portalText.includes("portal")) throw new Error("Portal window did not render a status");
   if (loadoutRows < 6) throw new Error("Loadout should offer at least six active skills");
   if (loadoutStatus !== "Saved") throw new Error(`Loadout save did not apply (status: ${loadoutStatus})`);
   if (realErrors.length) throw new Error("browser errors:\n" + realErrors.join("\n"));

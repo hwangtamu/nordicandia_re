@@ -34,6 +34,11 @@ public sealed class CombatRegistry
     private const int UniquePityDrops = 120;
     private const int MaxQuantityFromMagicFindMultiplier = 5; // GameParameters.MaxQuantityFromMagicFindMultiplier
 
+    /// <summary>Largest wall-clock gap the live simulation will advance in one step. A longer gap
+    /// (tab closed, host asleep) is handled by the offline-reward flow instead of fast-forwarding
+    /// combat, which would otherwise run the player through hours of un-attended damage.</summary>
+    private const double MaxCatchUpSeconds = 5.0;
+
     public CombatRegistry(GameStore store, TimeProvider clock = null)
     {
         this.store = store;
@@ -58,6 +63,18 @@ public sealed class CombatRegistry
             Resistances: new ResistanceBundle(Lightning: -0.2, Fire: 0.2)),
     };
 
+    /// <summary>Scaled archetypes for a Niflheim run. Provisional: the client's
+    /// NiflheimPortalGameMode spawns "packs" sized by the portal affix (NumMonsterPacks); the
+    /// exact per-pack scaling was not decoded, so the same archetypes are used with higher
+    /// HP/damage/defence and a larger wave.</summary>
+    private static MonsterProfile[] NiflheimProfiles() =>
+        MonsterProfiles.Select(p => p with
+        {
+            HpMult = p.HpMult * 1.8,
+            OffenseMult = p.OffenseMult * 1.6,
+            DefenseMult = p.DefenseMult * 1.3,
+        }).ToArray();
+
     private sealed class Entry
     {
         public CombatInstance Instance = null!;
@@ -75,6 +92,12 @@ public sealed class CombatRegistry
         public long FlushedVersion;
         // Drops since the last unique/set; at the threshold the next drop is forced unique.
         public int UniquePity;
+        // Wall-clock seconds the player was away when this entry was created; claimed once.
+        public long PendingOfflineSeconds;
+        // Niflheim portal run: while true the instance uses the scaled monster profiles.
+        public bool Niflheim;
+        public int NiflheimRunsCleared;
+        public int LastDungeonsCleared;
         public readonly List<LootDropView> RecentLoot = new();
     }
 
@@ -90,19 +113,20 @@ public sealed class CombatRegistry
             var loadout = store.GetLoadout(owner, characterId);
             var basePowers = PowerCatalog.BuildPool(persisted.Class, loadout.Active, loadout.Passive);
             var ranks = store.GetMasteryRanks(owner, characterId);
+            var niflheim = store.IsNiflheimActive(owner, characterId);
             var stats = CharacterRatings.Apply(
                 CombatantStats.FromRealtime(
                     persisted.Offense + equipOffense,
                     persisted.Defense + equipDefense,
                     persisted.Recovery + equipRecovery,
                     (int)persisted.Level),
-                WithPassiveBonuses(store.GetAttributeMap(owner, characterId), basePowers));
+                CharacterAttributeMap(owner, characterId, basePowers));
             // P1: seed the instance's version from the persisted counter so it never resets
             // to 1 across a restart (which would make the command log boundary reject fresh
             // commands from a client that already saw a higher version).
             var persistedVersion = store.GetCombatVersion(owner, characterId);
             var instance = new CombatInstance(stats, persisted.Experience, persisted.Silver, persisted.Opals,
-                (int)persisted.MonsterKills, seed, monsterProfiles: MonsterProfiles,
+                (int)persisted.MonsterKills, seed, monsterProfiles: niflheim ? NiflheimProfiles() : MonsterProfiles,
                 classPowers: EffectivePowers(basePowers, ranks), initialVersion: persistedVersion);
             entries[characterId] = new Entry
             {
@@ -112,6 +136,9 @@ public sealed class CombatRegistry
                 EquipOffense = equipOffense,
                 EquipDefense = equipDefense,
                 EquipRecovery = equipRecovery,
+                PendingOfflineSeconds = store.GetOfflineWindow(owner, characterId),
+                Niflheim = niflheim,
+                LastDungeonsCleared = instance.DungeonsCleared,
                 FlushedExperience = persisted.Experience,
                 FlushedSilver = persisted.Silver,
                 FlushedOpals = persisted.Opals,
@@ -128,11 +155,156 @@ public sealed class CombatRegistry
         {
             var entry = GetEntry(owner, characterId);
             AdvanceLocked(entry);
+            ApplyNiflheimCompletionLocked(owner, characterId, entry);
             CollectLootLocked(owner, characterId, entry);
             FlushLocked(owner, characterId, entry);
             return TakeState(entry);
         }
     }
+
+    // ----- offline rewards (M3) -----
+
+    /// <summary>Offline reward preview: the away window, the capped eligible seconds and the
+    /// experience a claim would grant. Does not grant anything.</summary>
+    public OfflineView Offline(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            var (experience, seconds) = OfflineRewards.Compute(entry.Instance.PlayerLevel, entry.PendingOfflineSeconds);
+            return new OfflineView(entry.PendingOfflineSeconds, seconds, experience, experience > 0);
+        }
+    }
+
+    /// <summary>Grants the pending offline experience once and clears the window. A second call
+    /// returns nothing (idempotent).</summary>
+    public OfflineView ClaimOffline(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            var (experience, seconds) = OfflineRewards.Compute(entry.Instance.PlayerLevel, entry.PendingOfflineSeconds);
+            if (experience > 0)
+            {
+                entry.Instance.GrantExperience(experience);
+                FlushLocked(owner, characterId, entry);
+            }
+            entry.PendingOfflineSeconds = 0;
+            return new OfflineView(0, seconds, experience, false);
+        }
+    }
+
+    // ----- Aesir blessings (M3) -----
+
+    /// <summary>Active blessings and the offering options. Buying is server-validated; the
+    /// effect flows through the recovered attribute engine on the next stat recompute.</summary>
+    public BlessingsView ActiveBlessings(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            var active = store.GetActiveBlessingSeconds(owner, characterId);
+            var rows = Blessings.Types.Select(type => new BlessingState(
+                type, Blessings.TypeName(type), active.ContainsKey(type),
+                active.TryGetValue(type, out var seconds) ? seconds : 0, Blessings.Effect(type))).ToList();
+            var sizes = Blessings.Sizes
+                .Select(size => new OfferingSize(size, Blessings.SizeName(size), Blessings.OpalCost(size),
+                    (long)Blessings.Duration(size).TotalSeconds)).ToList();
+            var opals = store.ProjectWebSnapshot(owner, characterId).Opals;
+            return new BlessingsView(rows, sizes, opals);
+        }
+    }
+
+    /// <summary>Buys an offering and immediately applies its blessing (idempotent per call: the
+    /// opal cost is deducted once, and the expiry is extended).</summary>
+    public (bool Applied, string Reason, BlessingsView View) Offer(Guid owner, Guid characterId, int type, int size)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            if (!Blessings.Types.Contains(type)) return (false, "unknown_type", ActiveBlessings(owner, characterId));
+            if (size is < 1 or > 4) return (false, "unknown_size", ActiveBlessings(owner, characterId));
+            var cost = Blessings.OpalCost(size);
+            if (store.ProjectWebSnapshot(owner, characterId).Opals < cost)
+                return (false, "not_enough_opals", ActiveBlessings(owner, characterId));
+            store.MakeOffering(owner, characterId, type, size, cost);
+            // Rebuild the transient attribute map so the blessing affects combat ratings now.
+            RecomputeStats(owner, characterId, entry);
+            return (true, "ok", ActiveBlessings(owner, characterId));
+        }
+    }
+
+    // ----- Niflheim portal (M3) -----
+
+    /// <summary>Whether the character holds a portal and/or is inside a run.</summary>
+    public WebPortalState Portal(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            var portal = store.GetItems(owner, characterId).FirstOrDefault(i => i != null && i.DefinitionIntegerId == PortalDefinitionIntegerId);
+            return new WebPortalState(entry.Niflheim, portal is not null, portal?.Id ?? Guid.Empty, entry.NiflheimRunsCleared);
+        }
+    }
+
+    /// <summary>Consumes one Niflheim portal and switches the instance to the portal world. If a
+    /// run is already active nothing is consumed (idempotent retry).</summary>
+    public (bool Applied, string Reason, WebCombatState State) EnterPortal(Guid owner, Guid characterId, Guid itemId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            if (entry.Niflheim) return (false, "already_in_niflheim", PeekState(entry));
+            var portal = store.GetItems(owner, characterId).FirstOrDefault(i => i != null && i.Id == itemId && i.DefinitionIntegerId == PortalDefinitionIntegerId);
+            if (portal is null) return (false, "no_portal_item", PeekState(entry));
+            var (consumed, _) = store.ConsumeItem(owner, characterId, itemId, 1);
+            if (consumed <= 0) return (false, "consume_failed", PeekState(entry));
+            store.SetNiflheimActive(owner, characterId, true);
+            entry.Niflheim = true;
+            entry.Instance.SetWorld(NiflheimProfiles());
+            entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
+            FlushLocked(owner, characterId, entry);
+            return (true, "ok", TakeState(entry));
+        }
+    }
+
+    /// <summary>Leaves a Niflheim run and restores the normal dungeon (no item is consumed).</summary>
+    public WebCombatState ReturnPortal(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            if (!entry.Niflheim) return TakeState(entry);
+            LeaveNiflheimLocked(owner, characterId, entry);
+            FlushLocked(owner, characterId, entry);
+            return TakeState(entry);
+        }
+    }
+
+    private void ApplyNiflheimCompletionLocked(Guid owner, Guid characterId, Entry entry)
+    {
+        if (!entry.Niflheim)
+        {
+            entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
+            return;
+        }
+        if (entry.Instance.DungeonsCleared > entry.LastDungeonsCleared)
+        {
+            entry.NiflheimRunsCleared++;
+            LeaveNiflheimLocked(owner, characterId, entry);
+        }
+    }
+
+    private void LeaveNiflheimLocked(Guid owner, Guid characterId, Entry entry)
+    {
+        store.SetNiflheimActive(owner, characterId, false);
+        entry.Niflheim = false;
+        entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
+        entry.Instance.SetWorld(MonsterProfiles);
+        entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
+    }
+
+    private const int PortalDefinitionIntegerId = 159; // Items.json: NiflheimPortal
 
     public (bool Applied, string Reason, WebCombatState State) ApplyCommand(
         Guid owner, Guid characterId, string commandId, long expectedVersion, WebCommandRequest command)
@@ -381,7 +553,7 @@ public sealed class CombatRegistry
                 entry.Instance.Defense - entry.EquipDefense + defense,
                 entry.Instance.Recovery - entry.EquipRecovery + recovery,
                 entry.Instance.PlayerLevel),
-            WithPassiveBonuses(store.GetAttributeMap(owner, characterId), entry.BasePowers)));
+            CharacterAttributeMap(owner, characterId, entry.BasePowers)));
         entry.EquipOffense = offense;
         entry.EquipDefense = defense;
         entry.EquipRecovery = recovery;
@@ -400,6 +572,16 @@ public sealed class CombatRegistry
         return map;
     }
 
+    /// <summary>Character attribute map with the recovered passive bonuses and the active Aesir
+    /// blessing effects merged in (both transient; only the base map is persisted).</summary>
+    private Dictionary<int, double> CharacterAttributeMap(Guid owner, Guid characterId, ClassPowerPool pool)
+    {
+        var map = WithPassiveBonuses(store.GetAttributeMap(owner, characterId), pool);
+        foreach (var (id, value) in Blessings.AttributeBonuses(store.GetActiveBlessingSeconds(owner, characterId).Keys))
+            map[id] = map.GetValueOrDefault(id) + value;
+        return map;
+    }
+
     private Entry GetEntry(Guid owner, Guid characterId)
     {
         if (entries.TryGetValue(characterId, out var entry)) return entry;
@@ -410,7 +592,11 @@ public sealed class CombatRegistry
     private void AdvanceLocked(Entry entry)
     {
         var now = Now;
-        entry.Instance.Advance((now - entry.LastAdvanceUtc).TotalSeconds);
+        // Clamp the catch-up: a long away gap is turned into offline progress, not simulated
+        // combat. Without this a tab left closed for hours would fast-forward the fight in one
+        // step and usually kill the player.
+        var elapsed = Math.Clamp((now - entry.LastAdvanceUtc).TotalSeconds, 0, MaxCatchUpSeconds);
+        entry.Instance.Advance(elapsed);
         entry.LastAdvanceUtc = now;
     }
 
@@ -455,7 +641,7 @@ public sealed class CombatRegistry
     /// equipped passives' recovered bonuses. Fractions: 0.3 = +30%.</summary>
     private (double MagicFind, double ItemQuantity) LootLuck(Guid owner, Guid characterId, Entry entry)
     {
-        var map = WithPassiveBonuses(store.GetAttributeMap(owner, characterId), entry.BasePowers);
+        var map = CharacterAttributeMap(owner, characterId, entry.BasePowers);
         var eval = CharacterAttributeEngine.Instance.Evaluate(map);
         return (Math.Max(0, eval.Resolve("Magic_Find_Percent_Total")),
             Math.Max(0, eval.Resolve("Item_Quantity_Bonus_Percent_Total")));

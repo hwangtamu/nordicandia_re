@@ -118,7 +118,7 @@ public sealed class CombatInstance
     private readonly CombatRandom rng;
     private readonly double playerSpeed = 6.5;
     private readonly int monsterCount;
-    private readonly MonsterProfile[] profiles;
+    private MonsterProfile[] profiles;
     private SkillProfile[] skills;
     private PassiveProfile[] passives;
 
@@ -680,6 +680,28 @@ public sealed class CombatInstance
         Offense += 1.5 * gained;
         PlayerMaxHp = EffectiveMaxHealth();
         PlayerHp = PlayerMaxHp;
+    }
+
+    /// <summary>Grants experience that does not come from a kill (offline/administrative) and
+    /// applies any level-ups. Returns the amount actually granted.</summary>
+    public double GrantExperience(double amount)
+    {
+        if (double.IsNaN(amount) || amount <= 0 || PlayerHp <= 0) return 0;
+        Experience += amount;
+        LevelUpIfNeeded();
+        Version++;
+        return amount;
+    }
+
+    /// <summary>Switches the monster archetypes (e.g. entering/leaving a Niflheim portal) and
+    /// restarts the current wave. Progress (experience/currency/kills) is preserved.</summary>
+    public void SetWorld(IReadOnlyList<MonsterProfile> worldProfiles)
+    {
+        if (worldProfiles is { Count: > 0 }) profiles = worldProfiles.ToArray();
+        boss = null;
+        dungeonKills = 0;
+        SpawnMonsters();
+        Version++;
     }
 
     // ------------------------------------------------------------------ commands

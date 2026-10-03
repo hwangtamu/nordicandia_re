@@ -405,6 +405,76 @@ public static class WebApiEndpoints
                 user.UserId, id, product.Value.DefinitionIntegerId, product.Value.Name, stacks);
             return Results.Ok(new { applied, reason = applied ? "ok" : "empty_offer", inventory = CombatRegistry.Instance.Inventory(user.UserId, id) });
         });
+
+        // ----- offline rewards (M3) -----
+
+        // Away-time reward preview (does not grant).
+        group.MapGet("/characters/{id:guid}/offline", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(CombatRegistry.Instance.Offline(user.UserId, id));
+        });
+
+        // Grant the pending offline experience once.
+        group.MapPost("/characters/{id:guid}/offline/claim", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(CombatRegistry.Instance.ClaimOffline(user.UserId, id));
+        });
+
+        // ----- Aesir blessings (M3) -----
+
+        group.MapGet("/characters/{id:guid}/blessings", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(CombatRegistry.Instance.ActiveBlessings(user.UserId, id));
+        });
+
+        group.MapPost("/characters/{id:guid}/blessings", (HttpContext ctx, Guid id, WebOfferingRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var (applied, reason, view) = CombatRegistry.Instance.Offer(user.UserId, id, req?.Type ?? 0, req?.Size ?? 0);
+            return Results.Ok(new { applied, reason, view, attributes = CombatRegistry.Instance.Attributes(user.UserId, id) });
+        });
+
+        // ----- Niflheim portal (M3) -----
+
+        group.MapGet("/characters/{id:guid}/portal", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(CombatRegistry.Instance.Portal(user.UserId, id));
+        });
+
+        group.MapPost("/characters/{id:guid}/portal/enter", (HttpContext ctx, Guid id, WebPortalEnterRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var (applied, reason, state) = CombatRegistry.Instance.EnterPortal(user.UserId, id, req?.ItemId ?? Guid.Empty);
+            return Results.Ok(new { applied, reason, state });
+        });
+
+        group.MapPost("/characters/{id:guid}/portal/return", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(new { state = CombatRegistry.Instance.ReturnPortal(user.UserId, id) });
+        });
     }
 
     private static IResult CreateSessionResponse(HttpContext ctx, Guid userId, string displayName)
