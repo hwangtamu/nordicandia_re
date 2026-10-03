@@ -95,6 +95,15 @@ Buff / 召唤 / 弹体：
 
 ## 结论
 
-* 5 个代表技能的**数值**与客户端一致（ClientVerified），网页差异在**执行**：`strike`/`projectile`/`chain`/`nova`/`summon` 原型、缺少 AttackPayload/onPostHit/弹体/冻结/仆从继承。
-* C05 的目标是把这 5 个（Shatter、PowerShot、ChainLightning、IceNova、SummonSkeleton）从原型改成真实行为，并为每个加 B04 样本。
+* 5 个代表技能的**数值**与客户端一致（ClientVerified，已进 B04 样本）。
+* C05 进展（本轮）：
+  * **ChainLightning** 衰减改为每跳 **−25%**（`_DamageReductionPerJump=0.25`，原 0.85 错误）；测试命中 **4** 条链。
+  * **IceNova** 冻结接入（`Power_Freeze_Duration=2`），测试敌人 `StunTimer>0`。
+  * **PowerShot** 穿透改为按 **0.95** 逐目标 roll（原为无条件 2 个 50%）。
+  * **Shatter** 的 `strike` 行为与客户端一致（单体武器攻击）。
+* 仍缺：**SummonSkeleton 的盟友仆从**需要 **P01**（玩家召唤物公共模型），不能只加进敌对 `monsters`；`AttackPayload`/`onPostHit`/7 个 Shatter 精通改写未接。
 * 通用模式（RequiresTarget + AttackPayload + onPostHit）可作为 C06 批量移植的模板。
+
+## B04 样本
+
+`fidelity_samples.json` 已加入 6 条 `skill_param`（Shatter 倍率/冷却、PowerShot 穿透、ChainLightning 链数、IceNova 冻结、SummonSkeleton 继承生命），回放 **19/19** 通过。

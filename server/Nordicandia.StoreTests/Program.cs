@@ -11,6 +11,7 @@ LuckAndOnHitRecoveryTests.BrainSelection();
 LuckAndOnHitRecoveryTests.BossPowers();
 LuckAndOnHitRecoveryTests.Curses();
 FidelityReplayTests.Run();
+LuckAndOnHitRecoveryTests.SkillMechanics();
 
 var directory = Path.Combine(Path.GetTempPath(), "nord-alias-test-" + Guid.NewGuid());
 Directory.CreateDirectory(directory);

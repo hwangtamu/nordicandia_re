@@ -119,6 +119,60 @@
       "expected": { "counts": [1, 2, 1, 2] },
       "source": "ELF 0x02C21730 (FRINTM + remainder)",
       "status": "对照通过"
+    },
+    {
+      "id": "skill.shatter.damage",
+      "kind": "skill_param",
+      "rule": "Shatter.InternalInitializePowerParameters",
+      "inputs": { "classId": 0, "skill": "Shatter", "field": "Multiplier" },
+      "expected": { "value": 9.0 },
+      "source": "disasm_powers.py Shatter @ 0x2d48348",
+      "status": "对照通过"
+    },
+    {
+      "id": "skill.shatter.cooldown",
+      "kind": "skill_param",
+      "rule": "Shatter.InternalInitializePowerParameters",
+      "inputs": { "classId": 0, "skill": "Shatter", "field": "Cooldown" },
+      "expected": { "value": 5.0 },
+      "source": "disasm_powers.py Shatter",
+      "status": "对照通过"
+    },
+    {
+      "id": "skill.powershot.pierce",
+      "kind": "skill_param",
+      "rule": "PowerShot.InternalInitializePowerParameters",
+      "inputs": { "classId": 4, "skill": "PowerShot", "field": "Power_Power_Shot_Pierce_Chance_Percent" },
+      "expected": { "value": 0.95 },
+      "source": "disasm_powers.py PowerShot @ 0x2d21498",
+      "status": "对照通过"
+    },
+    {
+      "id": "skill.chainlightning.chains",
+      "kind": "skill_param",
+      "rule": "ChainLightning.InternalInitializePowerParameters",
+      "inputs": { "classId": 5, "skill": "ChainLightning", "field": "ChainLightning_Max_Num_Chains" },
+      "expected": { "value": 4.0 },
+      "source": "disasm_powers.py ChainLightning @ 0x2d27cd0",
+      "status": "对照通过"
+    },
+    {
+      "id": "skill.icenova.freeze",
+      "kind": "skill_param",
+      "rule": "IceNova.InternalInitializePowerParameters",
+      "inputs": { "classId": 5, "skill": "IceNova", "field": "Power_Freeze_Duration" },
+      "expected": { "value": 2.0 },
+      "source": "disasm_powers.py IceNova @ 0x2d2cd04",
+      "status": "对照通过"
+    },
+    {
+      "id": "skill.summon_skeleton.inheritance_life",
+      "kind": "skill_param",
+      "rule": "SummonSkeleton.InternalInitializePowerParameters",
+      "inputs": { "classId": 6, "skill": "SummonSkeleton", "field": "Minion_Inheritance_Life_Bonus_Percent" },
+      "expected": { "value": 0.5 },
+      "source": "disasm_powers.py SummonSkeleton @ 0x2a536f8",
+      "status": "对照通过"
     }
   ]
 }

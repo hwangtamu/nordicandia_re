@@ -297,4 +297,25 @@ static class LuckAndOnHitRecoveryTests
         }
         Check(slowed, $"curses: a champion curser slows the player ({instance.CurseSlow:F2})");
     }
+
+    public static void SkillMechanics()
+    {
+        var stats = CombatantStats.FromRealtime(5000, 5000, 0, 30) with { ManaMax = 500 };
+        // ChainLightning: ChainLightning_Max_Num_Chains = 4 (client).
+        var chainPool = Nordicandia.Server.WebApi.PowerCatalog.BuildPool(5, new[] { "ChainLightning" }, Array.Empty<string>());
+        var chain = new CombatInstance(stats, 0, 0, 0, 0, seed: 21, monsterCount: 8, classPowers: chainPool);
+        chain.MoveTo(0, 0);
+        for (var i = 0; i < chain.Monsters.Count; i++) { chain.Monsters[i].X = 2 + i; chain.Monsters[i].Z = 0; }
+        var chainOutcome = chain.UseSkill(0);
+        var chainHits = chain.Monsters.Count(m => m.Hp < m.MaxHp);
+        Check(chainOutcome.Cast && chainHits == 4, $"skill: ChainLightning hits its 4 chains ({chainHits})");
+
+        // IceNova: Power_Freeze_Duration = 2s (client).
+        var icePool = Nordicandia.Server.WebApi.PowerCatalog.BuildPool(5, new[] { "IceNova" }, Array.Empty<string>());
+        var ice = new CombatInstance(stats, 0, 0, 0, 0, seed: 22, monsterCount: 6, classPowers: icePool);
+        ice.MoveTo(0, 0);
+        for (var i = 0; i < ice.Monsters.Count; i++) { ice.Monsters[i].X = 1 + i; ice.Monsters[i].Z = 0; }
+        ice.UseSkill(0);
+        Check(ice.Monsters.Any(m => m.StunTimer > 0), "skill: IceNova freezes enemies");
+    }
 }

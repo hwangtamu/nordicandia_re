@@ -1238,9 +1238,10 @@ public sealed class CombatInstance
                 BeginCast(skillId, skill);
                 candidates.Sort((a, b) => Distance(a).CompareTo(Distance(b)));
                 var maxTargets = Math.Max(1, ChainsOf(skill));
+                // ChainLightning._DamageReductionPerJump = 0.25 (client default), so each jump keeps 75%.
                 var decay = skill.Values.TryGetValue("Power_Chain_Lightning_Damage_Reduction_Percent", out var d)
                     ? Math.Clamp(1 - d, 0.1, 1.0)
-                    : 0.85;
+                    : 0.75;
                 double total = 0;
                 var first = candidates[0].Index;
                 var currentMultiplier = skill.Multiplier;
@@ -1285,22 +1286,28 @@ public sealed class CombatInstance
             }
             case "projectile":
             {
-                // Ranged single-target shot; pierce modifiers add nearby targets.
+                // Ranged shot. PowerShot rolls its recovered pierce chance; a success keeps the
+                // projectile going to the next nearby enemy (client: per-hit pierce roll).
                 var target = NearestAliveMonster(14);
                 if (target is null) return new SkillOutcome(false, 0, -1, "no_target");
                 BeginCast(skillId, skill);
                 var hit = ResolveSkill(target, skill, skill.Multiplier);
                 var total = ApplyOnHit(target, hit, autoAttack: false);
                 DamageMonster(target, total);
-                if (skill.Values.ContainsKey("Power_Projectile_Pierce_Chance") ||
-                    skill.Values.ContainsKey("Power_Power_Shot_Pierce_Chance_Percent"))
+                var pierceChance = skill.Values.TryGetValue("Power_Power_Shot_Pierce_Chance_Percent", out var pc)
+                    ? pc
+                    : skill.Values.TryGetValue("Power_Projectile_Pierce_Chance", out var ppc) ? ppc : 0.0;
+                pierceChance = Math.Clamp(pierceChance, 0, 1);
+                var hitIndices = new HashSet<int> { target.Index };
+                foreach (var extra in AliveMonstersInRadius(Math.Max(skill.Radius, 8)).OrderBy(Distance))
                 {
-                    foreach (var extra in AliveMonstersInRadius(6).Where(m => m.Index != target.Index).Take(2))
-                    {
-                        var pierce = ResolveSkill(extra, skill, skill.Multiplier * 0.5);
-                        total += pierce.Damage;
-                        DamageMonster(extra, pierce.Damage);
-                    }
+                    if (hitIndices.Contains(extra.Index)) continue;
+                    if (pierceChance <= 0 || !CombatModel.RollChance(pierceChance, rng)) break;
+                    var pierce = ResolveSkill(extra, skill, skill.Multiplier);
+                    var dealt = ApplyOnHit(extra, pierce, autoAttack: false);
+                    total += dealt;
+                    DamageMonster(extra, dealt);
+                    hitIndices.Add(extra.Index);
                 }
                 Version++;
                 return new SkillOutcome(true, total, target.Index, "ok");

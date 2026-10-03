@@ -98,6 +98,25 @@ static class FidelityReplayTests
                 var want = expected.GetProperty("counts").EnumerateArray().Select(c => c.GetInt32()).ToArray();
                 return counts.SequenceEqual(want);
             }
+            case "skill_param":
+            {
+                // The web class pool's skill value must equal the client set_Item value.
+                var classId = inputs.GetProperty("classId").GetInt32();
+                var skill = inputs.GetProperty("skill").GetString()!;
+                var field = inputs.GetProperty("field").GetString()!;
+                var profile = PowerCatalog.BuildPool(classId, new[] { skill }, Array.Empty<string>())
+                    .Active.FirstOrDefault(s => s.Name == skill);
+                if (profile is null) return false;
+                var actual = field switch
+                {
+                    "Multiplier" => profile.Multiplier,
+                    "Cooldown" => profile.Cooldown,
+                    "Radius" => profile.Radius,
+                    "ManaCost" => profile.ManaCost,
+                    _ => profile.Values.TryGetValue(field, out var v) ? v : double.NaN,
+                };
+                return Eq(actual, expected.GetProperty("value").GetDouble());
+            }
             default:
                 throw new InvalidOperationException($"unknown sample kind '{kind}'");
         }
