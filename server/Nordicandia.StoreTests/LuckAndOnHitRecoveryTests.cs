@@ -356,5 +356,14 @@ static class LuckAndOnHitRecoveryTests
             new AttackProfile(1.0, 0, 0, 0, IgnoreArmor: true, IgnoreResistances: true), new CombatRandom(3));
         Check(bypassed.Damage > mitigated.Damage,
             $"damage order: IgnoreArmor/IgnoreResistances bypass mitigation ({mitigated.Damage:F1} -> {bypassed.Damage:F1})");
+        // Deadly strike doubles a crit (Constants.Deadly_Strike_Crit_Multiplier = 2.0).
+        var plainTarget = CombatantStats.FromRealtime(1000, 0, 0, 10);
+        var crit = CombatModel.ResolveBundleAttack(critter, new DamageBundle(Physical: 100), plainTarget,
+            default, new AttackProfile(1.0, 0, 1.5, 0), new CombatRandom(5));
+        var deadly = CombatantStats.FromRealtime(1000, 0, 0, 10) with { CritChance = 1.0, DeadlyStrikeChance = 1.0 };
+        var deadlyHit = CombatModel.ResolveBundleAttack(deadly, new DamageBundle(Physical: 100), plainTarget,
+            default, new AttackProfile(1.0, 0, 1.5, 0), new CombatRandom(5));
+        Check(deadlyHit.Critical && Math.Abs(deadlyHit.Damage - crit.Damage * 2.0) < 1e-9,
+            $"damage order: deadly strike doubles a crit ({crit.Damage:F1} -> {deadlyHit.Damage:F1})");
     }
 }

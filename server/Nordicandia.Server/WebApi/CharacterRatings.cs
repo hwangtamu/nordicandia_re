@@ -55,6 +55,8 @@ internal static class CharacterRatings
             HitChanceCap = eval.Resolve("Hit_Chance_Cap") is var cap && cap > 0 ? cap : 1.0,
             AlwaysHits = eval.Resolve("Always_Hits") > 0 || eval.Resolve("Always_Hits_Global") > 0,
             IgnoresCrits = eval.Resolve("Ignores_Critical_Hits") > 0,
+            // Deadly strike (axes): chance from Deadly_Strike_Chance_Total, x2 on a crit.
+            DeadlyStrikeChance = eval.Resolve("Deadly_Strike_Chance_Total"),
         };
     }
 }

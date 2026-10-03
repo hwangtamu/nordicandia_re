@@ -52,8 +52,12 @@ public readonly record struct CombatantStats(double Offense, double Defense, dou
     // IsEvaded: CalculateChanceToHit(AttackRating_Total, Evasion_Total, Hit_Chance_Bonus_Percent
     // (0x608), Hit_Chance_Cap (0x680)); Always_Hits (0x5C8) bypasses the roll. Ignores_Critical_Hits
     // (0x1168) on the defender prevents crits.
-    double HitChanceBonus = 0, double HitChanceCap = 1, bool AlwaysHits = false, bool IgnoresCrits = false)
+    double HitChanceBonus = 0, double HitChanceCap = 1, bool AlwaysHits = false, bool IgnoresCrits = false,
+    // Deadly strike: on a crit, roll Deadly_Strike_Chance_Total (0x1C90, axes) and
+    // Constants.Deadly_Strike_Crit_Multiplier = 2.0.
+    double DeadlyStrikeChance = 0)
 {
+    public const double DeadlyStrikeCritMultiplier = 2.0;
     public static CombatantStats FromRealtime(double offense, double defense, double recovery, int level)
         => new(Math.Max(0, offense), Math.Max(0, defense), Math.Max(0, recovery), Math.Max(1, level));
 
@@ -292,8 +296,12 @@ public static class CombatModel
         var blocked = RollChance(defender.BlockChance, rng);
         var critChance = attacker.CritChance > 0 ? attacker.CritChance : profile.CritChance;
         var critical = !defender.IgnoresCrits && RollChance(critChance, rng);
+        // Deadly strike can occur on a critical hit and multiplies the damage again.
+        var deadly = critical && RollChance(attacker.DeadlyStrikeChance, rng);
 
-        var scale = Math.Max(0, profile.SkillMultiplier) * (critical ? Math.Max(1.0, profile.CritMultiplier) : 1.0);
+        var scale = Math.Max(0, profile.SkillMultiplier)
+            * (critical ? Math.Max(1.0, profile.CritMultiplier) : 1.0)
+            * (deadly ? CombatantStats.DeadlyStrikeCritMultiplier : 1.0);
         // Client order: convert the weapon's physical damage, then mitigate with armour and
         // resistances reduced by the attacker's penetration.
         var converted = ConvertDamage(bundle.Scale(scale), attacker.Conversion);

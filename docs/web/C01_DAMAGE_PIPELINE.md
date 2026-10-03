@@ -37,8 +37,8 @@ Miss（MissPayload） → IsEvaded（命中/闪避判定） → IsDodged → IsB
 ## 未完成
 
 * **Evade 与 `ChanceToHit` 的命名**：网页把 `IsEvaded` 当作"命中率"，未单独验证 `MissPayload`（距离/视线）与 `IsEvaded` 是否还有第二层；`Always_Hits` 已接。
-* **Glancing hit**：是 `DebuffGlancingHit`（斧类暴击后施加的减益，`Base_Glancing_Hit_Debuff_Duration` 580），未实现。
-* **Deadly strike**：`Deadly_Strike_Chance_Total`（1205，斧专精），未实现暴击变体。
+* **Deadly strike**：已接入。`Deadly_Strike_Chance_Total`（1205 = `Pin(AxeAny_CurrentHand,0,1) * Deadly_Strike_Chance_With_Axes`）在暴击后 roll，成功则伤害 ×`Constants.Deadly_Strike_Crit_Multiplier`=**2.0**。测试：150→300。
+* **Glancing hit**：是 `DebuffGlancingHit`（一个可叠加的 **DoT debuff**，`_AddInstance(dps, damageType, duration)`，`Base_Glancing_Hit_Debuff_Duration` 580），由特定 power/buff 施加，不是通用攻击机制；当前网页内容没有任何 power 创建它，因此标记为**当前内容不适用**（待相关 power 移植时再补，属 W03/P02）。
 * **Force field**：`IgnoreForceField` 标志已加但网页护盾在 `ApplyPlayerDamage` 单独处理，未按标志绕过。
 * **受伤方的 `IsEvaded`/`IsDodged` vs 攻方的 `IgnoreArmor`**：只做了单次命中判定，未逐技能验证。
 
