@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "baseline": { "platform": "android", "version": "1.9.3", "versionCode": 507033 },
+  "note": "B04 sample library. Each sample is a fixed input and the expected output recovered from the client (or the documented reference). B05 replays these deterministically. Add skills/buffs/loot here as they are ported.",
+  "samples": [
+    {
+      "id": "mf.weights.0.3",
+      "kind": "rarity_weights",
+      "rule": "ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes",
+      "inputs": { "magicFind": 0.3, "factor": 1.0 },
+      "expected": { "normal": 9904153, "unique": 549, "set": 399 },
+      "source": "LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md",
+      "status": "对照通过"
+    },
+    {
+      "id": "mf.weights.1.0",
+      "kind": "rarity_weights",
+      "rule": "ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes",
+      "inputs": { "magicFind": 1.0, "factor": 1.0 },
+      "expected": { "normal": 9901961, "unique": 655, "set": 452 },
+      "source": "LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md",
+      "status": "对照通过"
+    },
+    {
+      "id": "mf.weights.100",
+      "kind": "rarity_weights",
+      "rule": "ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes",
+      "inputs": { "magicFind": 100.0, "factor": 1.0 },
+      "expected": { "normal": 9901000, "unique": 2482, "set": 1218 },
+      "source": "LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md",
+      "status": "对照通过"
+    },
+    {
+      "id": "mf.weights.factor2",
+      "kind": "rarity_weights",
+      "rule": "ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes",
+      "inputs": { "magicFind": 10.0, "factor": 2.0 },
+      "expected": { "normal": 9804305, "unique": 1716, "set": 952 },
+      "source": "LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md",
+      "status": "对照通过"
+    },
+    {
+      "id": "conversion.split",
+      "kind": "damage_conversion",
+      "rule": "GameCalculator.ApplyWeaponDamageConversion / InternalApplyDamageConversion",
+      "inputs": { "physical": 100.0, "fire": 0.2, "cold": 0.3 },
+      "expected": { "physical": 50.0, "fire": 20.0, "cold": 30.0 },
+      "source": "ELF 0x02BABF3C + 0x02BAC1F8",
+      "status": "对照通过"
+    },
+    {
+      "id": "conversion.over100",
+      "kind": "damage_conversion",
+      "rule": "GameCalculator.ApplyWeaponDamageConversion (normalise when sum > 1)",
+      "inputs": { "physical": 100.0, "fire": 0.8, "cold": 0.8 },
+      "expected": { "physical": 0.0, "fire": 50.0, "cold": 50.0 },
+      "source": "ELF 0x02BABFBC (FCMP 1.0 + FDIV)",
+      "status": "对照通过"
+    },
+    {
+      "id": "penetration.negative",
+      "kind": "resistance_penetration",
+      "rule": "Fire_Resistance_Penetration_Total subtracted from resistance",
+      "inputs": { "resistance": 0.5, "penetration": 0.75 },
+      "expected": { "fire": -0.25 },
+      "source": "attribute_ids 98 + ApplyDamageReduction 0x02BAF34C",
+      "status": "对照通过"
+    },
+    {
+      "id": "offline.tier1",
+      "kind": "offline_rate",
+      "rule": "WindowWelcomeBack.Start killsPerMinute",
+      "inputs": { "efficiency": 1.5, "tier": 1 },
+      "expected": { "killsPerMinute": 15 },
+      "source": "ELF 0x02678C10/0x02678D1C + 0x13872D8",
+      "status": "对照通过"
+    },
+    {
+      "id": "offline.tier10",
+      "kind": "offline_rate",
+      "rule": "WindowWelcomeBack.Start killsPerMinute",
+      "inputs": { "efficiency": 1.5, "tier": 10 },
+      "expected": { "killsPerMinute": 22 },
+      "source": "ELF 0x02678D1C/0x02678D24",
+      "status": "对照通过"
+    },
+    {
+      "id": "offline.tier30",
+      "kind": "offline_rate",
+      "rule": "WindowWelcomeBack.Start killsPerMinute",
+      "inputs": { "efficiency": 1.5, "tier": 30 },
+      "expected": { "killsPerMinute": 67 },
+      "source": "ELF 0x13872D8 (clamp 45)",
+      "status": "对照通过"
+    },
+    {
+      "id": "brain.standard.combat",
+      "kind": "brain_choice",
+      "rule": "Game.AI.WeightedActionBrain weighted pick",
+      "inputs": { "brain": "Standard", "conditions": ["StateCombat"], "roll": 0.0 },
+      "expected": { "power": "DefaultAttackProxy" },
+      "source": "Brains.json + StringHashHelper",
+      "status": "对照通过"
+    },
+    {
+      "id": "brain.standard.wander",
+      "kind": "brain_choice",
+      "rule": "Game.AI.WeightedActionBrain weighted pick",
+      "inputs": { "brain": "Standard", "conditions": ["StateWander"], "roll": 0.0 },
+      "expected": { "power": "Wander" },
+      "source": "Brains.json + StringHashHelper",
+      "status": "对照通过"
+    },
+    {
+      "id": "item_quantity.remainder50",
+      "kind": "item_quantity",
+      "rule": "DeathPayload.Apply item count (floor with remainder)",
+      "inputs": { "itemQuantity": 0.5, "draws": 4 },
+      "expected": { "counts": [1, 2, 1, 2] },
+      "source": "ELF 0x02C21730 (FRINTM + remainder)",
+      "status": "对照通过"
+    }
+  ]
+}
