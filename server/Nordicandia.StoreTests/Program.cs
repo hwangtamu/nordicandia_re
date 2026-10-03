@@ -54,6 +54,8 @@ LootEquipmentTests.Run();
 
 AffixGenerationTests.Run();
 
+PowerParameterTests.Run();
+
 ManaMasteryTests.Run();
 
 AcceptanceRegressionTests.Run();

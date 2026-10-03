@@ -1,0 +1,1445 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "binary": "tmp/apk-libil2cpp.so",
+    "sha256": "529bd257af0cd6e953fb50f51a69857f42f04eb70acab0586f8413d1f97afd1d",
+    "fieldAndAttributeNames": "steam_analysis/dump.cs; native offsets retained for cross-version review"
+  },
+  "formulaSemantics": "rank1 + perRank * (rank - 1); apply capMax afterwards when present. Stored units, not UI percentages.",
+  "runtimeIntegrated": false,
+  "powers": {
+    "TreasureHunter": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d60808",
+      "methodSha256": "5295ee4ad9856a8078ec4d8f5342dfe7c7cb6eb9b7383ad8699a06c36491925d",
+      "constantLoads": [
+        {
+          "instruction": "0x2d6082c",
+          "address": "0x1385850",
+          "values": [
+            0.02,
+            0.01
+          ]
+        },
+        {
+          "instruction": "0x2d60838",
+          "address": "0x1385a40",
+          "values": [
+            0.3,
+            0.1
+          ]
+        }
+      ],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "rank_formulas",
+      "fields": {
+        "_MagicFindIncrease": {
+          "kind": "linear_rank",
+          "rank1": 0.3,
+          "perRank": 0.02,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x120"
+        },
+        "_ItemQuantityIncrease": {
+          "kind": "linear_rank",
+          "rank1": 0.1,
+          "perRank": 0.01,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x128"
+        }
+      },
+      "instructions": [
+        "0x2d60808 str x30, [sp, #-0x20]!",
+        "0x2d6080c stp x20, x19, [sp, #0x10]",
+        "0x2d60810 mov x2, xzr",
+        "0x2d60814 mov w19, w1",
+        "0x2d60818 mov x20, x0",
+        "0x2d6081c bl #0x2c28510",
+        "0x2d60820 sub w8, w19, #1",
+        "0x2d60824 scvtf d0, w8",
+        "0x2d60828 adrp x8, #0x1385000",
+        "0x2d6082c ldr q1, [x8, #0x850]",
+        "0x2d60830 adrp x8, #0x1385000",
+        "0x2d60834 fmul v0.2d, v1.2d, v0.d[0]",
+        "0x2d60838 ldr q1, [x8, #0xa40]",
+        "0x2d6083c fadd v0.2d, v0.2d, v1.2d",
+        "0x2d60840 str q0, [x20, #0x120]",
+        "0x2d60844 ldp x20, x19, [sp, #0x10]",
+        "0x2d60848 ldr x30, [sp], #0x20",
+        "0x2d6084c ret"
+      ]
+    },
+    "FireArmor": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d56ca8",
+      "methodSha256": "a9252adde8af06de720c682d85eb59bf77e6c5d01864bb7e04cd5a54c5d01cb5",
+      "constantLoads": [
+        {
+          "instruction": "0x2d56ccc",
+          "address": "0x1384630",
+          "values": [
+            0.1,
+            0.01
+          ]
+        },
+        {
+          "instruction": "0x2d56cd8",
+          "address": "0x1385e70",
+          "values": [
+            0.5,
+            0.1
+          ]
+        }
+      ],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "rank_formulas",
+      "fields": {
+        "_ResistanceBonus": {
+          "kind": "linear_rank",
+          "rank1": 0.5,
+          "perRank": 0.1,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x120"
+        },
+        "_DamageTakenAsElement": {
+          "kind": "linear_rank",
+          "rank1": 0.1,
+          "perRank": 0.01,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x128"
+        }
+      },
+      "instructions": [
+        "0x2d56ca8 str x30, [sp, #-0x20]!",
+        "0x2d56cac stp x20, x19, [sp, #0x10]",
+        "0x2d56cb0 mov x2, xzr",
+        "0x2d56cb4 mov w19, w1",
+        "0x2d56cb8 mov x20, x0",
+        "0x2d56cbc bl #0x2c28510",
+        "0x2d56cc0 sub w8, w19, #1",
+        "0x2d56cc4 scvtf d0, w8",
+        "0x2d56cc8 adrp x8, #0x1384000",
+        "0x2d56ccc ldr q1, [x8, #0x630]",
+        "0x2d56cd0 adrp x8, #0x1385000",
+        "0x2d56cd4 fmul v0.2d, v1.2d, v0.d[0]",
+        "0x2d56cd8 ldr q1, [x8, #0xe70]",
+        "0x2d56cdc fadd v0.2d, v0.2d, v1.2d",
+        "0x2d56ce0 str q0, [x20, #0x120]",
+        "0x2d56ce4 ldp x20, x19, [sp, #0x10]",
+        "0x2d56ce8 ldr x30, [sp], #0x20",
+        "0x2d56cec ret"
+      ]
+    },
+    "ColdArmor": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d55f54",
+      "methodSha256": "ca084796b0649ef5a92e5c67d37e2fa7ed794be1d70a4df8c1f85d72b7fd7419",
+      "constantLoads": [
+        {
+          "instruction": "0x2d55f78",
+          "address": "0x1384630",
+          "values": [
+            0.1,
+            0.01
+          ]
+        },
+        {
+          "instruction": "0x2d55f84",
+          "address": "0x1385e70",
+          "values": [
+            0.5,
+            0.1
+          ]
+        }
+      ],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "rank_formulas",
+      "fields": {
+        "_ResistanceBonus": {
+          "kind": "linear_rank",
+          "rank1": 0.5,
+          "perRank": 0.1,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x120"
+        },
+        "_DamageTakenAsElement": {
+          "kind": "linear_rank",
+          "rank1": 0.1,
+          "perRank": 0.01,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x128"
+        }
+      },
+      "instructions": [
+        "0x2d55f54 str x30, [sp, #-0x20]!",
+        "0x2d55f58 stp x20, x19, [sp, #0x10]",
+        "0x2d55f5c mov x2, xzr",
+        "0x2d55f60 mov w19, w1",
+        "0x2d55f64 mov x20, x0",
+        "0x2d55f68 bl #0x2c28510",
+        "0x2d55f6c sub w8, w19, #1",
+        "0x2d55f70 scvtf d0, w8",
+        "0x2d55f74 adrp x8, #0x1384000",
+        "0x2d55f78 ldr q1, [x8, #0x630]",
+        "0x2d55f7c adrp x8, #0x1385000",
+        "0x2d55f80 fmul v0.2d, v1.2d, v0.d[0]",
+        "0x2d55f84 ldr q1, [x8, #0xe70]",
+        "0x2d55f88 fadd v0.2d, v0.2d, v1.2d",
+        "0x2d55f8c str q0, [x20, #0x120]",
+        "0x2d55f90 ldp x20, x19, [sp, #0x10]",
+        "0x2d55f94 ldr x30, [sp], #0x20",
+        "0x2d55f98 ret"
+      ]
+    },
+    "LightningArmor": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d57870",
+      "methodSha256": "ff1cbb894e7c5d1d2e84b4979f8c59550a030e66b8283d675166700fdee03377",
+      "constantLoads": [
+        {
+          "instruction": "0x2d57894",
+          "address": "0x1384630",
+          "values": [
+            0.1,
+            0.01
+          ]
+        },
+        {
+          "instruction": "0x2d578a0",
+          "address": "0x1385e70",
+          "values": [
+            0.5,
+            0.1
+          ]
+        }
+      ],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "rank_formulas",
+      "fields": {
+        "_ResistanceBonus": {
+          "kind": "linear_rank",
+          "rank1": 0.5,
+          "perRank": 0.1,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x120"
+        },
+        "_DamageTakenAsElement": {
+          "kind": "linear_rank",
+          "rank1": 0.1,
+          "perRank": 0.01,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x128"
+        }
+      },
+      "instructions": [
+        "0x2d57870 str x30, [sp, #-0x20]!",
+        "0x2d57874 stp x20, x19, [sp, #0x10]",
+        "0x2d57878 mov x2, xzr",
+        "0x2d5787c mov w19, w1",
+        "0x2d57880 mov x20, x0",
+        "0x2d57884 bl #0x2c28510",
+        "0x2d57888 sub w8, w19, #1",
+        "0x2d5788c scvtf d0, w8",
+        "0x2d57890 adrp x8, #0x1384000",
+        "0x2d57894 ldr q1, [x8, #0x630]",
+        "0x2d57898 adrp x8, #0x1385000",
+        "0x2d5789c fmul v0.2d, v1.2d, v0.d[0]",
+        "0x2d578a0 ldr q1, [x8, #0xe70]",
+        "0x2d578a4 fadd v0.2d, v0.2d, v1.2d",
+        "0x2d578a8 str q0, [x20, #0x120]",
+        "0x2d578ac ldp x20, x19, [sp, #0x10]",
+        "0x2d578b0 ldr x30, [sp], #0x20",
+        "0x2d578b4 ret"
+      ]
+    },
+    "Wander": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2a0e168",
+      "methodSha256": "a0cdc791bc1f25d1fb16db7692e6bcf28568fd49f8e7b82c7a850fa88c3803a3",
+      "constantLoads": [],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "runtime_inputs",
+      "attributes": {
+        "Base_Cooldown": {
+          "kind": "call",
+          "function": "UnityEngine.Random.Range(int,int)",
+          "arguments": [
+            1,
+            6
+          ],
+          "origin": 3
+        }
+      },
+      "note": "Cooldown is sampled at initialization, not a missing constant.",
+      "instructions": [
+        "0x2a0e168 str x30, [sp, #-0x30]!",
+        "0x2a0e16c stp x22, x21, [sp, #0x10]",
+        "0x2a0e170 stp x20, x19, [sp, #0x20]",
+        "0x2a0e174 adrp x22, #0x5bab000",
+        "0x2a0e178 adrp x21, #0x5588000",
+        "0x2a0e17c mov w20, w1",
+        "0x2a0e180 ldrb w8, [x22, #0xa04]",
+        "0x2a0e184 ldr x21, [x21, #0xa28]",
+        "0x2a0e188 mov x19, x0",
+        "0x2a0e18c tbnz w8, #0, #0x2a0e1b0",
+        "0x2a0e190 adrp x0, #0x5588000",
+        "0x2a0e194 ldr x0, [x0, #0xa28]",
+        "0x2a0e198 bl #0x2310ad4",
+        "0x2a0e19c adrp x0, #0x5589000",
+        "0x2a0e1a0 ldr x0, [x0, #0x3b0]",
+        "0x2a0e1a4 bl #0x2310ad4",
+        "0x2a0e1a8 mov w8, #1",
+        "0x2a0e1ac strb w8, [x22, #0xa04]",
+        "0x2a0e1b0 mov x0, x19",
+        "0x2a0e1b4 mov w1, w20",
+        "0x2a0e1b8 mov x2, xzr",
+        "0x2a0e1bc bl #0x2c28510",
+        "0x2a0e1c0 ldr x8, [x19]",
+        "0x2a0e1c4 mov x0, x19",
+        "0x2a0e1c8 ldp x9, x1, [x8, #0x1c8]",
+        "0x2a0e1cc blr x9",
+        "0x2a0e1d0 ldr x8, [x21]",
+        "0x2a0e1d4 mov x19, x0",
+        "0x2a0e1d8 ldr w9, [x8, #0xe4]",
+        "0x2a0e1dc cbnz w9, #0x2a0e1e8",
+        "0x2a0e1e0 mov x0, x8",
+        "0x2a0e1e4 bl #0x2310c50",
+        "0x2a0e1e8 adrp x20, #0x5ba9000",
+        "0x2a0e1ec ldrb w8, [x20, #0xf5b]",
+        "0x2a0e1f0 cbnz w8, #0x2a0e208",
+        "0x2a0e1f4 adrp x0, #0x5588000",
+        "0x2a0e1f8 ldr x0, [x0, #0xa28]",
+        "0x2a0e1fc bl #0x2310ad4",
+        "0x2a0e200 mov w8, #1",
+        "0x2a0e204 strb w8, [x20, #0xf5b]",
+        "0x2a0e208 ldr x0, [x21]",
+        "0x2a0e20c adrp x20, #0x5589000",
+        "0x2a0e210 ldr w8, [x0, #0xe4]",
+        "0x2a0e214 ldr x20, [x20, #0x3b0]",
+        "0x2a0e218 cbnz w8, #0x2a0e224",
+        "0x2a0e21c bl #0x2310c50",
+        "0x2a0e220 ldr x0, [x21]",
+        "0x2a0e224 ldr x8, [x20]",
+        "0x2a0e228 ldr x9, [x0, #0xb8]",
+        "0x2a0e22c ldr w10, [x8, #0xe4]",
+        "0x2a0e230 ldr x20, [x9, #0x1340]",
+        "0x2a0e234 cbnz w10, #0x2a0e240",
+        "0x2a0e238 mov x0, x8",
+        "0x2a0e23c bl #0x2310c50",
+        "0x2a0e240 mov w0, #1",
+        "0x2a0e244 mov w1, #6",
+        "0x2a0e248 mov x2, xzr",
+        "0x2a0e24c bl #0x4298f94",
+        "0x2a0e250 cbz x19, #0x2a0e278",
+        "0x2a0e254 scvtf d0, w0",
+        "0x2a0e258 mov x0, x19",
+        "0x2a0e25c mov x2, x20",
+        "0x2a0e260 ldp x20, x19, [sp, #0x20]",
+        "0x2a0e264 mov w1, #3",
+        "0x2a0e268 ldp x22, x21, [sp, #0x10]",
+        "0x2a0e26c mov x3, xzr",
+        "0x2a0e270 ldr x30, [sp], #0x30",
+        "0x2a0e274 b #0x2a88484",
+        "0x2a0e278 bl #0x2310d7c"
+      ]
+    },
+    "ManaArrowsAbility": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2a10574",
+      "methodSha256": "d003149ea57ecabe895b184bff1c5babee74b48f39dbd8b52d19584a1ac267a2",
+      "constantLoads": [],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "runtime_inputs",
+      "attributes": {
+        "Power_Num_Projectiles": {
+          "kind": "constant",
+          "value": 1,
+          "origin": 3
+        },
+        "MaxStackAmount": {
+          "kind": "field",
+          "field": "_NumArrowCharges",
+          "offset": "0x144",
+          "origin": 3
+        },
+        "CurrentStackAmount": {
+          "kind": "field",
+          "field": "_NumArrowCharges",
+          "offset": "0x144",
+          "origin": 3
+        }
+      },
+      "note": "Weapon multiplier, charges and mana gains come from constructor arguments; do not invent a fixed rank table.",
+      "instructions": [
+        "0x2a10574 stp x30, x23, [sp, #-0x30]!",
+        "0x2a10578 stp x22, x21, [sp, #0x10]",
+        "0x2a1057c stp x20, x19, [sp, #0x20]",
+        "0x2a10580 adrp x22, #0x5bab000",
+        "0x2a10584 adrp x21, #0x5588000",
+        "0x2a10588 mov w20, w1",
+        "0x2a1058c ldrb w8, [x22, #0xa4e]",
+        "0x2a10590 ldr x21, [x21, #0xa28]",
+        "0x2a10594 mov x19, x0",
+        "0x2a10598 tbnz w8, #0, #0x2a105b0",
+        "0x2a1059c adrp x0, #0x5588000",
+        "0x2a105a0 ldr x0, [x0, #0xa28]",
+        "0x2a105a4 bl #0x2310ad4",
+        "0x2a105a8 mov w8, #1",
+        "0x2a105ac strb w8, [x22, #0xa4e]",
+        "0x2a105b0 mov x0, x19",
+        "0x2a105b4 mov w1, w20",
+        "0x2a105b8 mov x2, xzr",
+        "0x2a105bc bl #0x2a01510",
+        "0x2a105c0 ldr x8, [x19]",
+        "0x2a105c4 mov x0, x19",
+        "0x2a105c8 ldp x9, x1, [x8, #0x1c8]",
+        "0x2a105cc blr x9",
+        "0x2a105d0 ldr x8, [x21]",
+        "0x2a105d4 mov x20, x0",
+        "0x2a105d8 ldr w9, [x8, #0xe4]",
+        "0x2a105dc cbnz w9, #0x2a105e8",
+        "0x2a105e0 mov x0, x8",
+        "0x2a105e4 bl #0x2310c50",
+        "0x2a105e8 adrp x22, #0x5bab000",
+        "0x2a105ec ldrb w8, [x22, #0xa36]",
+        "0x2a105f0 cbnz w8, #0x2a10608",
+        "0x2a105f4 adrp x0, #0x5588000",
+        "0x2a105f8 ldr x0, [x0, #0xa28]",
+        "0x2a105fc bl #0x2310ad4",
+        "0x2a10600 mov w8, #1",
+        "0x2a10604 strb w8, [x22, #0xa36]",
+        "0x2a10608 ldr x0, [x21]",
+        "0x2a1060c ldr w8, [x0, #0xe4]",
+        "0x2a10610 cbnz w8, #0x2a1061c",
+        "0x2a10614 bl #0x2310c50",
+        "0x2a10618 ldr x0, [x21]",
+        "0x2a1061c cbz x20, #0x2a10718",
+        "0x2a10620 ldr x8, [x0, #0xb8]",
+        "0x2a10624 mov x0, x20",
+        "0x2a10628 mov w1, #3",
+        "0x2a1062c mov w3, #1",
+        "0x2a10630 mov x4, xzr",
+        "0x2a10634 mov w22, #1",
+        "0x2a10638 ldr x2, [x8, #0x1460]",
+        "0x2a1063c bl #0x2a831fc",
+        "0x2a10640 ldr x8, [x19]",
+        "0x2a10644 mov x0, x19",
+        "0x2a10648 ldp x9, x1, [x8, #0x1c8]",
+        "0x2a1064c blr x9",
+        "0x2a10650 adrp x23, #0x5ba9000",
+        "0x2a10654 mov x20, x0",
+        "0x2a10658 ldrb w8, [x23, #0x506]",
+        "0x2a1065c cbnz w8, #0x2a10670",
+        "0x2a10660 adrp x0, #0x5588000",
+        "0x2a10664 ldr x0, [x0, #0xa28]",
+        "0x2a10668 bl #0x2310ad4",
+        "0x2a1066c strb w22, [x23, #0x506]",
+        "0x2a10670 ldr x0, [x21]",
+        "0x2a10674 ldr w8, [x0, #0xe4]",
+        "0x2a10678 cbnz w8, #0x2a10684",
+        "0x2a1067c bl #0x2310c50",
+        "0x2a10680 ldr x0, [x21]",
+        "0x2a10684 cbz x20, #0x2a10718",
+        "0x2a10688 ldr x8, [x0, #0xb8]",
+        "0x2a1068c ldr w3, [x19, #0x144]",
+        "0x2a10690 mov x0, x20",
+        "0x2a10694 mov w1, #3",
+        "0x2a10698 mov x4, xzr",
+        "0x2a1069c ldr x2, [x8, #0x328]",
+        "0x2a106a0 bl #0x2a831fc",
+        "0x2a106a4 ldr x8, [x19]",
+        "0x2a106a8 mov x0, x19",
+        "0x2a106ac ldp x9, x1, [x8, #0x1c8]",
+        "0x2a106b0 blr x9",
+        "0x2a106b4 adrp x22, #0x5ba9000",
+        "0x2a106b8 mov x20, x0",
+        "0x2a106bc ldrb w8, [x22, #0x391]",
+        "0x2a106c0 cbnz w8, #0x2a106d8",
+        "0x2a106c4 adrp x0, #0x5588000",
+        "0x2a106c8 ldr x0, [x0, #0xa28]",
+        "0x2a106cc bl #0x2310ad4",
+        "0x2a106d0 mov w8, #1",
+        "0x2a106d4 strb w8, [x22, #0x391]",
+        "0x2a106d8 ldr x0, [x21]",
+        "0x2a106dc ldr w8, [x0, #0xe4]",
+        "0x2a106e0 cbnz w8, #0x2a106ec",
+        "0x2a106e4 bl #0x2310c50",
+        "0x2a106e8 ldr x0, [x21]",
+        "0x2a106ec cbz x20, #0x2a10718",
+        "0x2a106f0 ldr x8, [x0, #0xb8]",
+        "0x2a106f4 ldr w3, [x19, #0x144]",
+        "0x2a106f8 mov x0, x20",
+        "0x2a106fc ldp x20, x19, [sp, #0x20]",
+        "0x2a10700 mov w1, #3",
+        "0x2a10704 ldp x22, x21, [sp, #0x10]",
+        "0x2a10708 mov x4, xzr",
+        "0x2a1070c ldr x2, [x8, #0x2b8]",
+        "0x2a10710 ldp x30, x23, [sp], #0x30",
+        "0x2a10714 b #0x2a831fc",
+        "0x2a10718 bl #0x2310d7c"
+      ]
+    },
+    "DeadlyPoison": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d50ca4",
+      "methodSha256": "48b0921e4977c28a79d9fbcae3b4ff664e4b8b0f3d9a6b78bbdbc8075d8ade9b",
+      "constantLoads": [
+        {
+          "instruction": "0x2d50d90",
+          "address": "0x1386fe0",
+          "values": [
+            0.01
+          ]
+        },
+        {
+          "instruction": "0x2d50d9c",
+          "address": "0x1386ff8",
+          "values": [
+            0.15
+          ]
+        },
+        {
+          "instruction": "0x2d50e10",
+          "address": "0x13884f8",
+          "values": [
+            0.8
+          ]
+        }
+      ],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "rank_formulas",
+      "attributes": {
+        "Poison_Chance_On_Hit": {
+          "kind": "linear_rank",
+          "rank1": 0.15,
+          "perRank": 0.01,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "capMax": 1.0,
+          "origin": 4,
+          "attributeStaticOffset": "0x6b8"
+        },
+        "Double_Damage_Chance_On_Crit_On_Poisoned_Target": {
+          "kind": "linear_rank",
+          "rank1": 0.8,
+          "perRank": 0.01,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "capMax": 1.0,
+          "origin": 4,
+          "attributeStaticOffset": "0x6c0"
+        }
+      },
+      "instructions": [
+        "0x2d50ca4 str d8, [sp, #-0x40]!",
+        "0x2d50ca8 stp x30, x23, [sp, #0x10]",
+        "0x2d50cac stp x22, x21, [sp, #0x20]",
+        "0x2d50cb0 stp x20, x19, [sp, #0x30]",
+        "0x2d50cb4 adrp x21, #0x5bad000",
+        "0x2d50cb8 adrp x23, #0x5588000",
+        "0x2d50cbc mov w20, w1",
+        "0x2d50cc0 ldrb w8, [x21, #0x717]",
+        "0x2d50cc4 ldr x23, [x23, #0xa28]",
+        "0x2d50cc8 mov x19, x0",
+        "0x2d50ccc tbnz w8, #0, #0x2d50cf0",
+        "0x2d50cd0 adrp x0, #0x5588000",
+        "0x2d50cd4 ldr x0, [x0, #0xa28]",
+        "0x2d50cd8 bl #0x2310ad4",
+        "0x2d50cdc adrp x0, #0x5584000",
+        "0x2d50ce0 ldr x0, [x0, #0xbd8]",
+        "0x2d50ce4 bl #0x2310ad4",
+        "0x2d50ce8 mov w8, #1",
+        "0x2d50cec strb w8, [x21, #0x717]",
+        "0x2d50cf0 mov x0, x19",
+        "0x2d50cf4 mov w1, w20",
+        "0x2d50cf8 mov x2, xzr",
+        "0x2d50cfc bl #0x2c28510",
+        "0x2d50d00 ldr x8, [x19]",
+        "0x2d50d04 mov x0, x19",
+        "0x2d50d08 ldp x9, x1, [x8, #0x1c8]",
+        "0x2d50d0c blr x9",
+        "0x2d50d10 ldr x8, [x23]",
+        "0x2d50d14 mov x21, x0",
+        "0x2d50d18 ldr w9, [x8, #0xe4]",
+        "0x2d50d1c cbnz w9, #0x2d50d28",
+        "0x2d50d20 mov x0, x8",
+        "0x2d50d24 bl #0x2310c50",
+        "0x2d50d28 adrp x22, #0x5bac000",
+        "0x2d50d2c ldrb w8, [x22, #0xe30]",
+        "0x2d50d30 cbnz w8, #0x2d50d48",
+        "0x2d50d34 adrp x0, #0x5588000",
+        "0x2d50d38 ldr x0, [x0, #0xa28]",
+        "0x2d50d3c bl #0x2310ad4",
+        "0x2d50d40 mov w8, #1",
+        "0x2d50d44 strb w8, [x22, #0xe30]",
+        "0x2d50d48 ldr x0, [x23]",
+        "0x2d50d4c adrp x22, #0x5584000",
+        "0x2d50d50 ldr w8, [x0, #0xe4]",
+        "0x2d50d54 ldr x22, [x22, #0xbd8]",
+        "0x2d50d58 cbnz w8, #0x2d50d64",
+        "0x2d50d5c bl #0x2310c50",
+        "0x2d50d60 ldr x0, [x23]",
+        "0x2d50d64 ldr x8, [x22]",
+        "0x2d50d68 ldr x9, [x0, #0xb8]",
+        "0x2d50d6c ldr w10, [x8, #0xe4]",
+        "0x2d50d70 ldr x22, [x9, #0x6b8]",
+        "0x2d50d74 cbnz w10, #0x2d50d80",
+        "0x2d50d78 mov x0, x8",
+        "0x2d50d7c bl #0x2310c50",
+        "0x2d50d80 sub w8, w20, #1",
+        "0x2d50d84 mov x0, xzr",
+        "0x2d50d88 scvtf d0, w8",
+        "0x2d50d8c adrp x8, #0x1386000",
+        "0x2d50d90 ldr d1, [x8, #0xfe0]",
+        "0x2d50d94 adrp x8, #0x1386000",
+        "0x2d50d98 fmul d8, d0, d1",
+        "0x2d50d9c ldr d0, [x8, #0xff8]",
+        "0x2d50da0 fadd d1, d8, d0",
+        "0x2d50da4 fmov d0, #1.00000000",
+        "0x2d50da8 bl #0x40af9c8",
+        "0x2d50dac cbz x21, #0x2d50e54",
+        "0x2d50db0 mov x0, x21",
+        "0x2d50db4 mov w1, #4",
+        "0x2d50db8 mov x2, x22",
+        "0x2d50dbc mov x3, xzr",
+        "0x2d50dc0 bl #0x2a88484",
+        "0x2d50dc4 ldr x8, [x19]",
+        "0x2d50dc8 mov x0, x19",
+        "0x2d50dcc ldp x9, x1, [x8, #0x1c8]",
+        "0x2d50dd0 blr x9",
+        "0x2d50dd4 adrp x20, #0x5bad000",
+        "0x2d50dd8 mov x19, x0",
+        "0x2d50ddc ldrb w8, [x20, #0x7e4]",
+        "0x2d50de0 cbnz w8, #0x2d50df8",
+        "0x2d50de4 adrp x0, #0x5588000",
+        "0x2d50de8 ldr x0, [x0, #0xa28]",
+        "0x2d50dec bl #0x2310ad4",
+        "0x2d50df0 mov w8, #1",
+        "0x2d50df4 strb w8, [x20, #0x7e4]",
+        "0x2d50df8 ldr x0, [x23]",
+        "0x2d50dfc ldr w8, [x0, #0xe4]",
+        "0x2d50e00 cbnz w8, #0x2d50e0c",
+        "0x2d50e04 bl #0x2310c50",
+        "0x2d50e08 ldr x0, [x23]",
+        "0x2d50e0c adrp x8, #0x1388000",
+        "0x2d50e10 ldr d0, [x8, #0x4f8]",
+        "0x2d50e14 ldr x8, [x0, #0xb8]",
+        "0x2d50e18 mov x0, xzr",
+        "0x2d50e1c fadd d1, d8, d0",
+        "0x2d50e20 fmov d0, #1.00000000",
+        "0x2d50e24 ldr x20, [x8, #0x6c0]",
+        "0x2d50e28 bl #0x40af9c8",
+        "0x2d50e2c cbz x19, #0x2d50e54",
+        "0x2d50e30 mov x0, x19",
+        "0x2d50e34 mov x2, x20",
+        "0x2d50e38 mov w1, #4",
+        "0x2d50e3c ldp x20, x19, [sp, #0x30]",
+        "0x2d50e40 mov x3, xzr",
+        "0x2d50e44 ldp x22, x21, [sp, #0x20]",
+        "0x2d50e48 ldp x30, x23, [sp, #0x10]",
+        "0x2d50e4c ldr d8, [sp], #0x40",
+        "0x2d50e50 b #0x2a88484",
+        "0x2d50e54 bl #0x2310d7c"
+      ]
+    },
+    "Solitary": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d53538",
+      "methodSha256": "203656d127432e88efe3898b14347ba348c0fa81ab8ab8cf032c71c5da43f4bb",
+      "constantLoads": [
+        {
+          "instruction": "0x2d535f8",
+          "address": "0x13885f0",
+          "values": [
+            0.005
+          ]
+        },
+        {
+          "instruction": "0x2d53608",
+          "address": "0x1387838",
+          "values": [
+            0.1
+          ]
+        }
+      ],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "rank_formulas",
+      "attributes": {
+        "Power_More_Weapon_Damage_When_No_Wolf_Is_Active": {
+          "kind": "linear_rank",
+          "rank1": 0.1,
+          "perRank": 0.005,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "origin": 3,
+          "attributeStaticOffset": "0x15e8"
+        }
+      },
+      "instructions": [
+        "0x2d53538 str x30, [sp, #-0x30]!",
+        "0x2d5353c stp x22, x21, [sp, #0x10]",
+        "0x2d53540 stp x20, x19, [sp, #0x20]",
+        "0x2d53544 adrp x22, #0x5bad000",
+        "0x2d53548 adrp x21, #0x5588000",
+        "0x2d5354c mov w19, w1",
+        "0x2d53550 ldrb w8, [x22, #0x731]",
+        "0x2d53554 ldr x21, [x21, #0xa28]",
+        "0x2d53558 mov x20, x0",
+        "0x2d5355c tbnz w8, #0, #0x2d53574",
+        "0x2d53560 adrp x0, #0x5588000",
+        "0x2d53564 ldr x0, [x0, #0xa28]",
+        "0x2d53568 bl #0x2310ad4",
+        "0x2d5356c mov w8, #1",
+        "0x2d53570 strb w8, [x22, #0x731]",
+        "0x2d53574 mov x0, x20",
+        "0x2d53578 mov w1, w19",
+        "0x2d5357c mov x2, xzr",
+        "0x2d53580 bl #0x2c28510",
+        "0x2d53584 ldr x8, [x20]",
+        "0x2d53588 mov x0, x20",
+        "0x2d5358c ldp x9, x1, [x8, #0x1c8]",
+        "0x2d53590 blr x9",
+        "0x2d53594 ldr x8, [x21]",
+        "0x2d53598 mov x20, x0",
+        "0x2d5359c ldr w9, [x8, #0xe4]",
+        "0x2d535a0 cbnz w9, #0x2d535ac",
+        "0x2d535a4 mov x0, x8",
+        "0x2d535a8 bl #0x2310c50",
+        "0x2d535ac adrp x22, #0x5bad000",
+        "0x2d535b0 ldrb w8, [x22, #0x7e5]",
+        "0x2d535b4 cbnz w8, #0x2d535cc",
+        "0x2d535b8 adrp x0, #0x5588000",
+        "0x2d535bc ldr x0, [x0, #0xa28]",
+        "0x2d535c0 bl #0x2310ad4",
+        "0x2d535c4 mov w8, #1",
+        "0x2d535c8 strb w8, [x22, #0x7e5]",
+        "0x2d535cc ldr x0, [x21]",
+        "0x2d535d0 ldr w8, [x0, #0xe4]",
+        "0x2d535d4 cbnz w8, #0x2d535e0",
+        "0x2d535d8 bl #0x2310c50",
+        "0x2d535dc ldr x0, [x21]",
+        "0x2d535e0 cbz x20, #0x2d53628",
+        "0x2d535e4 sub w8, w19, #1",
+        "0x2d535e8 ldp x22, x21, [sp, #0x10]",
+        "0x2d535ec scvtf d0, w8",
+        "0x2d535f0 adrp x8, #0x1388000",
+        "0x2d535f4 mov w1, #3",
+        "0x2d535f8 ldr d1, [x8, #0x5f0]",
+        "0x2d535fc adrp x8, #0x1387000",
+        "0x2d53600 mov x3, xzr",
+        "0x2d53604 fmul d0, d0, d1",
+        "0x2d53608 ldr d1, [x8, #0x838]",
+        "0x2d5360c ldr x8, [x0, #0xb8]",
+        "0x2d53610 mov x0, x20",
+        "0x2d53614 ldp x20, x19, [sp, #0x20]",
+        "0x2d53618 ldr x2, [x8, #0x15e8]",
+        "0x2d5361c fadd d0, d0, d1",
+        "0x2d53620 ldr x30, [sp], #0x30",
+        "0x2d53624 b #0x2a88484",
+        "0x2d53628 bl #0x2310d7c"
+      ]
+    },
+    "Fork": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d51a8c",
+      "methodSha256": "b08baf3c420bece6ae72898ad97b06df8d56e3be758543d87e3223c3143dbc26",
+      "constantLoads": [
+        {
+          "instruction": "0x2d51b4c",
+          "address": "0x13885f0",
+          "values": [
+            0.005
+          ]
+        },
+        {
+          "instruction": "0x2d51b5c",
+          "address": "0x1387838",
+          "values": [
+            0.1
+          ]
+        }
+      ],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "rank_formulas",
+      "attributes": {
+        "Projectile_Auto_Attacks_Fork_Chance": {
+          "kind": "linear_rank",
+          "rank1": 0.1,
+          "perRank": 0.005,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "origin": 3,
+          "attributeStaticOffset": "0x24f8"
+        }
+      },
+      "instructions": [
+        "0x2d51a8c str x30, [sp, #-0x30]!",
+        "0x2d51a90 stp x22, x21, [sp, #0x10]",
+        "0x2d51a94 stp x20, x19, [sp, #0x20]",
+        "0x2d51a98 adrp x22, #0x5bad000",
+        "0x2d51a9c adrp x21, #0x5588000",
+        "0x2d51aa0 mov w19, w1",
+        "0x2d51aa4 ldrb w8, [x22, #0x720]",
+        "0x2d51aa8 ldr x21, [x21, #0xa28]",
+        "0x2d51aac mov x20, x0",
+        "0x2d51ab0 tbnz w8, #0, #0x2d51ac8",
+        "0x2d51ab4 adrp x0, #0x5588000",
+        "0x2d51ab8 ldr x0, [x0, #0xa28]",
+        "0x2d51abc bl #0x2310ad4",
+        "0x2d51ac0 mov w8, #1",
+        "0x2d51ac4 strb w8, [x22, #0x720]",
+        "0x2d51ac8 mov x0, x20",
+        "0x2d51acc mov w1, w19",
+        "0x2d51ad0 mov x2, xzr",
+        "0x2d51ad4 bl #0x2c28510",
+        "0x2d51ad8 ldr x8, [x20]",
+        "0x2d51adc mov x0, x20",
+        "0x2d51ae0 ldp x9, x1, [x8, #0x1c8]",
+        "0x2d51ae4 blr x9",
+        "0x2d51ae8 ldr x8, [x21]",
+        "0x2d51aec mov x20, x0",
+        "0x2d51af0 ldr w9, [x8, #0xe4]",
+        "0x2d51af4 cbnz w9, #0x2d51b00",
+        "0x2d51af8 mov x0, x8",
+        "0x2d51afc bl #0x2310c50",
+        "0x2d51b00 adrp x22, #0x5bab000",
+        "0x2d51b04 ldrb w8, [x22, #0xa13]",
+        "0x2d51b08 cbnz w8, #0x2d51b20",
+        "0x2d51b0c adrp x0, #0x5588000",
+        "0x2d51b10 ldr x0, [x0, #0xa28]",
+        "0x2d51b14 bl #0x2310ad4",
+        "0x2d51b18 mov w8, #1",
+        "0x2d51b1c strb w8, [x22, #0xa13]",
+        "0x2d51b20 ldr x0, [x21]",
+        "0x2d51b24 ldr w8, [x0, #0xe4]",
+        "0x2d51b28 cbnz w8, #0x2d51b34",
+        "0x2d51b2c bl #0x2310c50",
+        "0x2d51b30 ldr x0, [x21]",
+        "0x2d51b34 cbz x20, #0x2d51b7c",
+        "0x2d51b38 sub w8, w19, #1",
+        "0x2d51b3c ldp x22, x21, [sp, #0x10]",
+        "0x2d51b40 scvtf d0, w8",
+        "0x2d51b44 adrp x8, #0x1388000",
+        "0x2d51b48 mov w1, #3",
+        "0x2d51b4c ldr d1, [x8, #0x5f0]",
+        "0x2d51b50 adrp x8, #0x1387000",
+        "0x2d51b54 mov x3, xzr",
+        "0x2d51b58 fmul d0, d0, d1",
+        "0x2d51b5c ldr d1, [x8, #0x838]",
+        "0x2d51b60 ldr x8, [x0, #0xb8]",
+        "0x2d51b64 mov x0, x20",
+        "0x2d51b68 ldp x20, x19, [sp, #0x20]",
+        "0x2d51b6c ldr x2, [x8, #0x24f8]",
+        "0x2d51b70 fadd d0, d0, d1",
+        "0x2d51b74 ldr x30, [sp], #0x30",
+        "0x2d51b78 b #0x2a88484",
+        "0x2d51b7c bl #0x2310d7c"
+      ]
+    },
+    "RepelMagic": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d5fb38",
+      "methodSha256": "5997005769fad0058cf22b3a4054e3c9d9a1b743cf586d71c6b8cfdac566c372",
+      "constantLoads": [
+        {
+          "instruction": "0x2d5fb5c",
+          "address": "0x1388360",
+          "values": [
+            0.001,
+            0.001
+          ]
+        },
+        {
+          "instruction": "0x2d5fb68",
+          "address": "0x1388600",
+          "values": [
+            0.03,
+            0.03
+          ]
+        }
+      ],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "rank_formulas",
+      "fields": {
+        "_IncreasedMaximumResistances": {
+          "kind": "linear_rank",
+          "rank1": 0.03,
+          "perRank": 0.001,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x120"
+        },
+        "_IncreasedMaximumPhysReduction": {
+          "kind": "linear_rank",
+          "rank1": 0.03,
+          "perRank": 0.001,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x128"
+        }
+      },
+      "instructions": [
+        "0x2d5fb38 str x30, [sp, #-0x20]!",
+        "0x2d5fb3c stp x20, x19, [sp, #0x10]",
+        "0x2d5fb40 mov x2, xzr",
+        "0x2d5fb44 mov w19, w1",
+        "0x2d5fb48 mov x20, x0",
+        "0x2d5fb4c bl #0x2c28510",
+        "0x2d5fb50 sub w8, w19, #1",
+        "0x2d5fb54 scvtf d0, w8",
+        "0x2d5fb58 adrp x8, #0x1388000",
+        "0x2d5fb5c ldr d1, [x8, #0x360]",
+        "0x2d5fb60 adrp x8, #0x1388000",
+        "0x2d5fb64 fmul d0, d0, d1",
+        "0x2d5fb68 ldr d1, [x8, #0x600]",
+        "0x2d5fb6c fadd d0, d0, d1",
+        "0x2d5fb70 stp d0, d0, [x20, #0x120]",
+        "0x2d5fb74 ldp x20, x19, [sp, #0x10]",
+        "0x2d5fb78 ldr x30, [sp], #0x20",
+        "0x2d5fb7c ret"
+      ]
+    },
+    "UniqueItemFireballOnHit": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2a04f40",
+      "methodSha256": "77887f7a9dd4501520f46bb7a18716bad48f6666c3690619b905d39d547cf8a3",
+      "constantLoads": [],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "inherited",
+      "delegatesTo": "ProjectileSkill",
+      "targetAddress": "0x2c388d4",
+      "instructions": [
+        "0x2a04f40 mov x2, xzr",
+        "0x2a04f44 b #0x2c388d4"
+      ]
+    },
+    "ShootExplodingFireArrow": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2a01234",
+      "methodSha256": "4545b701d06ecc995e47738fa8ec3261684eecf048a74b13b2f57332590ebaa5",
+      "constantLoads": [],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "runtime_inputs",
+      "fields": {
+        "_WeaponDamageMult": {
+          "kind": "user_attribute",
+          "attribute": "Unique_Auto_Attacks_Are_Fire_Arrows_That_Explode_Weapon_Damage_Percent",
+          "offset": "0x138",
+          "condition": "User != null"
+        }
+      },
+      "attributes": {
+        "Power_Projectile_Speed": {
+          "kind": "expression",
+          "expression": "10 * Constants.Default_Base_Movement_Speed",
+          "origin": 3
+        },
+        "Power_Projectile_Pierce_Chance": {
+          "kind": "constant",
+          "value": 0,
+          "origin": 3
+        },
+        "Power_Projectile_Fork_Chance": {
+          "kind": "constant",
+          "value": 0,
+          "origin": 3
+        }
+      },
+      "instructions": [
+        "0x2a01234 str x30, [sp, #-0x30]!",
+        "0x2a01238 stp x22, x21, [sp, #0x10]",
+        "0x2a0123c stp x20, x19, [sp, #0x20]",
+        "0x2a01240 adrp x21, #0x5bab000",
+        "0x2a01244 mov w20, w1",
+        "0x2a01248 mov x19, x0",
+        "0x2a0124c ldrb w8, [x21, #0x9af]",
+        "0x2a01250 tbnz w8, #0, #0x2a0128c",
+        "0x2a01254 adrp x0, #0x558e000",
+        "0x2a01258 ldr x0, [x0, #0x430]",
+        "0x2a0125c bl #0x2310ad4",
+        "0x2a01260 adrp x0, #0x558a000",
+        "0x2a01264 ldr x0, [x0, #0xac0]",
+        "0x2a01268 bl #0x2310ad4",
+        "0x2a0126c adrp x0, #0x5588000",
+        "0x2a01270 ldr x0, [x0, #0xa28]",
+        "0x2a01274 bl #0x2310ad4",
+        "0x2a01278 adrp x0, #0x5599000",
+        "0x2a0127c ldr x0, [x0, #0xbf0]",
+        "0x2a01280 bl #0x2310ad4",
+        "0x2a01284 mov w8, #1",
+        "0x2a01288 strb w8, [x21, #0x9af]",
+        "0x2a0128c adrp x22, #0x5588000",
+        "0x2a01290 mov x0, x19",
+        "0x2a01294 mov w1, w20",
+        "0x2a01298 ldr x22, [x22, #0xa28]",
+        "0x2a0129c bl #0x2a01510",
+        "0x2a012a0 mov x0, x19",
+        "0x2a012a4 mov x1, xzr",
+        "0x2a012a8 bl #0x2c37e10",
+        "0x2a012ac cbz x0, #0x2a01388",
+        "0x2a012b0 mov x20, x0",
+        "0x2a012b4 mov x0, x19",
+        "0x2a012b8 mov x1, xzr",
+        "0x2a012bc bl #0x2c37e10",
+        "0x2a012c0 cbz x0, #0x2a01320",
+        "0x2a012c4 adrp x8, #0x558e000",
+        "0x2a012c8 ldr x8, [x8, #0x430]",
+        "0x2a012cc ldr x9, [x0]",
+        "0x2a012d0 ldr x8, [x8]",
+        "0x2a012d4 ldrb w11, [x9, #0x130]",
+        "0x2a012d8 ldrb w10, [x8, #0x130]",
+        "0x2a012dc cmp w11, w10",
+        "0x2a012e0 b.lo #0x2a01320",
+        "0x2a012e4 ldr x9, [x9, #0xc8]",
+        "0x2a012e8 add x9, x9, x10, lsl #3",
+        "0x2a012ec ldur x9, [x9, #-8]",
+        "0x2a012f0 cmp x9, x8",
+        "0x2a012f4 b.ne #0x2a01320",
+        "0x2a012f8 ldr x8, [x0, #0x240]",
+        "0x2a012fc cbz x8, #0x2a0150c",
+        "0x2a01300 ldr x8, [x8, #0x18]",
+        "0x2a01304 cbz x8, #0x2a0150c",
+        "0x2a01308 adrp x9, #0x5599000",
+        "0x2a0130c mov x2, xzr",
+        "0x2a01310 ldr x9, [x9, #0xbf0]",
+        "0x2a01314 ldr x0, [x8, #0x28]",
+        "0x2a01318 ldr x1, [x9]",
+        "0x2a0131c bl #0x3f05434",
+        "0x2a01320 ldr x0, [x22]",
+        "0x2a01324 ldr x20, [x20, #0x118]",
+        "0x2a01328 ldr w8, [x0, #0xe4]",
+        "0x2a0132c cbnz w8, #0x2a01334",
+        "0x2a01330 bl #0x2310c50",
+        "0x2a01334 adrp x21, #0x5bab000",
+        "0x2a01338 ldrb w8, [x21, #0xa29]",
+        "0x2a0133c cbnz w8, #0x2a01354",
+        "0x2a01340 adrp x0, #0x5588000",
+        "0x2a01344 ldr x0, [x0, #0xa28]",
+        "0x2a01348 bl #0x2310ad4",
+        "0x2a0134c mov w8, #1",
+        "0x2a01350 strb w8, [x21, #0xa29]",
+        "0x2a01354 ldr x0, [x22]",
+        "0x2a01358 ldr w8, [x0, #0xe4]",
+        "0x2a0135c cbnz w8, #0x2a01368",
+        "0x2a01360 bl #0x2310c50",
+        "0x2a01364 ldr x0, [x22]",
+        "0x2a01368 cbz x20, #0x2a0150c",
+        "0x2a0136c ldr x8, [x0, #0xb8]",
+        "0x2a01370 mov x0, x20",
+        "0x2a01374 mov w2, #1",
+        "0x2a01378 mov x3, xzr",
+        "0x2a0137c ldr x1, [x8, #0x1f68]",
+        "0x2a01380 bl #0x2a85bb0",
+        "0x2a01384 str d0, [x19, #0x138]",
+        "0x2a01388 ldr x8, [x19]",
+        "0x2a0138c mov x0, x19",
+        "0x2a01390 ldp x9, x1, [x8, #0x1c8]",
+        "0x2a01394 blr x9",
+        "0x2a01398 ldr x8, [x22]",
+        "0x2a0139c mov x20, x0",
+        "0x2a013a0 ldr w9, [x8, #0xe4]",
+        "0x2a013a4 cbnz w9, #0x2a013b0",
+        "0x2a013a8 mov x0, x8",
+        "0x2a013ac bl #0x2310c50",
+        "0x2a013b0 adrp x21, #0x5bab000",
+        "0x2a013b4 ldrb w8, [x21, #0xa11]",
+        "0x2a013b8 cbnz w8, #0x2a013d0",
+        "0x2a013bc adrp x0, #0x5588000",
+        "0x2a013c0 ldr x0, [x0, #0xa28]",
+        "0x2a013c4 bl #0x2310ad4",
+        "0x2a013c8 mov w8, #1",
+        "0x2a013cc strb w8, [x21, #0xa11]",
+        "0x2a013d0 ldr x0, [x22]",
+        "0x2a013d4 adrp x21, #0x558a000",
+        "0x2a013d8 ldr w8, [x0, #0xe4]",
+        "0x2a013dc ldr x21, [x21, #0xac0]",
+        "0x2a013e0 cbnz w8, #0x2a013ec",
+        "0x2a013e4 bl #0x2310c50",
+        "0x2a013e8 ldr x0, [x22]",
+        "0x2a013ec ldr x8, [x21]",
+        "0x2a013f0 ldr x9, [x0, #0xb8]",
+        "0x2a013f4 ldr w10, [x8, #0xe4]",
+        "0x2a013f8 ldr x21, [x9, #0x1578]",
+        "0x2a013fc cbnz w10, #0x2a01408",
+        "0x2a01400 mov x0, x8",
+        "0x2a01404 bl #0x2310c50",
+        "0x2a01408 mov x0, xzr",
+        "0x2a0140c bl #0x2ae0f24",
+        "0x2a01410 cbz x20, #0x2a0150c",
+        "0x2a01414 fmov d1, #10.00000000",
+        "0x2a01418 mov x0, x20",
+        "0x2a0141c mov w1, #3",
+        "0x2a01420 mov x2, x21",
+        "0x2a01424 mov x3, xzr",
+        "0x2a01428 fmul d0, d0, d1",
+        "0x2a0142c bl #0x2a88484",
+        "0x2a01430 ldr x8, [x19]",
+        "0x2a01434 mov x0, x19",
+        "0x2a01438 ldp x9, x1, [x8, #0x1c8]",
+        "0x2a0143c blr x9",
+        "0x2a01440 adrp x21, #0x5bab000",
+        "0x2a01444 mov x20, x0",
+        "0x2a01448 ldrb w8, [x21, #0x7c7]",
+        "0x2a0144c cbnz w8, #0x2a01464",
+        "0x2a01450 adrp x0, #0x5588000",
+        "0x2a01454 ldr x0, [x0, #0xa28]",
+        "0x2a01458 bl #0x2310ad4",
+        "0x2a0145c mov w8, #1",
+        "0x2a01460 strb w8, [x21, #0x7c7]",
+        "0x2a01464 ldr x0, [x22]",
+        "0x2a01468 ldr w8, [x0, #0xe4]",
+        "0x2a0146c cbnz w8, #0x2a01478",
+        "0x2a01470 bl #0x2310c50",
+        "0x2a01474 ldr x0, [x22]",
+        "0x2a01478 cbz x20, #0x2a0150c",
+        "0x2a0147c ldr x8, [x0, #0xb8]",
+        "0x2a01480 movi d0, #0000000000000000",
+        "0x2a01484 mov x0, x20",
+        "0x2a01488 mov w1, #3",
+        "0x2a0148c mov x3, xzr",
+        "0x2a01490 ldr x2, [x8, #0x1488]",
+        "0x2a01494 bl #0x2a88484",
+        "0x2a01498 ldr x8, [x19]",
+        "0x2a0149c mov x0, x19",
+        "0x2a014a0 ldp x9, x1, [x8, #0x1c8]",
+        "0x2a014a4 blr x9",
+        "0x2a014a8 adrp x20, #0x5bab000",
+        "0x2a014ac mov x19, x0",
+        "0x2a014b0 ldrb w8, [x20, #0x798]",
+        "0x2a014b4 cbnz w8, #0x2a014cc",
+        "0x2a014b8 adrp x0, #0x5588000",
+        "0x2a014bc ldr x0, [x0, #0xa28]",
+        "0x2a014c0 bl #0x2310ad4",
+        "0x2a014c4 mov w8, #1",
+        "0x2a014c8 strb w8, [x20, #0x798]",
+        "0x2a014cc ldr x0, [x22]",
+        "0x2a014d0 ldr w8, [x0, #0xe4]",
+        "0x2a014d4 cbnz w8, #0x2a014e0",
+        "0x2a014d8 bl #0x2310c50",
+        "0x2a014dc ldr x0, [x22]",
+        "0x2a014e0 cbz x19, #0x2a0150c",
+        "0x2a014e4 ldr x8, [x0, #0xb8]",
+        "0x2a014e8 mov x0, x19",
+        "0x2a014ec movi d0, #0000000000000000",
+        "0x2a014f0 ldp x20, x19, [sp, #0x20]",
+        "0x2a014f4 mov w1, #3",
+        "0x2a014f8 ldp x22, x21, [sp, #0x10]",
+        "0x2a014fc ldr x2, [x8, #0x1490]",
+        "0x2a01500 mov x3, xzr",
+        "0x2a01504 ldr x30, [sp], #0x30",
+        "0x2a01508 b #0x2a88484",
+        "0x2a0150c bl #0x2310d7c"
+      ]
+    },
+    "Spitfire": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2a040a8",
+      "methodSha256": "8d5230938fd80c693715dce67cae84eafda50098e221bb38875f5f9df7b96283",
+      "constantLoads": [],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "runtime_inputs",
+      "fields": {
+        "_WeaponDamageMult": {
+          "kind": "user_attribute",
+          "attribute": "Unique_Auto_Attacks_Is_Spitfire_Weapon_Damage_Percent_Per_Second",
+          "offset": "0x130",
+          "condition": "User != null"
+        },
+        "OpenDelay": {
+          "kind": "call",
+          "function": "PowerScript.GetActionSpeed (virtual dispatch)",
+          "offset": "0x120",
+          "condition": "User != null"
+        }
+      },
+      "instructions": [
+        "0x2a040a8 str x30, [sp, #-0x30]!",
+        "0x2a040ac stp x22, x21, [sp, #0x10]",
+        "0x2a040b0 stp x20, x19, [sp, #0x20]",
+        "0x2a040b4 adrp x21, #0x5bab000",
+        "0x2a040b8 mov w20, w1",
+        "0x2a040bc mov x19, x0",
+        "0x2a040c0 ldrb w8, [x21, #0x9bf]",
+        "0x2a040c4 tbnz w8, #0, #0x2a040dc",
+        "0x2a040c8 adrp x0, #0x5588000",
+        "0x2a040cc ldr x0, [x0, #0xa28]",
+        "0x2a040d0 bl #0x2310ad4",
+        "0x2a040d4 mov w8, #1",
+        "0x2a040d8 strb w8, [x21, #0x9bf]",
+        "0x2a040dc mov x0, x19",
+        "0x2a040e0 mov w1, w20",
+        "0x2a040e4 mov x2, xzr",
+        "0x2a040e8 str xzr, [sp, #8]",
+        "0x2a040ec bl #0x2c28510",
+        "0x2a040f0 mov x0, x19",
+        "0x2a040f4 mov x1, xzr",
+        "0x2a040f8 bl #0x2c37e10",
+        "0x2a040fc cbz x0, #0x2a041a0",
+        "0x2a04100 mov x0, x19",
+        "0x2a04104 mov x1, xzr",
+        "0x2a04108 bl #0x2c37e10",
+        "0x2a0410c cbz x0, #0x2a041b0",
+        "0x2a04110 adrp x21, #0x5588000",
+        "0x2a04114 ldr x21, [x21, #0xa28]",
+        "0x2a04118 ldr x20, [x0, #0x118]",
+        "0x2a0411c ldr x8, [x21]",
+        "0x2a04120 ldr w9, [x8, #0xe4]",
+        "0x2a04124 cbnz w9, #0x2a04130",
+        "0x2a04128 mov x0, x8",
+        "0x2a0412c bl #0x2310c50",
+        "0x2a04130 adrp x22, #0x5bab000",
+        "0x2a04134 ldrb w8, [x22, #0xa2e]",
+        "0x2a04138 cbnz w8, #0x2a04150",
+        "0x2a0413c adrp x0, #0x5588000",
+        "0x2a04140 ldr x0, [x0, #0xa28]",
+        "0x2a04144 bl #0x2310ad4",
+        "0x2a04148 mov w8, #1",
+        "0x2a0414c strb w8, [x22, #0xa2e]",
+        "0x2a04150 ldr x0, [x21]",
+        "0x2a04154 ldr w8, [x0, #0xe4]",
+        "0x2a04158 cbnz w8, #0x2a04164",
+        "0x2a0415c bl #0x2310c50",
+        "0x2a04160 ldr x0, [x21]",
+        "0x2a04164 cbz x20, #0x2a041b0",
+        "0x2a04168 ldr x8, [x0, #0xb8]",
+        "0x2a0416c mov x0, x20",
+        "0x2a04170 mov w2, #1",
+        "0x2a04174 mov x3, xzr",
+        "0x2a04178 ldr x1, [x8, #0x1f80]",
+        "0x2a0417c bl #0x2a85bb0",
+        "0x2a04180 ldr x8, [x19]",
+        "0x2a04184 add x1, sp, #8",
+        "0x2a04188 mov x0, x19",
+        "0x2a0418c str d0, [x19, #0x130]",
+        "0x2a04190 ldr x9, [x8, #0x468]",
+        "0x2a04194 ldr x2, [x8, #0x470]",
+        "0x2a04198 blr x9",
+        "0x2a0419c str d0, [x19, #0x120]",
+        "0x2a041a0 ldp x20, x19, [sp, #0x20]",
+        "0x2a041a4 ldp x22, x21, [sp, #0x10]",
+        "0x2a041a8 ldr x30, [sp], #0x30",
+        "0x2a041ac ret",
+        "0x2a041b0 bl #0x2310d7c"
+      ]
+    },
+    "Whirl": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d18b10",
+      "methodSha256": "371f2a6df17e3e36aff890e25bf4e122526279c5cbbf9b0a38fbd20ee535ce97",
+      "constantLoads": [],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "inherited",
+      "delegatesTo": "Power",
+      "targetAddress": "0x2c28510",
+      "instructions": [
+        "0x2d18b10 mov x2, xzr",
+        "0x2d18b14 b #0x2c28510"
+      ]
+    },
+    "UniqueItemThrowHammerOnHit": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2a055b0",
+      "methodSha256": "db1a97c42425c49054c2dfeb31503fe87bd279a42473d88d84098bd51c1d2afa",
+      "constantLoads": [],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "inherited",
+      "delegatesTo": "ProjectileSkill",
+      "targetAddress": "0x2c388d4",
+      "instructions": [
+        "0x2a055b0 mov x2, xzr",
+        "0x2a055b4 b #0x2c388d4"
+      ]
+    },
+    "Pillaging": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d5b13c",
+      "methodSha256": "5ffdfa5584bf868b74e24c41b94876ec16fa879ab06dc199a87bfb2ec1167a00",
+      "constantLoads": [
+        {
+          "instruction": "0x2d5b160",
+          "address": "0x1384630",
+          "values": [
+            0.1,
+            0.01
+          ]
+        },
+        {
+          "instruction": "0x2d5b16c",
+          "address": "0x13851a0",
+          "values": [
+            0.5,
+            0.2
+          ]
+        }
+      ],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "rank_formulas",
+      "fields": {
+        "_MinionMagicFindIncrease": {
+          "kind": "linear_rank",
+          "rank1": 0.5,
+          "perRank": 0.1,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x120"
+        },
+        "_AdditionalIronDropChance": {
+          "kind": "linear_rank",
+          "rank1": 0.2,
+          "perRank": 0.01,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x128"
+        }
+      },
+      "instructions": [
+        "0x2d5b13c str x30, [sp, #-0x20]!",
+        "0x2d5b140 stp x20, x19, [sp, #0x10]",
+        "0x2d5b144 mov x2, xzr",
+        "0x2d5b148 mov w19, w1",
+        "0x2d5b14c mov x20, x0",
+        "0x2d5b150 bl #0x2c28510",
+        "0x2d5b154 sub w8, w19, #1",
+        "0x2d5b158 scvtf d0, w8",
+        "0x2d5b15c adrp x8, #0x1384000",
+        "0x2d5b160 ldr q1, [x8, #0x630]",
+        "0x2d5b164 adrp x8, #0x1385000",
+        "0x2d5b168 fmul v0.2d, v1.2d, v0.d[0]",
+        "0x2d5b16c ldr q1, [x8, #0x1a0]",
+        "0x2d5b170 fadd v0.2d, v0.2d, v1.2d",
+        "0x2d5b174 str q0, [x20, #0x120]",
+        "0x2d5b178 ldp x20, x19, [sp, #0x10]",
+        "0x2d5b17c ldr x30, [sp], #0x20",
+        "0x2d5b180 ret"
+      ]
+    },
+    "MasterSummoner": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d5ace4",
+      "methodSha256": "41cfa036bdf63fc1fdebbde3489dc8ad77e97fd52028fe4224b68aff93812daf",
+      "constantLoads": [
+        {
+          "instruction": "0x2d5ad08",
+          "address": "0x1386a30",
+          "values": [
+            0.01,
+            0.005
+          ]
+        },
+        {
+          "instruction": "0x2d5ad14",
+          "address": "0x13856c0",
+          "values": [
+            0.1,
+            0.05
+          ]
+        }
+      ],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "rank_formulas",
+      "fields": {
+        "_MinionLifeBonus": {
+          "kind": "linear_rank",
+          "rank1": 0.1,
+          "perRank": 0.01,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x120"
+        },
+        "_MinionDamageBonus": {
+          "kind": "linear_rank",
+          "rank1": 0.05,
+          "perRank": 0.005,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x128"
+        }
+      },
+      "instructions": [
+        "0x2d5ace4 str x30, [sp, #-0x20]!",
+        "0x2d5ace8 stp x20, x19, [sp, #0x10]",
+        "0x2d5acec mov x2, xzr",
+        "0x2d5acf0 mov w19, w1",
+        "0x2d5acf4 mov x20, x0",
+        "0x2d5acf8 bl #0x2c28510",
+        "0x2d5acfc sub w8, w19, #1",
+        "0x2d5ad00 scvtf d0, w8",
+        "0x2d5ad04 adrp x8, #0x1386000",
+        "0x2d5ad08 ldr q1, [x8, #0xa30]",
+        "0x2d5ad0c adrp x8, #0x1385000",
+        "0x2d5ad10 fmul v0.2d, v1.2d, v0.d[0]",
+        "0x2d5ad14 ldr q1, [x8, #0x6c0]",
+        "0x2d5ad18 fadd v0.2d, v0.2d, v1.2d",
+        "0x2d5ad1c str q0, [x20, #0x120]",
+        "0x2d5ad20 ldp x20, x19, [sp, #0x10]",
+        "0x2d5ad24 ldr x30, [sp], #0x20",
+        "0x2d5ad28 ret"
+      ]
+    },
+    "VileTouch": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d5be54",
+      "methodSha256": "135dbbd5f1446a7d6f657360dfd62097dc9589bb3f982847a061c2b60dbd8996",
+      "constantLoads": [
+        {
+          "instruction": "0x2d5be78",
+          "address": "0x1385420",
+          "values": [
+            0.01,
+            0.02
+          ]
+        },
+        {
+          "instruction": "0x2d5be84",
+          "address": "0x1385330",
+          "values": [
+            0.2,
+            0.6
+          ]
+        }
+      ],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "rank_formulas",
+      "fields": {
+        "_MorePoisonDamage": {
+          "kind": "linear_rank",
+          "rank1": 0.2,
+          "perRank": 0.01,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x120"
+        },
+        "_PoisonChanceOnHit": {
+          "kind": "linear_rank",
+          "rank1": 0.6,
+          "perRank": 0.02,
+          "expression": "rank1 + perRank * (rank - 1)",
+          "offset": "0x128"
+        }
+      },
+      "instructions": [
+        "0x2d5be54 str x30, [sp, #-0x20]!",
+        "0x2d5be58 stp x20, x19, [sp, #0x10]",
+        "0x2d5be5c mov x2, xzr",
+        "0x2d5be60 mov w19, w1",
+        "0x2d5be64 mov x20, x0",
+        "0x2d5be68 bl #0x2c28510",
+        "0x2d5be6c sub w8, w19, #1",
+        "0x2d5be70 scvtf d0, w8",
+        "0x2d5be74 adrp x8, #0x1385000",
+        "0x2d5be78 ldr q1, [x8, #0x420]",
+        "0x2d5be7c adrp x8, #0x1385000",
+        "0x2d5be80 fmul v0.2d, v1.2d, v0.d[0]",
+        "0x2d5be84 ldr q1, [x8, #0x330]",
+        "0x2d5be88 fadd v0.2d, v0.2d, v1.2d",
+        "0x2d5be8c str q0, [x20, #0x120]",
+        "0x2d5be90 ldp x20, x19, [sp, #0x10]",
+        "0x2d5be94 ldr x30, [sp], #0x20",
+        "0x2d5be98 ret"
+      ]
+    },
+    "KibuSmallLightningNova": {
+      "method": "InternalInitializePowerParameters",
+      "address": "0x2d623cc",
+      "methodSha256": "d2c34e76d360bcd6bb7d271912fd5c98ec28a9abf0d4bb4b42917e39bd8061cc",
+      "constantLoads": [],
+      "scope": "Own initializer only; base initializer, constructors, buffs and execution may add parameters.",
+      "status": "inherited",
+      "delegatesTo": "Nova",
+      "targetAddress": "0x2d2d054",
+      "instructions": [
+        "0x2d623cc mov x2, xzr",
+        "0x2d623d0 b #0x2d2d054"
+      ]
+    }
+  }
+}

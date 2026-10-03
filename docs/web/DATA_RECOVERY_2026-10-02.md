@@ -94,3 +94,22 @@ ret
 5. CalculateIdleLevelsGained 离线收益；锻造占位槽、完整费用与祝福过滤。
 
 19 个空记录已解释，不等于所有技能行为或所有原版数据提取完成。
+
+## 服务端可读目录（后续接入）
+
+`power_parameter_recovery.json` 已复制为服务端嵌入资源
+`server/Nordicandia.Server/GameData/power_parameter_recovery.json`，并由
+`Nordicandia.Server.WebApi.PowerParameterCatalog` 解析：
+
+- `Powers` / `ForPower(name)`：19 个技能的字段与属性条目，含 `kind`/`rank1`/`perRank`/`capMax`。
+- `Evaluate(parameter, rank)`：对 `linear_rank`/`constant` 求值（`rank1 + perRank*(rank-1)`，随后应用 `capMax`）。
+- `EvaluatePower(name, rank)`：只返回标量条目；`call`/`field`/`user_attribute`/`expression`/`inherited`
+  记录来源但不被填成虚构常量。
+
+`PowerParameterTests` 断言 19 条全部存在、四组等级公式、概率上限与“非标量不填零”。
+**这些参数仍未进入网页战斗结算**（`runtimeIntegrated=false`）；该目录只是让运行时可按名取值。
+
+`Affixes.json` 与 `ItemAffixes.json` 的取舍补充证据：Items.json/ItemTypes.json 的 `AffixIds` 共引用
+1388/210 个 Guid，**全部存在于 `Affixes.json`**，仅子集在 `ItemAffixes.json`；例如 `FireResistance` 被引用的是
+四个 GenerationType=4 的 Guid，而 gen=1 的那条未被任何物品类型引用。故当前精选目录（取自 `Affixes.json`）
+与物品定义的引用一致；`ItemAffixes.json` 更像独立的/历史表。仍建议从 `GameWorld` 加载调用方做最终确认。
