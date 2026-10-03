@@ -58,5 +58,5 @@ M3 目标：事务存档、断线恢复、技能槽扩展、Aesir 祝福、Niflh
 * **事务存储**：仍是单进程 `world.json` + 原子替换，不是 SQLite；多进程并发写入不支持（见计划：单机内测可接受）。
 * **断线恢复**：用快照 + 版本，而非计划里写的递增事件序号；网页端靠轮询 `/state` 对齐。
 * **传送门**：`NiflheimPortalGameMode` 的 pack 布局未还原，当前用“击杀数 = 包数、波次 ≈ 包数/2”近似；怪物缩放为 Provisional；`WorldTier`/`WorldWaypoint` 未涉及。
-* **离线收益**：公式与常量已复原（`CalculateIdleLevelsGained`：`(秒/60)·killsPerMinute·0.15·xpPerKill`；`Offline_Base_Battle_Time_Minutes=720`；击杀上限 20000）。仅 `killsPerMinute` 是 Provisional——客户端从角色属性读取（`WindowWelcomeBack.Start`：`(int)(attr·clamp(idle,8,max))`），`GameAttributeDA` 静态字段偏移无法可靠映射到属性 id。
+* **离线收益**：已恢复基础经验公式与上述常量。2026-10-03 直接解码 ELF 后确认 `killsPerMinute = truncate(Offline_Battle_Efficiency_Multiplier · clamp(1.5 · secondHighestReachedTier, 10, 45))`；属性为 **565**（静态偏移 `0x200`），阶层来源为 `Character.GetSecondHighestReachedWorldCheckpoint`。此前 `idle`、下限 `8` 和“字段无法映射”均已纠正。**运行时仍为 Provisional**：网页尚未接入该阶层/检查点语义，仍使用固定 30 次/分钟；击杀经验也仍取网页 `CombatModel.ExperienceReward(level)`。详见 [恢复报告](LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md)。
 * **祝福 opal 价格**：已从 `LocalCatalog.cctor` 提取 Small/Medium/Large/ExtraLarge = **200/500/800/2500** opals（与 `OfflineCatalog.GetOpalPrice` 一致）。客户端源码明确标注为 "TODO-PRICE: seed values, production export pending"，因此这是客户端实际使用的 seed 值，但预计会在生产导出后变动。

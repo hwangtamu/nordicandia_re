@@ -163,6 +163,8 @@ public sealed class CombatInstance
     public double ForkChance { get; private set; }
     public double ChainChance { get; private set; }
     public double PoisonChance { get; private set; }
+    public bool PoisonOnHit { get; private set; }
+    public bool ProjectileAutoAttack { get; private set; }
     public double DoubleDamageOnCritPoisoned { get; private set; }
     public int PlayerLevel { get; private set; }
     public double Experience { get; private set; }
@@ -229,6 +231,8 @@ public sealed class CombatInstance
         ForkChance = stats.ForkChance;
         ChainChance = stats.ChainChance;
         PoisonChance = stats.PoisonChance;
+        PoisonOnHit = stats.PoisonOnHit;
+        ProjectileAutoAttack = stats.ProjectileAutoAttack;
         DoubleDamageOnCritPoisoned = stats.DoubleDamageOnCritPoisoned;
         // Base 6.5 u/s scaled by the recovered Movement_Speed total (Aesir Tyr +40% etc.).
         playerSpeed = 6.5 * Math.Clamp(stats.MoveSpeedMultiplier, 0.1, 10.0);
@@ -557,58 +561,51 @@ public sealed class CombatInstance
         return best;
     }
 
-    /// <summary>Nearest alive monster other than <paramref name="exclude"/> (fork/chain target).</summary>
-    private CombatMonster NearestAliveMonsterExcept(CombatMonster exclude, double range)
-    {
-        CombatMonster best = null;
-        var bestDistance = range;
-        if (boss is { Alive: true } && boss != exclude)
-        {
-            var bd = Distance(boss);
-            if (bd < bestDistance) { bestDistance = bd; best = boss; }
-        }
-        foreach (var monster in monsters)
-        {
-            if (!monster.Alive || monster == exclude) continue;
-            var distance = Distance(monster);
-            if (distance < bestDistance) { bestDistance = distance; best = monster; }
-        }
-        return best;
-    }
-
-    /// <summary>Recovered on-hit mechanics: Poison_Chance_On_Hit (428),
-    /// Double_Damage_Chance_On_Crit_On_Poisoned_Target (429) and, for auto-attacks,
-    /// Projectile_Auto_Attacks_Fork_Chance (431) via Calculator.CalculateChance (see
-    /// ShootRangedProjectile.HandleForkAndChain). Returns the damage actually dealt.</summary>
+    /// <summary>On-hit status handling. Poison duration/rate come from HitPayload.Apply;
+    /// projectile branching uses independently resolved hits, never copied post-mitigation damage.</summary>
     private double ApplyOnHit(CombatMonster target, DamageResult hit, bool autoAttack)
     {
-        if (!hit.Hit) return 0;
+        if (!hit.Hit || !target.Alive) return 0;
         var damage = hit.Damage;
         if (hit.Critical && target.PoisonTimer > 0 && CombatModel.RollChance(DoubleDamageOnCritPoisoned, rng))
             damage *= 2;
-        if (CombatModel.RollChance(PoisonChance, rng))
+        if (damage > 0 && (PoisonOnHit || CombatModel.RollChance(PoisonChance, rng)))
         {
+            // Native: Buff_Duration=1 and Tick_Damage_Per_Second=TotalDamage*0.2.
+            // The web retains one strongest poison; full BuffManager replacement is not ported.
             target.PoisonTimer = Math.Max(target.PoisonTimer, PoisonSeconds);
-            target.PoisonDps = Math.Max(target.PoisonDps, PoisonDamagePerSecond());
+            target.PoisonDps = Math.Max(target.PoisonDps, damage * PoisonHitDamageFactor);
         }
-        if (autoAttack && CombatModel.RollChance(ForkChance, rng))
+        if (autoAttack && ProjectileAutoAttack)
         {
-            var forked = NearestAliveMonsterExcept(target, PlayerAttackRange * 2);
-            if (forked is not null) DamageMonster(forked, damage);
-        }
-        if (autoAttack && CombatModel.RollChance(ChainChance, rng))
-        {
-            var chained = NearestAliveMonsterExcept(target, PlayerAttackRange * 2);
-            if (chained is not null) DamageMonster(chained, damage * 0.75);
+            var fork = CombatModel.RollChance(ForkChance, rng);
+            var chain = CombatModel.RollChance(ChainChance, rng);
+            // Native forks twice at 0.5x and disables recursion. A successful fork takes
+            // precedence over chain. Selection of nearby targets is still a web approximation
+            // of the two moving projectiles' collision geometry.
+            if (fork || chain)
+                foreach (var secondary in SecondaryTargets(target).Take(fork ? 2 : 1).ToArray())
+                {
+                    var next = CombatModel.ResolveBundleAttack(PlayerStats(), PlayerDamageBundle(),
+                        MonsterStats(secondary), secondary.Resistances,
+                        new AttackProfile(fork ? 0.5 : 1, 0.08, 1.6, 0.12), rng);
+                    DamageMonster(secondary, ApplyOnHit(secondary, next, autoAttack: false));
+                }
         }
         return damage;
     }
 
-    private const double PoisonSeconds = 3.0;
+    private IEnumerable<CombatMonster> SecondaryTargets(CombatMonster primary)
+    {
+        var candidates = boss is { Alive: true } ? monsters.Append(boss) : monsters;
+        return candidates.Where(m => m.Alive && m != primary)
+            .Select(m => (Monster: m, Distance: Math.Sqrt(Math.Pow(m.X - primary.X, 2) + Math.Pow(m.Z - primary.Z, 2))))
+            .Where(x => x.Distance <= 10).OrderBy(x => x.Distance).ThenBy(x => x.Monster.Index)
+            .Select(x => x.Monster);
+    }
 
-    /// <summary>Poison DoT rate: half the main-hand poison damage per second (Interim magnitude;
-    /// the chance and double-damage rules are the recovered ones).</summary>
-    private double PoisonDamagePerSecond() => Math.Max(1.0, Damage.Poison * 0.5);
+    public const double PoisonSeconds = 1.0;
+    public const double PoisonHitDamageFactor = 0.2;
 
     private void TickPoison(double dt)
     {
@@ -619,8 +616,12 @@ public sealed class CombatInstance
     private void TickMonsterPoison(CombatMonster monster, double dt)
     {
         if (monster is null || !monster.Alive || monster.PoisonTimer <= 0) return;
-        monster.PoisonTimer -= dt;
-        DamageMonster(monster, monster.PoisonDps * dt);
+        var elapsed = Math.Min(dt, monster.PoisonTimer);
+        monster.PoisonTimer = Math.Max(0, monster.PoisonTimer - elapsed);
+        // DebuffPoisoned.DoWork sends Tick_Damage_Per_Second*dt as poison damage.
+        // DoT cannot roll a new hit/crit, poison, fork or chain, or use the one-damage hit floor.
+        var damage = CombatModel.EffectiveElementalDamage(monster.PoisonDps * elapsed, monster.Resistances.Poison);
+        DamageMonster(monster, damage);
         if (monster.PoisonTimer <= 0) monster.PoisonDps = 0;
     }
 
@@ -631,6 +632,8 @@ public sealed class CombatInstance
         if (monster.Hp > 0) return;
         monster.Alive = false;
         monster.Hp = 0;
+        monster.PoisonTimer = 0;
+        monster.PoisonDps = 0;
         Kills++;
         Experience += CombatModel.ExperienceReward(monster.Level);
         LevelUpIfNeeded();

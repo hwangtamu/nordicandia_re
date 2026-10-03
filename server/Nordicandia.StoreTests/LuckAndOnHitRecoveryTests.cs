@@ -1,0 +1,161 @@
+using Game;
+using Nordicandia.Server.State;
+using SharedNet.Api;
+using SharedNet.Constants.Game;
+using Nordicandia.Server.WebApi;
+using Nordicandia.Simulation;
+
+static class LuckAndOnHitRecoveryTests
+{
+    private static void Check(bool value, string name)
+    {
+        if (!value) throw new Exception(name);
+        Console.WriteLine("PASS " + name);
+    }
+
+    public static void RarityWeights()
+    {
+        // Run before any item-definition access: the old lazy-load order silently used 1/0/0.
+        Check(ItemCatalog.RarityWeightsFor() == (10000000, 500, 375), "MF: first call loads all rarity weights");
+        var goldens = new[] {
+            (0.3, 1.0, 9904153.0, 549.0, 399.0),
+            (1.0, 1.0, 9901961.0, 655.0, 452.0),
+            (10.0, 1.0, 9901088.0, 1457.0, 816.0),
+            (100.0, 1.0, 9901000.0, 2482.0, 1218.0),
+            (10.0, 2.0, 9804305.0, 1716.0, 952.0),
+            (10.0, 0.5, 9950273.0, 1172.0, 675.0),
+            (1000000.0, 1.0, 9900990.0, 2750.0, 1312.0),
+        };
+        foreach (var (mf, factor, normal, unique, set) in goldens)
+            Check(ItemCatalog.RarityWeightsFor(mf, factor) == (normal, unique, set), $"MF: native golden weights MF={mf}, factor={factor}");
+        Check(ItemCatalog.RarityWeightsFor(10, 0) == ItemCatalog.RarityWeightsFor() &&
+              ItemCatalog.RarityWeightsFor(-1) == ItemCatalog.RarityWeightsFor(), "MF: disabled/negative bonus preserves base weights");
+        var weights = ItemCatalog.RarityWeightsFor(10);
+        var expected = new CombatRandom(772);
+        var actual = new CombatRandom(772);
+        for (var i = 0; i < 200000; i++)
+        {
+            var draw = expected.NextDouble() * (weights.Normal + weights.Unique + weights.Set);
+            var type = draw < weights.Set ? ItemCatalog.RarityType.Set :
+                draw < weights.Set + weights.Unique ? ItemCatalog.RarityType.Unique : ItemCatalog.RarityType.Normal;
+            if (ItemCatalog.RollRarityType(actual, 10) != type) throw new Exception("MF: roll did not consume recovered weights");
+        }
+        Check(true, "MF: 200,000 seeded rolls use exact adjusted weights");
+    }
+
+    public static void EquippedWeaponGate()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "nord-projectile-" + Guid.NewGuid());
+        try
+        {
+            using var store = new GameStore(directory);
+            var owner = store.GetOrCreateUser("device:projectile-gate").UserId;
+            var id = store.CreateCharacter(owner, new CreateCharacterRequest
+            {
+                DisplayName = "projectile-test", CharacterGameMode = GameMode.Normal,
+                Data = new SerializedCharacterData { Data = Defaults.Create<SerializedCharacterData.SerializedData>() },
+            }).CharacterId;
+            var bow = LootTable.CreateItem(new LootDrop(12, 0, 1, false, 1));
+            bow.DefinitionIntegerId = ItemCatalog.Definitions.First(d => d.Type == "Bow").IntegerId;
+            bow.Slot = ItemSlotTypes.MainHand;
+            var sword = LootTable.CreateItem(new LootDrop(12, 0, 1, false, 2));
+            sword.DefinitionIntegerId = ItemCatalog.Definitions.First(d => d.Type == "Sword1H").IntegerId;
+            sword.Slot = ItemSlotTypes.Inventory;
+            store.GrantItems(owner, id, new List<SerializedItem> { bow, sword });
+            var registry = new CombatRegistry(store);
+            var instance = registry.GetOrCreate(owner, id);
+            Check(instance.ProjectileAutoAttack, "fork: registry restores projectile mode from equipped bow");
+            var equipped = registry.ApplyCommand(owner, id, "sword", instance.Version, new WebCommandRequest("equip", ItemId: sword.Id));
+            Check(equipped.Applied && !instance.ProjectileAutoAttack, "fork: equipping a sword immediately disables projectile procs");
+            equipped = registry.ApplyCommand(owner, id, "bow", instance.Version, new WebCommandRequest("equip", ItemId: bow.Id));
+            Check(equipped.Applied && instance.ProjectileAutoAttack, "fork: re-equipping a bow restores projectile procs");
+        }
+        finally { if (Directory.Exists(directory)) Directory.Delete(directory, true); }
+    }
+
+    private static readonly ClassPowerPool TestPowers = new("test", new[] {
+        new SkillProfile(0, "TestPhysical", "", "", "strike", 1, 0, 8, 0, 0, 0, 0, "test", new Dictionary<string,double>())
+    }, Array.Empty<PassiveProfile>());
+
+    private static CombatInstance Create(CombatantStats stats, ulong seed = 123, int count = 1)
+    {
+        var result = new CombatInstance(stats, 0, 0, 0, 0, seed, monsterCount: count, classPowers: TestPowers);
+        foreach (var m in result.Monsters)
+        {
+            m.X = 5 + m.Index; m.Z = 0; m.Hp = m.MaxHp = 10000;
+            m.Armor = m.Defense = 0; m.Speed = 0; m.Offense = 0;
+            m.AttackCooldown = 1000; m.Resistances = default;
+        }
+        return result;
+    }
+
+    private static CombatantStats Stats => new(100, 1000, 0, 1,
+        AttackRating: 1e12, CritChance: 1, Damage: new DamageBundle(Physical: 100));
+
+    public static void OnHit()
+    {
+        var poison = Create(Stats with { PoisonChance = 1 });
+        var monster = poison.Monsters[0];
+        monster.Resistances = new ResistanceBundle(Poison: 0.5);
+        var cast = poison.UseSkill(0);
+        Check(cast.Cast && cast.Damage > 0 && monster.PoisonTimer == 1 &&
+            Math.Abs(monster.PoisonDps - cast.Damage * 0.2) < 1e-9,
+            "poison: physical hit creates 1s poison at 20% of hit damage (no weapon-poison dependency)");
+        var hp = monster.Hp;
+        poison.Advance(1.25);
+        Check(Math.Abs(hp - monster.Hp - cast.Damage * 0.2 * 0.5) < 1e-8 && monster.PoisonTimer == 0 && monster.PoisonDps == 0,
+            "poison: exactly 1s damage, respects resistance, expires without further procs");
+        monster.PoisonTimer = 0.0125; monster.PoisonDps = 100; hp = monster.Hp;
+        poison.Advance(0.05);
+        Check(Math.Abs(hp - monster.Hp - 0.625) < 1e-8, "poison: final fractional tick never exceeds remaining duration");
+
+        var immune = Create(Stats with { PoisonOnHit = true });
+        immune.Monsters[0].Resistances = new ResistanceBundle(Poison: 1);
+        immune.UseSkill(0); hp = immune.Monsters[0].Hp;
+        immune.Advance(1.1);
+        Check(immune.Monsters[0].Hp == hp, "poison: 100% poison resistance prevents DoT, without a minimum-damage floor");
+
+        var first = Create(Stats with { PoisonChance = 1, DoubleDamageOnCritPoisoned = 1 });
+        var baseFirst = Create(Stats with { PoisonChance = 1 });
+        Check(first.UseSkill(0).Damage == baseFirst.UseSkill(0).Damage,
+            "poison crit: newly applied poison does not double the same hit");
+        var bonus = Create(Stats with { DoubleDamageOnCritPoisoned = 1 });
+        var noBonus = Create(Stats);
+        bonus.Monsters[0].PoisonTimer = noBonus.Monsters[0].PoisonTimer = 1;
+        Check(bonus.UseSkill(0).Damage == 2 * noBonus.UseSkill(0).Damage,
+            "poison crit: pre-existing poison enables double damage");
+
+        var kill = Create(Stats with { PoisonOnHit = true });
+        kill.Monsters[0].Hp = 1; kill.UseSkill(0); kill.Advance(1.1);
+        Check(kill.Kills == 1 && kill.Monsters[0].PoisonTimer == 0 && kill.Monsters[0].PoisonDps == 0,
+            "poison: killing blow clears status and rewards only once");
+
+        var foundMiss = false;
+        for (ulong seed = 1; seed <= 100 && !foundMiss; seed++)
+        {
+            var miss = Create(Stats with { PoisonOnHit = true }, seed);
+            miss.Monsters[0].Defense = 1e30;
+            if (miss.UseSkill(0).Damage != 0) continue;
+            foundMiss = true;
+            Check(miss.Monsters[0].PoisonTimer == 0, "poison: a missed attack never applies poison");
+        }
+        Check(foundMiss, "poison: miss branch exercised");
+
+        var fork = Create(Stats with { ProjectileAutoAttack = true, ForkChance = 1, ChainChance = 1 }, count: 4);
+        for (var i = 0; i < 4; i++) fork.Monsters[i].X = 1 + i;
+        fork.Monsters[2].Armor = 1e9;
+        fork.Advance(0.05);
+        var losses = fork.Monsters.Select(m => m.MaxHp - m.Hp).ToArray();
+        Check(losses[0] > 130 && losses[1] > 60 && losses[1] < 100 && losses[2] > 0 && losses[2] < 15 && losses[3] == 0,
+            "fork: two 50% children resolve their own armor; no chain or recursive extra hits");
+        var melee = Create(Stats with { ForkChance = 1, ChainChance = 1 }, count: 4);
+        for (var i = 0; i < 4; i++) melee.Monsters[i].X = 1 + i;
+        melee.Advance(0.05);
+        Check(melee.Monsters.Count(m => m.Hp < m.MaxHp) == 1, "fork: melee attacks cannot fork or chain");
+        var secondaryPoison = Create(Stats with { ProjectileAutoAttack = true, ForkChance = 1, PoisonOnHit = true }, count: 4);
+        for (var i = 0; i < 4; i++) secondaryPoison.Monsters[i].X = 1 + i;
+        secondaryPoison.Advance(0.05);
+        Check(secondaryPoison.Monsters.Count(m => m.PoisonTimer > 0) == 3,
+            "fork: child hits apply on-hit poison without recursively forking");
+    }
+}

@@ -120,7 +120,7 @@ public sealed class CombatRegistry
                     persisted.Offense + equipOffense,
                     persisted.Defense + equipDefense,
                     persisted.Recovery + equipRecovery,
-                    (int)persisted.Level),
+                    (int)persisted.Level) with { ProjectileAutoAttack = UsesRangedAutoAttack(items) },
                 CharacterAttributeMap(owner, characterId, basePowers));
             // P1: seed the instance's version from the persisted counter so it never resets
             // to 1 across a restart (which would make the command log boundary reject fresh
@@ -547,15 +547,23 @@ public sealed class CombatRegistry
         return (true, "ok");
     }
 
+    // ShootRangedProjectile handles bow/crossbow auto attacks; equipping a melee weapon
+    // must not turn its attacks into projectiles just because Fork is in the passive loadout.
+    private static bool UsesRangedAutoAttack(IEnumerable<Game.SerializedItem> items)
+        => items.Any(item => item != null && item.Slot == ItemSlotTypes.MainHand &&
+            ItemCatalog.Definitions.Any(d => d.IntegerId == item.DefinitionIntegerId &&
+                (d.Type == "Bow" || d.Type.StartsWith("Crossbow", StringComparison.Ordinal))));
+
     private void RecomputeStats(Guid owner, Guid characterId, Entry entry)
     {
-        var (offense, defense, recovery) = LootTable.EquipmentBonus(store.GetItems(owner, characterId));
+        var equippedItems = store.GetItems(owner, characterId);
+        var (offense, defense, recovery) = LootTable.EquipmentBonus(equippedItems);
         entry.Instance.UpdateStats(CharacterRatings.Apply(
             CombatantStats.FromRealtime(
                 entry.Instance.Offense - entry.EquipOffense + offense,
                 entry.Instance.Defense - entry.EquipDefense + defense,
                 entry.Instance.Recovery - entry.EquipRecovery + recovery,
-                entry.Instance.PlayerLevel),
+                entry.Instance.PlayerLevel) with { ProjectileAutoAttack = UsesRangedAutoAttack(equippedItems) },
             CharacterAttributeMap(owner, characterId, entry.BasePowers)));
         entry.EquipOffense = offense;
         entry.EquipDefense = defense;
@@ -607,8 +615,8 @@ public sealed class CombatRegistry
     {
         var drops = entry.Instance.DrainDrops();
         if (drops.Count == 0) return;
-        // Magic find raises the rare weights (Interim linear curve; the client's exact curve is not
-        // recovered); item quantity adds extra rolls, capped at GameParameters'
+        // Magic find uses recovered per-type saturation; item quantity still uses an Interim
+        // floor rule for extra rolls, capped at GameParameters'
         // MaxQuantityFromMagicFindMultiplier = 5.
         var (magicFind, itemQuantity) = LootLuck(owner, characterId, entry);
         var rollsPerDrop = Math.Clamp(1 + (int)Math.Floor(itemQuantity), 1, MaxQuantityFromMagicFindMultiplier);

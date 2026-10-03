@@ -1,6 +1,10 @@
 using System.Text.Json;
 using Nordicandia.Server.State;
 
+LuckAndOnHitRecoveryTests.RarityWeights();
+LuckAndOnHitRecoveryTests.OnHit();
+LuckAndOnHitRecoveryTests.EquippedWeaponGate();
+
 var directory = Path.Combine(Path.GetTempPath(), "nord-alias-test-" + Guid.NewGuid());
 Directory.CreateDirectory(directory);
 void Check(bool value, string name) { if (!value) throw new Exception(name); Console.WriteLine("PASS " + name); }

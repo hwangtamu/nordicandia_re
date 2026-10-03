@@ -162,30 +162,38 @@ ret
 - 物品数量 = `Item_Quantity_Bonus_Percent_Total` → 每堆掉落额外重抽，封顶
   `GameParameters.MaxQuantityFromMagicFindMultiplier = 5`。
 
-### 魔法找到饱和曲线（ClientVerified，已替换 Interim）
+### 魔法找到饱和曲线（2026-10-03 校正）
 
 `ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes`（Android `0x02CA0534`）按稀有度类型选不同的
 (D11,D13,D9) 常量（.so `0x13879D8`=225、`0x1387878`=150、`0x1386FE0`=0.01、`0x13874D0`=0.6），
-权重 = `baseWeight * (1 + 0.01 * (100*MF*D13) / (100*MF*D11 + D9*D13))`，最终按中点取偶取整：
+当 `magicFindFactorMultiplier=1` 时，增益因子为
+`1 + 0.01 * (100*MF*D13) / (100*MF*D11 + D9*D13)`。
+Unique/Set 基础权重乘该因子，Normal 基础权重**除以**该因子，最终按中点取偶取整：
 
 | 类型 | D11 | D13 | D9 | 因子 |
 |---|---:|---:|---:|---|
-| Normal | 1 | 1 | 1 | `1 + MF/(100*MF+1)`（几乎不变，占比下降） |
-| Unique | 0.5 | 225 | 2 | `1 + 4.5*MF/(MF+9)`（饱和 ×5.5） |
-| Set | 0.6 | 150 | 4 | `1 + 2.5*MF/(MF+10)`（饱和 ×3.5） |
+| Normal | 1 | 1 | 1 | `1 + MF/(100*MF+1)`（权重除以此因子） |
+| Unique | 0.5 | 225 | 3 | `1 + 4.5*MF/(MF+13.5)`（饱和 ×5.5） |
+| Set | 0.6 | 150 | 4.5 | `1 + 2.5*MF/(MF+11.25)`（饱和 ×3.5） |
 
-`ItemCatalog.RollRarityType` 已按此实现（`RoundHalfEven`）。
+此前 Cpp2IL 文本将浮点立即数 3/4.5 误解码为 2/4，且实现遗漏 Normal 的除法分支。
+现由实际 ELF 指令校正，`ItemCatalog.RarityWeightsFor` 与 `RollRarityType` 已同步。
+证据、factor 参数及验证见 [2026-10-03 恢复报告](LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md)。
 
 ### 命中时效果：毒 / 分叉 / 链（ClientVerified 属性，执行已接入）
 
-`ShootRangedProjectile.HandleForkAndChain` 读 `Projectile_Auto_Attacks_Fork_Chance`(431) 与
-`Projectile_Auto_Attacks_Chain_Chance`(663)，对两者调用 `Calculator.CalculateChance`，命中后产生额外弹道；
+`ShootRangedProjectile.HandleForkAndChain` 读弹体的 `Power_Projectile_Fork_Chance` 与
+`Power_Projectile_Chain_Chance`，对两者调用 `Calculator.CalculateChance`；网页自动攻击的角色概率来源是
+`Projectile_Auto_Attacks_Fork_Chance`(431) / `Projectile_Auto_Attacks_Chain_Chance`(663)。
 `Poison_Chance_On_Hit`(428) / `Double_Damage_Chance_On_Crit_On_Poisoned_Target`(429) 为中毒与毒暴。
 `CombatantStats` 新增 `ForkChance`/`ChainChance`/`PoisonChance`/`DoubleDamageOnCritPoisoned`，
 `CharacterRatings.Apply` 从属性引擎读取，`CombatInstance.ApplyOnHit` 执行：
-自动攻击触发分叉/链；所有命中触发中毒（3 秒 DoT）与“毒目标暴击翻倍”。
+弓/弩自动攻击分叉为两次 50% 倍率命中，禁止子命中递归分叉/链；有施毒属性的命中产生 1 秒 DoT，
+DPS 为命中总伤害的 20%，并经过毒抗性。此前“3 秒、主手毒伤的一半/秒”的近似已被替换。
+弹体运动碰撞、完整 BuffManager 替换和 Power 类型过滤仍未完整移植，不能将整条执行管线标为 ClientVerified。
 
-仍缺：毒 DoT 的精确幅度（当前取主手毒伤的一半/秒，Interim）、元素转换/穿透、AI、离线。
+仍缺：上述运行时近似、元素转换/穿透、AI、离线阶层输入接入等。
+离线 killsPerMinute 的属性 id 和算式现已恢复，详见 [2026-10-03 恢复报告](LUCK_AND_ON_HIT_RECOVERY_2026-10-03.md)。
 
 `Affixes.json` 与 `ItemAffixes.json` 的取舍补充证据：Items.json/ItemTypes.json 的 `AffixIds` 共引用
 1388/210 个 Guid，**全部存在于 `Affixes.json`**，仅子集在 `ItemAffixes.json`；例如 `FireResistance` 被引用的是

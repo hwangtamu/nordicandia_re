@@ -29,6 +29,7 @@ static class CombatInstanceTests
         {
             PoisonChance = 1.0,
             ForkChance = 1.0,
+            ProjectileAutoAttack = true,
             ChainChance = 1.0,
             DoubleDamageOnCritPoisoned = 1.0,
             Damage = new DamageBundle(Poison: 25),

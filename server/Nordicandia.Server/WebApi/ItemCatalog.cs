@@ -48,22 +48,43 @@ public static class ItemCatalog
         }
     }
 
-    /// <summary>Item rarity-type roll weights from Droprates.json.ItemRarityTypeWeights.</summary>
-    public static IReadOnlyDictionary<string, double> RarityTypeWeights { get; private set; } = new Dictionary<string, double>();
+    private static readonly Lazy<IReadOnlyDictionary<string, double>> BaseRarityWeights = new(() =>
+    {
+        using var stream = ReadResource("GameData.droprate_weights.json");
+        return JsonSerializer.Deserialize<Dictionary<string, double>>(stream)!;
+    });
 
-    /// <summary>Rolls Normal/Unique/Set using the client weights and the recovered magic-find
-    /// saturation from <c>ItemGenerator.InternalInitializeSetOrUniqueItemRarityTypes</c>:
-    /// each type keeps its base weight and is scaled by <c>1 + 0.01 * (100*MF*D13) /
-    /// (100*MF*D11 + D9*D13)</c>, with (D11,D13,D9) = Normal (1,1,1), Unique (0.5,225,2),
-    /// Set (0.6,150,4). The final weights use round-half-to-even. <paramref name="magicFind"/> is a
-    /// fraction (0.3 = +30%).</summary>
+    /// <summary>Loaded independently of item definitions, including the first rarity roll.</summary>
+    public static IReadOnlyDictionary<string, double> RarityTypeWeights => BaseRarityWeights.Value;
+
+    /// <summary>Client InternalInitializeSetOrUniqueItemRarityTypes (0x02CA0534).
+    /// With p=100*MF, factor=1: Unique boost=1+.01*p*225/(.5*p+3*225),
+    /// Set boost=1+.01*p*150/(.6*p+4.5*150). Normal DIVIDES by 1+.01*p/(p+1).
+    /// Round each resulting weight to even. ARM64 FMOV immediates are 3 and 4.5;
+    /// the Cpp2IL annotated text decodes them incorrectly as 2 and 4.</summary>
+    public static (double Normal, double Unique, double Set) RarityWeightsFor(
+        double magicFind = 0, double magicFindFactorMultiplier = 1)
+    {
+        if (!double.IsFinite(magicFind) || !double.IsFinite(magicFindFactorMultiplier) || magicFindFactorMultiplier < 0)
+            throw new ArgumentOutOfRangeException(nameof(magicFind), "Loot luck inputs must be finite and the factor nonnegative.");
+        var mf = Math.Max(0, magicFind);
+        double Boost(double slope, double coefficient, double divisor)
+        {
+            // Zero multiplier disables the bonus; avoid the native 0/0 singularity at MF=0.
+            if (magicFindFactorMultiplier == 0 || mf == 0) return 1;
+            var p = 100 * mf;
+            var c = coefficient * magicFindFactorMultiplier;
+            return 1 + 0.01 * p * c / (p * slope + divisor * c);
+        }
+        double Weight(string type) => RarityTypeWeights.GetValueOrDefault(type, 0);
+        return (Math.Round(Weight("Normal") / Boost(1, 1, 1), MidpointRounding.ToEven),
+                Math.Round(Weight("Unique") * Boost(0.5, 225, 3), MidpointRounding.ToEven),
+                Math.Round(Weight("Set") * Boost(0.6, 150, 4.5), MidpointRounding.ToEven));
+    }
+
     public static RarityType RollRarityType(CombatRandom rng, double magicFind = 0)
     {
-        double normal = RarityTypeWeights.GetValueOrDefault("Normal", 1), unique = RarityTypeWeights.GetValueOrDefault("Unique", 0), set = RarityTypeWeights.GetValueOrDefault("Set", 0);
-        var mf = Math.Max(0, magicFind);
-        normal = RoundHalfEven(normal * Saturation(mf, 1, 1, 1));
-        unique = RoundHalfEven(unique * Saturation(mf, 0.5, 225, 2));
-        set = RoundHalfEven(set * Saturation(mf, 0.6, 150, 4));
+        var (normal, unique, set) = RarityWeightsFor(magicFind);
         var total = normal + unique + set;
         if (total <= 0) return RarityType.Normal;
         var roll = rng.NextDouble() * total;
@@ -71,13 +92,6 @@ public static class ItemCatalog
         if (roll < set + unique) return RarityType.Unique;
         return RarityType.Normal;
     }
-
-    /// <summary>Recovered per-type magic-find factor: <c>1 + 0.01 * (100*MF*d13) /
-    /// (100*MF*d11 + d9*d13)</c>.</summary>
-    private static double Saturation(double magicFind, double d11, double d13, double d9)
-        => 1 + 0.01 * (100 * magicFind * d13) / (100 * magicFind * d11 + d9 * d13);
-
-    private static double RoundHalfEven(double value) => Math.Round(value, MidpointRounding.ToEven);
 
     // Equip slot -> candidate item type names (client ItemTypes).
     private static readonly string[][] SlotTypes =
@@ -134,8 +148,6 @@ public static class ItemCatalog
         using var stream = assembly.GetManifestResourceStream(resource)!;
         var raw = JsonSerializer.Deserialize<Dictionary<string, RawDefinition>>(stream,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
-        RarityTypeWeights = JsonSerializer.Deserialize<Dictionary<string, double>>(
-            ReadResource("GameData.droprate_weights.json"))!;
         return raw.Select(kv => new Definition(kv.Key, kv.Value.IntegerId, kv.Value.Type,
             kv.Value.IsUnique, kv.Value.SetId, kv.Value.Implicit.Select(i => new Implicit(i.Key,
                 i.Value.Default is { Length: 2 } d ? new Range(d[0], d[1]) : null,
