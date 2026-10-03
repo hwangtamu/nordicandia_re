@@ -157,6 +157,9 @@ def main() -> int:
         ],
     }, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
 
+    (OUT.parent / "affix_rarity_weights.json").write_text(
+        json.dumps(droprates["AffixRarityRatio"], indent=2, sort_keys=True) + "\n")
+
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(catalog, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
     # Item-type -> inherited tag names, so loot can weight affixes by the item type's tags.

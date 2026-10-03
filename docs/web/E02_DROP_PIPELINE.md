@@ -41,12 +41,25 @@
   `LocalArmorPercent`→1000）、无匹配回退 1000、ValueMultiplier、amulet 掉落 500 seed 全部词缀合格且带属性。
 * 服务端 **656 PASS**，回放 58/58。
 
+## 词缀稀有度池（已恢复并接入）
+
+`ItemGenerator.InternalInitializeAffixRarityPool`（0x02CA2468）已反汇编恢复，证据脚本
+`tools/web-content/recover_affix_rarity.py` 校验二进制 SHA + 指令段 + `FMOV` 常量。曲线：
+
+* F/E：`base/(1+MF)`；D：`base*(1+MF*(factor>=10?.1:1))`
+* C–S：`base*(1 + .01*(100*MF)*(coefficient*factor)/((100*MF)*slope+divisor*coefficient*factor))`
+  系数 `C(1000,.22,1) B(800,.4,1) A(700,.6,1) AA(600,.65,1) AAA(500,.6,1.4) AAAA(400,.6,1.9) AAAAA(225,.5,3) S(150,.6,4.5)`
+* 后续 roll 偏置：低于最高已出稀有度 `/(1+.025*affixNumber)`，≥ 时 `*(1+.02*rarity*affixNumber)`，
+  且 highest≥D 时低于者再 `/max(|rarity-highest|*2.25,1)`
+
+`AffixRarityCatalog` 实现该池；`LootTable` **逐词缀**滚自身稀有度（不再用物品稀有度近似）
+并据此取 `ValueRangeByRarityList`。同时删除网页自造的 unique pity 与随机 set-id roll。
+`EconomyRecoveryTests` 含独立十进制 goldens、D 阈值、2.25 距离惩罚、禁用饱和因子避免 0/0、
+30 万次种子分布检验与真实掉落验证。
+
 ## 未完成 / 待办
 
-* **词缀稀有度池**（`AffixRarityRatio` + MF）：`InternalInitializeAffixRarityPool` 的 MF/`affixNumber`
-  公式尚未完全解码（已定位常量 `magicFind*0.1`、`affixNumber*0.025`、`magicFind*100` 与多处
-  `weight*(1+…)/(p*slope+divisor*c)` 形态）；当前仍用**物品稀有度**近似词缀取值区间（Interim）。
 * **TagData 权重聚合**：`GetSpawnWeights…ByTag` 的逐 tag 聚合（sum vs max）未确认，当前 best-match（Interim）。
 * **物品类型抽取**：`LootTables.ItemTypeWeights` 与职业乘子已提取但未接入（当前用 `ItemCatalog` 的槽位类型均分）。
 * **怪物/容器掉落资格**：`LootTables`/`MonsterDefinition` 的掉落表绑定未恢复。
-* **统计分布对照**：需按固定种子对比词缀数量/稀有度/类型分布（B05 分布样本）。
+* **统计分布对照**：词缀稀有度已做种子分布检验；物体类型/怪物掉落分布仍待对照。

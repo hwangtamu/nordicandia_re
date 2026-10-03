@@ -142,7 +142,11 @@ public static class LootTable
             .DistinctBy(a => a.Name).ToList();
         // E02: weighted by TagData spawn weight; values scaled by TagData ValueMultiplier.
         var weights = pool.Select(a => a.SpawnWeight(typeTags)).ToList();
-        var chosen = new List<(AffixCatalog.Affix Affix, List<(AffixCatalog.AffixAttribute Attribute, double Value)> Values)>();
+        // CreateItem initializes once (affixNumber=1, highest=null), then calls
+        // GenerateRandomAffix with allowReinitializingRarityPool=false. Do not introduce
+        // the helper's optional inter-affix bias into the normal item-generation path.
+        var rarityWeights = AffixRarityCatalog.Weights(magicFind);
+        var chosen = new List<(AffixCatalog.Affix Affix, int Rarity, List<(AffixCatalog.AffixAttribute Attribute, double Value)> Values)>();
         for (var i = 0; i < affixCount && pool.Count > 0; i++)
         {
             var total = 0.0;
@@ -153,10 +157,11 @@ public static class LootTable
             var affix = pool[index];
             pool.RemoveAt(index);
             weights.RemoveAt(index);
-            var values = AffixCatalog.RollAll(affix, drop.Rarity, affixRng);
+            var affixRarity = AffixRarityCatalog.Roll(affixRng, rarityWeights);
+            var values = AffixCatalog.RollAll(affix, affixRarity, affixRng);
             var mult = affix.ValueMultiplier(typeTags);
             if (mult != 1.0) values = values.Select(v => (v.Attribute, v.Value * mult)).ToList();
-            chosen.Add((affix, values));
+            chosen.Add((affix, affixRarity, values));
         }
 
         var suffix = string.Concat(chosen.Select(a => " " + a.Affix.Name));
@@ -227,14 +232,9 @@ public static class LootTable
             }
         }
         if (definition is { IsUnique: true }) itemAttributes[AttrUnique] = Value(1);
-        // Set items carry their definition's set id; other rare+ items roll a random set.
+        // Set membership belongs to the definition, never to a random rarity roll.
         if (definition is { SetId: { } definitionSetId })
             itemAttributes[AttrSetId] = Value(definitionSetId);
-        else if (drop.Rarity >= 4 && SetCatalog.Count > 0)
-        {
-            var setIds = SetCatalog.Ids;
-            itemAttributes[AttrSetId] = Value(setIds[(int)(rng.NextDouble() * setIds.Count) % setIds.Count]);
-        }
         var item = new SerializedItem
         {
             Id = Guid.NewGuid(),
@@ -256,7 +256,7 @@ public static class LootTable
                 // E01: the client's SerializedAffix references the affix definition, not the
                 // granted attribute (several affixes can share a primary attribute).
                 DefinitionIntegerId = a.Affix.IntegerId != 0 ? a.Affix.IntegerId : a.Affix.AttributeId,
-                Rarity = (Rarity)Math.Clamp(drop.Rarity, 0, 11),
+                Rarity = (Rarity)a.Rarity,
                 Attributes = new SerializedAttributes
                 {
                     Values = new Dictionary<AttributeOrigin, Dictionary<int, GameAttributeValue>>

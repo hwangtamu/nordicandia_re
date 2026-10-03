@@ -76,6 +76,7 @@ RunSuite("LootEquipment", LootEquipmentTests.Run);
 RunSuite("AffixGeneration", AffixGenerationTests.Run);
 RunSuite("E01AffixCatalog", E01AffixCatalogTests.Run);
 RunSuite("E02DropPipeline", E02DropPipelineTests.Run);
+RunSuite("EconomyRecovery", EconomyRecoveryTests.Run);
 RunSuite("E03SetAndSlots", E03SetAndSlotsTests.Run);
 RunSuite("W01MonsterCatalog", W01MonsterCatalogTests.Run);
 RunSuite("W02W03Brain", W02W03BrainTests.Run);

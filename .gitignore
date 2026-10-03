@@ -63,3 +63,6 @@ server/certs/
 
 # B05 generated fidelity reports (regenerate via StoreTests)
 /server/fidelity-reports/
+
+# generated test reports
+/fidelity-reports/

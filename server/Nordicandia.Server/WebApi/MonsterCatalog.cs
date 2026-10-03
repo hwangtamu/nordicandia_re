@@ -61,9 +61,11 @@ public static class MonsterCatalog
         return result;
     }
 
-    /// <summary>W01: monsters of a monster type (Beast/Demon/Undead/...), spawnable first.</summary>
+    /// <summary>W01: the normal-spawn monsters of a monster type (Beast/Demon/Undead/...). Bosses
+    /// (rarity 6 only) are excluded — they are placed via the world's BossMonsterId, not the pool.</summary>
     public static IEnumerable<Monster> ByType(string typeName)
-        => All.Value.Values.Where(m => m.TypeName == typeName && m.AvailableRarities.Count > 0)
+        => All.Value.Values.Where(m => m.TypeName == typeName
+                && m.AvailableRarities.Any(r => r is 0 or 1 or 2 or 4))
             .OrderBy(m => m.IntegerId);
 
     private sealed record RawCatalog(List<RawMonster> Items);

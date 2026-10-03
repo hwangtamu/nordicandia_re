@@ -92,7 +92,9 @@ static class LootEquipmentTests
             var clock = new FakeClock();
             var owner = store.GetOrCreateUser("device:m2-test").UserId;
             var data = Defaults.Create<SerializedCharacterData.SerializedData>();
-            data.CombatStats = new SerializedCharacterData.SerializedCombatStats { Offense = 200, Defense = 50, Recovery = 5 };
+            // The combat seed derives from the (random) character Guid, so give the character enough
+            // offence that a boss is reliably cleared within the window regardless of the seed.
+            data.CombatStats = new SerializedCharacterData.SerializedCombatStats { Offense = 2000, Defense = 50, Recovery = 5 };
             var characterId = store.CreateCharacter(owner, new CreateCharacterRequest
             {
                 DisplayName = "m2",
@@ -104,12 +106,26 @@ static class LootEquipmentTests
 
             var registry = new CombatRegistry(store, clock);
 
-            // Run the dungeon long enough to drop loot and clear at least one boss.
+            // Run the dungeon long enough to drop loot and clear at least one boss. Drive the player
+            // toward the nearest monster each step (the web client's auto-move) so the random layout
+            // seed cannot leave both sides idle outside aggro range.
             var loot = new List<WebItemDetail>();
-            for (var i = 0; i < 12; i++)
+            for (var i = 0; i < 20; i++)
             {
                 clock.Advance(TimeSpan.FromSeconds(5));
-                registry.Advance(owner, characterId);
+                var snapshot = registry.Advance(owner, characterId);
+                var nearest = default(MonsterSnapshot);
+                var bestDistance = double.MaxValue;
+                foreach (var monster in snapshot.Combat.Monsters)
+                {
+                    if (!monster.Alive) continue;
+                    var distance = (monster.X - snapshot.Combat.PlayerX) * (monster.X - snapshot.Combat.PlayerX)
+                        + (monster.Z - snapshot.Combat.PlayerZ) * (monster.Z - snapshot.Combat.PlayerZ);
+                    if (distance < bestDistance) { bestDistance = distance; nearest = monster; }
+                }
+                if (bestDistance < double.MaxValue)
+                    registry.ApplyCommand(owner, characterId, $"mv-{i}", snapshot.Combat.Version,
+                        new WebCommandRequest("move", X: nearest.X, Z: nearest.Z));
             }
             var afterCombat = registry.Advance(owner, characterId);
             var inventory = registry.Inventory(owner, characterId);

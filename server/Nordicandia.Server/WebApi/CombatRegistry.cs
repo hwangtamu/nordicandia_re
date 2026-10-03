@@ -30,8 +30,6 @@ public sealed class CombatRegistry
     /// (the web loot drops near the player's level; the exact client rule is not recovered).</summary>
     private const int LevelRequirementGrace = 20;
 
-    /// <summary>Guaranteed unique/set after this many drops without one (a web pity rule).</summary>
-    private const int UniquePityDrops = 120;
     private const int MaxQuantityFromMagicFindMultiplier = 5; // GameParameters.MaxQuantityFromMagicFindMultiplier
 
     /// <summary>Largest wall-clock gap the live simulation will advance in one step. A longer gap
@@ -150,8 +148,6 @@ public sealed class CombatRegistry
         public int FlushedOpals;
         public int FlushedKills;
         public long FlushedVersion;
-        // Drops since the last unique/set; at the threshold the next drop is forced unique.
-        public int UniquePity;
         // Carries the fractional part of the recovered item-quantity roll between drops.
         public double ItemQuantityRemainder;
         // Wall-clock seconds the player was away when this entry was created; claimed once.
@@ -715,19 +711,14 @@ public sealed class CombatRegistry
         // floor-with-remainder rule (Num_Items_Granted * (Item_Quantity_Final_Multiplier + 1)),
         // capped at GameParameters.MaxQuantityFromMagicFindMultiplier = 5.
         var (magicFind, itemQuantity) = LootLuck(owner, characterId, entry);
-        var rollsPerDrop = RollItemsPerDrop(itemQuantity, ref entry.ItemQuantityRemainder);
-        // Drop pity: force a unique once enough drops have gone by without one, so the rarest
-        // tier is reachable in a session. Set items also reset the counter.
         var items = new List<SerializedItem>();
         foreach (var drop in drops)
         {
+            var rollsPerDrop = RollItemsPerDrop(itemQuantity, ref entry.ItemQuantityRemainder);
             for (var i = 0; i < rollsPerDrop; i++)
             {
                 var current = i == 0 ? drop : drop with { Seed = drop.Seed + (ulong)i * 0x9E3779B97F4A7C15UL };
-                entry.UniquePity++;
-                var force = entry.UniquePity >= UniquePityDrops ? ItemCatalog.RarityType.Unique : (ItemCatalog.RarityType?)null;
-                var item = LootTable.CreateItem(current, force, magicFind);
-                if (LootTable.IsUniqueOrSet(item)) entry.UniquePity = 0;
+                var item = LootTable.CreateItem(current, magicFind: magicFind);
                 items.Add(item);
             }
         }

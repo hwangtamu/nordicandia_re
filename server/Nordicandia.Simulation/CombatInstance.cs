@@ -166,6 +166,9 @@ public sealed partial class CombatInstance
     private double targetX;
     private double targetZ;
     private bool hasTarget;
+    // W02: the player also follows an A* path so walls do not block auto-battle movement.
+    private List<(int X, int Z)>? playerPath;
+    private double playerPathTimer;
     private double attackCooldown;
     private double[] skillCooldowns;
     // C02: player buffs live in PlayerBuffs (offense, movespeed, curses). The old
@@ -301,6 +304,14 @@ public sealed partial class CombatInstance
         PlayerMaxMana = EffectiveMaxMana();
         PlayerMana = PlayerMaxMana;
         Layout = layout;
+        // W04: if the arena centre is a wall in this layout, start the player at the first room so
+        // monsters can path to it (otherwise auto-battle stalls outside the walls).
+        if (layout is { RoomCenters.Count: > 0 } && !layout.IsFloor(layout.Cell(0, 0, ArenaHalf).X, layout.Cell(0, 0, ArenaHalf).Z))
+        {
+            var (px, pz) = layout.World(layout.RoomCenters[0].X, layout.RoomCenters[0].Z, ArenaHalf);
+            PlayerX = px;
+            PlayerZ = pz;
+        }
         rng = new CombatRandom(seed == 0 ? 0x9E3779B97F4A7C15UL : seed);
         SpawnMonsters();
         // The version is a persistent, monotonically increasing counter. Restoring it from
@@ -429,9 +440,24 @@ public sealed partial class CombatInstance
         monsters.Clear();
         for (var i = 0; i < monsterCount; i++)
         {
-            var angle = (i / (double)monsterCount) * Math.PI * 2;
-            var radius = 7 + (i % 3) * 3;
-            monsters.Add(CreateMonster(i, Math.Cos(angle) * radius, Math.Sin(angle) * radius, alive: true));
+            double x, z;
+            if (Layout is { SpawnAnchors.Count: > 0 } layout)
+            {
+                // W04: spawn on the floor at the layout's room anchors so the player can reach them.
+                var anchor = layout.SpawnAnchors[i % layout.SpawnAnchors.Count];
+                var (ax, az) = layout.World(anchor.X, anchor.Z, ArenaHalf);
+                var angle = rng.NextDouble() * Math.PI * 2;
+                var r = rng.NextDouble() * 2.0;
+                (x, z) = ConstrainMove(ax, az, ax + Math.Cos(angle) * r, az + Math.Sin(angle) * r);
+            }
+            else
+            {
+                var angle = (i / (double)monsterCount) * Math.PI * 2;
+                var radius = 7 + (i % 3) * 3;
+                x = Math.Cos(angle) * radius;
+                z = Math.Sin(angle) * radius;
+            }
+            monsters.Add(CreateMonster(i, x, z, alive: true));
         }
     }
 
@@ -651,13 +677,39 @@ public sealed partial class CombatInstance
             if (distance < 0.15) hasTarget = false;
             else
             {
-                var speed = playerSpeed * (1 + PlayerBuffs.MagnitudeOf("movespeed")) * (1 - CurseSlow);
-                var step = Math.Min(distance, speed * dt);
-                // W02: the player also respects the dungeon walls (slides along them).
-                var (nx, nz) = ConstrainMove(PlayerX, PlayerZ, PlayerX + dx / distance * step, PlayerZ + dz / distance * step);
-                PlayerX = nx;
-                PlayerZ = nz;
-                ClampToArena();
+                double goalX = targetX, goalZ = targetZ;
+                if (Layout is not null)
+                {
+                    playerPathTimer -= dt;
+                    if (playerPath is null || playerPath.Count == 0 || playerPathTimer <= 0)
+                    {
+                        var path = Layout.FindPath(Layout.Cell(PlayerX, PlayerZ, ArenaHalf),
+                            Layout.Cell(targetX, targetZ, ArenaHalf));
+                        if (path.Count > 0) path.RemoveAt(0);
+                        playerPath = path;
+                        playerPathTimer = 0.4;
+                    }
+                    if (playerPath is { Count: > 0 })
+                    {
+                        var (wx, wz) = Layout.World(playerPath[0].X, playerPath[0].Z, ArenaHalf);
+                        goalX = wx;
+                        goalZ = wz;
+                    }
+                }
+                var gdx = goalX - PlayerX;
+                var gdz = goalZ - PlayerZ;
+                var gdist = Math.Sqrt(gdx * gdx + gdz * gdz);
+                if (gdist > 1e-6)
+                {
+                    var speed = playerSpeed * (1 + PlayerBuffs.MagnitudeOf("movespeed")) * (1 - CurseSlow);
+                    var step = Math.Min(gdist, speed * dt);
+                    // W02: the player respects the dungeon walls (slides along them).
+                    var (nx, nz) = ConstrainMove(PlayerX, PlayerZ,
+                        PlayerX + gdx / gdist * step, PlayerZ + gdz / gdist * step);
+                    PlayerX = nx;
+                    PlayerZ = nz;
+                    ClampToArena();
+                }
             }
         }
 
