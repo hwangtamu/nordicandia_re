@@ -51,13 +51,17 @@ public static class Blessings
         _ => "Small",
     };
 
-    /// <summary>Provisional opal cost for an offering size (Small/Medium/Large/ExtraLarge).</summary>
+    /// <summary>Opal cost per offering size, recovered from <c>LocalCatalog.cctor</c> (the
+    /// Small/Medium/Large/ExtraLarge entries) — the same values the client's
+    /// <c>OfflineCatalog.GetOpalPrice</c> reads. The client labels these "TODO-PRICE: seed
+    /// values, production export pending", so they are client-seed (authoritative for the
+    /// shipped client, but expected to change in a production catalog export).</summary>
     public static int OpalCost(int size) => size switch
     {
-        1 => 15,
-        2 => 40,
-        3 => 90,
-        4 => 250,
+        1 => 200,
+        2 => 500,
+        3 => 800,
+        4 => 2500,
         _ => 0,
     };
 

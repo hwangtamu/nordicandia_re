@@ -31,7 +31,7 @@ static class M3Tests
                     Data = new SerializedCharacterData { Data = Defaults.Create<SerializedCharacterData.SerializedData>() },
                 }).CharacterId;
                 // Give the character some opals for offerings.
-                store.SaveRealtimeProgress(owner, id, 0, 0, 1000);
+                store.SaveRealtimeProgress(owner, id, 0, 0, 5000);
 
                 var registry = new CombatRegistry(store, clock);
 
@@ -71,7 +71,7 @@ static class M3Tests
                 Check(thorEval.Resolve("Weapon_Damage_Percent_Bonus_Final") == Blessings.Magnitude,
                     "m3 blessings: Thor targets Weapon_Damage_Percent_Bonus_Final (+40%)");
                 var expensive = registry.Offer(owner, id, Blessings.Thor, 4);
-                Check(expensive.Applied, "m3 blessings: an ExtraLarge offering is affordable at 1000 opals");
+                Check(expensive.Applied, "m3 blessings: an ExtraLarge offering is affordable at 5000 opals");
                 clock.Current = clock.Current.AddMinutes(11);
                 var expired = registry.ActiveBlessings(owner, id).Active.Single(b => b.Type == Blessings.Odin);
                 Check(!expired.Active, "m3 blessings: the short blessing expires");
