@@ -24,14 +24,14 @@
 * `AcceptanceRegressionTests.SetBonusesAndEquipRequirements` 新增：2 件套生效、**脱装后加成消失**。
 * 服务端 **662 PASS**，回放 58/58。
 
-## 未完成（开放词缀槽 / prefix-suffix 容量）
+## 开放槽填充（本轮已接）
 
-* **开放词缀槽**：`Open_Prefix_Slot`(389)/`Open_Suffix_Slot`(390) 已定位；客户端
-  `GameAttributes.IsOpenAffix(gameAttribute)` 用一个静态列表判定，`ItemType.get_AddOpenAffix()`
-  返回 `[+0x1F0]` 字段，`Item.FillOpenAffixSlotWith` 填槽。该机制与符文/镶嵌类制作相关，
-  **未接入**。
-* **prefix/suffix 容量**：网页在精华合成里仍用 `2 + clamp(rarity/3,0,4)` 近似
-  (`GameStore.CraftEssenceItem`)；客户端的真实容量规则（`GetMergableAffixes` 的
-  `IsPrefixOrSuffix + IsOpenAffix`）尚未完全恢复。
-* **独特触发效果**：9 条独特词缀（`GenerationType=4`）已作为 implicit 进入物品属性，但
-  `ChanceToBleed` 等**触发效果**（Proc）未实现。
+`OpenAffixSlots` 已替换 `CraftEssenceItem` 的虚构容量：按定义1076/1077、属性389/390
+识别开放前后缀槽，新词缀替换同类型槽位，同定义更高稀有度可升级。无空槽不能增加条数。
+证据与验证见 [E03–E05反汇编复核](E03_E05_RECOVERY_2026-10-03.md)。
+
+## 未完成
+
+* 掉落中的开放槽生成（`forceOpenAffix/canRollOpenAffix`、`AddOpenAffix`）尚未接入。
+* 独特词缀已作为隐式属性进入物品，但 `ChanceToBleed` 等 Proc 未完成。
+* 合成完整资格、重投数值、耐久和失败处理仍待按原版调用链校准。

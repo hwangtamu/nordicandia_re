@@ -304,10 +304,13 @@ static class AcceptanceRegressionTests
         var (store, registry, owner, characterId, _) = Create("r9", 100);
         using (store)
         {
-            var a = LootTable.CreateItem(new LootDrop(3, 5, 10, false, 1));
-            var b = LootTable.CreateItem(new LootDrop(3, 6, 10, false, 2));
-            a.Slot = ItemSlotTypes.Blacksmith_SourceItem;
-            b.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            var essenceDef = EssenceCatalog.ForAffixDefinition(30)!.Value;
+            var a = EssenceCatalog.CreateItem(essenceDef, 10);
+            a.BaseRarity = (Rarity)8; // One steel-equivalent essence + 300 Iron.
+            var b = new SerializedItem { Id = Guid.NewGuid(), DefinitionIntegerId = 63,
+                Attributes = new SerializedAttributes { Values = new() { [AttributeOrigin.Item] = new()
+                { [19] = new() { Value = 300, ValueD = 300 } } }, MultiplicativeValues = new() } };
+            a.Slot = b.Slot = ItemSlotTypes.Blacksmith_SourceItem;
             store.GrantItems(owner, characterId, new List<SerializedItem> { a, b });
 
             var (ok, _, result) = store.SmeltItems(owner, characterId);
@@ -390,8 +393,12 @@ static class AcceptanceRegressionTests
         var (store, _, owner, characterId, _) = Create("r12", 100);
         using (store)
         {
-            var a = LootTable.CreateItem(new LootDrop(3, 5, 10, false, 41));
-            var b = LootTable.CreateItem(new LootDrop(3, 6, 10, false, 42));
+            var a = EssenceCatalog.CreateItem(EssenceCatalog.ForAffixDefinition(30)!.Value, 1);
+            a.BaseRarity = (Rarity)8;
+            var b = new SerializedItem { Id = Guid.NewGuid(), DefinitionIntegerId = 63,
+                Slot = ItemSlotTypes.Inventory,
+                Attributes = new SerializedAttributes { Values = new() { [AttributeOrigin.Item] = new()
+                { [19] = new() { Value = 300, ValueD = 300 } } }, MultiplicativeValues = new() } };
             store.GrantItems(owner, characterId, new List<SerializedItem> { a, b });
             // The web NPC window places selected items into the Blacksmith slot before the op.
             store.SetItemSlots(owner, characterId, new Dictionary<Guid, ItemSlotTypes>
@@ -502,7 +509,7 @@ static class AcceptanceRegressionTests
             };
             var target = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 1));
             target.Slot = ItemSlotTypes.Blacksmith_TargetItem;
-            target.Affixes = new() { Affix(4000, 2) }; // Existing implicit must remain intact.
+            target.Affixes = new() { Affix(4000, 2), OpenAffixSlots.Create(true), OpenAffixSlots.Create(false) };
             var source = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 3));
             source.Slot = ItemSlotTypes.Blacksmith_SourceItem;
             source.Affixes = Enumerable.Range(-1, 6).Select(t => Affix(3000 + t, t)).ToList();
@@ -523,8 +530,8 @@ static class AcceptanceRegressionTests
             var result = store.CraftEssenceItem(owner, characterId, 10);
             var ids = result.Result?.Affixes.Select(a => a.DefinitionIntegerId).OrderBy(id => id).ToArray();
             if (!result.OperationSuccessful || !result.Success || ids == null ||
-                !ids.SequenceEqual(new[] { 3000, 3001, 3100, 4000 }))
-                throw new Exception("merge: client 0/1 types must merge; -1/2/3/4 must not; existing and untyped affixes remain compatible");
+                !ids.SequenceEqual(new[] { 3000, 3001, 4000 }))
+                throw new Exception("merge: client 0/1 types must merge; -1/2/3/4 must not; existing implicit remains; unknown source cannot fill a typed slot");
             Console.WriteLine("PASS merge: actual crafting accepts Prefix=0/Suffix=1 and rejects undefined/implicit/set/unique sources");
         }
     }
@@ -556,6 +563,10 @@ static class AcceptanceRegressionTests
             target.Slot = ItemSlotTypes.Blacksmith_TargetItem;
             var source = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 6));
             source.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            target.Affixes = new() { OpenAffixSlots.Create(true) };
+            source.Affixes = new() { new SerializedAffix { DefinitionIntegerId = 30, Rarity = Rarity.C } };
+            // ArmorPercent is a prefix in the client catalog.
+            if (OpenAffixSlots.TypeOf(source.Affixes[0]) == 1) target.Affixes = new() { OpenAffixSlots.Create(false) };
             var items = new List<SerializedItem> { target, source };
             for (var i = 0; i < 6; i++) items.Add(Iron());
             store.GrantItems(owner, characterId, items);
@@ -567,7 +578,7 @@ static class AcceptanceRegressionTests
             Check(remainingIron < 6, "essence: the iron stacks are actually deducted");
 
             // Affix merge: a rarity-10 target always succeeds; its affixes are the rarity-upgraded
-            // union of the target's and the source's (up to capacity). Clear the previous craft's
+            // existing affix upgrade (without adding capacity). Clear the previous craft's
             // Blacksmith slots so the merge uses its own target/source.
             store.SetItemSlots(owner, characterId, new Dictionary<Guid, ItemSlotTypes>
             {
@@ -578,31 +589,22 @@ static class AcceptanceRegressionTests
             mergeTarget.Slot = ItemSlotTypes.Blacksmith_TargetItem;
             var mergeSource = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 3));
             mergeSource.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            mergeTarget.Affixes = new() { new SerializedAffix { DefinitionIntegerId = 30, Rarity = Rarity.C } };
+            mergeSource.Affixes = new() { new SerializedAffix { DefinitionIntegerId = 30, Rarity = (Rarity)10 } };
             var iron2 = new List<SerializedItem>();
             for (var i = 0; i < 60; i++) iron2.Add(Iron());
             store.GrantItems(owner, characterId, new List<SerializedItem> { mergeTarget, mergeSource }.Concat(iron2).ToList());
             var (mOk, mSuccess, mResult, _, _) = store.CraftEssenceItem(owner, characterId, 10);
             Check(mOk && mSuccess, "merge: a rarity-10 target succeeds deterministically");
-            static int AffixType(SerializedAffix a) =>
-                a?.Attributes?.Values != null
-                && a.Attributes.Values.TryGetValue(AttributeOrigin.Item, out var m) && m != null
-                && m.TryGetValue(99008, out var v) ? (int)v.ValueD : -1;
             var originalIds = mergeTarget.Affixes.Select(a => a.DefinitionIntegerId).ToList();
             var sourceIds = mergeSource.Affixes.Select(a => a.DefinitionIntegerId).ToList();
             var resultIds = mResult.Affixes.Select(a => a.DefinitionIntegerId).ToList();
             var union = originalIds.Concat(sourceIds).Distinct().ToList();
-            // Rarity 10 => affix capacity 2 + clamp(10/3,0,4) = 5; the merge is the union capped at it.
-            var capacity = 2 + Math.Clamp((int)mResult.BaseRarity / 3, 0, 4);
             Check(originalIds.Count > 0 && originalIds.All(resultIds.Contains),
                 "merge: the target keeps its original affixes");
             Check(resultIds.All(union.Contains), "merge: the result only contains target/source affixes");
-            Check(resultIds.Count <= capacity, "merge: the target does not exceed its affix capacity");
-            // Only prefix/suffix (type 0 or 1) source affixes merge and only those absent from the target.
-            var adoptable = mergeSource.Affixes
-                .Where(a => AffixType(a) is 0 or 1 && !originalIds.Contains(a.DefinitionIntegerId))
-                .Select(a => a.DefinitionIntegerId).ToList();
-            if (adoptable.Count > 0)
-                Check(adoptable.Any(resultIds.Contains), "merge: a new prefix/suffix source affix is adopted");
+            Check(resultIds.Count == originalIds.Count,
+                "merge: absent open markers, rarity does not create extra prefix/suffix capacity");
 
             // ProcessSuccessRate: overheat * 0.1 means overheat 0 can never succeed.
             store.SetItemSlots(owner, characterId, new Dictionary<Guid, ItemSlotTypes>
@@ -613,6 +615,8 @@ static class AcceptanceRegressionTests
             zeroTarget.Slot = ItemSlotTypes.Blacksmith_TargetItem;
             var zeroSource = LootTable.CreateItem(new LootDrop(3, 10, 20, false, 74));
             zeroSource.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+            zeroTarget.Affixes = new() { new SerializedAffix { DefinitionIntegerId = 30, Rarity = Rarity.C } };
+            zeroSource.Affixes = new() { new SerializedAffix { DefinitionIntegerId = 30, Rarity = (Rarity)10 } };
             var iron3 = new List<SerializedItem>();
             for (var i = 0; i < 10; i++) iron3.Add(Iron());
             store.GrantItems(owner, characterId, new List<SerializedItem> { zeroTarget, zeroSource }.Concat(iron3).ToList());

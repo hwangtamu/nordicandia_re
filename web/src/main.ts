@@ -771,9 +771,9 @@ function prettyPower(name: string): string {
 }
 
 const NPc_TABS: Record<string, { label: string; hint: string }> = {
-  smelt: { label: "Smelting", hint: "Smelt selected materials into Steel (essence → steel value)." },
-  disassemble: { label: "Disassemble", hint: "Disassemble selected equipment into Iron." },
-  essence: { label: "Reforge", hint: "Pick a target and source items; consumes Iron and merges affixes." },
+  smelt: { label: "Smelting", hint: "Steel: 300 Iron + essences per ingot. Titansteel: 10 Titanium Ore + 100 Steel. Unused materials are kept." },
+  disassemble: { label: "Disassemble", hint: "Extract essences from eligible equipment affixes." },
+  essence: { label: "Reforge", hint: "Pick a target and sources; consumes Iron. New affixes need a matching open prefix or suffix slot." },
   relic: { label: "Bless", hint: "Pick a target and a source relic; blesses the target's affixes." },
   socket: { label: "Socket", hint: "Pick a gem and a target; inserts the gem into a free socket." },
   "add-socket": { label: "Add Socket", hint: "Pick a target; consumes Titansteel to add a socket." },

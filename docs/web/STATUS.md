@@ -45,9 +45,9 @@
 |---|---|---|---|
 | E01 完整物品/词缀目录 | ✅ | 最终作用域（全部随机 Prefix/Suffix 引用 0 未解析）已达成；97 词缀/1242 属性 ID/多属性/槽位资格已接。隐式/独特/套装接入属 E03 | [E01](E01_AFFIX_CATALOG.md) |
 | E02 完整掉落生成管线 | ✅ | 数量余数/MF/稀有度/词缀数/TagData 加权/ValueMultiplier/词缀稀有度池（二进制证据）/物品类型权重+职业乘子（沿父链）/Boss 保证掉落（RegularBoss→HelheimKey）均已接；统计分布已测。残留：TagData 权重聚合（Interim）、Helheim 模式表与容器绑定、按怪物掉落分布对照 | [E02](E02_DROP_PIPELINE.md) |
-| E03 独特/套装/隐式/开放槽 | ⏳ | 11 套 51 断点全解析、脱装无残留；**开放词缀槽、prefix/suffix 容量、独特 Proc 待办** | [E03](E03_SETS_AND_SLOTS.md) |
-| E04 校准制作流程 | ⏳ | 合成/熔炼/插槽/镶嵌/祝福/换购已接、原子无复制；分解按反汇编产出精华（`GetDisassemblableAffixes` + 60 条 `EssenceAffixId` + `IsOpenAffix` 389/390）；`GetCraftingCost` 稀有度表与公式已恢复（`CraftingCostCatalog`）；`GetNumSteelSmeltingOutput` 形状已解；**待办**：Titansteel 产出计数、`N` 来源、名称 HashSet | [E04/E05](E04_E05_CRAFT_ECONOMY.md) |
-| E05 NPC/商店/经济 | ⏳ | 购买/以物易物/祝福已接；**商店价格源、祝福价(seed)、刷新/过滤、经济验证待办** | [E04/E05](E04_E05_CRAFT_ECONOMY.md) |
+| E03 独特/套装/隐式/开放槽 | ⏳ | 11 套 51 断点全解析；同类型开放槽替换已接，移除稀有度虚构容量；**开放槽生成与独特 Proc 未完成** | [E03](E03_SETS_AND_SLOTS.md) |
+| E04 校准制作流程 | ⏳ | **钢/钛钢配比、真实产量、按需扣料与余料持久化已接**；制作费用有公式但未接调用；分解仍缺概率/精华属性重建/独特套装分支，Relic 实际祝福未完成 | [本轮反汇编](E03_E05_RECOVERY_2026-10-03.md) |
+| E05 NPC/商店/经济 | ⏳ | **24 条离线报价已提取，5 种网页药水按目录定价**；生产动态目录、传送门价格、刷新过滤、以物易物估值、正常角色收支未完成 | [本轮反汇编](E03_E05_RECOVERY_2026-10-03.md) |
 
 ## P1–P2 怪物、地图与进度（W）
 

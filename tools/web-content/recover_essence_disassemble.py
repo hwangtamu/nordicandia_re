@@ -9,9 +9,10 @@ Targets (all in tmp/apk-libil2cpp.so; the script fails on a different binary):
   EssenceGrid.CreateEssences                                  0x02506C7C
   EssenceLootboxSmall.<InternalOnRequestUse>d__7.MoveNext     0x02CD44C4
 
-Disassembly is a deterministic filter (no success chance): the output is the prefix/suffix
-affixes at rarity >= 2 whose attributes include an open affix. `EssenceAffixId` is the
-item-definition field mapping an essence to its affix. The lootbox is the only random piece.
+GetDisassemblableAffixes is a deterministic candidate filter. This does NOT recover the
+full disassembly operation: PerformDisassembleOffline also calls CalculateChance and
+ExtractAffixEssence. EssenceAffixId maps an essence definition to its affix.
+See docs/web/E03_E05_RECOVERY_2026-10-03.md for corrected coverage.
 
 Also exports the EssenceAffixId catalog (Items.json essence items -> affix names).
 

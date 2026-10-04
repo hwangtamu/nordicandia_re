@@ -1,0 +1,170 @@
+[
+  {
+    "address": "0x41ce6a4",
+    "name": "GreatElixirOfKnowledge",
+    "stacks": 1,
+    "currency": "SL",
+    "price": 1500000
+  },
+  {
+    "address": "0x41ce714",
+    "name": "GreatElixirOfQuantity",
+    "stacks": 1,
+    "currency": "SL",
+    "price": 1500000
+  },
+  {
+    "address": "0x41ce784",
+    "name": "GreatElixirOfImmortality",
+    "stacks": 1,
+    "currency": "SL",
+    "price": 800000
+  },
+  {
+    "address": "0x41ce7f4",
+    "name": "GreatElixirOfDreams",
+    "stacks": 1,
+    "currency": "SL",
+    "price": 2500000
+  },
+  {
+    "address": "0x41ce864",
+    "name": "GreatElixirOfInsomnia",
+    "stacks": 1,
+    "currency": "SL",
+    "price": 1500000
+  },
+  {
+    "address": "0x41ce904",
+    "name": "GreatElixirOfKnowledge",
+    "stacks": 1,
+    "currency": "OP",
+    "price": 150
+  },
+  {
+    "address": "0x41ce970",
+    "name": "GreatElixirOfQuantity",
+    "stacks": 1,
+    "currency": "OP",
+    "price": 150
+  },
+  {
+    "address": "0x41ce9dc",
+    "name": "GreatElixirOfImmortality",
+    "stacks": 1,
+    "currency": "OP",
+    "price": 80
+  },
+  {
+    "address": "0x41cea40",
+    "name": "GreatElixirOfDreams",
+    "stacks": 1,
+    "currency": "OP",
+    "price": 250
+  },
+  {
+    "address": "0x41ceaa4",
+    "name": "GreatElixirOfInsomnia",
+    "stacks": 1,
+    "currency": "OP",
+    "price": 150
+  },
+  {
+    "address": "0x41ceb4c",
+    "name": "GrowthElixir",
+    "stacks": 1,
+    "currency": "SL",
+    "price": 10000
+  },
+  {
+    "address": "0x41cebb8",
+    "name": "PotentGrowthElixir",
+    "stacks": 1,
+    "currency": "SL",
+    "price": 50000
+  },
+  {
+    "address": "0x41cec28",
+    "name": "RapidGrowthElixir",
+    "stacks": 1,
+    "currency": "SL",
+    "price": 100000
+  },
+  {
+    "address": "0x41cec98",
+    "name": "RareGrowthElixir",
+    "stacks": 1,
+    "currency": "SL",
+    "price": 1000000
+  },
+  {
+    "address": "0x41ced08",
+    "name": "MythicalGrowthElixir",
+    "stacks": 1,
+    "currency": "SL",
+    "price": 10000000
+  },
+  {
+    "address": "0x41ced78",
+    "name": "LegendaryGrowthElixir",
+    "stacks": 1,
+    "currency": "SL",
+    "price": 100000000
+  },
+  {
+    "address": "0x41cede4",
+    "name": "FamiliarReviveElixir",
+    "stacks": 1,
+    "currency": "SL",
+    "price": 10000
+  },
+  {
+    "address": "0x41cee74",
+    "name": "GrowthElixir",
+    "stacks": 1,
+    "currency": "OP",
+    "price": 10
+  },
+  {
+    "address": "0x41ceee8",
+    "name": "PotentGrowthElixir",
+    "stacks": 1,
+    "currency": "OP",
+    "price": 50
+  },
+  {
+    "address": "0x41cef4c",
+    "name": "RapidGrowthElixir",
+    "stacks": 1,
+    "currency": "OP",
+    "price": 100
+  },
+  {
+    "address": "0x41cefb8",
+    "name": "RareGrowthElixir",
+    "stacks": 1,
+    "currency": "OP",
+    "price": 1000
+  },
+  {
+    "address": "0x41cf024",
+    "name": "MythicalGrowthElixir",
+    "stacks": 1,
+    "currency": "OP",
+    "price": 10000
+  },
+  {
+    "address": "0x41cf094",
+    "name": "LegendaryGrowthElixir",
+    "stacks": 1,
+    "currency": "OP",
+    "price": 100000
+  },
+  {
+    "address": "0x41cf0f8",
+    "name": "FamiliarReviveElixir",
+    "stacks": 1,
+    "currency": "OP",
+    "price": 10
+  }
+]

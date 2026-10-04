@@ -17,6 +17,7 @@ public static class EssenceCatalog
     private static readonly Lazy<Dictionary<string, Essence>> ByAffix = new(Load);
 
     public static int Count => ByAffix.Value.Count;
+    public static bool IsEssence(int definitionId) => ByAffix.Value.Values.Any(e => e.IntegerId == definitionId);
 
     /// <summary>The essence for an affix definition, or null when the affix has no essence.</summary>
     public static Essence? ForAffixDefinition(int affixDefinitionIntegerId)
