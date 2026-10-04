@@ -318,11 +318,15 @@ static class AcceptanceRegressionTests
                 "smelt: produces a Steel stack");
 
             var c = LootTable.CreateItem(new LootDrop(3, 4, 10, false, 3));
+            // The disassemble filter requires affix rarity >= 2; force it so the assertion is stable.
+            foreach (var affix in c.Affixes ?? new List<SerializedAffix>()) affix.Rarity = Rarity.C;
             c.Slot = ItemSlotTypes.Blacksmith_SourceItem;
             store.GrantItems(owner, characterId, new List<SerializedItem> { c });
             var (dOk, _, dResult) = store.DisassembleItems(owner, characterId);
             Check(dOk, "disassemble: succeeds with source items");
-            Check(dResult.Items.Count == 1 && dResult.Items[0].Name == "Iron", "disassemble: produces Iron");
+            // E04: the client disassembles a prefix/suffix affix (rarity >= 2) into its essence item.
+            Check(dResult.Items.Count > 0 && dResult.Items.All(i => i.Name != "Iron"),
+                $"disassemble: produces essences, not Iron ({string.Join(",", dResult.Items.Select(i => i.Name))})");
 
             var offer = LootTable.CreateItem(new LootDrop(3, 5, 10, false, 4));
             offer.Slot = ItemSlotTypes.YourTrade;

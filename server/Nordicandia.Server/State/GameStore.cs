@@ -863,10 +863,10 @@ public sealed class GameStore : IDisposable
         return (true, new SerializedItems { Items = new List<SerializedItem>() }, new SerializedItems { Items = new List<SerializedItem> { steel } });
     });
 
-    /// <summary>Disassembles the Blacksmith source items. The client's rule is "not unique and not a
-    /// set item" (web items carry neither), so every source qualifies; the source is consumed and
-    /// Iron is granted. The material amount is Provisional until the client's disassemble output
-    /// formula is recovered.</summary>
+    /// <summary>Disassembles the Blacksmith source items. ClientVerified
+    /// (CraftingUtils.GetDisassemblableAffixes, 0x02C82770): a prefix/suffix affix at rarity >= 2
+    /// becomes its essence item (Items.json EssenceAffixId). The source is consumed; there is no
+    /// success chance.</summary>
     public (bool Successful, SerializedItems SourceItems, SerializedItems Result) DisassembleItems(Guid owner, Guid characterId) => Change(s =>
     {
         var c = Owned(s, owner, characterId);
@@ -877,12 +877,18 @@ public sealed class GameStore : IDisposable
         var sourceSnapshot = new SerializedItems { Items = sources.Select(CloneItem).ToList() };
         if (sources.Count == 0) return (false, sourceSnapshot, new SerializedItems { Items = new List<SerializedItem>() });
 
-        var output = Math.Max(1, (int)Math.Floor(sources.Sum(i => 1 + (int)i.BaseRarity * 0.5)));
+        var essences = new List<SerializedItem>();
+        foreach (var source in sources)
+            foreach (var affix in source.Affixes ?? new List<SerializedAffix>())
+            {
+                if (affix is null || (int)affix.Rarity < 2) continue;
+                if (EssenceCatalog.ForAffixDefinition(affix.DefinitionIntegerId) is not { } essence) continue;
+                essences.Add(EssenceCatalog.CreateItem(essence, 1));
+            }
         data.Items.Items.RemoveAll(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem);
-        var iron = CreateMaterial(ItemIronId, "Iron", output);
-        data.Items.Items.Add(iron);
+        data.Items.Items.AddRange(essences);
         c.Data = Pack(data);
-        return (true, new SerializedItems { Items = new List<SerializedItem>() }, new SerializedItems { Items = new List<SerializedItem> { iron } });
+        return (true, new SerializedItems { Items = new List<SerializedItem>() }, new SerializedItems { Items = essences });
     });
 
     /// <summary>Merchant barter (TradeWithMerchant): consumes the items the client placed in the

@@ -1,0 +1,302 @@
+{
+ "223": {
+  "affix": "ArmorPercent",
+  "essenceAffixId": "78f198ed-2269-4a5e-a04a-020cc7a714d1",
+  "name": "ArmorPercent"
+ },
+ "224": {
+  "affix": "BaseWeaponColdDamage",
+  "essenceAffixId": "dca374d4-ca6e-4f49-96da-e0143a9d5e83",
+  "name": "BaseWeaponColdDamage"
+ },
+ "225": {
+  "affix": "BaseWeaponFireDamage",
+  "essenceAffixId": "679fad98-4b51-4d43-9192-5658c25cb193",
+  "name": "BaseWeaponFireDamage"
+ },
+ "226": {
+  "affix": "BaseWeaponLightningDamage",
+  "essenceAffixId": "aba0383a-2dd2-427f-b68b-d46696104816",
+  "name": "BaseWeaponLightningDamage"
+ },
+ "227": {
+  "affix": "BaseWeaponPhysicalDamage",
+  "essenceAffixId": "6a5b3755-188a-4d1d-a0da-c0850d37ee8c",
+  "name": "BaseWeaponPhysicalDamage"
+ },
+ "228": {
+  "affix": "BaseWeaponPoisonDamage",
+  "essenceAffixId": "72d7af0a-e507-43c8-846b-b65287b1ae20",
+  "name": "BaseWeaponPoisonDamage"
+ },
+ "229": {
+  "affix": "ColdLifeLeech",
+  "essenceAffixId": "beea98c6-df4d-42e9-8984-b341ec9ea806",
+  "name": "ColdLifeLeech"
+ },
+ "230": {
+  "affix": "DodgeChancePercent",
+  "essenceAffixId": "bcc992b8-1967-4b5d-896e-c83d4b702b6a",
+  "name": "DodgeChancePercent"
+ },
+ "231": {
+  "affix": "EvasionPercent",
+  "essenceAffixId": "ab69cdde-2256-4cf9-b83e-cf359c9e2ce2",
+  "name": "EvasionPercent"
+ },
+ "232": {
+  "affix": "FireLifeLeech",
+  "essenceAffixId": "d1dbd65f-aec1-4f57-9b67-22c9e48efd49",
+  "name": "FireLifeLeech"
+ },
+ "233": {
+  "affix": "ForceFieldPercent",
+  "essenceAffixId": "4baa56c2-778d-4dfe-bb42-aa54148ca697",
+  "name": "ForceFieldPercent"
+ },
+ "234": {
+  "affix": "LifeLeechRate",
+  "essenceAffixId": "e5608505-5ff0-4b48-94fb-d1337e17b1c3",
+  "name": "LifeLeechRate"
+ },
+ "235": {
+  "affix": "LifePercent",
+  "essenceAffixId": "d10556e0-3966-4183-b62c-0ffa8f02a7d2",
+  "name": "LifePercent"
+ },
+ "236": {
+  "affix": "LightningLifeLeech",
+  "essenceAffixId": "76f55d8e-cc5e-4077-a6b7-354daf57c4b5",
+  "name": "LightningLifeLeech"
+ },
+ "237": {
+  "affix": "LocalArmorPercent",
+  "essenceAffixId": "d2f81da1-4069-484d-ba8e-26ac70c4b356",
+  "name": "LocalArmorPercent"
+ },
+ "238": {
+  "affix": "LocalBaseArmor",
+  "essenceAffixId": "0ac753ca-b8cb-4bc2-8345-9ff0d633589f",
+  "name": "LocalBaseArmor"
+ },
+ "239": {
+  "affix": "LocalBaseColdDamage",
+  "essenceAffixId": "64d38338-dc55-4f2f-bae6-ba55eb904e34",
+  "name": "LocalBaseColdDamage"
+ },
+ "240": {
+  "affix": "LocalBaseEvasion",
+  "essenceAffixId": "4b41e485-36bd-498e-9192-7ab9313bdda0",
+  "name": "LocalBaseEvasion"
+ },
+ "241": {
+  "affix": "LocalBaseFireDamage",
+  "essenceAffixId": "4e2cb052-c0ee-445c-beb1-a8095f5c576a",
+  "name": "LocalBaseFireDamage"
+ },
+ "242": {
+  "affix": "LocalBaseForceField",
+  "essenceAffixId": "cd5cdcfe-db16-43ba-a68c-b80501cefe9d",
+  "name": "LocalBaseForceField"
+ },
+ "243": {
+  "affix": "LocalBaseLightningDamage",
+  "essenceAffixId": "01897e65-4a02-4ccc-9c26-ce9a1b810fea",
+  "name": "LocalBaseLightningDamage"
+ },
+ "244": {
+  "affix": "LocalBasePhysicalDamage",
+  "essenceAffixId": "caf0bc9c-f8ef-4f43-8806-7b78245eab16",
+  "name": "LocalBasePhysicalDamage"
+ },
+ "245": {
+  "affix": "LocalBasePoisonDamage",
+  "essenceAffixId": "189c02e4-81dd-424e-953b-ea991e504fe0",
+  "name": "LocalBasePoisonDamage"
+ },
+ "246": {
+  "affix": "LocalColdDamagePercent",
+  "essenceAffixId": "792c8998-b58d-49d1-9462-a0dbbb0dd487",
+  "name": "LocalColdDamagePercent"
+ },
+ "247": {
+  "affix": "LocalEvasionPercent",
+  "essenceAffixId": "9eff2b98-90f4-4590-ae6e-572ef89f2da4",
+  "name": "LocalEvasionPercent"
+ },
+ "248": {
+  "affix": "LocalFireDamagePercent",
+  "essenceAffixId": "0da84d78-eea8-4770-a01e-a488afe73883",
+  "name": "LocalFireDamagePercent"
+ },
+ "249": {
+  "affix": "LocalForceFieldPercent",
+  "essenceAffixId": "d51e979d-728e-42be-b480-f1f739ca255e",
+  "name": "LocalForceFieldPercent"
+ },
+ "250": {
+  "affix": "LocalLightningDamagePercent",
+  "essenceAffixId": "0910c960-bc3f-4a9f-84f8-04fc914871a4",
+  "name": "LocalLightningDamagePercent"
+ },
+ "251": {
+  "affix": "LocalPhysicalDamagePercent",
+  "essenceAffixId": "ad45b009-4eb1-4fbc-a799-fcad16cd2d5d",
+  "name": "LocalPhysicalDamagePercent"
+ },
+ "252": {
+  "affix": "LocalPhysicalDamagePercentAndAttackRating",
+  "essenceAffixId": "8447f31e-c3bf-4b92-9590-dc694159d0fe",
+  "name": "LocalPhysicalDamagePercentAndAttackRating"
+ },
+ "253": {
+  "affix": "LocalPoisonDamagePercent",
+  "essenceAffixId": "9a2a0ff3-123a-41b9-8299-fec1f875c321",
+  "name": "LocalPoisonDamagePercent"
+ },
+ "254": {
+  "affix": "MagicFindPercent",
+  "essenceAffixId": "6e55e757-1a6a-4c24-b8c0-2f28bbaf79d5",
+  "name": "MagicFindPercent"
+ },
+ "255": {
+  "affix": "MovementSpeed",
+  "essenceAffixId": "d982ced4-fcaf-48f5-b3d6-4d264f721b5a",
+  "name": "MovementSpeed"
+ },
+ "256": {
+  "affix": "PhysicalLifeLeech",
+  "essenceAffixId": "ade972e9-55c5-4d5f-9e51-57e604698b1f",
+  "name": "PhysicalLifeLeech"
+ },
+ "257": {
+  "affix": "PoisonLifeLeech",
+  "essenceAffixId": "b2513396-1e1b-4857-b18f-748d6d9b4d12",
+  "name": "PoisonLifeLeech"
+ },
+ "258": {
+  "affix": "Agility_Percent_Bonus",
+  "essenceAffixId": "ca7ae41e-b578-4745-9648-7f9965d82520",
+  "name": "Agility_Percent_Bonus"
+ },
+ "259": {
+  "affix": "AttackRating",
+  "essenceAffixId": "30f39d78-9ee9-4c3a-b749-cf623f5c851a",
+  "name": "AttackRating"
+ },
+ "260": {
+  "affix": "AttackRating_Percent",
+  "essenceAffixId": "0918f1e2-07e2-433c-8e61-f07607375df0",
+  "name": "AttackRating_Percent"
+ },
+ "261": {
+  "affix": "LocalAttackSpeedPercent",
+  "essenceAffixId": "01a1d515-3385-48a1-836e-cdaadff8e494",
+  "name": "LocalAttackSpeedPercent"
+ },
+ "262": {
+  "affix": "ColdResistance",
+  "essenceAffixId": "fa0e9f93-9abd-4f9c-a81f-2184e1ee5f6b",
+  "name": "ColdResistance"
+ },
+ "263": {
+  "affix": "Constitution_Percent_Bonus",
+  "essenceAffixId": "2cc5fa00-3e93-4385-a9aa-e4c0f15a46a6",
+  "name": "Constitution_Percent_Bonus"
+ },
+ "264": {
+  "affix": "Crit_Chance_Percent_Bonus",
+  "essenceAffixId": "4960b19e-ad9b-4714-ad3f-32c14cd9caa6",
+  "name": "Crit_Chance_Percent_Bonus"
+ },
+ "265": {
+  "affix": "Crit_Damage_Percent_Bonus",
+  "essenceAffixId": "1f0886cd-0bbd-4383-9147-e88526984d74",
+  "name": "Crit_Damage_Percent_Bonus"
+ },
+ "266": {
+  "affix": "Dexterity_Percent_Bonus",
+  "essenceAffixId": "9f524f07-b12a-49b5-bb1b-5bd641db5ee2",
+  "name": "Dexterity_Percent_Bonus"
+ },
+ "267": {
+  "affix": "ElementalResist",
+  "essenceAffixId": "d5887838-3d27-438e-b204-5ce534381b7b",
+  "name": "ElementalResistance"
+ },
+ "268": {
+  "affix": "FireResistance",
+  "essenceAffixId": "2c3b224f-b018-47ef-bc7a-be3284819001",
+  "name": "FireResistance"
+ },
+ "269": {
+  "affix": "Intelligence_Percent_Bonus",
+  "essenceAffixId": "2ff82bb4-a306-4ef7-ac82-458109de47ed",
+  "name": "Intelligence_Percent_Bonus"
+ },
+ "270": {
+  "affix": "LifeRegenPercent",
+  "essenceAffixId": "743a1288-72ab-457b-990c-ef21e1025a29",
+  "name": "LifeRegenPercent"
+ },
+ "271": {
+  "affix": "LightningResistance",
+  "essenceAffixId": "36515b99-2e45-4c62-9db2-31af82382140",
+  "name": "LightningResistance"
+ },
+ "272": {
+  "affix": "Local_Crit_Bonus_Percent",
+  "essenceAffixId": "ae2ac7da-69b6-40e4-9ae8-7658abe5660d",
+  "name": "Local_Crit_Bonus_Percent"
+ },
+ "274": {
+  "affix": "AttackSpeedPercent",
+  "essenceAffixId": "eebacdf0-820e-4e9a-8a09-8cf470cec1ea",
+  "name": "AttackSpeedPercent"
+ },
+ "275": {
+  "affix": "ManaGainedOnKill",
+  "essenceAffixId": "0493dcea-abf2-4582-960a-5dc6cf340b62",
+  "name": "ManaGainedOnKill"
+ },
+ "276": {
+  "affix": "Mindpower_Percent_Bonus",
+  "essenceAffixId": "309ee39a-5b24-4078-9c89-dad2e4ce96cd",
+  "name": "Mindpower_Percent_Bonus"
+ },
+ "277": {
+  "affix": "PoisonResistance",
+  "essenceAffixId": "765ddff3-d3c2-4b0a-a923-e07aef4aa644",
+  "name": "PoisonResistance"
+ },
+ "278": {
+  "affix": "Strength_Percent_Bonus",
+  "essenceAffixId": "4ecec596-9203-493e-84c1-58e97cd869aa",
+  "name": "Strength_Percent_Bonus"
+ },
+ "279": {
+  "affix": "Vitality_Percent_Bonus",
+  "essenceAffixId": "1ac40da6-67d7-4dd4-9f8e-66a1ea363b2d",
+  "name": "Vitality_Percent_Bonus"
+ },
+ "299": {
+  "affix": "Mana",
+  "essenceAffixId": "ce0d1148-e26f-4de0-901f-061ce6dbfb70",
+  "name": "Mana"
+ },
+ "304": {
+  "affix": "LocalElementalDamagePercentAndMana",
+  "essenceAffixId": "40bad478-f5ef-41a2-b348-6dd9c2713d6e",
+  "name": "LocalElementalDamagePercentAndMana"
+ },
+ "341": {
+  "affix": "PowerLessCooldown",
+  "essenceAffixId": "4a3b0711-7729-41ee-b874-a8f28521fd86",
+  "name": "PowerLessCooldown"
+ },
+ "342": {
+  "affix": "ManaRegen_Percent",
+  "essenceAffixId": "3c1d4a0b-f45d-4855-87d4-d14991898575",
+  "name": "ManaRegenPercent"
+ }
+}

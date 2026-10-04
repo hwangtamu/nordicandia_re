@@ -21,15 +21,28 @@
 `CraftEssenceConsumesIron`、socket add/insert、relic bless）、`ConsumeItemTests` 等，覆盖
 **失败/重试不丢失或复制物品**（源物品快照 + 原子变更）。
 
+## 分解与精华（已恢复并接入）
+
+`tools/web-content/recover_essence_disassemble.py`（对齐 affix-rarity 的做法：校验二进制 SHA +
+指令段 + 断言）恢复了：
+
+* `CraftingUtils.GetDisassemblableAffixes` @ `0x02C82770` —— **确定性过滤**，无成功率：
+  前后缀（`IsPrefixOrSuffix`）、`Rarity >= 2`（谓词 `b__14_0` 的 `cmp w8,#2`）、
+  属性含 `IsOpenAffix`；affix 的授予物品读 `GameAttributeMap.Linked`（offset `0x2C8`）。
+* `EssenceAffixId`（`ItemDefinitionData` serialized 字段）—— **60 个精华物品**（`Items.json`）
+  全部解析到词缀名（0 未解析），导出为 `GameData/essence_affix_catalog.json`。
+* `EssenceGrid.CreateEssences` @ `0x02506C7C`（UI 分组）与 `EssenceLootboxSmall.
+  InternalOnRequestUse` @ `0x02CD44C4`（唯一随机步骤，`Max_Num_Essence_Added_Affixes_On_Item` 198）。
+
+`EssenceCatalog` 加载目录；`GameStore.DisassembleItems` 改为**按词缀产出精华**（不再产 Iron）。
+`E04EssenceTests` 4 条 + `AcceptanceRegression` 更新。
+
 ## 未完成（E04）
 
-* **分解产出量**：`GameStore.DisassembleItems` 仍用网页近似
-  `Max(1, floor(Σ(1 + rarity×0.5)))`；客户端的分解语义（`GetDisassemblableAffixes`
-  + `GetMergableAffixesIfDisassembled`）疑似**抽取词缀**而非产出 Iron，需进一步反汇编确认。
 * **`GetCraftingCost`**：结构为 `概率 × 25 × …`，依赖 `GetSpawnProbabilityForAffixOnItem`
   与多层属性插值，未逐项确认。
 * **`GetNumTitansteelSmeltingOutput`**、`GetNumSteelSmeltingOutput` 的精确材料计数与取整。
-* 可分解/可合并/可熔炼的静态名称 `HashSet` 未提取。
+* 可分解/可合并/可熔炼的静态名称 `HashSet`、`IsOpenAffix` 的具体属性集未逐条导出。
 
 ## 未完成（E05）
 
