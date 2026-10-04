@@ -29,8 +29,13 @@
 `ExtractAffixEssence` 的**精华重建已接入**（本轮）：`EssenceCatalog.CreateItem` 会按
 `new Affix(affixDefinition, targetRarity, source=3)` + `Item.AddAffix` 给精华附着
 来源词缀（原代码是固定 C、空 Affixes）；`DisassembleItems` 传入来源词缀定义与稀有度。
-**仍未完成**：`PerformDisassembleOffline` 的 `CalculateChance` 概率、`ReduceItemLevelOfEligibleAffixes`
-降级开关与独特/套装输出分支。
+**分解概率已解并接入**：`PerformDisassembleOffline.MoveNext @0x29AE7EC` 读
+`GameAttributes` offset `0x318` = `Durability_Total`（属性 30 = 27+28+29，默认 0），
+`chance = min(1.0, Durability_Total)`，再 `Calculator.CalculateChance`（≤ 0 永不成功）。
+装备现带 `Durability_Implicit_Base`（物品定义隐式或回退 100）→ `Durability_Total ≥ 1` → 概率 1.0；
+无耐久物品概率 0 不可分解。
+
+**仍未完成**：`ReduceItemLevelOfEligibleAffixes` 降级开关与独特/套装输出分支；耐久消耗/修理尚未接。
 
 `RelicOfBlessing.ShouldBless/Affix.Bless` 仍未实现实际数值效果，
 网页目前只写标记99010。合成来源资格、reroll/耐久/失败处理仍待校准。

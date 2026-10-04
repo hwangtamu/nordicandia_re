@@ -1,4 +1,6 @@
 using Nordicandia.Server.WebApi;
+using Nordicandia.Simulation;
+using SharedNet.Constants.Game;
 
 /// <summary>
 /// E04: the essence catalog (Items.json EssenceAffixId) and the disassemble filter.
@@ -24,6 +26,13 @@ static class E04EssenceTests
             "E04: a weapon damage prefix maps to its essence");
         Check(EssenceCatalog.ForAffixDefinition(-1) is null,
             "E04: an unknown affix has no essence");
+
+        // Equipment durability: Durability_Total (30) >= 1 so min(1.0, total) disassembles.
+        var weapon = LootTable.CreateItem(new LootDrop(12, 5, 10, false, 7));
+        var itemMap = weapon.Attributes.Values[SharedNet.Constants.Game.AttributeOrigin.Item];
+        Check(itemMap.TryGetValue(30, out var durability) && durability.ValueD >= 1
+            && Math.Min(1.0, durability.ValueD) == 1.0,
+            $"E04: equipment carries durability ({durability.ValueD})");
 
         // ExtractAffixEssence: a disassembled essence carries the affix at the target rarity.
         var essenceItem = EssenceCatalog.CreateItem(EssenceCatalog.ForAffixDefinition(30)!.Value, 7, 30, 1);

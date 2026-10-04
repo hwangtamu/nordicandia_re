@@ -882,6 +882,11 @@ public sealed class GameStore : IDisposable
 
         var essences = new List<SerializedItem>();
         foreach (var source in sources)
+        {
+            // PerformDisassembleOffline: chance = min(1.0, Durability_Total) via
+            // Calculator.CalculateChance (chance <= 0 always fails).
+            var chance = Math.Min(1.0, DurabilityTotal(source));
+            if (chance <= 0 || Random.Shared.NextDouble() > chance) continue;
             foreach (var affix in source.Affixes ?? new List<SerializedAffix>())
             {
                 // ClientVerified: prefix/suffix, rarity >= 2, and no open-slot attribute
@@ -892,6 +897,7 @@ public sealed class GameStore : IDisposable
                 // ExtractAffixEssence: the essence carries an affix at the source affix's rarity.
                 essences.Add(EssenceCatalog.CreateItem(essence, (int)affix.Rarity, affix.DefinitionIntegerId, 1));
             }
+        }
         data.Items.Items.RemoveAll(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem);
         data.Items.Items.AddRange(essences);
         c.Data = Pack(data);
@@ -1587,6 +1593,15 @@ public sealed class GameStore : IDisposable
         c.Data = Pack(data);
         return (true, success, CloneItem(target), sourceSnapshot, ironCost);
     });
+
+    /// <summary>Durability_Total (30) = Durability_Implicit_Base (27) + Durability_Base (28) +
+    /// Durability (29); used as the disassemble chance.</summary>
+    private static double DurabilityTotal(SerializedItem item)
+    {
+        double Attr(int id) => GetItemAttribute(item, SharedNet.Constants.Game.AttributeOrigin.Item, id) ?? 0;
+        var total = Attr(30);
+        return total != 0 ? total : Attr(27) + Attr(28) + Attr(29);
+    }
 
     /// <summary>GameAttributes.IsOpenAffix: Open_Prefix_Slot (389) / Open_Suffix_Slot (390).</summary>
     private static bool HasOpenSlotAttribute(SerializedAffix affix)

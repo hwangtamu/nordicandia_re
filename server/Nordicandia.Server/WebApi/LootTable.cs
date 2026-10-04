@@ -221,6 +221,16 @@ public static class LootTable
             // Accessories and armour carry a small all-resistance (Resistance_All = 1002).
             itemAttributes[1002] = Value(Math.Round(defense * 0.0006, 4));
         }
+        // Equipment durability (Durability_Implicit_Base = 27). Durability_Total (30) is
+        // Durability_Implicit_Base + Durability_Base (28) + Durability (29), default 0; the
+        // client's disassemble chance is min(1.0, Durability_Total). Equipment is undamaged here,
+        // so it disassembles; 0 gates non-durable items out. No RNG, so the loot stream is unchanged.
+        if ((int)drop.Slot is >= 0 and <= 13)
+        {
+            var durability = definition?.Find("Durability_Implicit_Base")?.For(drop.Rarity)?.Min ?? 100.0;
+            itemAttributes[27] = Value(Math.Round(durability, 2));
+            itemAttributes[30] = Value(Math.Round(durability, 2));
+        }
         // All of the definition's implicit affixes (unique items carry their special affixes here),
         // except those already mapped explicitly above, so unique/set bonuses are preserved.
         if (definition is { } def)
