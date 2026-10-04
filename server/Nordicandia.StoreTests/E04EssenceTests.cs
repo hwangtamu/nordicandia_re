@@ -24,5 +24,17 @@ static class E04EssenceTests
             "E04: a weapon damage prefix maps to its essence");
         Check(EssenceCatalog.ForAffixDefinition(-1) is null,
             "E04: an unknown affix has no essence");
+
+        // E04: GetCraftingCost (Titansteel) rarity factors and formula.
+        Check(CraftingCostCatalog.RarityFactor(10) == 92.2 && CraftingCostCatalog.RarityFactor(11) == 300.0
+            && CraftingCostCatalog.RarityFactor(4) == 1.55,
+            "E04: GetCraftingCost rarity factors match the recovered switch");
+        var expected = (int)(1 * CraftingCostCatalog.BaseMultiplier * 92.2
+            * (1 + CraftingCostCatalog.ProbabilityScale / Math.Max(CraftingCostCatalog.ProbabilityFloor, 0.05)));
+        Check(CraftingCostCatalog.Evaluate(1, 10, 0.05, uniqueOrSet: false) == expected,
+            $"E04: GetCraftingCost formula (rarity 10, prob 0.05 -> {expected})");
+        // rarity 4 (1.55) x base 1.24 x 25 (prob 0) x 1.55 (unique/set) = 74.4775 -> 74.
+        Check(CraftingCostCatalog.Evaluate(1, 4, 0, uniqueOrSet: true) == 74,
+            "E04: GetCraftingCost handles probability 0 and unique/set targets");
     }
 }

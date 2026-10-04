@@ -37,12 +37,26 @@
 `EssenceCatalog` 加载目录；`GameStore.DisassembleItems` 改为**按词缀产出精华**（不再产 Iron）。
 `E04EssenceTests` 4 条 + `AcceptanceRegression` 更新。
 
+## 制作费用与熔炼产出（本轮恢复）
+
+* **`GameAttributes.IsOpenAffix`**：即 `Open_Prefix_Slot`(389) / `Open_Suffix_Slot`(390)
+  （`dump.cs` 字段 offset 0x330/0x338）；已接入分解过滤。
+* **`CraftingUtils.GetCraftingCost` @ `0x02C85244`**：
+  `cost = 前缀序号 × 1.24 × 稀有度系数`，若 `概率==0` 则 `×25`，否则
+  `×(1 + 0.043 / max(0.01, 概率))`，独特/套装目标再 `×1.55`，最后截断为 int。
+  稀有度系数（switch `0x02C852CC-0x02C853A4`）：
+  `2→0, 3→1, 4→1.55, 5→3.1, 6→6.2, 7→12.4, 8→24.8, 9→45.9, 10→92.2, 11→300`。
+  常量 `1.24 @0x1386DE0`、`0.01 @0x1386FE0`、`0.043 @0x1388020`、`1.55 @0x1387438`。
+  导出为 `GameData/crafting_cost.json`；`CraftingCostCatalog` 暴露公式。
+* **`GetNumSteelSmeltingOutput` @ `0x02C8364C`**：形状为
+  `Max(1, Min(floor(Σ EssenceToSteel(rarity)), floor(N / 300)))`（`Math.Min`/`Math.Max`
+  @0x2c83a88/0x2c83a9c，常量 `300.0 @0x1387140`）。
+
 ## 未完成（E04）
 
-* **`GetCraftingCost`**：结构为 `概率 × 25 × …`，依赖 `GetSpawnProbabilityForAffixOnItem`
-  与多层属性插值，未逐项确认。
-* **`GetNumTitansteelSmeltingOutput`**、`GetNumSteelSmeltingOutput` 的精确材料计数与取整。
-* 可分解/可合并/可熔炼的静态名称 `HashSet`、`IsOpenAffix` 的具体属性集未逐条导出。
+* **`GetNumTitansteelSmeltingOutput` @ `0x02C84350`** 的精确计数。
+* `GetNumSteelSmeltingOutput` 的 `N`（材料计数）具体来源与取整边界待复核。
+* 可分解/可合并/可熔炼的静态名称 `HashSet` 未逐条导出。
 
 ## 未完成（E05）
 

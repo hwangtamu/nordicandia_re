@@ -36,10 +36,20 @@ SPANS = {
     "linked_attribute_read": (0x02C86DE0, 0x02C86E40),
     "create_essences": (0x02506C7C, 0x02506EA0),
     "essence_lootbox_use": (0x02CD44C4, 0x02CD4A00),
+    # E04 crafting cost (Titansteel): CraftingUtils.GetCraftingCost.
+    "get_crafting_cost": (0x02C85244, 0x02C85690),
 }
 
-# Constant-pool doubles referenced by the disassemble/essence code.
-CONSTANT_ADDRESSES = [0x13872D0, 0x1387B90]
+# GetCraftingCost per-rarity factors read from the switch (0x02C852CC-0x02C853A4).
+# Rarity 3 skips the multiply (factor 1); 2 selects 0.0.
+CRAFTING_COST_RARITY = {
+    2: 0.0, 3: 1.0, 4: 1.55, 5: 3.1, 6: 6.2,
+    7: 12.4, 8: 24.8, 9: 45.9, 10: 92.2, 11: 300.0,
+}
+
+# Constant-pool doubles referenced by the disassemble/essence/cost code.
+CONSTANT_ADDRESSES = [0x1386DE0, 0x1386FE0, 0x1388020, 0x1387140, 0x1387E88,
+                      0x1387BA8, 0x1388388, 0x1387438, 0x1387168, 0x13872F0, 0x1387010]
 
 
 def main() -> None:
@@ -110,10 +120,18 @@ def main() -> None:
         "address": "0x02C82770",
         "predicate": "affix != null && affix.IsPrefixOrSuffix && affix.Rarity >= 2 && "
                      "affix.AffixDefinition != null && attributes include an open affix (IsOpenAffix)",
+        "isOpenAffix": "GameAttributes.IsOpenAffix == Open_Prefix_Slot (389) / Open_Suffix_Slot (390)",
         "disassembleChance": "deterministic (no success chance)",
         "linkedAttribute": "GameAttributeMap.Linked (offset 0x2C8) carries the affix's granted item",
         "lootbox": "EssenceLootboxSmall.InternalOnRequestUse is the only random step "
                    "(Max_Num_Essence_Added_Affixes_On_Item 198)",
+        "craftingCost": {
+            "method": "Game.Items.CraftingUtils.GetCraftingCost",
+            "address": "0x02C85244",
+            "formula": "affixIndex * 1.24 * rarityFactor; if prob==0 *25 else "
+                       "*(1 + 0.043 / max(0.01, prob)); unique/set target *1.55; truncated to int",
+            "rarityFactors": CRAFTING_COST_RARITY,
+        },
         "constants": constants,
         "evidence": evidence,
         "essenceAffixCatalog": essences,
@@ -126,9 +144,20 @@ def main() -> None:
     embedded = native.ROOT / "server/Nordicandia.Server/GameData/essence_affix_catalog.json"
     embedded.write_text(json.dumps(catalog, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
 
+    # Server-embedded crafting cost (GetCraftingCost rarity factors + formula constants).
+    cost = native.ROOT / "server/Nordicandia.Server/GameData/crafting_cost.json"
+    cost.write_text(json.dumps({
+        "rarityFactors": CRAFTING_COST_RARITY,
+        "baseMultiplier": constants[hex(0x1386DE0)],
+        "probabilityFloor": constants[hex(0x1386FE0)],
+        "probabilityScale": constants[hex(0x1388020)],
+        "uniqueSetFactor": constants[hex(0x1387438)],
+        "probabilityZeroFactor": 25.0,
+    }, indent=1, sort_keys=True) + "\n")
+
     print(f"wrote {out.relative_to(native.ROOT)}: {len(essences)} essences, "
           f"{len(unresolved)} unresolved affix guids")
-    print(f"wrote {embedded.relative_to(native.ROOT)}")
+    print(f"wrote {embedded.relative_to(native.ROOT)}, {cost.relative_to(native.ROOT)}")
 
 
 if __name__ == "__main__":

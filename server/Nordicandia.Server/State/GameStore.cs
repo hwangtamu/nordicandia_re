@@ -881,7 +881,10 @@ public sealed class GameStore : IDisposable
         foreach (var source in sources)
             foreach (var affix in source.Affixes ?? new List<SerializedAffix>())
             {
+                // ClientVerified: prefix/suffix, rarity >= 2, and no open-slot attribute
+                // (GameAttributes.IsOpenAffix checks Open_Prefix_Slot 389 / Open_Suffix_Slot 390).
                 if (affix is null || (int)affix.Rarity < 2) continue;
+                if (HasOpenSlotAttribute(affix)) continue;
                 if (EssenceCatalog.ForAffixDefinition(affix.DefinitionIntegerId) is not { } essence) continue;
                 essences.Add(EssenceCatalog.CreateItem(essence, 1));
             }
@@ -1606,6 +1609,18 @@ public sealed class GameStore : IDisposable
         c.Data = Pack(data);
         return (true, success, CloneItem(target), sourceSnapshot, ironCost);
     });
+
+    /// <summary>GameAttributes.IsOpenAffix: Open_Prefix_Slot (389) / Open_Suffix_Slot (390).</summary>
+    private static bool HasOpenSlotAttribute(SerializedAffix affix)
+    {
+        if (affix.Attributes?.Values == null) return false;
+        foreach (var map in affix.Attributes.Values.Values)
+        {
+            if (map == null) continue;
+            if (map.ContainsKey(389) || map.ContainsKey(390)) return true;
+        }
+        return false;
+    }
 
     /// <summary>Server attribute id marking a blessed affix (the client stores the bless flag on
     /// the Affix; this reuses the affix's attribute map under a web-only id).</summary>
