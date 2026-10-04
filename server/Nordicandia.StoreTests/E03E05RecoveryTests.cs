@@ -63,6 +63,11 @@ static class E03E05RecoveryTests
             ["GreatElixirOfKnowledge"] = (1500000,150), ["GreatElixirOfQuantity"] = (1500000,150),
             ["GreatElixirOfImmortality"] = (800000,80), ["GreatElixirOfDreams"] = (2500000,250),
             ["GreatElixirOfInsomnia"] = (1500000,150),
+            // Pet growth / revive potions from the same recovered offline catalog.
+            ["GrowthElixir"] = (10000,10), ["PotentGrowthElixir"] = (50000,50),
+            ["RapidGrowthElixir"] = (100000,100), ["RareGrowthElixir"] = (1000000,1000),
+            ["MythicalGrowthElixir"] = (10000000,10000), ["LegendaryGrowthElixir"] = (100000000,100000),
+            ["FamiliarReviveElixir"] = (10000,10),
         };
         foreach (var (name, price) in expected)
         {

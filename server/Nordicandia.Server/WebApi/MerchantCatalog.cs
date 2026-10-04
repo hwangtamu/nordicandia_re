@@ -32,6 +32,15 @@ public static class MerchantCatalog
         new(Guid.Parse("e43b59b0-60e9-4030-ab60-5a9c449d9f10"), "GreatElixirOfImmortality", 610, Price("GreatElixirOfImmortality", "SL"), Price("GreatElixirOfImmortality", "OP")),
         new(Guid.Parse("171ff678-ee17-4bbd-abd1-1b9ddf59e72f"), "GreatElixirOfDreams", 609, Price("GreatElixirOfDreams", "SL"), Price("GreatElixirOfDreams", "OP")),
         new(Guid.Parse("e10d6f84-8284-44d6-904a-ae5a8452a858"), "GreatElixirOfInsomnia", 614, Price("GreatElixirOfInsomnia", "SL"), Price("GreatElixirOfInsomnia", "OP")),
+        // Pet-growth / revive potions (Items.json 628..634), priced from the same offline
+        // merchant catalog. Selling them is faithful; their pet effect is P03/P04.
+        new(Guid.Parse("0f1594a3-35b4-4e71-b3dd-406ec8be4458"), "GrowthElixir", 628, Price("GrowthElixir", "SL"), Price("GrowthElixir", "OP")),
+        new(Guid.Parse("777b858a-6ed0-408d-9c3c-29434156d21d"), "PotentGrowthElixir", 629, Price("PotentGrowthElixir", "SL"), Price("PotentGrowthElixir", "OP")),
+        new(Guid.Parse("ea2b5e81-e19c-4305-bc35-9aea7ad65ade"), "RapidGrowthElixir", 630, Price("RapidGrowthElixir", "SL"), Price("RapidGrowthElixir", "OP")),
+        new(Guid.Parse("dc922e58-2b67-476a-87e7-b100ad25b7dc"), "RareGrowthElixir", 631, Price("RareGrowthElixir", "SL"), Price("RareGrowthElixir", "OP")),
+        new(Guid.Parse("e3d1bef2-f47c-4c0d-b7db-544100ce5b5b"), "MythicalGrowthElixir", 632, Price("MythicalGrowthElixir", "SL"), Price("MythicalGrowthElixir", "OP")),
+        new(Guid.Parse("5ff95c9f-57ba-4099-9baf-b6008cf201eb"), "LegendaryGrowthElixir", 633, Price("LegendaryGrowthElixir", "SL"), Price("LegendaryGrowthElixir", "OP")),
+        new(Guid.Parse("500b4ff0-3131-477c-9f1f-eb18bdeadf9c"), "FamiliarReviveElixir", 634, Price("FamiliarReviveElixir", "SL"), Price("FamiliarReviveElixir", "OP")),
         // Provisional web offer: Niflheim is absent from the recovered offline merchant catalog.
         // Consumable Niflheim portal (Items.json IntegerId 159); using it starts a Niflheim run.
         new(Guid.Parse("15900000-0000-0000-0000-000000000159"), "NiflheimPortal", 159, 50_000, 30),
