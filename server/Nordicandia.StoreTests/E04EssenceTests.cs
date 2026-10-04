@@ -25,6 +25,12 @@ static class E04EssenceTests
         Check(EssenceCatalog.ForAffixDefinition(-1) is null,
             "E04: an unknown affix has no essence");
 
+        // ExtractAffixEssence: a disassembled essence carries the affix at the target rarity.
+        var essenceItem = EssenceCatalog.CreateItem(EssenceCatalog.ForAffixDefinition(30)!.Value, 7, 30, 1);
+        Check(essenceItem.Affixes.Count == 1 && essenceItem.Affixes[0].DefinitionIntegerId == 30
+            && (int)essenceItem.Affixes[0].Rarity == 7 && (int)essenceItem.BaseRarity == 7,
+            "E04: a disassembled essence carries its affix at the target rarity");
+
         // E04: GetCraftingCost (Titansteel) rarity factors and formula.
         Check(CraftingCostCatalog.RarityFactor(10) == 92.2 && CraftingCostCatalog.RarityFactor(11) == 300.0
             && CraftingCostCatalog.RarityFactor(4) == 1.55,

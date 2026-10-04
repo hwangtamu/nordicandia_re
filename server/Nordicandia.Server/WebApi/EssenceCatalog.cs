@@ -27,16 +27,22 @@ public static class EssenceCatalog
         return ByAffix.Value.TryGetValue(affix.Name, out var essence) ? essence : null;
     }
 
-    /// <summary>A guaranteed essence item (inventory, no implicit rolls).</summary>
-    public static SerializedItem CreateItem(Essence essence, int level)
+    /// <summary>An essence item (inventory, no implicit rolls). ClientVerified
+    /// (TabBlacksmithDisassemble.ExtractAffixEssence @0x029ABFE8): the essence carries a new affix
+    /// built from the source affix definition at <paramref name="targetRarity"/>.</summary>
+    public static SerializedItem CreateItem(Essence essence, int targetRarity, int affixDefinitionId, int level)
     {
+        var rarity = (Rarity)Math.Clamp(targetRarity, 0, 11);
+        var affixes = new List<SerializedAffix>();
+        if (affixDefinitionId != 0)
+            affixes.Add(new SerializedAffix { DefinitionIntegerId = affixDefinitionId, Rarity = rarity });
         return new SerializedItem
         {
             Id = Guid.NewGuid(),
             Name = essence.Name,
             Slot = ItemSlotTypes.Inventory,
             DefinitionIntegerId = essence.IntegerId,
-            BaseRarity = Rarity.C,
+            BaseRarity = rarity,
             Location = new SerializedItemInventoryLocation { Page = 1, Row = 0, Column = 0 },
             Attributes = new SerializedAttributes
             {
@@ -49,9 +55,13 @@ public static class EssenceCatalog
                 },
                 MultiplicativeValues = new(),
             },
-            Affixes = new List<SerializedAffix>(),
+            Affixes = affixes,
         };
     }
+
+    /// <summary>A bare essence item (no affix), e.g. from a lootbox.</summary>
+    public static SerializedItem CreateItem(Essence essence, int level)
+        => CreateItem(essence, (int)Rarity.C, 0, level);
 
     private static Dictionary<string, Essence> Load()
     {

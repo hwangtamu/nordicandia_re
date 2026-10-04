@@ -24,7 +24,13 @@
 分解必须继续追踪 `TabBlacksmithDisassemble.PerformDisassembleOffline`：
 它包含 `Calculator.CalculateChance`、`ExtractAffixEssence @0x029ABFE8` 与
 独特/套装输出分支。`GetDisassemblableAffixes` 无随机只说明筛选器确定性，
-**不能推出分解保证成功**。当前固定C且空词缀的精华输出不符合该创建流程。
+**不能推出分解保证成功**。
+
+`ExtractAffixEssence` 的**精华重建已接入**（本轮）：`EssenceCatalog.CreateItem` 会按
+`new Affix(affixDefinition, targetRarity, source=3)` + `Item.AddAffix` 给精华附着
+来源词缀（原代码是固定 C、空 Affixes）；`DisassembleItems` 传入来源词缀定义与稀有度。
+**仍未完成**：`PerformDisassembleOffline` 的 `CalculateChance` 概率、`ReduceItemLevelOfEligibleAffixes`
+降级开关与独特/套装输出分支。
 
 `RelicOfBlessing.ShouldBless/Affix.Bless` 仍未实现实际数值效果，
 网页目前只写标记99010。合成来源资格、reroll/耐久/失败处理仍待校准。

@@ -889,7 +889,8 @@ public sealed class GameStore : IDisposable
                 if (affix is null || (int)affix.Rarity < 2) continue;
                 if (HasOpenSlotAttribute(affix)) continue;
                 if (EssenceCatalog.ForAffixDefinition(affix.DefinitionIntegerId) is not { } essence) continue;
-                essences.Add(EssenceCatalog.CreateItem(essence, 1));
+                // ExtractAffixEssence: the essence carries an affix at the source affix's rarity.
+                essences.Add(EssenceCatalog.CreateItem(essence, (int)affix.Rarity, affix.DefinitionIntegerId, 1));
             }
         data.Items.Items.RemoveAll(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem);
         data.Items.Items.AddRange(essences);
