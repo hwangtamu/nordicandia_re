@@ -101,7 +101,7 @@ static long sc(long n, long a, long b, long c, long d, long e, long f)
 /* Baked-in private server address (plain HTTP/1.1 JSON feed, port 8081). */
 #define LB_IP_WORD 0x88328C03u /* 3.140.50.136 network byte order */
 #define LB_PORT 8081
-#define LB_MODE 1 /* 0 = normal, 1 = season */
+#define LB_MODE 0 /* 0 = normal, 1 = season */
 #define LB_BODY_CAP 32768
 
 /* FakeLeaderboardRow (value type) field offsets inside the unboxed struct. */
