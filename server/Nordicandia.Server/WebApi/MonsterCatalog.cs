@@ -23,6 +23,13 @@ public static class MonsterCatalog
     public static Monster? ByName(string name)
         => name is not null && All.Value.TryGetValue(name, out var m) ? m : null;
 
+    public static Monster? ByIntegerId(int integerId)
+    {
+        foreach (var monster in All.Value.Values)
+            if (monster.IntegerId == integerId) return monster;
+        return null;
+    }
+
     /// <summary>Game.DamageType ids (Physical=0, Fire=1, Cold=2, Lightning=3, Poison=4; Pure=5).</summary>
     public static string DamageTypeName(int? id) => id switch
     {

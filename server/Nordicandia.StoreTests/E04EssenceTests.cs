@@ -33,12 +33,25 @@ static class E04EssenceTests
         Check(itemMap.TryGetValue(30, out var durability) && durability.ValueD >= 1
             && Math.Min(1.0, durability.ValueD) == 1.0,
             $"E04: equipment carries durability ({durability.ValueD})");
+        Check(itemMap.TryGetValue(20, out var requiredLevel) && requiredLevel.ValueD == 10,
+            "E04: generated equipment persists the client RequiredLevel attribute alongside the web gate");
 
-        // ExtractAffixEssence: a disassembled essence carries the affix at the target rarity.
-        var essenceItem = EssenceCatalog.CreateItem(EssenceCatalog.ForAffixDefinition(30)!.Value, 7, 30, 1);
-        Check(essenceItem.Affixes.Count == 1 && essenceItem.Affixes[0].DefinitionIntegerId == 30
-            && (int)essenceItem.Affixes[0].Rarity == 7 && (int)essenceItem.BaseRarity == 7,
-            "E04: a disassembled essence carries its affix at the target rarity");
+        // ExtractAffixEssence constructs a new Affix from the source definition at the source rarity.
+        var essence = EssenceCatalog.ForAffixDefinition(30)!.Value;
+        var essenceItem = EssenceCatalog.CreateItem(essence, 7, 30, 37, seed: 12345);
+        var affixDefinition = AffixCatalog.Entries.Single(a => a.IntegerId == 30);
+        var rolledAffix = essenceItem.Affixes.Single();
+        var rolledValues = rolledAffix.Attributes.Values[AttributeOrigin.Item];
+        var expectedAttributeIds = affixDefinition.Attributes.Select(a => a.AttributeId).ToHashSet();
+        Check(rolledAffix.DefinitionIntegerId == 30 && (int)rolledAffix.Rarity == 7
+            && rolledAffix.AffixSource == AffixSources.EssenceAdd
+            && rolledValues.Keys.Where(id => id != LootTable.AttrAffixType).ToHashSet().SetEquals(expectedAttributeIds)
+            && (int)essenceItem.Attributes.Values[AttributeOrigin.Item][LootTable.AttrRequiredLevel].ValueD == 37,
+            "E04: disassembled essence carries a newly rolled source affix, source rarity, and required level");
+        var sameSeed = EssenceCatalog.CreateItem(essence, 7, 30, 37, seed: 12345);
+        Check(rolledValues.Where(kv => kv.Key != LootTable.AttrAffixType)
+                .All(kv => sameSeed.Affixes[0].Attributes.Values[AttributeOrigin.Item][kv.Key].ValueD == kv.Value.ValueD),
+            "E04: essence affix value rolls are deterministic for the same source seed");
 
         // E04: GetCraftingCost (Titansteel) rarity factors and formula.
         Check(CraftingCostCatalog.RarityFactor(10) == 92.2 && CraftingCostCatalog.RarityFactor(11) == 300.0

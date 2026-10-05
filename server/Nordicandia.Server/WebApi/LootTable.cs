@@ -174,6 +174,7 @@ public static class LootTable
             [AttrDefense] = Value(defense),
             [AttrRecovery] = Value(recovery),
             [AttrEquipSlot] = Value(drop.Slot),
+            [20] = Value(Math.Max(1, drop.Level)), // client RequiredLevel
             [AttrRequiredLevel] = Value(Math.Max(1, drop.Level)),
         };
         // Items carry the client's attribute ids so the recovered synthesis formulas drive the
@@ -301,7 +302,11 @@ public static class LootTable
             {
                 Values = new Dictionary<AttributeOrigin, Dictionary<int, GameAttributeValue>>
                 {
-                    [AttributeOrigin.Item] = new() { [AttrRequiredLevel] = Value(Math.Max(1, drop.Level)) },
+                    [AttributeOrigin.Item] = new()
+                    {
+                        [20] = Value(Math.Max(1, drop.Level)), // client RequiredLevel
+                        [AttrRequiredLevel] = Value(Math.Max(1, drop.Level)),
+                    },
                 },
                 MultiplicativeValues = new(),
             },
@@ -352,7 +357,14 @@ public static class LootTable
         return map.TryGetValue(attributeId, out var value) ? value.ValueD : 0;
     }
 
-    public static int EquipSlotOf(SerializedItem item) => (int)AttributeOf(item, AttrEquipSlot);
+    public static int EquipSlotOf(SerializedItem item)
+    {
+        if (HasAttribute(item, AttrEquipSlot)) return (int)AttributeOf(item, AttrEquipSlot);
+        // Legacy equipped items can predate the web-only slot attribute. For inventory
+        // items, derive the slot only from a known equipment definition. Materials and
+        // consumables must never silently become Head gear.
+        return IsEquipped(item) ? (int)item.Slot : ItemCatalog.EquipSlotForDefinition(item.DefinitionIntegerId);
+    }
 
     public static bool IsEquipped(SerializedItem item) => (int)item.Slot is >= 0 and <= 13;
 

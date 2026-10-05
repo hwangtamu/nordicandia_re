@@ -48,11 +48,11 @@
 | ID | 任务 | 交付与验收 | 依赖 |
 |---|---|---|---|
 | C01 | 校准完整伤害管线 | ✅ 2026-10-03：13 步管线顺序定死（含每步证据等级）；补 `Amplify_Damage_Taken_Percent`（attribute 6，推断位置）；确认无取整（0x02BAF34C 无 frint）；吸血为 Buff 子系统归 C02；新增放大/零伤害/无取整 3 样本，39/39 pass。见 `docs/web/C01_DAMAGE_PIPELINE.md` | B04–B05 |
-| C02 | 还原 Buff 生命周期 | ✅ 2026-10-03：BuffManager 落地（唯一键 DefinitionId\|Source、Stack/IsStrongerThan 反汇编规则、时长只延长不缩短、驱散、死亡/换图移除、临界 tick 钳制）；毒/玩家增益/诅咒全迁移，毒弃用"最高 DPS+刷新"近似；新增 9 样本，48/48 pass，全回归 507 PASS。见 `docs/web/C02_BUFF_LIFECYCLE.md` | B06、C01 |
-| C03 | 还原弹体与空间命中 | ✅ 2026-10-03：真实弹体飞行（0.25y 步进、圆形碰撞、已命中集合）；分叉=2 支 0.5x 子弹 ±(45°–90°) 散布、子弹不递归；连锁=同一弹体转向 10 码内最近敌人、全伤害、一跳后清除几率；删除 SecondaryTargets 占位（D08 关闭）；projectile 事件供渲染。速度/碰撞半径/射程暂定。新增 3 样本，51/51 pass，全回归 513 PASS。见 `docs/web/C03_PROJECTILES.md` | B06、C01 |
-| C04 | 逐技能/精通建立行为规格 | ✅ 2026-10-03：93 技能行为规格生成器（`tools/web-content/export_skill_specs.py`→`skill_specs.json`）：施法条件/目标/资源/冷却/等级曲线/效果时间线/Buff/弹体/召唤/精通改写；反静默映射清单 29 技能（原型未实现属性逐条列出）；可疑映射 Teleport→rally、ImpalingTrap→strike 记入 C06；SkillSpecTests 守卫（93 规格/无 unknown/29 gaps）。见 `docs/web/C04_SKILL_SPECS.md` | B02、B04 |
-| C05 | 首批 4 个代表技能贯通 | ✅ 2026-10-03：Shatter（Warrior 直接攻击）/ PowerShot（Hunter 弹体）/ PoisonCloud（Mage 持续范围）/ SummonSkeleton（Necromancer 召唤）四技能贯通：原版规格→服务端结算→前端事件→成长（精通→EffectivePowers→伤害）→重登（精通/装配保留，冷却/毒云/骷髅重置）。PoisonCloud 实现为 6s 毒云实体（1s tick 0.9x 毒伤 + 20% 减速，关闭 C04 gaps×2）；SummonSkeleton 生成 3 只骷髅实体（Minion_Inheritance 继承，寻敌/转火）。附带修复 SetLoadout 后 skillCooldowns 越界真 bug。C05SkillTests 20 条，全回归 537 PASS，fidelity 51/51。见 `docs/web/C05_SKILLS.md` | B06、C01–C04 |
-| C06 | 补全四职业全部可用技能 | ✅ 2026-10-03 完成：第一批（5 技能）：ImpalingTrap（陷阱实体）/ Teleport（rally→位移修正）/ Whirlwind（5s 引导）/ MarkOfTheChosen（易伤 debuff）/ Thorns（200% 反射+减伤）；边界样本 18 条；修复 BuffManager Source 键读取、浮点到期两系统 bug。全回归 555 PASS，fidelity 51/51。剩余 22 gaps 技能待后续批次。第二批（2026-10-03）：Blizzard/ElementalSeal（持久 AoE 云泛化）/ FrozenArrow（爆炸弹体）/ Tornado（移动涡流）/ Slam（直线修正）；20 条测试，全回归 575 PASS。剩余 17 gaps。第三批（2026-10-03）：17 技能全部实现，51 技能 gaps 清零。全回归 614 PASS。见 `docs/web/C06_SKILLS.md` | C05 |
+| C02 | 还原 Buff 生命周期 | ⏳ 本轮：补入 `DebuffPoisoned.IsStrongerThan` 的 DPS/TimeoutDuration 优先比较；DoT 按物理/元素类型走相应减伤；SetWorld 清除临时 Buff、云、仆从、陷阱、弹体与持续施法。待办：原版来源/去重链证据、跨来源毒样本、吸血数值链与燃烧幅度校准。见 `docs/web/C02_BUFF_LIFECYCLE.md` | B06、C01 |
+| C03 | 还原弹体与空间命中 | ⏳ 本轮：弹体改为持续实体，在 50ms 固定步长内做移动目标扫掠碰撞并受 MapLayout 墙体阻挡；本轮补权威弹体快照和前端标记。分叉/连锁/穿透规则保留。待办：速度/半径/射程属性槽位、散布角约定、多弹体模式、Tornado 寿命及原版场景对照。见 `docs/web/C03_PROJECTILES.md` | B06、C01 |
+| C04 | 逐技能/精通建立行为规格 | ⏳ 本轮：生成器按技能名对齐 C05/C06 属性；被动索引覆盖 42 个池项。接入 Meditation cooldown modifier（读存档 Power_Rank）与 skill-start reset 掷骰；rank-1 chance 为 -0.1，其他属性来源合并/Remove 仍待接。**多数被动运行时行为未复刻；44 个技能保留 behaviorGaps，完整等级曲线未恢复。**DaggerSpecialization 暂无类源。见 `docs/web/C04_SKILL_SPECS.md`、`docs/web/PASSIVE_SKILL_RECOVERY.md` | B02、B04 |
+| C05 | 首批 4 个代表技能贯通 | ⏳ 服务端已有 Shatter/PowerShot/PoisonCloud/SummonSkeleton 分支与回归；事件批次、弹体/云/仆从等瞬时实体现接到 WebApi 和基础前端标记。**技能专属 VFX 与四技能原版浏览器对照仍待完成。**见 `docs/web/C05_SKILLS.md` | B06、C01–C04 |
+| C06 | 补全四职业全部可用技能 | ⏳ 已有逐步按名技能分支，覆盖陷阱/位移/引导/地面效果/爆炸弹体/召唤等；但有分支不代表生产行为完整。C04 当前仍保留 44 个技能的 behaviorGaps，狼/恶魔/死亡召唤、UnholyFocus 等存在未实现行为，需按 48 个唯一主动和 42 个被动逐项验收。见 `docs/web/C06_SKILLS.md` | C05 |
 | C07 | 补全全部精通与组合效应 | 前置条件、互斥、PerLevel/SpecificLevel、加减/覆盖顺序、重置费用；选取会互相改写的技能/精通组合做交互验证 | C04、C06 | ✅
 | C08 | 校准角色成长与操作规则 | 职业/种族基础值、属性来源、加点、装备需求、技能槽解锁、自动施法、锁定目标、死亡/复活及原版存在的惩罚；属性面板与结算一致 | C01、C06–C07 |
 
@@ -61,20 +61,20 @@
 | ID | 任务 | 交付与验收 | 依赖 |
 |---|---|---|---|
 | E01 | 完整物品/词缀目录 | ✅ 2026-10-03：从 `ItemAffixes.json` 导出全部 97 条随机 Prefix/Suffix 词缀（Item 域 56 / Monster 27 / Area 14），多属性、Guid/Group/TagData/Domain 齐备；修正 `GameAttributeI` 漏采使属性 id 表 927→1181，词缀引用 0 未解析；`AffixCatalog`/`LootTable` 改用全量目录并按 Domain 过滤，多属性逐条写入。`E01AffixCatalogTests` 10 条，全回归 643 PASS，回放 58/58。见 `docs/web/E01_AFFIX_CATALOG.md` | B01–B02 |
-| E02 | 完整掉落生成管线 | ⏳ 部分：已接入数量余数/MF 饱和/稀有度类型/词缀数量（前轮）+ **item-type 词缀资格、TagData 加权抽取、ValueMultiplier**（本轮）；`Droprates` 五段（含 `AffixRarityRatio`、`LootTables`）已导出。**待办**：词缀稀有度池 MF 公式（Interim，当前用物品稀有度近似）、物品类型抽取权重、怪物/容器掉落资格、统计分布对照。`E02DropPipelineTests` 13 条，全回归 656 PASS。见 `docs/web/E02_DROP_PIPELINE.md` | C01、E01、B05 |
+| E02 | 完整掉落生成管线 | ⏳ 部分：数量余数/MF 饱和/稀有度类型/词缀数量、词缀稀有度池、物品类型权重+职业乘子、Prefix/Suffix 资格、TagData 权重/ValueMultiplier 与 Boss 保证掉落已接。**待办**：多标签权重聚合仍为 Interim，Helheim 表与容器绑定、怪物资格及原版掉落分布对照。见 `docs/web/E02_DROP_PIPELINE.md` | C01、E01、B05 |
 | E03 | 独特/套装/隐式与开放词缀槽 | ⏳ 11套/51断点已接；同类型开放槽替换已接，移除虚构容量。**待办**：开放槽生成、独特Proc及完整合成行为。见 [反汇编复核](E03_E05_RECOVERY_2026-10-03.md) | E01、C02 |
-| E04 | 校准制作流程 | ⏳ 钢/钛钢真实配比与产量、按需扣料、余料持久化已接。**待办**：分解概率/精华属性重建/独特套装分支、费用公式运行时接入、Relic数值效果、合成耐久/失败流程。见 [反汇编复核](E03_E05_RECOVERY_2026-10-03.md) | E01–E03 |
+| E04 | 校准制作流程 | ⏳ 钢/钛钢配比、按需扣料与余料持久化、Durability_Total 分解概率已接；掉落装备写入客户端 RequiredLevel(20)。本轮分解只处理已知 Item Prefix/Suffix，按来源定义/稀有度重建精华 Affix 属性并保留 required level。**待办**：唯一/套装分支与失败样本校准、精华等级缩放、GetCraftingCost 调用链、Relic ShouldBless/Bless 数值效果及制作耐久流程。见 [反汇编复核](E03_E05_RECOVERY_2026-10-03.md) | E01–E03 |
 | E05 | 校准 NPC、商店和资源经济 | ⏳ 24条离线报价已提取，12 种商品（含 7 种宠物药水）已按目录定价。**待办**：生产动态目录/刷新过滤、传送门报价、交易估值、宠物行为、正常角色经济验证。见 [反汇编复核](E03_E05_RECOVERY_2026-10-03.md) | E02–E04、C08 |
 
 ## P1–P2：怪物、地图与进度
 
 | ID | 任务 | 交付与验收 | 依赖 |
 |---|---|---|---|
-| W01 | 全怪物属性与缩放 | ⏳ 部分：属性曲线/稀有度系数已接入且手工原型倍率已删（D04/D05）；136 条怪物目录已导出战斗字段（damageType/caster/ranged/size/tags/affixes）并嵌入 `MonsterCatalog`。**待办**：运行时用真实怪物（等级/阶层/怪物池）替代 6 个通用 archetype；抗性/经验/掉落关联。`W01MonsterCatalogTests` 5 条。见 `docs/web/W_P_BATCH_STATUS.md` | B02、C01、E02 |
+| W01 | 全怪物属性与缩放 | ⏳ 部分：属性曲线/稀有度系数已接入且手工原型倍率已删（D04/D05）；136 条怪物目录已导出战斗字段（damageType/caster/ranged/size/tags/affixes）并嵌入 `MonsterCatalog`；世界 `MonsterTypeSpawnWeights` 已驱动生成抽样。**待办**：类型内物种权重仍均分 Interim；稀有度/经验/抗性/掉落关联。`W01MonsterCatalogTests` 10 条。见 `docs/web/W_P_BATCH_STATUS.md` | B02、C01、E02 |
 | W02 | 完整 AI 条件与状态迁移 | ⏳ 部分：Brains.json 技能/移动动作落状态；**墙体碰撞+贴墙滑动 + A\* 寻路**（`MapLayout.FindPath`，每 0.4s 刷新）已接入怪物与玩家移动。**待办**：仇恨/逃离时机数值、目标丢失、宠物/图腾动作 | W01、B05 |
-| W03 | 全怪物技能与 Boss 阶段 | ⏳ 部分：`MonsterPowerCatalog` 35 技能（brain 引用 0 缺失，召唤仆从全部真实）。**待办**：各 Power 精确定量参数、Boss 阶段与清场、多敌并发 | C02–C03、W01–W02 |
+| W03 | 全怪物技能与 Boss 阶段 | ⏳ 部分：`MonsterPowerCatalog` 35 技能（brain 引用 0 缺失，召唤仆从全部真实）；关底 Boss 按选中世界 `BossMonsterId` 解析 MonsterCatalog 名称/Brain/伤害类型；`ImAboveOrEqualToTier4` 按选中 WorldTier 判定。**待办**：Power 精确参数、Boss 抗性/阶段/清场、多敌并发 | C02–C03、W01–W02 |
 | W04 | 世界/地图生成 | ⏳ 部分：36 世界目录嵌入 `WorldCatalog`；**程序化地图生成器** `MapLayout`（房间+走廊、确定性）接入服务端刷怪锚点与客户端 kit 渲染；怪物池按世界类型生成。**待办**：碰撞/寻路、主题纹理切换、刷怪区体积/密度、真实路径约束。`W04MapLayoutTests` 7 条。见 `docs/web/W04_MAP_GENERATOR.md` | B02、W01 |
-| W05 | 城镇与完整进度 | ⏳ 部分：世界目录可按 id/tier 寻址。**待办**：城镇/地图解锁/checkpoint/WorldTier 选择、返回路径、跨重登恢复 | W04、C08 |
+| W05 | 城镇与完整进度 | ⏳ 部分：可读取/选择存档已解锁的 WorldTier 与 waypoint；Boss clear 保存清除时间/最高 checkpoint 并开放下一 waypoint；Town 静态场景和原版 SpawnZone 已导出渲染；已实现 Blacksmith/Disassembler/Merchant/SetItemMerchant/Offering/PortalMaster/WorldPortal/TownPortal 站点到现有界面的点击路由，Niflheim 返回 Town 已接。**待办**：动态 NPC/对话、宠物/Changer/Guild 等非占位功能、Tier 解锁规则、checkpoint 难度和原版场景对照 | W04、C08 |
 | W06 | Niflheim 剩余差异 | ⏳ 部分：pack 数量/逐个生成保留；W04 后 pack 用地图房间锚点，进入/离开 Niflheim 改用世界 tier 怪物池。**待办**：真实 DungeonMonsterSpawnArea 体积、世界修饰符、boss 包、完成/失败规则 | W01、W03–W05 |
 | W07 | 离线收益精确接入 | ⏳ 部分：`GetSecondHighestReachedWorldCheckpoint` 已定位（读 `World_Tier_Unlocked` id 9，同 tier 回退一个 checkpoint，仅在刚解锁 tier 时回退上一 tier）；`OfflineRate` 已改用属性 9。**待办**：逐 tier checkpoint 进度跟踪以应用 tier 回退；多进度样本对照 | W05、E02、C08 |
 

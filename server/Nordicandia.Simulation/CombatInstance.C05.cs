@@ -18,6 +18,7 @@ namespace Nordicandia.Simulation;
 /// </summary>
 public sealed class PoisonCloud
 {
+    public int Id;
     public double X, Z;
     public double Radius = 3.0;
     public double Remaining = 6.0;
@@ -34,6 +35,7 @@ public sealed class PoisonCloud
 /// <summary>Friendly player minion (skeleton). Attacks monsters in melee.</summary>
 public sealed class PlayerMinion
 {
+    public int Id;
     public string Name = "Skeleton";
     public double X, Z;
     public double Hp, MaxHp;
@@ -49,6 +51,8 @@ public partial class CombatInstance
 {
     private readonly List<PoisonCloud> clouds = new();
     private readonly List<PlayerMinion> minions = new();
+    private int nextCloudId;
+    private int nextMinionId;
 
     /// <summary>Active poison clouds (for tests/rendering).</summary>
     public IReadOnlyList<PoisonCloud> Clouds => clouds;
@@ -163,6 +167,7 @@ public partial class CombatInstance
     {
         var cloud = new PoisonCloud
         {
+            Id = ++nextCloudId,
             X = x,
             Z = z,
             Kind = kind,
@@ -199,6 +204,7 @@ public partial class CombatInstance
             var angle = rng.NextDouble() * Math.PI * 2;
             var minion = new PlayerMinion
             {
+                Id = ++nextMinionId,
                 X = Math.Clamp(PlayerX + Math.Cos(angle) * 2, -ArenaHalf, ArenaHalf),
                 Z = Math.Clamp(PlayerZ + Math.Sin(angle) * 2, -ArenaHalf, ArenaHalf),
                 Damage = Math.Max(1, weaponTotal * (1 + dmgBonus)),

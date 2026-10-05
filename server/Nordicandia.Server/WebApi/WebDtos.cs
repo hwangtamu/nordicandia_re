@@ -12,11 +12,12 @@ public sealed record WebItem(Guid Id, string Name, int Slot, int DefinitionInteg
 
 /// <summary>Inventory row with resolved equipment stats.</summary>
 public sealed record WebItemDetail(
-    Guid Id, string Name, int Slot, int Rarity, int EquipSlot, bool Equipped,
-    double Offense, double Defense, double Recovery, IReadOnlyList<string> Affixes);
+    Guid Id, string Name, int DefinitionIntegerId, int Slot, int Rarity, int EquipSlot, bool Equipped,
+    double Offense, double Defense, double Recovery, IReadOnlyList<string> Affixes,
+    int RequiredLevel, int Stack, bool CanEquip, string EquipReason);
 
 public sealed record WebInventory(
-    IReadOnlyList<WebItemDetail> Items, double Offense, double Defense, double Recovery);
+    IReadOnlyList<WebItemDetail> Items, double Offense, double Defense, double Recovery, int CharacterLevel);
 
 /// <summary>A drop rolled by combat, resolved into display/testable stats.</summary>
 public sealed record LootDropView(
@@ -67,7 +68,8 @@ public sealed record WebAttributes(
     double StrengthAllocated, double DexterityAllocated, double IntelligenceAllocated, double VitalityAllocated,
     double ConstitutionAllocated, double AgilityAllocated, double MindpowerAllocated,
     double Strength, double Dexterity, double Intelligence, double Vitality, double Constitution,
-    double Agility, double Mindpower);
+    double Agility, double Mindpower,
+    IReadOnlyDictionary<string, double> Details);
 
 /// <summary>Attribute allocation request (pending deltas, matching the client's preview).</summary>
 public sealed record WebAllocateAttributesRequest(
@@ -97,7 +99,23 @@ public sealed record BlessingsView(IReadOnlyList<BlessingState> Active, IReadOnl
 
 /// <summary>Niflheim portal state: whether a run is active, whether the bag holds a portal, the id
 /// of that portal, the cleared-run count and the active run's pack goal.</summary>
-public sealed record WebPortalState(bool InNiflheim, bool HasPortal, Guid PortalItemId, int RunsCleared, int Packs = 0);
+public sealed record WebPortalState(bool InNiflheim, bool HasPortal, Guid PortalItemId, int RunsCleared,
+    int Packs = 0, bool ExitReady = false, int ChestSize = 0, bool ChestOpened = false);
+public sealed record WebTownState(bool InTown, int WorldTier, int Waypoint);
+public sealed record WebPetEffect(string Name, int AttributeId, double Value);
+public sealed record WebPetOption(int DefinitionIntegerId, string Name, bool Unlocked, bool Selected,
+    int? UnlockCost = null, string? UnlockCurrency = null, IReadOnlyList<WebPetEffect>? Effects = null,
+    double Level = 0, double Experience = 0, bool IsAlive = true, DateTime? LastDeathTime = null,
+    int AdsLeftToWatch = 0);
+public sealed record WebPetRoster(IReadOnlyList<WebPetOption> Pets, IReadOnlyList<WebPetOption> CombatPets,
+    int Silver, int Opals);
+public sealed record WebPetSelectRequest(int DefinitionIntegerId);
+public sealed record WebPetUnlockRequest(int DefinitionIntegerId);
+
+public sealed record WebWorldOption(int Tier, int WorldId, string Name, string BossName,
+    bool Unlocked, bool Selected, int CurrentWaypoint, int MaxWaypoint);
+public sealed record WebWorldProgress(int CurrentTier, int UnlockedTier, IReadOnlyList<WebWorldOption> Worlds);
+public sealed record WebWorldSelectRequest(int Tier, int Waypoint = 0);
 
 /// <summary>Offering purchase request (type 1..4, size 1..4).</summary>
 public sealed record WebOfferingRequest(int Type, int Size);

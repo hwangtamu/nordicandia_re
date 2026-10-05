@@ -6,14 +6,14 @@ using Nordicandia.Simulation;
 /// </summary>
 static class W01MonsterCatalogTests
 {
+    private static void Check(bool ok, string message)
+    {
+        if (!ok) throw new Exception(message);
+        Console.WriteLine("PASS " + message);
+    }
+
     public static void Run()
     {
-        void Check(bool ok, string message)
-        {
-            if (!ok) throw new Exception(message);
-            Console.WriteLine("PASS " + message);
-        }
-
         Check(MonsterCatalog.Count == 136, $"W01: full client monster roster loaded ({MonsterCatalog.Count}, expected 136)");
         Check(MonsterCatalog.ByName("CasterDemon1") is { Caster: true, DamageType: 2 },
             "W01: CasterDemon1 carries its caster flag and damage type");
@@ -35,5 +35,33 @@ static class W01MonsterCatalogTests
         // World spawn pools group spawnable monsters by type.
         Check(MonsterCatalog.ByType("Beast").Count() >= 5 && MonsterCatalog.ByType("Undead").Any(),
             "W01: spawnable monsters are grouped by type (Beast/Undead) for world pools");
+        var worlds = WorldCatalog.Entries.Where(w => w.Tier is > 0).ToList();
+        Check(worlds.Count == 35 && worlds.All(w => !string.IsNullOrEmpty(w.BossName)
+            && MonsterCatalog.ByName(w.BossName) is not null),
+            "W03: each tiered world resolves its BossMonsterId to a catalogued monster");
+        SpawnWeights();
+    }
+
+    private static void SpawnWeights()
+    {
+        var profiles = new[]
+        {
+            new MonsterProfile("CommonType", SpawnWeight: 9),
+            new MonsterProfile("RareType", SpawnWeight: 1),
+        };
+        var stats = new CombatantStats(100, 100, 0, 1,
+            AttackRating: 1e12, CritChance: 0, Damage: new DamageBundle(Physical: 100));
+        var common = 0;
+        var rare = 0;
+        for (ulong seed = 1; seed <= 200; seed++)
+        {
+            var instance = new CombatInstance(stats, 0, 0, 0, 0, seed,
+                monsterCount: 24, monsterProfiles: profiles);
+            common += instance.Monsters.Count(m => m.Name == "CommonType");
+            rare += instance.Monsters.Count(m => m.Name == "RareType");
+        }
+        var rareShare = rare / (double)(common + rare);
+        Check(Math.Abs(rareShare - 0.1) < 0.025,
+            $"W01: spawn profiles honor relative weights over deterministic rolls ({rareShare:P1} expected 10%)");
     }
 }

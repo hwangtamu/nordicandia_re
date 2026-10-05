@@ -77,24 +77,15 @@ public partial class CombatInstance
         EmitEvent("buff", -1, 0, "fade Fade");
     }
 
-    /// <summary>Explosive projectile: direct hit + radius explosion (primary excluded).</summary>
-    private (double total, int first) HitExplosiveProjectile(SkillProfile skill, double explosionMult)
+    /// <summary>Explosive projectile: direct impact followed by a radius explosion.</summary>
+    private (double total, int first) HitExplosiveProjectile(SkillProfile skill, double explosionMult,
+        Action<CombatMonster>? afterImpact = null)
     {
-        var (total, first) = HitProjectile(skill, 14);
-        if (first < 0) return (0, -1);
-        var primary = monsters.FirstOrDefault(m => m.Index == first)
-            ?? (boss is { Alive: true } && boss.Index == first ? boss : null);
-        if (primary is not null)
+        var (total, first) = HitProjectile(skill, 14, primary =>
         {
-            foreach (var m in AllCombatMonsters())
-            {
-                if (!m.Alive || ReferenceEquals(m, primary)) continue;
-                var d = Math.Sqrt(Math.Pow(m.X - primary.X, 2) + Math.Pow(m.Z - primary.Z, 2));
-                if (d > skill.Radius) continue;
-                total += HitTarget(m, skill, explosionMult);
-            }
-            EmitEvent("projectile", first, 0, $"explode {skill.Name} {primary.X:F1},{primary.Z:F1}");
-        }
+            ExplodeAround(primary, skill, explosionMult, skill.Name);
+            afterImpact?.Invoke(primary);
+        });
         return (total, first);
     }
 
@@ -226,6 +217,7 @@ public partial class CombatInstance
         var hpPct = skill.Values.TryGetValue("Power_Backflip_Mirror_Image_Health_Percent", out var h) ? h : 0.2;
         var mirror = new PlayerMinion
         {
+            Id = ++nextMinionId,
             Name = "MirrorImage",
             X = PlayerX,
             Z = PlayerZ,
@@ -267,4 +259,18 @@ public partial class CombatInstance
     }
 
     private CombatMonster drainTarget;
+
+    /// <summary>Clears transient entities and channels when changing world.</summary>
+    private void ClearWorldEffects()
+    {
+        clouds.Clear();
+        minions.Clear();
+        traps.Clear();
+        projectileFlights.Clear();
+        projectileTimeRemainder = 0;
+        activeChannel = null;
+        drainTarget = null;
+        pendingSummons = 0;
+        pendingSummonMinion = null;
+    }
 }

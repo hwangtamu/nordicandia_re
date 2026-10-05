@@ -91,13 +91,12 @@ static class C06Batch2Tests
         inst.Monsters[1].X = 5; inst.Monsters[1].Z = 0; // within 4y of primary
         inst.Monsters[2].X = 15; inst.Monsters[2].Z = 0; // outside
         var cast = inst.UseSkill(0);
-        Check(cast.Cast && cast.Damage > 0, "frozen: projectile hits the primary target");
-        var hp1 = inst.Monsters[1].Hp;
-        // The explosion happens synchronously in UseSkill; check monster[1] took AoE.
-        // (We need to re-run to measure; simpler: verify via events.)
+        Check(cast.Cast && inst.Monsters[0].Hp == inst.Monsters[0].MaxHp,
+            "frozen: primary remains untouched until projectile impact");
+        inst.Advance(0.5);
         var events = inst.DrainEvents();
         Check(events.Any(e => e.Type == "projectile" && e.Detail.StartsWith("explode")),
-            "frozen: explosion event emitted");
+            "frozen: impact explosion event emitted");
         // Verify the AoE damaged the nearby monster by checking a fresh instance.
         var inst2 = Create(4, "FrozenArrow", count: 3);
         inst2.Monsters[0].X = 3;
@@ -106,7 +105,8 @@ static class C06Batch2Tests
         var hp1b = inst2.Monsters[1].Hp;
         var hp2b = inst2.Monsters[2].Hp;
         inst2.UseSkill(0);
-        Check(hp1b - inst2.Monsters[1].Hp > 0, "frozen: explosion damages monsters in 4y");
+        inst2.Advance(0.5);
+        Check(hp1b - inst2.Monsters[1].Hp > 0, "frozen: impact explosion damages monsters in 4y");
         Check(inst2.Monsters[2].Hp == hp2b, "frozen: monster outside 4y unaffected");
     }
 
@@ -118,7 +118,9 @@ static class C06Batch2Tests
         inst.Monsters[1].X = 6; inst.Monsters[1].Z = 0.5; // in the 2y corridor
         inst.Monsters[2].X = 6; inst.Monsters[2].Z = 10; // outside corridor
         var cast = inst.UseSkill(0);
-        Check(cast.Cast && cast.Damage > 0, "tornado: vortex hits the primary target");
+        Check(cast.Cast && inst.ActiveProjectiles.Count == 1,
+            "tornado: persistent vortex projectile starts in flight");
+        inst.Advance(0.5);
         // 100% pierce: should hit monster[1] in the corridor.
         var inst2 = Create(5, "Tornado", count: 3);
         inst2.Monsters[0].X = 3;
@@ -127,6 +129,7 @@ static class C06Batch2Tests
         var hp1 = inst2.Monsters[1].Hp;
         var hp2 = inst2.Monsters[2].Hp;
         inst2.UseSkill(0);
+        inst2.Advance(0.5);
         Check(hp1 - inst2.Monsters[1].Hp > 0, "tornado: 100% pierce hits the second monster in corridor");
         Check(inst2.Monsters[2].Hp == hp2, "tornado: monster outside corridor unaffected");
     }

@@ -1,0 +1,282 @@
+{
+  "source": "gamedata_decrypted/Monsters.json + Affixes.json; PetRow.Present attr ids 421/968",
+  "priceLevel": 1,
+  "priceRarity": 1,
+  "items": [
+    {
+      "integerId": 186,
+      "name": "CombatPetDurnir",
+      "kind": "CombatPet",
+      "image": "\\Textures\\Avatars\\CombatPet\\Durnir_1.png",
+      "unlockCurrency": "SL",
+      "unlockCost": 6000000,
+      "effects": [
+        {
+          "affix": "SilverCost",
+          "attributeId": 968,
+          "value": 6000000.0
+        },
+        {
+          "affix": "Durnir_Provocation_Radius",
+          "attributeId": 971,
+          "value": 5.0
+        }
+      ]
+    },
+    {
+      "integerId": 188,
+      "name": "CombatPetHala",
+      "kind": "CombatPet",
+      "image": "\\Textures\\Avatars\\CombatPet\\Hala_1.png",
+      "unlockCurrency": "OP",
+      "unlockCost": 1000,
+      "effects": [
+        {
+          "affix": "Opal_Cost",
+          "attributeId": 421,
+          "value": 1000.0
+        },
+        {
+          "affix": "Hala_Stat_Increase",
+          "attributeId": 974,
+          "value": 0.5
+        }
+      ]
+    },
+    {
+      "integerId": 189,
+      "name": "CombatPetEggther",
+      "kind": "CombatPet",
+      "image": "\\Textures\\Avatars\\CombatPet\\Eggther_1.png",
+      "unlockCurrency": "SL",
+      "unlockCost": 6000000,
+      "effects": [
+        {
+          "affix": "Silver_Cost",
+          "attributeId": 968,
+          "value": 6000000.0
+        },
+        {
+          "affix": "Eggther_Stat_Increase",
+          "attributeId": 975,
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "integerId": 190,
+      "name": "CombatPetHraesvelgr",
+      "kind": "CombatPet",
+      "image": "\\Textures\\Avatars\\CombatPet\\Hraesvelgr_1.png",
+      "unlockCurrency": "OP",
+      "unlockCost": 1200,
+      "effects": [
+        {
+          "affix": "Opal_Cost",
+          "attributeId": 421,
+          "value": 1200.0
+        },
+        {
+          "affix": "Hraesvelgr_Attack_Increase_Percent",
+          "attributeId": 972,
+          "value": 0.01
+        }
+      ]
+    },
+    {
+      "integerId": 191,
+      "name": "CombatPetFossegrim",
+      "kind": "CombatPet",
+      "image": "\\Textures\\Avatars\\CombatPet\\Fossegrim_1.png",
+      "unlockCurrency": "OP",
+      "unlockCost": 1000,
+      "effects": [
+        {
+          "affix": "Opal_Cost",
+          "attributeId": 421,
+          "value": 1000.0
+        },
+        {
+          "affix": "Fossegrim_Stat_Increase",
+          "attributeId": 973,
+          "value": 0.1
+        }
+      ]
+    },
+    {
+      "integerId": 89,
+      "name": "PetDog",
+      "kind": "Pet",
+      "image": "\\Textures\\Avatars\\Pet\\Mobs_dog_01.png",
+      "unlockCurrency": null,
+      "unlockCost": null,
+      "effects": [
+        {
+          "affix": "EndLevelRewards",
+          "attributeId": 418,
+          "value": 1.0
+        },
+        {
+          "affix": "IncreasedXp",
+          "attributeId": 361,
+          "value": 10.0
+        }
+      ]
+    },
+    {
+      "integerId": 96,
+      "name": "PetSnowOxe",
+      "kind": "Pet",
+      "image": "\\Textures\\Avatars\\Pet\\MonstersAvatarIcons_107.png",
+      "unlockCurrency": null,
+      "unlockCost": null,
+      "effects": [
+        {
+          "affix": "AutoBattleTime",
+          "attributeId": 416,
+          "value": 20.0
+        }
+      ]
+    },
+    {
+      "integerId": 98,
+      "name": "PetCrow",
+      "kind": "Pet",
+      "image": "\\Textures\\Avatars\\Pet\\Mobs_crow_01.png",
+      "unlockCurrency": "OP",
+      "unlockCost": 600,
+      "effects": [
+        {
+          "affix": "AutoBattleTime",
+          "attributeId": 416,
+          "value": 38.0
+        },
+        {
+          "affix": "OpalCost",
+          "attributeId": 421,
+          "value": 600.0
+        }
+      ]
+    },
+    {
+      "integerId": 100,
+      "name": "PetTurtle",
+      "kind": "Pet",
+      "image": "\\Textures\\Avatars\\Pet\\Mobs_addons_096.PNG",
+      "unlockCurrency": "OP",
+      "unlockCost": 600,
+      "effects": [
+        {
+          "affix": "AutoBattleTime",
+          "attributeId": 416,
+          "value": 45.0
+        },
+        {
+          "affix": "OpalCost",
+          "attributeId": 421,
+          "value": 600.0
+        },
+        {
+          "affix": "LessXp",
+          "attributeId": 419,
+          "value": -30.0
+        }
+      ]
+    },
+    {
+      "integerId": 156,
+      "name": "PetEagle",
+      "kind": "Pet",
+      "image": "\\Textures\\Avatars\\Pet\\Creatures_03_nobg.png",
+      "unlockCurrency": "OP",
+      "unlockCost": 600,
+      "effects": [
+        {
+          "affix": "MovementSpeedBonus",
+          "attributeId": 1101,
+          "value": 10.0
+        },
+        {
+          "affix": "EndLevelRewards",
+          "attributeId": 418,
+          "value": 1.0
+        },
+        {
+          "affix": "OpalCost",
+          "attributeId": 421,
+          "value": 600.0
+        }
+      ]
+    },
+    {
+      "integerId": 158,
+      "name": "PetBabyDragon",
+      "kind": "Pet",
+      "image": "\\Textures\\Avatars\\Pet\\Mobs_dragon_10.png",
+      "unlockCurrency": "OP",
+      "unlockCost": 600,
+      "effects": [
+        {
+          "affix": "AutoBattleTime",
+          "attributeId": 416,
+          "value": 30.0
+        },
+        {
+          "affix": "OpalCost",
+          "attributeId": 421,
+          "value": 600.0
+        },
+        {
+          "affix": "LootInventorySize",
+          "attributeId": 848,
+          "value": 1.0
+        }
+      ]
+    },
+    {
+      "integerId": 160,
+      "name": "PetLarva",
+      "kind": "Pet",
+      "image": "\\Textures\\Avatars\\Pet\\Mobs_l_03.png",
+      "unlockCurrency": "OP",
+      "unlockCost": 600,
+      "effects": [
+        {
+          "affix": "EndLevelRewards",
+          "attributeId": 418,
+          "value": 1.0
+        },
+        {
+          "affix": "OpalCost",
+          "attributeId": 421,
+          "value": 600.0
+        },
+        {
+          "affix": "CraftingReagents",
+          "attributeId": 165,
+          "value": 20.0
+        }
+      ]
+    },
+    {
+      "integerId": 162,
+      "name": "PetSnake",
+      "kind": "Pet",
+      "image": "\\Textures\\Avatars\\Pet\\Monsters_59_nobg.png",
+      "unlockCurrency": null,
+      "unlockCost": null,
+      "effects": [
+        {
+          "affix": "AutoOpenChests",
+          "attributeId": 849,
+          "value": 8.0
+        },
+        {
+          "affix": "EndLevelRewards",
+          "attributeId": 418,
+          "value": 1.0
+        }
+      ]
+    }
+  ]
+}

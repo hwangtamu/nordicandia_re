@@ -96,6 +96,15 @@ public static class PowerParameterCatalog
     public static IReadOnlyDictionary<int, double> AttributeBonuses(string powerName, int rank = 1)
     {
         var result = new Dictionary<int, double>();
+        if (powerName == "Meditation")
+        {
+            // Android 1.9.3 Meditation.InternalInitializePowerParameters:
+            // min(0.1 + 0.01 * (rank - 1), 1.0), applied as the negative
+            // Power_Cooldown_Increase_Percent_Final modifier; the reset chance is -0.1.
+            result[96] = -Math.Min(0.1 + 0.01 * (Math.Max(1, rank) - 1), 1.0);
+            result[176] = -0.1;
+            return result;
+        }
         var elementResistance = ElementResistanceByPower.GetValueOrDefault(powerName);
         foreach (var (name, parameter) in ForPower(powerName))
         {

@@ -41,6 +41,10 @@ static class C05SkillTests
         PoisonCloud();
         SummonSkeleton();
         Growth();
+        EventsThroughWebState();
+        MeditationCooldown();
+        MeditationCooldownReset();
+        PersistedPassiveRank();
         Relogin();
     }
 
@@ -66,7 +70,10 @@ static class C05SkillTests
         var inst = Create(4, "PowerShot", count: 3);
         for (var i = 0; i < 3; i++) { inst.Monsters[i].X = 2 + i * 2; inst.Monsters[i].Z = 0; }
         var cast = inst.UseSkill(0);
-        Check(cast.Cast && cast.Damage > 0, "powershot: projectile hits the primary target");
+        Check(cast.Cast && cast.Damage == 0 && inst.ActiveProjectiles.Count == 1
+            && inst.Monsters.All(m => m.Hp == m.MaxHp),
+            "powershot: cast launches a persistent projectile without instant damage");
+        inst.Advance(1.0);
         var events = inst.DrainEvents();
         Check(events.Any(e => e.Type == "projectile" && e.Detail.StartsWith("spawn")),
             "powershot: projectile spawn event emitted for rendering");
@@ -140,7 +147,119 @@ static class C05SkillTests
         var da = a.UseSkill(0).Damage;
         var db = b.UseSkill(0).Damage;
         Check(Math.Abs(db / da - 9.05 / 9.0) < 1e-4,
-            $"growth: +0.05 mastery multiplier flows to damage ({da:F1} -> {db:F1})");
+            $"growth: +0.05 mastery multiplier flows to immediate strike damage ({da:F1} -> {db:F1})");
+    }
+
+    private static void MeditationCooldown()
+    {
+        var pool = Nordicandia.Server.WebApi.PowerCatalog.BuildPool(0,
+            new List<string> { "Shatter" }, new List<string> { "Meditation" });
+        var meditation = pool.Passive.Single(p => p.Name == "Meditation");
+        Check(meditation.AttributeBonuses?.GetValueOrDefault(96) == -0.1,
+            "Meditation: rank-1 native cooldown modifier is mapped to attribute 96");
+        var instance = new CombatInstance(Stats, 0, 0, 0, 0, 123, monsterCount: 1, classPowers: pool);
+        instance.Monsters[0].X = 2;
+        var before = instance.Snapshot().Skills.Single(s => s.Name == "Shatter").MaxCooldown;
+        Check(Math.Abs(before - pool.Active[0].Cooldown * 0.9) < 1e-9,
+            "Meditation: active skill maximum cooldown is reduced by 10 percent");
+        Check(instance.UseSkill(0).Cast, "Meditation: Shatter still casts with the passive equipped");
+        var after = instance.Snapshot().Skills.Single(s => s.Name == "Shatter").Cooldown;
+        Check(Math.Abs(after - before) < 1e-9,
+            "Meditation: the live cooldown timer uses the reduced duration");
+    }
+
+    private static void PersistedPassiveRank()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "nord-c05-passive-rank-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(directory);
+        try
+        {
+            using var store = new GameStore(directory);
+            var owner = store.GetOrCreateUser("device:c05-passive-rank").UserId;
+            var hash = Nordicandia.Server.State.PowerCatalog.HashNameSafe("Meditation");
+            var data = Defaults.Create<SerializedCharacterData.SerializedData>();
+            data.Powers = new SerializedCharacterData.SerializedPowers
+            {
+                Powers = new List<SerializedCharacterData.SerializedPower>
+                {
+                    new() { PowerHash = hash, PowerHashSafe = hash, Power_Rank = 5 },
+                },
+            };
+            var characterId = store.CreateCharacter(owner, new CreateCharacterRequest
+            {
+                DisplayName = "passive-rank",
+                CharacterGameMode = GameMode.Normal,
+                CharacterClass = CharacterClass.Warrior,
+                Data = new SerializedCharacterData { Data = data },
+            }).CharacterId;
+            var ranks = store.GetPowerRanks(owner, characterId);
+            Check(ranks.GetValueOrDefault("Meditation") == 5,
+                "passive rank: saved Power_Rank resolves from PowerHashSafe");
+            var registry = new CombatRegistry(store, new FrozenClock());
+            Check(registry.SetLoadout(owner, characterId,
+                new List<string> { "Shatter" }, new List<string> { "Meditation" }).Applied,
+                "passive rank: loadout accepts Meditation");
+            var first = registry.GetOrCreate(owner, characterId).Snapshot().Skills.Single(s => s.Name == "Shatter");
+            Check(Math.Abs(first.MaxCooldown - 4.3) < 1e-9,
+                $"passive rank: rank 5 formula applies after loadout ({first.MaxCooldown:F2}s)");
+            registry.Reset();
+            var reloaded = new CombatRegistry(store, new FrozenClock()).GetOrCreate(owner, characterId)
+                .Snapshot().Skills.Single(s => s.Name == "Shatter");
+            Check(Math.Abs(reloaded.MaxCooldown - first.MaxCooldown) < 1e-9,
+                "passive rank: ranked cooldown survives combat-registry recreation");
+        }
+        finally
+        {
+            if (Directory.Exists(directory)) Directory.Delete(directory, true);
+        }
+    }
+
+    private static void MeditationCooldownReset()
+    {
+        var basePool = Nordicandia.Server.WebApi.PowerCatalog.BuildPool(0,
+            new List<string> { "Shatter" }, new List<string>());
+        var resetPassive = new PassiveProfile("ResetChance", "", "", "", 0, 0,
+            "test", new Dictionary<int, double> { [176] = 1.0 });
+        var pool = new ClassPowerPool(basePool.ClassName, basePool.Active, new[] { resetPassive });
+        var instance = new CombatInstance(Stats, 0, 0, 0, 0, 123, monsterCount: 1, classPowers: pool);
+        instance.Monsters[0].X = 2;
+        Check(instance.UseSkill(0).Cast, "Meditation hook: active skill casts with reset chance");
+        Check(instance.Snapshot().Skills.Single(s => s.Name == "Shatter").Cooldown == 0
+            && instance.DrainEvents().Any(e => e.Type == "cooldown-reset" && e.Detail == "Shatter"),
+            "Meditation hook: successful native chance removes that skill's cooldown and emits a render event");
+    }
+
+    private static void EventsThroughWebState()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "nordicandia-c05-events-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(directory);
+        try
+        {
+            using var store = new GameStore(directory);
+            var owner = store.GetOrCreateUser("device:c05-events").UserId;
+            var characterId = store.CreateCharacter(owner, new CreateCharacterRequest
+            {
+                DisplayName = "events",
+                CharacterGameMode = GameMode.Normal,
+                CharacterClass = CharacterClass.Necromancer,
+                Data = new SerializedCharacterData { Data = new SerializedCharacterData.SerializedData() },
+            }).CharacterId;
+            var registry = new CombatRegistry(store, new FrozenClock());
+            Check(registry.SetLoadout(owner, characterId, new List<string> { "SummonSkeleton" }, new List<string>()).Applied,
+                "web events: install SummonSkeleton for integration test");
+            var instance = registry.GetOrCreate(owner, characterId);
+            Check(instance.UseSkill(0).Cast, "web events: skill emits a simulation combat event");
+            var state = registry.Advance(owner, characterId);
+            Check(state.Combat.Events?.Any(e => e.Type == "summon" && e.Detail == "SummonSkeleton") == true,
+                "web events: authoritative state transports drained summon events");
+            var next = registry.Advance(owner, characterId);
+            Check(next.Combat.Events?.Count == 0,
+                "web events: event batches are consumed once and do not repeat on later polls");
+        }
+        finally
+        {
+            if (Directory.Exists(directory)) Directory.Delete(directory, true);
+        }
     }
 
     private static void Relogin()
@@ -189,5 +308,11 @@ static class C05SkillTests
                 "relogin: mastery rank persists in the store and applies after relogin");
         }
         finally { if (Directory.Exists(directory)) Directory.Delete(directory, true); }
+    }
+
+    private sealed class FrozenClock : TimeProvider
+    {
+        private readonly DateTimeOffset now = new(2026, 10, 3, 12, 0, 0, TimeSpan.Zero);
+        public override DateTimeOffset GetUtcNow() => now;
     }
 }

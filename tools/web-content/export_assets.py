@@ -37,7 +37,7 @@ APK = ROOT / "dist/android-arm64-src/UnityDataAssetPack.apk"
 OUT = ROOT / "web/public/assets"
 
 # Content-version tag. Bump when the export rules change so clients can invalidate.
-CONTENT_VERSION = "v01-1"
+CONTENT_VERSION = "v01-2"
 
 DUNGEON_BUNDLE = "world_dungeon_theme_default_assets_all_"
 # Meshes that make up a usable room kit. Names come from the bundle inventory.
@@ -302,7 +302,16 @@ def main() -> int:
     manifest: dict = {"contentVersion": CONTENT_VERSION, "sourceApk": APK.name}
     z = zipfile.ZipFile(APK)
     export_kits(z, manifest)
+    # Town's static scene needs the Unity Transform hierarchy and static-batch submesh
+    # ranges in addition to the individual meshes exported above.
+    from export_town_scene import main as export_town_scene
+    if export_town_scene() != 0:
+        return 1
+    town_scene_path = OUT / "kit/town/town_scene.json"
+    manifest["townScene"] = json.loads(town_scene_path.read_text())
     export_avatars(z, manifest)
+    from export_inventory_art import main as export_inventory_art
+    manifest["inventoryArt"] = export_inventory_art()
     manifest["missingAssets"] = write_missing_report(manifest)
     (OUT / "manifest.json").write_text(json.dumps(manifest, indent=2))
     print(f"wrote {OUT / 'manifest.json'}")

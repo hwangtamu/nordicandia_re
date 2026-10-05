@@ -16,6 +16,18 @@ public static class PowerCatalog
 
     public static bool TryGet(Guid powerId, out PowerInfo info) => Map.Value.TryGetValue(powerId, out info);
 
+    public static bool TryGetNameByHashSafe(int hashSafe, out string name)
+    {
+        foreach (var info in Map.Value.Values)
+            if (info.HashSafe == hashSafe)
+            {
+                name = info.Name;
+                return true;
+            }
+        name = null;
+        return false;
+    }
+
     public static int HashNameSafe(string name)
     {
         if (string.IsNullOrEmpty(name)) return 0;

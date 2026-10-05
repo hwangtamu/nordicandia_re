@@ -46,7 +46,8 @@
    ],
    "behaviorGaps": [
     "Slam_Max_Distance"
-   ]
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Might",
@@ -91,7 +92,8 @@
     "MasteryMightDisarm",
     "MasteryMightSturdiness"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Pounce",
@@ -135,7 +137,8 @@
     "MasteryPounceWings",
     "MasteryPounceRend"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "WarStomp",
@@ -178,7 +181,8 @@
     "MasteryWarStompBlazingStomp",
     "MasteryWarStompGraspingVines"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Shatter",
@@ -223,7 +227,8 @@
     "MasteryShatterCrushingBlow",
     "MasteryShatterLightningStrike"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Sprint",
@@ -267,7 +272,8 @@
     "MasterySprintChargeFirstHit",
     "MasterySprintAcrobatics"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "IncrementalFortress",
@@ -309,7 +315,8 @@
     "MasteryIncrementalFortressCounterAttack",
     "MasteryIncrementalFortressBlock"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Retaliation",
@@ -353,9 +360,8 @@
     "MasteryRetaliationThorns",
     "MasteryRetaliationThrownAxe"
    ],
-   "behaviorGaps": [
-    "Buff_Duration"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Frenzy",
@@ -400,7 +406,8 @@
     "MasteryFrenzyEstablishedWeakness",
     "MasteryFrenzyDualStriking"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Intimidate",
@@ -444,10 +451,8 @@
     "MasteryIntimidateWound",
     "MasteryIntimidateShieldWall"
    ],
-   "behaviorGaps": [
-    "Buff_Duration",
-    "Power_Intimidate_Opponent_All_Damage_Reduced_Percent"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Hunger",
@@ -497,7 +502,8 @@
     "MasteryHungerCellRecovery",
     "MasteryHungerFinishingBlow"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Mixology",
@@ -542,7 +548,8 @@
     "MasteryMixologyManaDuringLife",
     "MasteryMixologyLifeDuringMana"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Whirlwind",
@@ -589,10 +596,8 @@
     "MasteryWhirlwindSmartWhirl",
     "MasteryWhirlwindBloodWhirlpool"
    ],
-   "behaviorGaps": [
-    "Power_Duration",
-    "Power_Whirlwind_Damage_Frequency"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Overkill",
@@ -625,7 +630,89 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_OverkillChance [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_OverkillChance",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_OverkillChance",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_OverkillChance": {
+      "rank1": 0.4,
+      "perRank": 0.02,
+      "expression": "min((((rank-1.0)*0.02)+0.4),1.0)",
+      "capMax": 1.0
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Overkill_Chance"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x13f0",
+      "attributeField": "_Overkill_Chance_k__BackingField",
+      "attribute": "Overkill_Chance",
+      "attributeId": 177,
+      "sourceField": "_OverkillChance",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+13F0], this._OverkillChance (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5f0f4",
+      "nativeMethodSha256": "dbcf4fa72c90dd8ed721a7318de18bba28667c50542ea542117ddd2863429bc5",
+      "annotatedStartAddress": "0x02D5F0F4",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5f190",
+      "nativeMethodSha256": "b5dd63df30ef632f4e7fdcc26f1fc338d842a111f360dd5cc9b461ebea34b308",
+      "annotatedStartAddress": "0x02D5F190",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5f324",
+      "nativeMethodSha256": "b937df65d114d0b4544509d3964ff94f85beed14114dbe416924a88c4ba43a8e",
+      "annotatedStartAddress": "0x02D5F324",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.Overkill+OverkillBuff",
+     "Game.Skills.Overkill+OverkillBuff+<>c__DisplayClass2_0"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.Overkill+OverkillBuff",
+      "signature": "System.Void OnPayload(Game.Payload payload)",
+      "annotatedStartAddress": "0x02D5F3E8",
+      "nativeMethodSha256": "31b5d0e017a55ad48d40b842df211f0d8d1747657d951df00c154088e2c84a37"
+     },
+     {
+      "owner": "Game.Skills.Overkill+OverkillBuff+<>c__DisplayClass2_0",
+      "signature": "System.Boolean <OnPayload>b__0(Game.Actor x)",
+      "annotatedStartAddress": "0x02D5F990",
+      "nativeMethodSha256": "7c695a20bb56593e9c8946e723048f1d872ee5e89b40233ef626e740f2e39f7b"
+     }
+    ]
+   }
   },
   {
    "name": "TreasureHunter",
@@ -658,7 +745,84 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_MagicFindIncrease",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_ItemQuantityIncrease",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_MagicFindIncrease",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_ItemQuantityIncrease",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Item_Quantity_Bonus_Percent",
+     "Magic_Find_Bonus_Percent"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0xb88",
+      "attributeField": "_Magic_Find_Bonus_Percent_k__BackingField",
+      "attribute": "Magic_Find_Bonus_Percent",
+      "attributeId": 356,
+      "sourceField": "_MagicFindIncrease",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+B88], this._MagicFindIncrease (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0xc18",
+      "attributeField": "_Item_Quantity_Bonus_Percent_k__BackingField",
+      "attribute": "Item_Quantity_Bonus_Percent",
+      "attributeId": 367,
+      "sourceField": "_ItemQuantityIncrease",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v163 @ X8_v20+C18], this._ItemQuantityIncrease (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d60808",
+      "nativeMethodSha256": "5295ee4ad9856a8078ec4d8f5342dfe7c7cb6eb9b7383ad8699a06c36491925d",
+      "annotatedStartAddress": "0x02D60808",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d60850",
+      "nativeMethodSha256": "e7ea50a36c820386e411b58973f318e5729b7cea968185a16e7bcf88a835a3df",
+      "annotatedStartAddress": "0x02D60850",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d60a30",
+      "nativeMethodSha256": "19516832b72b63b8d1522746d73da7f054acfacce85749631c75357e240fdf4b",
+      "annotatedStartAddress": "0x02D60A30",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.TreasureHunter+TreasureHunterBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "AxeSpecialization",
@@ -691,7 +855,74 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_DeadlyChance [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_DeadlyChance",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_DeadlyChance",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_DeadlyChance": {
+      "rank1": 0.1,
+      "perRank": 0.01,
+      "expression": "(((rank-1.0)*0.01)+0.1)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Deadly_Strike_Chance_With_Axes"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1c88",
+      "attributeField": "_Deadly_Strike_Chance_With_Axes_k__BackingField",
+      "attribute": "Deadly_Strike_Chance_With_Axes",
+      "attributeId": 1204,
+      "sourceField": "_DeadlyChance",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1C88], this._DeadlyChance (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5c69c",
+      "nativeMethodSha256": "c061d3223ca7fa924b78a14a687f7439eb59d043607abbd2129ce9cf85366683",
+      "annotatedStartAddress": "0x02D5C69C",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5c6e4",
+      "nativeMethodSha256": "823599a20a51bd3e94f615d48d3127639917c0ad2e12bcf74099c7b8132ebe27",
+      "annotatedStartAddress": "0x02D5C6E4",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5c878",
+      "nativeMethodSha256": "6b4fc99a1a600fc4c3c187cab9ee651b40b159bb2cd81b1fa82f92b38ccbbf2c",
+      "annotatedStartAddress": "0x02D5C878",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.AxeSpecialization+AxeSpecializationBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "SwordSpecialization",
@@ -724,7 +955,89 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_ExtraSwingChance [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_ExtraSwingChance",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_MaxAdditionalSwings",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ExtraSwingChance",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_MaxAdditionalSwings",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_ExtraSwingChance": {
+      "rank1": 0.6,
+      "perRank": 0.01,
+      "expression": "min((((rank-1.0)*0.01)+0.6),1.0)",
+      "capMax": 1.0
+     },
+     "_MaxAdditionalSwings": {
+      "rank1": 20.0,
+      "perRank": 0.0,
+      "expression": "20.0"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Extra_Swing_Reproc_Chance_Swords"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1c78",
+      "attributeField": "_Extra_Swing_Reproc_Chance_Swords_k__BackingField",
+      "attribute": "Extra_Swing_Reproc_Chance_Swords",
+      "attributeId": 1200,
+      "sourceField": "_ExtraSwingChance",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1C78], this._ExtraSwingChance (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d6039c",
+      "nativeMethodSha256": "0b39e1893ceb70857110be9be17b9da35f3be499cf6fd3c11f5e888d8b291660",
+      "annotatedStartAddress": "0x02D6039C",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d60440",
+      "nativeMethodSha256": "e944017ce29374df2762d9cac7d2acd2a3bd96ba16eb22675888495fbc3b353e",
+      "annotatedStartAddress": "0x02D60440",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d605d4",
+      "nativeMethodSha256": "e10bd5b121376a8e73a796f65d5c9c2bbbed29370bdfe6f4ef7df64eaf9fd17e",
+      "annotatedStartAddress": "0x02D605D4",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.SwordSpecialization+SwordSpecializationBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "MaceSpecialization",
@@ -757,7 +1070,125 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_ThrowMaceChance [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_ThrowMaceChance",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_ThrowRadius",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ThrowMaceChance",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_ThrowRadius",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_ThrowMaceChance": {
+      "rank1": 0.2,
+      "perRank": 0.01,
+      "expression": "min((((rank-1.0)*0.01)+0.2),1.0)",
+      "capMax": 1.0
+     },
+     "_ThrowRadius": {
+      "rank1": 8.0,
+      "perRank": 0.0,
+      "expression": "8.0"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "MaceSpecialization_Throw_Mace_Chance",
+     "MaceSpecialization_Throw_Mace_Radius"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x6e8",
+      "attributeField": "_MaceSpecialization_Throw_Mace_Chance_k__BackingField",
+      "attribute": "MaceSpecialization_Throw_Mace_Chance",
+      "attributeId": 175,
+      "sourceField": "_ThrowMaceChance",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+6E8], this._ThrowMaceChance (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x6f0",
+      "attributeField": "_MaceSpecialization_Throw_Mace_Radius_k__BackingField",
+      "attribute": "MaceSpecialization_Throw_Mace_Radius",
+      "attributeId": 236,
+      "sourceField": "_ThrowRadius",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v163 @ X8_v20+6F0], this._ThrowRadius (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5d8e0",
+      "nativeMethodSha256": "e1a256f1c7ecccef59d0b0c2375a6da52bbe3662d49cc50ff68b8f491fea6660",
+      "annotatedStartAddress": "0x02D5D8E0",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5d984",
+      "nativeMethodSha256": "2d413468bd3fd02db1cce9c3f86dc308acc22dd737a8bde3f507d6184114d142",
+      "annotatedStartAddress": "0x02D5D984",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5db64",
+      "nativeMethodSha256": "33058b48a81f077ea1a46a7391a13df251a1c220cf22a5d88a529e4045f8a763",
+      "annotatedStartAddress": "0x02D5DB64",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.MaceSpecialization+MaceSpecializationBuff",
+     "Game.Skills.MaceSpecialization+MaceSpecializationBuff+<>c",
+     "Game.Skills.MaceSpecialization+MaceSpecializationBuff+<>c__DisplayClass2_0"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.MaceSpecialization+MaceSpecializationBuff",
+      "signature": "System.Void OnPayload(Game.Payload payload)",
+      "annotatedStartAddress": "0x02D5DC28",
+      "nativeMethodSha256": "6e0e3fe3e2940ef84a82fa6d603af8341efe348f7d480c9407775cfcfa72f864"
+     },
+     {
+      "owner": "Game.Skills.MaceSpecialization+MaceSpecializationBuff",
+      "signature": "System.Void OnMeleeSwingHit(Game.HitPayload hit)",
+      "annotatedStartAddress": "0x02D5DEB8",
+      "nativeMethodSha256": "1e2442b74c60340f91c053cfe9d55d404ee278c5af09d3a5d1b3aefba9bededb"
+     },
+     {
+      "owner": "Game.Skills.MaceSpecialization+MaceSpecializationBuff+<>c",
+      "signature": "Game.TickTimer <OnMeleeSwingHit>b__2_1()",
+      "annotatedStartAddress": "0x02D5E638",
+      "nativeMethodSha256": "ed86e0b2911b6a4e9edfa1a48e9544ba115299466a1992e2370619d8ce8e29fc"
+     },
+     {
+      "owner": "Game.Skills.MaceSpecialization+MaceSpecializationBuff+<>c__DisplayClass2_0",
+      "signature": "System.Boolean <OnMeleeSwingHit>b__0(Game.Actor x)",
+      "annotatedStartAddress": "0x02D5E640",
+      "nativeMethodSha256": "934187beebc48b46cd3cb8bba2ac92a44deb362d2481ce3addaba42324b8a6de"
+     }
+    ]
+   }
   },
   {
    "name": "SpearSpecialization",
@@ -790,7 +1221,75 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_ArmorPiercing [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_ArmorPiercing",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ArmorPiercing",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_ArmorPiercing": {
+      "rank1": 0.3,
+      "perRank": 0.01,
+      "expression": "min((((rank-1.0)*0.01)+0.3),1.0)",
+      "capMax": 1.0
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Armor_Piercing_Percent_With_Spears"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1178",
+      "attributeField": "_Armor_Piercing_Percent_With_Spears_k__BackingField",
+      "attribute": "Armor_Piercing_Percent_With_Spears",
+      "attributeId": 290,
+      "sourceField": "_ArmorPiercing",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1178], this._ArmorPiercing (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5ff24",
+      "nativeMethodSha256": "ba4387f656193d0280332750b80611345aa7804f5c1e6461666a442ce3507e58",
+      "annotatedStartAddress": "0x02D5FF24",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5ffc0",
+      "nativeMethodSha256": "070335efbeacc7064fee3b5b20fedd655a6022cff4bf786225180ef394c576c5",
+      "annotatedStartAddress": "0x02D5FFC0",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d60154",
+      "nativeMethodSha256": "2ecff3c6f5c06aba9eb380f3e36d300eeeac23e97c0169150fed171e927ffd8d",
+      "annotatedStartAddress": "0x02D60154",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.SpearSpecialization+SpearSpecializationBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "DaggerSpecialization",
@@ -823,7 +1322,24 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": {
+    "sourceAvailable": false,
+    "recoveryStatus": "native_implementation_source_not_found",
+    "fields": [],
+    "nativeFieldAssignments": [],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [],
+    "applyAttributeWrites": [],
+    "methods": {
+     "initialize": null,
+     "apply": null,
+     "remove": null
+    },
+    "nestedTypes": [],
+    "triggerHooks": []
+   }
   },
   {
    "name": "CheatDeath",
@@ -856,7 +1372,135 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_VitalityBonusPercent [field_0x128]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_CooldownTime",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_FatalDamageNewLifePercent",
+      "dumpOffset": "0x128"
+     },
+     {
+      "name": "_VitalityBonusPercent",
+      "dumpOffset": "0x130"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_CooldownTime",
+      "nativeOffset": "0x11c",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_FatalDamageNewLifePercent",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_VitalityBonusPercent",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_CooldownTime": {
+      "rank1": 50.0,
+      "perRank": -1.0,
+      "expression": "max((51.0-rank),0.0)",
+      "capMin": 0.0
+     },
+     "_FatalDamageNewLifePercent": {
+      "rank1": 0.5,
+      "perRank": 0.0,
+      "expression": "0.5"
+     },
+     "_VitalityBonusPercent": {
+      "rank1": 0.2,
+      "perRank": 0.005,
+      "expression": "(((rank-1.0)*0.005)+0.2)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Base_Cooldown",
+     "Fatal_Damage_New_Life_Percent",
+     "Vitality_Bonus_Percent_Final"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x6e0",
+      "attributeField": "_Fatal_Damage_New_Life_Percent_k__BackingField",
+      "attribute": "Fatal_Damage_New_Life_Percent",
+      "attributeId": 174,
+      "sourceField": "_FatalDamageNewLifePercent",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+6E0], this._FatalDamageNewLifePercent (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x550",
+      "attributeField": "_Vitality_Bonus_Percent_Final_k__BackingField",
+      "attribute": "Vitality_Bonus_Percent_Final",
+      "attributeId": 247,
+      "sourceField": "_VitalityBonusPercent",
+      "raw": "140 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v176 @ X8_v20+550], v180 @ X0_v22 (Game.GameAttributeValueDoubleArray)"
+     },
+     {
+      "attributeStaticOffset": "0x1340",
+      "attributeField": "_Base_Cooldown_k__BackingField",
+      "attribute": "Base_Cooldown",
+      "attributeId": 79,
+      "sourceField": "_CooldownTime",
+      "raw": "164 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v160 @ X9_v3+1340], this._CooldownTime (System.Int32)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5ceb4",
+      "nativeMethodSha256": "eadf32cd8efa9eb08a6178aa16a194c7be58c032a1a9d98c8535eacdd534f0f0",
+      "annotatedStartAddress": "0x02D5CEB4",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5cf6c",
+      "nativeMethodSha256": "0c8e19b720c690045bdaa9b09d78de53a7fb2c2c9b3e61874d1445a5b83d94a2",
+      "annotatedStartAddress": "0x02D5CF6C",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5d1ac",
+      "nativeMethodSha256": "c89885c34946c8d4a67e2dee580027301daf414a036858c0f1821f906b2083b7",
+      "annotatedStartAddress": "0x02D5D1AC",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.CheatDeath+CheatDeathBuff",
+     "Game.Skills.CheatDeath+CheatDeathCooldownBuff"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.CheatDeath+CheatDeathBuff",
+      "signature": "System.Void OnPayload(Game.Payload payload)",
+      "annotatedStartAddress": "0x02D5D270",
+      "nativeMethodSha256": "37e69732e29f84053ff1a53b717dadeb6515d2aba9c358749b82e72c02b1eb64"
+     },
+     {
+      "owner": "Game.Skills.CheatDeath+CheatDeathBuff",
+      "signature": "System.Void <OnPayload>b__1_0(Game.HitPayload p)",
+      "annotatedStartAddress": "0x02D5D394",
+      "nativeMethodSha256": "9679d82220a37d554c2316917bf396e0a5a07dcbc41787696d4e75927d36d33c"
+     }
+    ]
+   }
   },
   {
    "name": "BossHunter",
@@ -889,7 +1533,74 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_SpawnIncrease [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_SpawnIncrease",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_SpawnIncrease",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_SpawnIncrease": {
+      "rank1": 0.25,
+      "perRank": 0.02,
+      "expression": "(((rank-1.0)*0.02)+0.25)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "UniqueMonster_Find_Bonus_Percent"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x88",
+      "attributeField": "_UniqueMonster_Find_Bonus_Percent_k__BackingField",
+      "attribute": "UniqueMonster_Find_Bonus_Percent",
+      "attributeId": 12,
+      "sourceField": "_SpawnIncrease",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+88], this._SpawnIncrease (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5ca4c",
+      "nativeMethodSha256": "483f00c93f98917f514009d45ba937fbbf954043871cef91b1634ea80c4d8dbd",
+      "annotatedStartAddress": "0x02D5CA4C",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5ca90",
+      "nativeMethodSha256": "65f3799c856403cf5b03b269fc4a46da2193332ceeefbc061c1d74fe74888d5f",
+      "annotatedStartAddress": "0x02D5CA90",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5cc24",
+      "nativeMethodSha256": "01c4ee0ed061ba9cd7384fd2ab877d9d11941be5182d353e0f147a79b7e73476",
+      "annotatedStartAddress": "0x02D5CC24",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.BossHunter+BossHunterBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "Meditation",
@@ -922,7 +1633,96 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_CooldownReduction [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_CooldownReduction",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_CooldownResetChance",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_CooldownReduction",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_CooldownResetChance",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_CooldownReduction": {
+      "rank1": 0.1,
+      "perRank": 0.01,
+      "expression": "min((((rank-1.0)*0.01)+0.1),1.0)",
+      "capMax": 1.0
+     },
+     "_CooldownResetChance": {
+      "rank1": -0.10000000000000002,
+      "perRank": 0.0,
+      "expression": "-0.10000000000000002"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Power_Cooldown_Reset_Chance"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x13e8",
+      "attributeField": "_Power_Cooldown_Reset_Chance_k__BackingField",
+      "attribute": "Power_Cooldown_Reset_Chance",
+      "attributeId": 176,
+      "sourceField": "_CooldownResetChance",
+      "raw": "137 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v164 @ X8_v20+13E8], this._CooldownResetChance (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5e7cc",
+      "nativeMethodSha256": "53f5a18b82f6695e391d65d80fe3f42d1a4ce10ef13fee1a49a3d6d77a3e517d",
+      "annotatedStartAddress": "0x02D5E7CC",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5e878",
+      "nativeMethodSha256": "20f7ff2be43eb6acb8f1767fb525bf7964dce209e3da827654bf8d9b51b25ba4",
+      "annotatedStartAddress": "0x02D5E878",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5ea5c",
+      "nativeMethodSha256": "9f7f74234492f1d6170577567d3a1f571dcaa5f28b65ec0dbb4dfdf8e30b0ca7",
+      "annotatedStartAddress": "0x02D5EA5C",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.Meditation+MeditationBuff"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.Meditation+MeditationBuff",
+      "signature": "System.Void Brain_OnSkillStarted(System.Object sender, Game.AI.Brain+SkillActionEventArgs e)",
+      "annotatedStartAddress": "0x02D5EC1C",
+      "nativeMethodSha256": "f81586518d9677436d4db5690be846e8f8dc3db371803f4f08c11deac8f9e35a"
+     }
+    ]
+   }
   },
   {
    "name": "RepelMagic",
@@ -955,7 +1755,95 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_IncreasedMaximumResistances",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_IncreasedMaximumPhysReduction",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_IncreasedMaximumResistances",
+      "nativeOffset": null,
+      "mappingConfidence": "unpaired"
+     },
+     {
+      "name": "_IncreasedMaximumPhysReduction",
+      "nativeOffset": null,
+      "mappingConfidence": "unpaired"
+     }
+    ],
+    "initializerFormulas": {
+     "_IncreasedMaximumResistances": {
+      "rank1": 0.03,
+      "perRank": 0.001,
+      "expression": "(((rank-1.0)*0.001)+0.03)"
+     },
+     "_IncreasedMaximumPhysReduction": {
+      "rank1": 0.03,
+      "perRank": 0.001,
+      "expression": "(((rank-1.0)*0.001)+0.03)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Physical_Damage_Reduction_Max",
+     "Resistance_Max_Bonus"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1b00",
+      "attributeField": "_Resistance_Max_Bonus_k__BackingField",
+      "attribute": "Resistance_Max_Bonus",
+      "attributeId": 1019,
+      "sourceField": "_IncreasedMaximumResistances",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1B00], this._IncreasedMaximumResistances (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x850",
+      "attributeField": "_Physical_Damage_Reduction_Max_k__BackingField",
+      "attribute": "Physical_Damage_Reduction_Max",
+      "attributeId": 411,
+      "sourceField": "_IncreasedMaximumPhysReduction",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v163 @ X8_v20+850], this._IncreasedMaximumPhysReduction (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5fb38",
+      "nativeMethodSha256": "5997005769fad0058cf22b3a4054e3c9d9a1b743cf586d71c6b8cfdac566c372",
+      "annotatedStartAddress": "0x02D5FB38",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5fb80",
+      "nativeMethodSha256": "36afa5c83f6e0c07ae18b37809f098a8b20112ff7ed83874d04a7448332018b1",
+      "annotatedStartAddress": "0x02D5FB80",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5fd60",
+      "nativeMethodSha256": "843f5e10fef2a40a6a695e2627fba590f89acbdbeae60fd8d75a582dd0096804",
+      "annotatedStartAddress": "0x02D5FD60",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.RepelMagic+RepelMagicBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "RapidFire",
@@ -999,7 +1887,8 @@
     "MasteryRapidFireMaxAttackSpeed",
     "MasteryRapidFireReducedStandStill"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "ArrowRain",
@@ -1042,7 +1931,8 @@
     "MasteryArrowRainPenetrate",
     "MasteryArrowRainPureArrows"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "SummonWolf",
@@ -1087,7 +1977,8 @@
     "MasterySummonWolfAoeAttack",
     "MasterySummonWolfReducedCooldown"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "FrozenArrow",
@@ -1132,9 +2023,8 @@
     "MasteryFrozenArrowFrozenShots",
     "MasteryFrozenArrowPiercingIce"
    ],
-   "behaviorGaps": [
-    "Base_Power_Radius"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "PowerShot",
@@ -1181,7 +2071,8 @@
    ],
    "behaviorGaps": [
     "Base_Action_Speed"
-   ]
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "ManaArrows",
@@ -1223,10 +2114,8 @@
     "MasteryManaArrowsManaOnKill",
     "MasteryManaArrowsMaxMana"
    ],
-   "behaviorGaps": [
-    "Power_Mana_Arrows_Mana_Per_Hit",
-    "Power_Mana_Arrows_Num_Charges"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Multishot",
@@ -1270,7 +2159,8 @@
     "MasteryMultishotExplosiveArrows",
     "MasteryMultishotKnockback"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Fade",
@@ -1314,9 +2204,8 @@
     "MasteryFadeRegenerate",
     "MasteryFadeShadowAssassin"
    ],
-   "behaviorGaps": [
-    "Evasion_Bonus_Percent"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "ImpalingTrap",
@@ -1360,9 +2249,8 @@
     "MasteryImpalingTrapHealingTrap",
     "MasteryImpalingTrapFireBomb"
    ],
-   "behaviorGaps": [
-    "Power_Duration"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Backflip",
@@ -1407,10 +2295,9 @@
     "MasteryBackflipPowerShot"
    ],
    "behaviorGaps": [
-    "Power_Backflip_Increased_Backflip_Speed_Percent",
-    "Power_Backflip_Mirror_Image_Duration",
-    "Power_Backflip_Mirror_Image_Health_Percent"
-   ]
+    "Power_Backflip_Increased_Backflip_Speed_Percent"
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "MarkOfTheChosen",
@@ -1450,10 +2337,8 @@
     "MasteryMarkOfTheChosenLessResistances",
     "MasteryMarkOfTheChosenDoom"
    ],
-   "behaviorGaps": [
-    "Power_Duration",
-    "Power_Mark_Of_The_Chosen_Amplify_Damage_Taken_Percent"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Thorns",
@@ -1497,10 +2382,8 @@
     "MasteryThornsToxicSting",
     "MasteryThornsCritDamageReduction"
    ],
-   "behaviorGaps": [
-    "Base_Physical_Damage_Reduction_Bonus",
-    "Reflect_Melee_Damage_Percent"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "BeastWithin",
@@ -1544,7 +2427,8 @@
     "MasteryBeastWithinSnakesDexterity",
     "MasteryBeastWithinTotalLeech"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Mixology",
@@ -1589,7 +2473,8 @@
     "MasteryMixologyManaDuringLife",
     "MasteryMixologyLifeDuringMana"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Precision",
@@ -1622,7 +2507,129 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_AttackRatingBonus [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_AttackRatingBonus",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_MaxStacks",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_MaxStacks",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_AttackRatingBonus",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_MaxStacks": {
+      "rank1": 10.0,
+      "perRank": 0.0,
+      "expression": "10.0"
+     },
+     "_AttackRatingBonus": {
+      "rank1": 0.5,
+      "perRank": 0.1,
+      "expression": "(((rank-1.0)*0.1)+0.5)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "AttackRating_Bonus_Percent",
+     "MaxStackAmount"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x5f8",
+      "attributeField": "_AttackRating_Bonus_Percent_k__BackingField",
+      "attribute": "AttackRating_Bonus_Percent",
+      "attributeId": 204,
+      "sourceField": "_AttackRatingBonus",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+5F8], this._AttackRatingBonus (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x328",
+      "attributeField": "_MaxStackAmount_k__BackingField",
+      "attribute": "MaxStackAmount",
+      "attributeId": 18,
+      "sourceField": "_MaxStacks",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v162 @ X8_v20+328], this._MaxStacks (System.Int32)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d52370",
+      "nativeMethodSha256": "d053f283b818162b82d2ea886ef2c45825cc1b690b35cfbcafbde96697e0c2df",
+      "annotatedStartAddress": "0x02D52370",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d523bc",
+      "nativeMethodSha256": "59bbeccbf68d955b8a714abd154cc98b6d4d573ece42ca96e1c796aa82c9f431",
+      "annotatedStartAddress": "0x02D523BC",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5259c",
+      "nativeMethodSha256": "d7f365af0c8593a729a8b9655c1ea1f9a9297946c7e68b67e1e968cc97dcd068",
+      "annotatedStartAddress": "0x02D5259C",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.Precision+PrecisionBuff",
+     "Game.Skills.Precision+PrecisionBuffStack"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.Precision+PrecisionBuff",
+      "signature": "System.Void OnPayload(Game.Payload payload)",
+      "annotatedStartAddress": "0x02D526D8",
+      "nativeMethodSha256": "f2bf4bb07ec49eeb8c1cf387132cfad0602082562b18b34d38a7e45daafaba7b"
+     },
+     {
+      "owner": "Game.Skills.Precision+PrecisionBuffStack",
+      "signature": "System.Boolean Update(System.Double deltaTime)",
+      "annotatedStartAddress": "0x02D52A00",
+      "nativeMethodSha256": "7c48a038600937487a1932d9ef27f08a5ff02d557615a988e05892ce5405890b"
+     },
+     {
+      "owner": "Game.Skills.Precision+PrecisionBuffStack",
+      "signature": "System.Void _AddStack()",
+      "annotatedStartAddress": "0x02D52A64",
+      "nativeMethodSha256": "c5b2a6be682f02238a660b4d712fb602c767501d4eacee0b587a3c0c1369aed8"
+     },
+     {
+      "owner": "Game.Skills.Precision+PrecisionBuffStack",
+      "signature": "System.Void OnPayload(Game.Payload payload)",
+      "annotatedStartAddress": "0x02D52D8C",
+      "nativeMethodSha256": "a92134ffcf8a525ce9d60f68979330de2c3e751fd0d010dcaee183f2ac454942"
+     },
+     {
+      "owner": "Game.Skills.Precision+PrecisionBuffStack",
+      "signature": "System.Boolean Stack(Game.Buff buff)",
+      "annotatedStartAddress": "0x02D52FB4",
+      "nativeMethodSha256": "3f97b21aa0179e6ac7eb6f9caf7852858a3427732272d44297e360e1a034567a"
+     }
+    ]
+   }
   },
   {
    "name": "Sharpshooter",
@@ -1655,7 +2662,74 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_RangeIncrease [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_RangeIncrease",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_RangeIncrease",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_RangeIncrease": {
+      "rank1": 0.2,
+      "perRank": 0.01,
+      "expression": "(((rank-1.0)*0.01)+0.2)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Attack_Range_Bonus_Percent"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x650",
+      "attributeField": "_Attack_Range_Bonus_Percent_k__BackingField",
+      "attribute": "Attack_Range_Bonus_Percent",
+      "attributeId": 220,
+      "sourceField": "_RangeIncrease",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+650], this._RangeIncrease (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d530f8",
+      "nativeMethodSha256": "524c03469507bc61f698e897765203505158d65337ffd647aaf3ee6411b531f6",
+      "annotatedStartAddress": "0x02D530F8",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d53140",
+      "nativeMethodSha256": "424464a9bdf27bf34967f397d6ca74817864a12ee461ebb8d269291d23a2eb56",
+      "annotatedStartAddress": "0x02D53140",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d532d4",
+      "nativeMethodSha256": "978ca79ef718760c5dfa7df00a795814af7380903b3708b520d8517442ebb667",
+      "annotatedStartAddress": "0x02D532D4",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.Sharpshooter+SharpshooterBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "BeastTracking",
@@ -1688,7 +2762,97 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_MoreChampionMonsters [field_0x128]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_MoreBeastDamage",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_MoreChampionMonsters",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_MoreBeastDamage",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_MoreChampionMonsters",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_MoreBeastDamage": {
+      "rank1": -0.10000000000000002,
+      "perRank": 0.0,
+      "expression": "-0.10000000000000002"
+     },
+     "_MoreChampionMonsters": {
+      "rank1": 0.5,
+      "perRank": 0.02,
+      "expression": "(((rank-1.0)*0.02)+0.5)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "ChampionMonster_Find_Bonus_Percent",
+     "More_Damage_To_Beasts"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x2350",
+      "attributeField": "_More_Damage_To_Beasts_k__BackingField",
+      "attribute": "More_Damage_To_Beasts",
+      "attributeId": 163,
+      "sourceField": "_MoreBeastDamage",
+      "raw": "117 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v126 @ X8_v16+2350], v130 @ X0_v17 (Game.GameAttributeValueDoubleArray)"
+     },
+     {
+      "attributeStaticOffset": "0x90",
+      "attributeField": "_ChampionMonster_Find_Bonus_Percent_k__BackingField",
+      "attribute": "ChampionMonster_Find_Bonus_Percent",
+      "attributeId": 164,
+      "sourceField": "_MoreChampionMonsters",
+      "raw": "140 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v167 @ X8_v20+90], this._MoreChampionMonsters (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d4f6b8",
+      "nativeMethodSha256": "27b853ff6feeea01d87f7ebccbc8da35f0d07a05380955858c10fdcdc7ce02e7",
+      "annotatedStartAddress": "0x02D4F6B8",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d4f70c",
+      "nativeMethodSha256": "1b2725e1265b542333c315411b0e662d20ea428c556705dc625a3c17bdb09d06",
+      "annotatedStartAddress": "0x02D4F70C",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d4f8fc",
+      "nativeMethodSha256": "c37c7d5aeddd8a15300be008d70d3953aa71b37b8820963971de87c0d5b5145e",
+      "annotatedStartAddress": "0x02D4F8FC",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.BeastTracking+BeastTrackingBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "DoubleDraw",
@@ -1721,7 +2885,75 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_ExtraProjectileChance [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_ExtraProjectileChance",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ExtraProjectileChance",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_ExtraProjectileChance": {
+      "rank1": 0.15,
+      "perRank": 0.01,
+      "expression": "min((((rank-1.0)*0.01)+0.15),1.0)",
+      "capMax": 1.0
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Abilities_More_Projectiles_Chance_Array"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x24e8",
+      "attributeField": "_Abilities_More_Projectiles_Chance_Array_k__BackingField",
+      "attribute": "Abilities_More_Projectiles_Chance_Array",
+      "attributeId": 292,
+      "sourceField": "_ExtraProjectileChance",
+      "raw": "117 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v126 @ X8_v16+24E8], v130 @ X0_v17 (Game.GameAttributeValueDoubleArray)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d515e8",
+      "nativeMethodSha256": "ad3b9e78c2e3a97a0f0df948862b0b3723928918882ddaa617cd9b21af5fbe8c",
+      "annotatedStartAddress": "0x02D515E8",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d51684",
+      "nativeMethodSha256": "18cfb0f903b6c02e21359507149e1b708d91c9aaed536cffdb87623e0dc7ca7b",
+      "annotatedStartAddress": "0x02D51684",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d51828",
+      "nativeMethodSha256": "a58945c90f80423fcb1a109a2221a60713d8d9ce724d4ab4389d9f2613a88214",
+      "annotatedStartAddress": "0x02D51828",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.DoubleDraw+DoubleDrawBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "PoolOfMana",
@@ -1754,7 +2986,74 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_ManaBonus [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_ManaBonus",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ManaBonus",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_ManaBonus": {
+      "rank1": 0.15,
+      "perRank": 0.005,
+      "expression": "(((rank-1.0)*0.005)+0.15)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Mana_Bonus_Percent_Final"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x998",
+      "attributeField": "_Mana_Bonus_Percent_Final_k__BackingField",
+      "attribute": "Mana_Bonus_Percent_Final",
+      "attributeId": 424,
+      "sourceField": "_ManaBonus",
+      "raw": "117 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v126 @ X8_v16+998], v130 @ X0_v17 (Game.GameAttributeValueDoubleArray)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d51f50",
+      "nativeMethodSha256": "77c2dc8521773a003138707350aecf771605ed908e187e5d2b5e8927744ff1ad",
+      "annotatedStartAddress": "0x02D51F50",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d51f98",
+      "nativeMethodSha256": "08f7708305e3df413036be13f12602608e51277fda7692658890a27e30656e6a",
+      "annotatedStartAddress": "0x02D51F98",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5213c",
+      "nativeMethodSha256": "042b7cb2235179d5fb357320b346418a30b525828d4419cef538ef86f863801a",
+      "annotatedStartAddress": "0x02D5213C",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.PoolOfMana+PoolOfManaBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "Concentrate",
@@ -1787,7 +3086,66 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "Hit_Chance_Bonus_Percent"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [],
+    "nativeFieldAssignments": [],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Hit_Chance_Bonus_Percent",
+     "Mana_Cost_Increase_Percent_Final"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x13a8",
+      "attributeField": "_Mana_Cost_Increase_Percent_Final_k__BackingField",
+      "attribute": "Mana_Cost_Increase_Percent_Final",
+      "attributeId": 97,
+      "sourceField": null,
+      "raw": "146 CallVoid Buff.SetAttribute, v104 @ X0_v11 (Game.Buff), [v130 @ X8_v16+13A8], v160 @ X0_v24 (Game.GameAttributeValueDoubleArray)"
+     },
+     {
+      "attributeStaticOffset": "0x608",
+      "attributeField": "_Hit_Chance_Bonus_Percent_k__BackingField",
+      "attribute": "Hit_Chance_Bonus_Percent",
+      "attributeId": 425,
+      "sourceField": null,
+      "raw": "199 CallVoid Buff.SetAttribute, v104 @ X0_v11 (Game.Buff), [v229 @ X8_v26+608], v190 @ V0_v1 (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d4fc5c",
+      "nativeMethodSha256": "049221956ebe2598136f949c529f6e0f9e1b5a62b4d2242db5eaf418602a069c",
+      "annotatedStartAddress": "0x02D4FC5C",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d4fde8",
+      "nativeMethodSha256": "33c1ca9b137dc5ac3e32ffb1fe37fe2ec171d917bbbcf5f1c669cb44400ee879",
+      "annotatedStartAddress": "0x02D4FDE8",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d50094",
+      "nativeMethodSha256": "ed32fe3cc289b5f29571662d7b14410a4454db9d31dff8dfd05fd564a3ed4ec3",
+      "annotatedStartAddress": "0x02D50094",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.Concentrate+ConcentrateBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "Cripple",
@@ -1820,7 +3178,128 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_MinimumAttackRangePercent [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_MinimumAttackRangePercent",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_SlowPercent",
+      "dumpOffset": "0x128"
+     },
+     {
+      "name": "_SlowDuration",
+      "dumpOffset": "0x130"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_MinimumAttackRangePercent",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_SlowPercent",
+      "nativeOffset": null,
+      "mappingConfidence": "unpaired"
+     },
+     {
+      "name": "_SlowDuration",
+      "nativeOffset": null,
+      "mappingConfidence": "unpaired"
+     }
+    ],
+    "initializerFormulas": {
+     "_MinimumAttackRangePercent": {
+      "rank1": 0.7,
+      "perRank": -0.01,
+      "expression": "max((((rank-1.0)*-0.01)+0.7),0.0)",
+      "capMin": 0.0
+     },
+     "_SlowPercent": {
+      "rank1": -0.4000000000000001,
+      "perRank": 0.0,
+      "expression": "-0.4000000000000001"
+     },
+     "_SlowDuration": {
+      "rank1": 2.0,
+      "perRank": 0.0,
+      "expression": "2.0"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Buff_Duration",
+     "Minimum_Attack_Range_Percent",
+     "Movement_Speed_Bonus_Percent_Final"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1c0",
+      "attributeField": "_Minimum_Attack_Range_Percent_k__BackingField",
+      "attribute": "Minimum_Attack_Range_Percent",
+      "attributeId": 169,
+      "sourceField": "_MinimumAttackRangePercent",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1C0], this._MinimumAttackRangePercent (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x1c58",
+      "attributeField": "_Movement_Speed_Bonus_Percent_Final_k__BackingField",
+      "attribute": "Movement_Speed_Bonus_Percent_Final",
+      "attributeId": 115,
+      "sourceField": "_SlowPercent",
+      "raw": "140 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v174 @ X8_v20+1C58], v178 @ X0_v22 (Game.GameAttributeValueDoubleArray)"
+     },
+     {
+      "attributeStaticOffset": "0x210",
+      "attributeField": "_Buff_Duration_k__BackingField",
+      "attribute": "Buff_Duration",
+      "attributeId": 166,
+      "sourceField": "_SlowDuration",
+      "raw": "163 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v164 @ X8_v24+210], this._SlowDuration (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d50320",
+      "nativeMethodSha256": "d2266f98c6c836a446706164dc7b6e6d4cc7ae1867ee9f69dd4afe4706b562f5",
+      "annotatedStartAddress": "0x02D50320",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d503d0",
+      "nativeMethodSha256": "39a1b630cf5048a79a01b952003343e74ab97958eb89183c9a8296284f2a04f2",
+      "annotatedStartAddress": "0x02D503D0",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5060c",
+      "nativeMethodSha256": "2e0ef95a753cea5fdd08451a6a38bedb4b9e5834cf57f2457e9828de6e3edd67",
+      "annotatedStartAddress": "0x02D5060C",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.Cripple+CrippleBuff"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.Cripple+CrippleBuff",
+      "signature": "System.Void OnPayload(Game.Payload payload)",
+      "annotatedStartAddress": "0x02D506D8",
+      "nativeMethodSha256": "9ff7b61198869669aec970761a2272384261c936dcf71334f3155d9f7add385e"
+     }
+    ]
+   }
   },
   {
    "name": "DeadlyPoison",
@@ -1853,7 +3332,71 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [],
+    "nativeFieldAssignments": [],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Double_Damage_Chance_On_Crit_On_Poisoned_Target",
+     "Poison_Chance_On_Hit"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x6b8",
+      "attributeField": "_Poison_Chance_On_Hit_k__BackingField",
+      "attribute": "Poison_Chance_On_Hit",
+      "attributeId": 428,
+      "sourceField": null,
+      "raw": "145 CallVoid Buff.SetAttribute, v104 @ X0_v11 (Game.Buff), [v130 @ X8_v16+6B8], v160 @ V0_v2 (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x6c0",
+      "attributeField": "_Double_Damage_Chance_On_Crit_On_Poisoned_Target_k__BackingField",
+      "attribute": "Double_Damage_Chance_On_Crit_On_Poisoned_Target",
+      "attributeId": 429,
+      "sourceField": null,
+      "raw": "198 CallVoid Buff.SetAttribute, v104 @ X0_v11 (Game.Buff), [v229 @ X8_v26+6C0], v190 @ V0_v3 (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d50ca4",
+      "nativeMethodSha256": "48b0921e4977c28a79d9fbcae3b4ff664e4b8b0f3d9a6b78bbdbc8075d8ade9b",
+      "annotatedStartAddress": "0x02D50CA4",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d50e58",
+      "nativeMethodSha256": "20b01695fd3362691f4b45a332700cf2cf59ff9c9874d00e99af67d3e2c4730f",
+      "annotatedStartAddress": "0x02D50E58",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d51100",
+      "nativeMethodSha256": "1f3b5f27d57aa01e052528d62f3f404b1fe80cd7b9c851480d4c815a9d8a60e2",
+      "annotatedStartAddress": "0x02D51100",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.DeadlyPoison+DeadlyPoisonBuff"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.DeadlyPoison+DeadlyPoisonBuff",
+      "signature": "System.Void OnPayload(Game.Payload payload)",
+      "annotatedStartAddress": "0x02D511C4",
+      "nativeMethodSha256": "d2a5684e7394de57321629e6eadabcd28d91e634168c3d33ddc6e67909c31a64"
+     }
+    ]
+   }
   },
   {
    "name": "TastyTreats",
@@ -1889,7 +3432,74 @@
    ],
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "Power_SummonWolf_Attack_Speed_Bonus",
+    "Power_SummonWolf_Base_Life_Regen"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [],
+    "nativeFieldAssignments": [],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Power_SummonWolf_Attack_Speed_Bonus",
+     "Power_SummonWolf_Base_Life_Regen"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x15c8",
+      "attributeField": "_Power_SummonWolf_Base_Life_Regen_k__BackingField",
+      "attribute": "Power_SummonWolf_Base_Life_Regen",
+      "attributeId": 426,
+      "sourceField": null,
+      "raw": "145 CallVoid Buff.SetAttribute, v104 @ X0_v11 (Game.Buff), [v130 @ X8_v16+15C8], v160 @ V0_v2 (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x15d0",
+      "attributeField": "_Power_SummonWolf_Attack_Speed_Bonus_k__BackingField",
+      "attribute": "Power_SummonWolf_Attack_Speed_Bonus",
+      "attributeId": 430,
+      "sourceField": null,
+      "raw": "198 CallVoid Buff.SetAttribute, v104 @ X0_v11 (Game.Buff), [v229 @ X8_v26+15D0], v190 @ V0_v3 (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d54ea4",
+      "nativeMethodSha256": "2498e5626ea49f9dda9dc0ae0b45bcd3d88ee18706fb9411ea3fcd3cb48e00c4",
+      "annotatedStartAddress": "0x02D54EA4",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d55014",
+      "nativeMethodSha256": "1f5d2db6e139056d1defce09a78c9aab3b835682748c583d902aa146e98b0018",
+      "annotatedStartAddress": "0x02D55014",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d552bc",
+      "nativeMethodSha256": "d878a93b67cf3a2f54d9d33e433d7a4a0aecc424a5a7d56d34792f7c76699d17",
+      "annotatedStartAddress": "0x02D552BC",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.TastyTreats+TastyTreatsBuff"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.TastyTreats+TastyTreatsBuff",
+      "signature": "System.Void BuffManager_OnBuffAdded(System.Object sender, Game.BuffManager+BuffEventArgs e)",
+      "annotatedStartAddress": "0x02D55380",
+      "nativeMethodSha256": "15fc649be56cf8c5dbfdd2f5a4fe2d654459fc4914d116ea4a1cc341c1b2587e"
+     }
+    ]
+   }
   },
   {
    "name": "Solitary",
@@ -1922,7 +3532,75 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [],
+    "nativeFieldAssignments": [],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Power_More_Weapon_Damage_When_No_Wolf_Is_Active"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x15e8",
+      "attributeField": "_Power_More_Weapon_Damage_When_No_Wolf_Is_Active_k__BackingField",
+      "attribute": "Power_More_Weapon_Damage_When_No_Wolf_Is_Active",
+      "attributeId": 427,
+      "sourceField": null,
+      "raw": "145 CallVoid Buff.SetAttribute, v104 @ X0_v11 (Game.Buff), [v130 @ X8_v16+15E8], v160 @ V0_v2 (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d53538",
+      "nativeMethodSha256": "203656d127432e88efe3898b14347ba348c0fa81ab8ab8cf032c71c5da43f4bb",
+      "annotatedStartAddress": "0x02D53538",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5362c",
+      "nativeMethodSha256": "0de30bf331d0024cdbc6da416f9fc121aaed875eb6bc87f152868bbaf6fc4f99",
+      "annotatedStartAddress": "0x02D5362C",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d53828",
+      "nativeMethodSha256": "797a805dbe976a53d0b8781657774bd60a95ef18d80fe850ad0bb622f8e5172f",
+      "annotatedStartAddress": "0x02D53828",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.Solitary+SolitaryBuff",
+     "Game.Skills.Solitary+SolitaryTriggerBuff"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.Solitary+SolitaryTriggerBuff",
+      "signature": "System.Void Target_OnEnterWorld(System.Object sender, Game.GameWorld e)",
+      "annotatedStartAddress": "0x02D53CB4",
+      "nativeMethodSha256": "fa55e28a0a24f92796e1da6846890833f6b8dde8d7f7259b63aeb4f67862de20"
+     },
+     {
+      "owner": "Game.Skills.Solitary+SolitaryTriggerBuff",
+      "signature": "System.Void BuffManager_OnBuffAdded(System.Object sender, Game.BuffManager+BuffEventArgs e)",
+      "annotatedStartAddress": "0x02D53E60",
+      "nativeMethodSha256": "8cdcfd4a7f1699a2efae56e066cd24cba6f14bd1b2eef4a2b51ecde4a4d6c74e"
+     },
+     {
+      "owner": "Game.Skills.Solitary+SolitaryTriggerBuff",
+      "signature": "System.Void BuffManager_OnBuffRemoved(System.Object sender, Game.BuffManager+BuffEventArgs e)",
+      "annotatedStartAddress": "0x02D53F5C",
+      "nativeMethodSha256": "631ee59d85f028dd2612e0acbaeec771253c56c1515df6a748c5c67815865f00"
+     }
+    ]
+   }
   },
   {
    "name": "Fork",
@@ -1955,7 +3633,55 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [],
+    "nativeFieldAssignments": [],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Projectile_Auto_Attacks_Fork_Chance"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x24f8",
+      "attributeField": "_Projectile_Auto_Attacks_Fork_Chance_k__BackingField",
+      "attribute": "Projectile_Auto_Attacks_Fork_Chance",
+      "attributeId": 431,
+      "sourceField": null,
+      "raw": "145 CallVoid Buff.SetAttribute, v104 @ X0_v11 (Game.Buff), [v130 @ X8_v16+24F8], v160 @ V0_v2 (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d51a8c",
+      "nativeMethodSha256": "b08baf3c420bece6ae72898ad97b06df8d56e3be758543d87e3223c3143dbc26",
+      "annotatedStartAddress": "0x02D51A8C",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d51b80",
+      "nativeMethodSha256": "f723a83223bee19d39d121bfe36c5747f1f33ad5820f4fe8bd79056a11aec3e8",
+      "annotatedStartAddress": "0x02D51B80",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d51d7c",
+      "nativeMethodSha256": "fecdf32ad2396f88f39d029bb06d51e58e12315d7136c64f471c19e6660ef68a",
+      "annotatedStartAddress": "0x02D51D7C",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.Fork+ForkBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "ChainLightning",
@@ -2001,7 +3727,8 @@
     "MasteryChainLightningDamagePerJump",
     "MasteryChainLightningThunderstrike"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Teleport",
@@ -2046,7 +3773,8 @@
    ],
    "behaviorGaps": [
     "Base_Action_Speed"
-   ]
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "IceNova",
@@ -2091,7 +3819,8 @@
     "MasteryIceNovaThaw",
     "MasteryIceNovaIceBomb"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "ElementalSeal",
@@ -2137,9 +3866,9 @@
     "MasteryElementalSealMorePlayerDamage"
    ],
    "behaviorGaps": [
-    "Power_Duration",
     "Power_Elemental_Seal_Weapon_Damage_Multiplier"
-   ]
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Blizzard",
@@ -2184,9 +3913,9 @@
     "MasteryBlizzardHurricane"
    ],
    "behaviorGaps": [
-    "Base_Crit_Chance_Multiplier",
-    "Power_Duration"
-   ]
+    "Base_Crit_Chance_Multiplier"
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "ManaShield",
@@ -2228,9 +3957,8 @@
     "MasteryManaShieldManaPotionEffect",
     "MasteryManaShieldMaxElementalResists"
    ],
-   "behaviorGaps": [
-    "Mana_Shield_Damage_Absorbtion_Factor"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "IceBlast",
@@ -2274,10 +4002,8 @@
     "MasteryIceBlastManaOnHit",
     "MasteryIceBlastCriticalDamage"
    ],
-   "behaviorGaps": [
-    "Base_Power_Radius",
-    "Power_Weapon_Damage_Multiplier_2"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "InfernalBlast",
@@ -2321,11 +4047,8 @@
     "MasteryInfernalBlastMultipleExplosions",
     "MasteryInfernalBlastLivingBomb"
    ],
-   "behaviorGaps": [
-    "Base_Power_Radius",
-    "Power_Duration",
-    "Power_Weapon_Damage_Multiplier_2"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Thunderstrike",
@@ -2369,9 +4092,8 @@
     "MasteryThunderstrikeReCast",
     "MasteryThunderstrikeChainLightningOnHit"
    ],
-   "behaviorGaps": [
-    "Power_Duration"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Tornado",
@@ -2418,9 +4140,9 @@
     "MasteryTornadoHurricane"
    ],
    "behaviorGaps": [
-    "Base_Power_Radius",
     "Power_Duration"
-   ]
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "PoisonCloud",
@@ -2466,10 +4188,8 @@
     "MasteryPoisonCloudSlimelings",
     "MasteryPoisonCloudHeal"
    ],
-   "behaviorGaps": [
-    "Power_Duration",
-    "Power_Slow_Effect_Percent"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Mixology",
@@ -2514,7 +4234,8 @@
     "MasteryMixologyManaDuringLife",
     "MasteryMixologyLifeDuringMana"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Hubris",
@@ -2547,7 +4268,74 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_IntelligenceBonus [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_IntelligenceBonus",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_IntelligenceBonus",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_IntelligenceBonus": {
+      "rank1": 0.3,
+      "perRank": 0.01,
+      "expression": "(((rank-1.0)*0.01)+0.3)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Intelligence_Bonus_Percent"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x510",
+      "attributeField": "_Intelligence_Bonus_Percent_k__BackingField",
+      "attribute": "Intelligence_Bonus_Percent",
+      "attributeId": 111,
+      "sourceField": "_IntelligenceBonus",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+510], this._IntelligenceBonus (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d57464",
+      "nativeMethodSha256": "5009901717d010b6fa63ee1161ebaa168e4bae42ede4dc9d5dcd750d59bb12fd",
+      "annotatedStartAddress": "0x02D57464",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d574ac",
+      "nativeMethodSha256": "8e0f99ca1907baafe2d625275e898abe134528998e57205ef924fb9041e0de83",
+      "annotatedStartAddress": "0x02D574AC",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d57640",
+      "nativeMethodSha256": "206e0babeeca60bce07aa1792a5a7aee8ef1e1a9235b1159b0d07a19107262f1",
+      "annotatedStartAddress": "0x02D57640",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.Hubris+HubrisBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "ManaFlow",
@@ -2580,7 +4368,97 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_IncreasedMaximumManaPercent [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_IncreasedMaximumManaPercent",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_IncreasedManaRegeneration",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_IncreasedManaRegeneration",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_IncreasedMaximumManaPercent",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_IncreasedManaRegeneration": {
+      "rank1": -0.10000000000000002,
+      "perRank": 0.0,
+      "expression": "-0.10000000000000002"
+     },
+     "_IncreasedMaximumManaPercent": {
+      "rank1": 0.2,
+      "perRank": 0.01,
+      "expression": "(((rank-1.0)*0.01)+0.2)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Mana_Bonus_Percent",
+     "Mana_Regen_Bonus_Percent"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x990",
+      "attributeField": "_Mana_Bonus_Percent_k__BackingField",
+      "attribute": "Mana_Bonus_Percent",
+      "attributeId": 327,
+      "sourceField": "_IncreasedMaximumManaPercent",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+990], this._IncreasedMaximumManaPercent (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x9b0",
+      "attributeField": "_Mana_Regen_Bonus_Percent_k__BackingField",
+      "attribute": "Mana_Regen_Bonus_Percent",
+      "attributeId": 331,
+      "sourceField": "_IncreasedManaRegeneration",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v163 @ X8_v20+9B0], this._IncreasedManaRegeneration (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d57cc8",
+      "nativeMethodSha256": "f0f298cd6d31ba105b7887c72f5888998a5da90f191f470cb654200da13247f6",
+      "annotatedStartAddress": "0x02D57CC8",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d57d20",
+      "nativeMethodSha256": "994c47a1e59f92b2bb50198b196ee54059d0773fd915cf7b30aa4dfc56c74279",
+      "annotatedStartAddress": "0x02D57D20",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d57f00",
+      "nativeMethodSha256": "742edd8b6fd37de65b9a28b4dc278629abc0a3775467412ead47b9ebe7461f53",
+      "annotatedStartAddress": "0x02D57F00",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.ManaFlow+ManaFlowBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "RapidCasting",
@@ -2613,7 +4491,98 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_MoreSkillManaCostPercent [field_0x128]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_MoreAttackSpeedPercent",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_MoreSkillManaCostPercent",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_MoreAttackSpeedPercent",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_MoreSkillManaCostPercent",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_MoreAttackSpeedPercent": {
+      "rank1": 1.2,
+      "perRank": 0.0,
+      "expression": "1.2"
+     },
+     "_MoreSkillManaCostPercent": {
+      "rank1": 0.25,
+      "perRank": -0.01,
+      "expression": "max((((rank-1.0)*-0.01)+0.25),0.0)",
+      "capMin": 0.0
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Attack_Speed_Bonus_Percent_Final",
+     "Mana_Cost_Increase_Percent_Final"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0xce0",
+      "attributeField": "_Attack_Speed_Bonus_Percent_Final_k__BackingField",
+      "attribute": "Attack_Speed_Bonus_Percent_Final",
+      "attributeId": 452,
+      "sourceField": "_MoreAttackSpeedPercent",
+      "raw": "117 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v126 @ X8_v16+CE0], v130 @ X0_v17 (Game.GameAttributeValueDoubleArray)"
+     },
+     {
+      "attributeStaticOffset": "0x13a8",
+      "attributeField": "_Mana_Cost_Increase_Percent_Final_k__BackingField",
+      "attribute": "Mana_Cost_Increase_Percent_Final",
+      "attributeId": 97,
+      "sourceField": "_MoreSkillManaCostPercent",
+      "raw": "144 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v167 @ X8_v20+13A8], v179 @ X0_v24 (Game.GameAttributeValueDoubleArray)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d58130",
+      "nativeMethodSha256": "03079e265610685491eed8578a0f5a64f5e602dc14c5ad88c6f11227c44da86e",
+      "annotatedStartAddress": "0x02D58130",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d581d4",
+      "nativeMethodSha256": "152d93116adb06df6338544040ab66e9403318dde1cd87c2ae5a04113f656f57",
+      "annotatedStartAddress": "0x02D581D4",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d583d4",
+      "nativeMethodSha256": "8063352f35c7cefd0240f93b8c56d67d4d4a3deeeff835059e271c5b1976ff02",
+      "annotatedStartAddress": "0x02D583D4",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.RapidCasting+RapidCastingBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "AncientKnowledge",
@@ -2646,7 +4615,74 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_ExperienceBonus [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_ExperienceBonus",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ExperienceBonus",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_ExperienceBonus": {
+      "rank1": 0.05,
+      "perRank": 0.005,
+      "expression": "(((rank-1.0)*0.005)+0.05)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Experience_Bonus_Percent"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0xbd8",
+      "attributeField": "_Experience_Bonus_Percent_k__BackingField",
+      "attribute": "Experience_Bonus_Percent",
+      "attributeId": 361,
+      "sourceField": "_ExperienceBonus",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+BD8], this._ExperienceBonus (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d55744",
+      "nativeMethodSha256": "ed2cc0d003afdcdb19fccf6b037e8d3936d90ea8e42374f08fc0a741d1d8ad26",
+      "annotatedStartAddress": "0x02D55744",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5578c",
+      "nativeMethodSha256": "7c9df03e1ad1f7b8565e8a3d8cbc585a45e6fff47b25f83ebcbe556eac6aaa8f",
+      "annotatedStartAddress": "0x02D5578C",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d55920",
+      "nativeMethodSha256": "8097392c37a35a185240999653fe6b9f583e0b58083e0eae508271bc122858dc",
+      "annotatedStartAddress": "0x02D55920",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.AncientKnowledge+AncientKnowledgeBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "BloodCasting",
@@ -2679,7 +4715,75 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_PercentOfManaCostTakenAsLife [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_PercentOfManaCostTakenAsLife",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_PercentOfManaCostTakenAsLife",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_PercentOfManaCostTakenAsLife": {
+      "rank1": 0.3,
+      "perRank": 0.01,
+      "expression": "min((((rank-1.0)*0.01)+0.3),1.0)",
+      "capMax": 1.0
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Percent_Of_Mana_Cost_Taken_As_Life"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x13c0",
+      "attributeField": "_Percent_Of_Mana_Cost_Taken_As_Life_k__BackingField",
+      "attribute": "Percent_Of_Mana_Cost_Taken_As_Life",
+      "attributeId": 170,
+      "sourceField": "_PercentOfManaCostTakenAsLife",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+13C0], this._PercentOfManaCostTakenAsLife (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d55af4",
+      "nativeMethodSha256": "cfb5e9a9e7441ce1d9d8782600a40615681f56659744c0d09196a3410e87b02e",
+      "annotatedStartAddress": "0x02D55AF4",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d55b90",
+      "nativeMethodSha256": "f6a552d295656f93bfe87339bef79ab3aac5594431cd5999ca6d73c942da54c5",
+      "annotatedStartAddress": "0x02D55B90",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d55d24",
+      "nativeMethodSha256": "4daa180aada98364166052e2fc21fa4b50d8ce6bb26d69094fe820703a40eae8",
+      "annotatedStartAddress": "0x02D55D24",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.BloodCasting+BloodCastingBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "FireArmor",
@@ -2714,7 +4818,84 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_ResistanceBonus",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_DamageTakenAsElement",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ResistanceBonus",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_DamageTakenAsElement",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Damage_Taken_Converted_To_Fire_Percent",
+     "Resistance_Fire"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1ad8",
+      "attributeField": "_Resistance_Fire_k__BackingField",
+      "attribute": "Resistance_Fire",
+      "attributeId": 1000,
+      "sourceField": "_ResistanceBonus",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1AD8], this._ResistanceBonus (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x1060",
+      "attributeField": "_Damage_Taken_Converted_To_Fire_Percent_k__BackingField",
+      "attribute": "Damage_Taken_Converted_To_Fire_Percent",
+      "attributeId": 575,
+      "sourceField": "_DamageTakenAsElement",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v163 @ X8_v20+1060], this._DamageTakenAsElement (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d56ca8",
+      "nativeMethodSha256": "a9252adde8af06de720c682d85eb59bf77e6c5d01864bb7e04cd5a54c5d01cb5",
+      "annotatedStartAddress": "0x02D56CA8",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d56cf0",
+      "nativeMethodSha256": "7b37a29b1f9006efd7cafd0358e807905906c054716ed2e712921f4bed484595",
+      "annotatedStartAddress": "0x02D56CF0",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d56ed0",
+      "nativeMethodSha256": "020549e4af135f1cc4792d9be61947497fd086b4948769d2caff1c6f931ebd35",
+      "annotatedStartAddress": "0x02D56ED0",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.FireArmor+FireArmorBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "ColdArmor",
@@ -2749,7 +4930,84 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_ResistanceBonus",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_DamageTakenAsElement",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ResistanceBonus",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_DamageTakenAsElement",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Damage_Taken_Converted_To_Cold_Percent",
+     "Resistance_Cold"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1ae0",
+      "attributeField": "_Resistance_Cold_k__BackingField",
+      "attribute": "Resistance_Cold",
+      "attributeId": 1011,
+      "sourceField": "_ResistanceBonus",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1AE0], this._ResistanceBonus (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x1068",
+      "attributeField": "_Damage_Taken_Converted_To_Cold_Percent_k__BackingField",
+      "attribute": "Damage_Taken_Converted_To_Cold_Percent",
+      "attributeId": 576,
+      "sourceField": "_DamageTakenAsElement",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v163 @ X8_v20+1068], this._DamageTakenAsElement (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d55f54",
+      "nativeMethodSha256": "ca084796b0649ef5a92e5c67d37e2fa7ed794be1d70a4df8c1f85d72b7fd7419",
+      "annotatedStartAddress": "0x02D55F54",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d55f9c",
+      "nativeMethodSha256": "1d155314a3c1834e3f8d8561c102dbdff1a695bde082a8bae072074f48291101",
+      "annotatedStartAddress": "0x02D55F9C",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5617c",
+      "nativeMethodSha256": "6ad7ea3a86d1e252338ea15bef94c530f70a510a3c331eaedbf19743ddfcf898",
+      "annotatedStartAddress": "0x02D5617C",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.ColdArmor+ColdArmorBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "LightningArmor",
@@ -2784,7 +5042,84 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_ResistanceBonus",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_DamageTakenAsElement",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ResistanceBonus",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_DamageTakenAsElement",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Damage_Taken_Converted_To_Lightning_Percent",
+     "Resistance_Lightning"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1ae8",
+      "attributeField": "_Resistance_Lightning_k__BackingField",
+      "attribute": "Resistance_Lightning",
+      "attributeId": 1012,
+      "sourceField": "_ResistanceBonus",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1AE8], this._ResistanceBonus (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x1070",
+      "attributeField": "_Damage_Taken_Converted_To_Lightning_Percent_k__BackingField",
+      "attribute": "Damage_Taken_Converted_To_Lightning_Percent",
+      "attributeId": 577,
+      "sourceField": "_DamageTakenAsElement",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v163 @ X8_v20+1070], this._DamageTakenAsElement (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d57870",
+      "nativeMethodSha256": "ff1cbb894e7c5d1d2e84b4979f8c59550a030e66b8283d675166700fdee03377",
+      "annotatedStartAddress": "0x02D57870",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d578b8",
+      "nativeMethodSha256": "ed9b0a793bf57cca26e1465388835abad9354f47b8ef96917cd597ba0b0ee729",
+      "annotatedStartAddress": "0x02D578B8",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d57a98",
+      "nativeMethodSha256": "ffb8447aff49a7e7c856b17e2067b91d0a356c4b94ae673329c29928b3141cf8",
+      "annotatedStartAddress": "0x02D57A98",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.LightningArmor+LightningArmorBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "EvasiveManeuver",
@@ -2819,7 +5154,146 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_IncreasedDodgeChance [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_IncreasedDodgeChance",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_ChanceToReduceTeleportCooldownWhenHit",
+      "dumpOffset": "0x128"
+     },
+     {
+      "name": "_TeleportCooldownReductionTime",
+      "dumpOffset": "0x130"
+     },
+     {
+      "name": "_TeleportCooldownReductionProcCooldown",
+      "dumpOffset": "0x138"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ChanceToReduceTeleportCooldownWhenHit",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_IncreasedDodgeChance",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_TeleportCooldownReductionTime",
+      "nativeOffset": "0x130",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": null,
+      "nativeOffset": "0x138",
+      "mappingConfidence": "unpaired-native-store"
+     }
+    ],
+    "initializerFormulas": {
+     "_ChanceToReduceTeleportCooldownWhenHit": {
+      "rank1": -0.4000000000000001,
+      "perRank": 0.0,
+      "expression": "-0.4000000000000001"
+     },
+     "_IncreasedDodgeChance": {
+      "rank1": 0.1,
+      "perRank": 0.01,
+      "expression": "(((rank-1.0)*0.01)+0.1)"
+     }
+    },
+    "suspiciousInitializerValues": {
+     "_TeleportCooldownReductionTime": {
+      "rank1": 7.291122019556398e-304,
+      "perRank": 0.0,
+      "expression": "7.291122019556398e-304"
+     }
+    },
+    "applyAttributes": [
+     "Chance_To_Reduce_Teleport_Cooldown_When_Hit",
+     "Dodge_Chance_Bonus_Percent",
+     "Teleport_Cooldown_Reduction_Proc_Cooldown",
+     "Teleport_Cooldown_Reduction_Time"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1300",
+      "attributeField": "_Dodge_Chance_Bonus_Percent_k__BackingField",
+      "attribute": "Dodge_Chance_Bonus_Percent",
+      "attributeId": 801,
+      "sourceField": "_IncreasedDodgeChance",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1300], this._IncreasedDodgeChance (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x6c8",
+      "attributeField": "_Chance_To_Reduce_Teleport_Cooldown_When_Hit_k__BackingField",
+      "attribute": "Chance_To_Reduce_Teleport_Cooldown_When_Hit",
+      "attributeId": 171,
+      "sourceField": "_ChanceToReduceTeleportCooldownWhenHit",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v174 @ X8_v20+6C8], this._ChanceToReduceTeleportCooldownWhenHit (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x6d0",
+      "attributeField": "_Teleport_Cooldown_Reduction_Time_k__BackingField",
+      "attribute": "Teleport_Cooldown_Reduction_Time",
+      "attributeId": 172,
+      "sourceField": "_TeleportCooldownReductionTime",
+      "raw": "159 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v196 @ X8_v24+6D0], this._TeleportCooldownReductionTime (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x6d8",
+      "attributeField": "_Teleport_Cooldown_Reduction_Proc_Cooldown_k__BackingField",
+      "attribute": "Teleport_Cooldown_Reduction_Proc_Cooldown",
+      "attributeId": 173,
+      "sourceField": "_TeleportCooldownReductionProcCooldown",
+      "raw": "182 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v164 @ X8_v28+6D8], this._TeleportCooldownReductionProcCooldown (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d56464",
+      "nativeMethodSha256": "1a36b317ac84f36bbea31fad9b24544d2dab5ba2984ec62814a1646dcdf1eb98",
+      "annotatedStartAddress": "0x02D56464",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d564c4",
+      "nativeMethodSha256": "f265c7666ccd1906b3c1ab22d03e0d362ca965fa0133b1864fae861538db12a1",
+      "annotatedStartAddress": "0x02D564C4",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5673c",
+      "nativeMethodSha256": "b229f895fbe253d910bef156c42f191af081d1a8ddb6d56e9b49cb7627350749",
+      "annotatedStartAddress": "0x02D5673C",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.EvasiveManeuver+EvasiveManeuverBuff"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.EvasiveManeuver+EvasiveManeuverBuff",
+      "signature": "System.Void OnPayload(Game.Payload payload)",
+      "annotatedStartAddress": "0x02D56808",
+      "nativeMethodSha256": "ed138f7921a3d89f033e393a30e2832b346361d5c3785135ae2f60b3bb5d0c4d"
+     }
+    ]
+   }
   },
   {
    "name": "ForceField",
@@ -2854,7 +5328,74 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_MoreForceField [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_MoreForceField",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_MoreForceField",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_MoreForceField": {
+      "rank1": 0.2,
+      "perRank": 0.01,
+      "expression": "(((rank-1.0)*0.01)+0.2)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "ForceField_Bonus_Percent_Final"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x788",
+      "attributeField": "_ForceField_Bonus_Percent_Final_k__BackingField",
+      "attribute": "ForceField_Bonus_Percent_Final",
+      "attributeId": 3101,
+      "sourceField": "_MoreForceField",
+      "raw": "117 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v126 @ X8_v16+788], v130 @ X0_v17 (Game.GameAttributeValueDoubleArray)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d570a4",
+      "nativeMethodSha256": "0526a73ca418d1a58ebe5e073086c2ff9408ab91f63adc2bf1e3e62e164cb75c",
+      "annotatedStartAddress": "0x02D570A4",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d570ec",
+      "nativeMethodSha256": "40800108a46579e8e2cf9f1e8a1310af63b18b42eab2574cfa79025b7b2c792e",
+      "annotatedStartAddress": "0x02D570EC",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d57290",
+      "nativeMethodSha256": "0839f4b60a8e5e4e8074d9cd75ba0af359cb0e586be0182f99d0b524b3c0864f",
+      "annotatedStartAddress": "0x02D57290",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.ForceField+ForceFieldBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "SummonSkeleton",
@@ -2908,7 +5449,18 @@
     "MasterySummonSkeletonMoreArmor",
     "MasterySummonSkeletonDetonate"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "Minion_Inheritance_Armor_Evasion_Bonus_Percent",
+    "Minion_Inheritance_Attack_Speed_Bonus_Percent",
+    "Minion_Inheritance_Crit_Chance_Bonus_Percent",
+    "Minion_Inheritance_Crit_Damage_Bonus_Percent",
+    "Minion_Inheritance_Force_Field_Bonus_Percent",
+    "Minion_Inheritance_Life_Bonus_Percent",
+    "Minion_Inheritance_Movement_Speed_Bonus_Percent",
+    "Minion_Inheritance_Resistances_Bonus_Percent",
+    "Minion_Inheritance_Weapon_Damage_Bonus_Percent"
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "AstralWalk",
@@ -2951,9 +5503,8 @@
     "MasteryAstralWalkReducedManaCost",
     "MasteryAstralWalkImmortal"
    ],
-   "behaviorGaps": [
-    "AstralWalk_Movement_Speed_Bonus_Percent"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Shadowbolt",
@@ -2997,10 +5548,8 @@
     "MasteryShadowboltPenetration",
     "MasteryShadowboltCooldown"
    ],
-   "behaviorGaps": [
-    "Base_Power_Radius",
-    "Power_Weapon_Damage_Multiplier_2"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "UnholyFocus",
@@ -3051,7 +5600,8 @@
     "Power_Unholy_Focus_Demon_Shadowbolt_Weapon_Damage_Multiplier",
     "Power_Unholy_Focus_Movement_Speed_Bonus_Percent",
     "Power_Unholy_Focus_Skeleton_Charge_Cooldown"
-   ]
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "DrainLife",
@@ -3103,11 +5653,9 @@
    "behaviorGaps": [
     "Base_Action_Speed",
     "Base_Power_Radius",
-    "Base_Power_Weapon_Damage_Multiplier",
-    "Power_Drain_Life_Percent_Of_Life_Leech_Leeched_As_Life",
-    "Power_Duration",
     "field_0x158"
-   ]
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "SummonDemon",
@@ -3162,7 +5710,19 @@
     "MasterySummonDemonReducedRangedDamageTaken",
     "MasterySummonDemonMoreDamageDealtAndTaken"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "Minion_Inheritance_Armor_Evasion_Bonus_Percent",
+    "Minion_Inheritance_Attack_Speed_Bonus_Percent",
+    "Minion_Inheritance_Crit_Chance_Bonus_Percent",
+    "Minion_Inheritance_Crit_Damage_Bonus_Percent",
+    "Minion_Inheritance_Force_Field_Bonus_Percent",
+    "Minion_Inheritance_Life_Bonus_Percent",
+    "Minion_Inheritance_Movement_Speed_Bonus_Percent",
+    "Minion_Inheritance_Resistances_Bonus_Percent",
+    "Minion_Inheritance_Weapon_Damage_Bonus_Percent",
+    "Power_Minion_Duration"
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "BoneLink",
@@ -3207,10 +5767,8 @@
     "MasteryBoneLinkGainLifePercentOnKill",
     "MasteryBoneLinkMoreDamageDealt"
    ],
-   "behaviorGaps": [
-    "Amplify_Damage_Taken_Percent",
-    "Buff_Duration"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Decay",
@@ -3254,10 +5812,8 @@
     "MasteryDecayMorePoisonDamageTaken",
     "MasteryDecayMinionRegen"
    ],
-   "behaviorGaps": [
-    "Power_Decay_Target_Reduced_Attack_Speed_Percent",
-    "Power_Duration"
-   ]
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "DemonicPresence",
@@ -3306,9 +5862,9 @@
     "Base_Power_Radius",
     "Life_Regen_Bonus",
     "Power_Demonic_Presence_Base_ForceField_Bonus_Percent",
-    "Power_Demonic_Presence_Base_Life_Bonus_Percent",
-    "Power_Duration"
-   ]
+    "Power_Demonic_Presence_Base_Life_Bonus_Percent"
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Sacrifice",
@@ -3353,10 +5909,9 @@
     "MasterySacrificeDetonate"
    ],
    "behaviorGaps": [
-    "Mana_Granted_Percent",
-    "Next_Offensive_Spell_Cast_Damage_Increased_Percent",
-    "Power_Duration"
-   ]
+    "Power_Life_And_Force_Field_Gained_From_Minion_Percent"
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "SummonDeath",
@@ -3410,7 +5965,17 @@
     "MasterySummonDeathChanceToBlock",
     "MasterySummonDeathMoreInitialDamage"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "Minion_Inheritance_Armor_Evasion_Bonus_Percent",
+    "Minion_Inheritance_Attack_Speed_Bonus_Percent",
+    "Minion_Inheritance_Crit_Chance_Bonus_Percent",
+    "Minion_Inheritance_Crit_Damage_Bonus_Percent",
+    "Minion_Inheritance_Force_Field_Bonus_Percent",
+    "Minion_Inheritance_Life_Bonus_Percent",
+    "Minion_Inheritance_Movement_Speed_Bonus_Percent",
+    "Minion_Inheritance_Resistances_Bonus_Percent"
+   ],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Mixology",
@@ -3455,7 +6020,8 @@
     "MasteryMixologyManaDuringLife",
     "MasteryMixologyLifeDuringMana"
    ],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": null
   },
   {
    "name": "Bodyguard",
@@ -3488,7 +6054,81 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_ReducedCritDamageTaken [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_ReducedCritDamageTaken",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ReducedCritDamageTaken",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_ReducedCritDamageTaken": {
+      "rank1": 0.1,
+      "perRank": 0.01,
+      "expression": "(((rank-1.0)*0.01)+0.1)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Reduced_Crit_Damage_Taken"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1190",
+      "attributeField": "_Reduced_Crit_Damage_Taken_k__BackingField",
+      "attribute": "Reduced_Crit_Damage_Taken",
+      "attributeId": 721,
+      "sourceField": "_ReducedCritDamageTaken",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1190], this._ReducedCritDamageTaken (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d593b4",
+      "nativeMethodSha256": "7dc473c2842d2839cdf824f561bdce55ee045dd5974dcf4e8e0a5a6cf9d4fbf2",
+      "annotatedStartAddress": "0x02D593B4",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d593fc",
+      "nativeMethodSha256": "2e7706c95cb792861a4fd934e289642461486d365be216cc3332802372e68790",
+      "annotatedStartAddress": "0x02D593FC",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d59590",
+      "nativeMethodSha256": "44b8deb7c19b58506caa92309b914f3b1d855b33d728b0ed310c3bf61607f7a4",
+      "annotatedStartAddress": "0x02D59590",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.Bodyguard+BodyguardBuff"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.Bodyguard+BodyguardBuff",
+      "signature": "System.Void OnPayload(Game.Payload payload)",
+      "annotatedStartAddress": "0x02D596F0",
+      "nativeMethodSha256": "d8b832e0cd269e699a5d343d1b97b081eac56eb15d0f546eceb757453ca80066"
+     }
+    ]
+   }
   },
   {
    "name": "AccumulatingShadows",
@@ -3521,7 +6161,146 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_ShadowBoltDamageIncrease [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_MaxStacks",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_ShadowBoltDamageIncrease",
+      "dumpOffset": "0x128"
+     },
+     {
+      "name": "_ShadowBoltTimeWindow",
+      "dumpOffset": "0x130"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_MaxStacks",
+      "nativeOffset": "0x11c",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_ShadowBoltTimeWindow",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_ShadowBoltDamageIncrease",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_MaxStacks": {
+      "rank1": 5.0,
+      "perRank": 0.0,
+      "expression": "5.0"
+     },
+     "_ShadowBoltTimeWindow": {
+      "rank1": 16.0,
+      "perRank": 0.0,
+      "expression": "16.0"
+     },
+     "_ShadowBoltDamageIncrease": {
+      "rank1": 0.2,
+      "perRank": 0.01,
+      "expression": "(((rank-1.0)*0.01)+0.2)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Power_Accumulating_Shadows_Buff_Duration",
+     "Power_Accumulating_Shadows_Max_Stacks",
+     "Shadowbolt_Damage_Bonus_Percent"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1738",
+      "attributeField": "_Power_Accumulating_Shadows_Max_Stacks_k__BackingField",
+      "attribute": "Power_Accumulating_Shadows_Max_Stacks",
+      "attributeId": 767,
+      "sourceField": "_MaxStacks",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1738], this._MaxStacks (System.Int32)"
+     },
+     {
+      "attributeStaticOffset": "0x1730",
+      "attributeField": "_Power_Accumulating_Shadows_Buff_Duration_k__BackingField",
+      "attribute": "Power_Accumulating_Shadows_Buff_Duration",
+      "attributeId": 766,
+      "sourceField": "_ShadowBoltTimeWindow",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v174 @ X8_v20+1730], this._ShadowBoltTimeWindow (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x1740",
+      "attributeField": "_Shadowbolt_Damage_Bonus_Percent_k__BackingField",
+      "attribute": "Shadowbolt_Damage_Bonus_Percent",
+      "attributeId": 768,
+      "sourceField": "_ShadowBoltDamageIncrease",
+      "raw": "159 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v164 @ X8_v24+1740], this._ShadowBoltDamageIncrease (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d58678",
+      "nativeMethodSha256": "324c8b6ce6c83c92380c132dc1779227bc7ef955b57100f4478d8184c60b855c",
+      "annotatedStartAddress": "0x02D58678",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d586d0",
+      "nativeMethodSha256": "12f5409b3baf7b253327f3c03e0525b2bb69dd7ae3ba7920b48b2488ddd213c2",
+      "annotatedStartAddress": "0x02D586D0",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d588fc",
+      "nativeMethodSha256": "40447df6d7c32a99ade7d2d7edd916a00ed73dc10e57bcd14598089bb3131b36",
+      "annotatedStartAddress": "0x02D588FC",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.AccumulatingShadows+AccumulatingShadowsBuff",
+     "Game.Skills.AccumulatingShadows+AccumulatingShadowsInstanceBuff"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.AccumulatingShadows+AccumulatingShadowsBuff",
+      "signature": "System.Void OnPayload(Game.Payload payload)",
+      "annotatedStartAddress": "0x02D589C0",
+      "nativeMethodSha256": "912dd6d6f0d25a631550e5d104692666c1002af9d87013ba0fd4f4f96aa12dc0"
+     },
+     {
+      "owner": "Game.Skills.AccumulatingShadows+AccumulatingShadowsInstanceBuff",
+      "signature": "System.Boolean get_CanRefreshDurationOnStack()",
+      "annotatedStartAddress": "0x02D58D10",
+      "nativeMethodSha256": "5103ba3de080c52a046485f800433848701faa49ab8f60241a80987ca249d7ac"
+     },
+     {
+      "owner": "Game.Skills.AccumulatingShadows+AccumulatingShadowsInstanceBuff",
+      "signature": "System.Void _AddStack()",
+      "annotatedStartAddress": "0x02D58EEC",
+      "nativeMethodSha256": "270c93e4efebf9a5729c876a7141b5d95b404df592ed98e67a6f12a7f335191c"
+     },
+     {
+      "owner": "Game.Skills.AccumulatingShadows+AccumulatingShadowsInstanceBuff",
+      "signature": "System.Boolean Stack(Game.Buff buff)",
+      "annotatedStartAddress": "0x02D5927C",
+      "nativeMethodSha256": "8df6fb8c5343185de08a7ae91aae1462b4bd4377fcb4236bd42ac1e84bbe438e"
+     }
+    ]
+   }
   },
   {
    "name": "Pillaging",
@@ -3554,7 +6333,84 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_MinionMagicFindIncrease",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_AdditionalIronDropChance",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_MinionMagicFindIncrease",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_AdditionalIronDropChance",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Minion_Kill_Magic_Find_Bonus_Percent",
+     "Set_Chance_To_Find_Additional_Iron_On_Drop"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0xbb0",
+      "attributeField": "_Minion_Kill_Magic_Find_Bonus_Percent_k__BackingField",
+      "attribute": "Minion_Kill_Magic_Find_Bonus_Percent",
+      "attributeId": 765,
+      "sourceField": "_MinionMagicFindIncrease",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+BB0], this._MinionMagicFindIncrease (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x1e90",
+      "attributeField": "_Set_Chance_To_Find_Additional_Iron_On_Drop_k__BackingField",
+      "attribute": "Set_Chance_To_Find_Additional_Iron_On_Drop",
+      "attributeId": 2005,
+      "sourceField": "_AdditionalIronDropChance",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v163 @ X8_v20+1E90], this._AdditionalIronDropChance (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5b13c",
+      "nativeMethodSha256": "5ffdfa5584bf868b74e24c41b94876ec16fa879ab06dc199a87bfb2ec1167a00",
+      "annotatedStartAddress": "0x02D5B13C",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5b184",
+      "nativeMethodSha256": "ba2a0c5dea9a5f3ad499271337f8433a7edc182eb83e6985a18b88eda3b79907",
+      "annotatedStartAddress": "0x02D5B184",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5b364",
+      "nativeMethodSha256": "fba23ab2fc8841d016db8997a679ef98b4488282b39559a8d995d60296af6bdf",
+      "annotatedStartAddress": "0x02D5B364",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.Pillaging+PillagingBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "BoneArmor",
@@ -3587,7 +6443,97 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_PhysicalDamageReductionBonus [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_PhysicalDamageReductionBonus",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_DamageTakenAsPhysical",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_DamageTakenAsPhysical",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_PhysicalDamageReductionBonus",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_DamageTakenAsPhysical": {
+      "rank1": -0.4000000000000001,
+      "perRank": 0.0,
+      "expression": "-0.4000000000000001"
+     },
+     "_PhysicalDamageReductionBonus": {
+      "rank1": 0.1,
+      "perRank": 0.01,
+      "expression": "(((rank-1.0)*0.01)+0.1)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Base_Physical_Damage_Reduction_Bonus",
+     "Damage_Taken_Converted_To_Physical_Percent"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1058",
+      "attributeField": "_Damage_Taken_Converted_To_Physical_Percent_k__BackingField",
+      "attribute": "Damage_Taken_Converted_To_Physical_Percent",
+      "attributeId": 574,
+      "sourceField": "_DamageTakenAsPhysical",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1058], this._DamageTakenAsPhysical (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x848",
+      "attributeField": "_Base_Physical_Damage_Reduction_Bonus_k__BackingField",
+      "attribute": "Base_Physical_Damage_Reduction_Bonus",
+      "attributeId": 271,
+      "sourceField": "_PhysicalDamageReductionBonus",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v163 @ X8_v20+848], this._PhysicalDamageReductionBonus (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d59e20",
+      "nativeMethodSha256": "9124c3fff737603d2af3f89119a0015484e04f6eefc4aba51bf57aadbae94c9c",
+      "annotatedStartAddress": "0x02D59E20",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d59e78",
+      "nativeMethodSha256": "edcda35a849134b4ecf15c9e8d0f0a193b784f99652df4e468d72319612cfb99",
+      "annotatedStartAddress": "0x02D59E78",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5a058",
+      "nativeMethodSha256": "75f04867bdf3f7dd9b4b58b81306343509dbdf68e1eeea1214ccdb79c82ccec6",
+      "annotatedStartAddress": "0x02D5A058",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.BoneArmor+BoneArmorBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "DarkMagic",
@@ -3620,7 +6566,97 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_ManaGainedOnKill [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_ManaGainedOnKill",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_ManaCostReduction",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ManaCostReduction",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_ManaGainedOnKill",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_ManaCostReduction": {
+      "rank1": -0.10000000000000002,
+      "perRank": 0.0,
+      "expression": "-0.10000000000000002"
+     },
+     "_ManaGainedOnKill": {
+      "rank1": 2.0,
+      "perRank": 0.1,
+      "expression": "(((rank-1.0)*0.1)+2.0)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Mana_Cost_Increase_Percent_Final",
+     "Mana_Gained_On_Kill"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x9f0",
+      "attributeField": "_Mana_Gained_On_Kill_k__BackingField",
+      "attribute": "Mana_Gained_On_Kill",
+      "attributeId": 148,
+      "sourceField": "_ManaGainedOnKill",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+9F0], this._ManaGainedOnKill (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x13a8",
+      "attributeField": "_Mana_Cost_Increase_Percent_Final_k__BackingField",
+      "attribute": "Mana_Cost_Increase_Percent_Final",
+      "attributeId": 97,
+      "sourceField": "_ManaCostReduction",
+      "raw": "140 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v163 @ X8_v20+13A8], v175 @ X0_v22 (Game.GameAttributeValueDoubleArray)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5a2c0",
+      "nativeMethodSha256": "be4feebdc183f3d59ea2d596e48fd948f68e09c62eb1dc1af9570a77eecabc04",
+      "annotatedStartAddress": "0x02D5A2C0",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5a314",
+      "nativeMethodSha256": "9e76a61ca88edf7e39a0e10229b632028fdc25e2da3333fd7dfb93fed191e691",
+      "annotatedStartAddress": "0x02D5A314",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5a504",
+      "nativeMethodSha256": "d21168c3733aed64c1b28276e4ebda6db9366629790864877e705606d7a8b099",
+      "annotatedStartAddress": "0x02D5A504",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.DarkMagic+DarkMagicBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "GiftOfTheVampire",
@@ -3653,7 +6689,133 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_MinionLeechGainPercent [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_MinionLeechGainPercent",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_LifeLeechBonus",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_LifeLeechBonus",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_MinionLeechGainPercent",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_LifeLeechBonus": {
+      "rank1": 0.03,
+      "perRank": 0.0,
+      "expression": "0.03"
+     },
+     "_MinionLeechGainPercent": {
+      "rank1": 0.1,
+      "perRank": 0.005,
+      "expression": "(((rank-1.0)*0.005)+0.1)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Cold_Life_Leech",
+     "Fire_Life_Leech",
+     "Lightning_Life_Leech",
+     "Minion_Inheritance_Life_Leech_Bonus_Percent",
+     "Physical_Life_Leech",
+     "Poison_Life_Leech"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x16c8",
+      "attributeField": "_Minion_Inheritance_Life_Leech_Bonus_Percent_k__BackingField",
+      "attribute": "Minion_Inheritance_Life_Leech_Bonus_Percent",
+      "attributeId": 769,
+      "sourceField": "_MinionLeechGainPercent",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+16C8], this._MinionLeechGainPercent (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0xa58",
+      "attributeField": "_Physical_Life_Leech_k__BackingField",
+      "attribute": "Physical_Life_Leech",
+      "attributeId": 313,
+      "sourceField": "_LifeLeechBonus",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v174 @ X8_v20+A58], this._LifeLeechBonus (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0xa60",
+      "attributeField": "_Fire_Life_Leech_k__BackingField",
+      "attribute": "Fire_Life_Leech",
+      "attributeId": 314,
+      "sourceField": "_LifeLeechBonus",
+      "raw": "159 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v196 @ X8_v24+A60], this._LifeLeechBonus (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0xa68",
+      "attributeField": "_Cold_Life_Leech_k__BackingField",
+      "attribute": "Cold_Life_Leech",
+      "attributeId": 315,
+      "sourceField": "_LifeLeechBonus",
+      "raw": "182 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v218 @ X8_v28+A68], this._LifeLeechBonus (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0xa70",
+      "attributeField": "_Lightning_Life_Leech_k__BackingField",
+      "attribute": "Lightning_Life_Leech",
+      "attributeId": 316,
+      "sourceField": "_LifeLeechBonus",
+      "raw": "205 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v240 @ X8_v32+A70], this._LifeLeechBonus (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0xa78",
+      "attributeField": "_Poison_Life_Leech_k__BackingField",
+      "attribute": "Poison_Life_Leech",
+      "attributeId": 317,
+      "sourceField": "_LifeLeechBonus",
+      "raw": "228 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v164 @ X8_v36+A78], this._LifeLeechBonus (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5a748",
+      "nativeMethodSha256": "c038e9ac9ad19fe9998c76e5514683b819f706b3c2efbf0669416b36cd80ad72",
+      "annotatedStartAddress": "0x02D5A748",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5a7a4",
+      "nativeMethodSha256": "31dc6db186dec1db5a2ebbdfaf795ea2b87e58cdf544b6aed1ed0ddc65124a06",
+      "annotatedStartAddress": "0x02D5A7A4",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5aab4",
+      "nativeMethodSha256": "5f6839f5a4b7e363cd20220af8391294559e58a341535d1b313fdfef7fcda721",
+      "annotatedStartAddress": "0x02D5AAB4",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.GiftOfTheVampire+GiftOfTheVampireBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "MasterSummoner",
@@ -3686,7 +6848,84 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_MinionLifeBonus",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_MinionDamageBonus",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_MinionLifeBonus",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_MinionDamageBonus",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Minion_Inheritance_Life_Bonus_Percent",
+     "Minion_Inheritance_Weapon_Damage_Bonus_Percent"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1698",
+      "attributeField": "_Minion_Inheritance_Life_Bonus_Percent_k__BackingField",
+      "attribute": "Minion_Inheritance_Life_Bonus_Percent",
+      "attributeId": 734,
+      "sourceField": "_MinionLifeBonus",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1698], this._MinionLifeBonus (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0x1680",
+      "attributeField": "_Minion_Inheritance_Weapon_Damage_Bonus_Percent_k__BackingField",
+      "attribute": "Minion_Inheritance_Weapon_Damage_Bonus_Percent",
+      "attributeId": 738,
+      "sourceField": "_MinionDamageBonus",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v163 @ X8_v20+1680], this._MinionDamageBonus (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5ace4",
+      "nativeMethodSha256": "41cfa036bdf63fc1fdebbde3489dc8ad77e97fd52028fe4224b68aff93812daf",
+      "annotatedStartAddress": "0x02D5ACE4",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5ad2c",
+      "nativeMethodSha256": "2bfd66fc242be126456af2ac09740e9911b350b60c00f369f00d5084e1f39ebc",
+      "annotatedStartAddress": "0x02D5AD2C",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5af0c",
+      "nativeMethodSha256": "96e81cc4311a871e2db41b87e5ed4c8d6a4b485aefd14ca119d790de06e29a18",
+      "annotatedStartAddress": "0x02D5AF0C",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.MasterSummoner+MasterSummonerBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "Reanimator",
@@ -3719,7 +6958,111 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_ChanceToReanimateFallenMinion [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_ChanceToReanimateFallenMinion",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_ReanimatedMinionLifePercent",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_ReanimatedMinionLifePercent",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_ChanceToReanimateFallenMinion",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_ReanimatedMinionLifePercent": {
+      "rank1": 0.5,
+      "perRank": 0.0,
+      "expression": "0.5"
+     },
+     "_ChanceToReanimateFallenMinion": {
+      "rank1": 0.3,
+      "perRank": 0.01,
+      "expression": "(((rank-1.0)*0.01)+0.3)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Minion_Chance_To_Reanimate_On_Killing_Blow",
+     "Reanimated_Minion_Life_Percent"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0xbb8",
+      "attributeField": "_Minion_Chance_To_Reanimate_On_Killing_Blow_k__BackingField",
+      "attribute": "Minion_Chance_To_Reanimate_On_Killing_Blow",
+      "attributeId": 770,
+      "sourceField": "_ChanceToReanimateFallenMinion",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+BB8], this._ChanceToReanimateFallenMinion (System.Double)"
+     },
+     {
+      "attributeStaticOffset": "0xbc0",
+      "attributeField": "_Reanimated_Minion_Life_Percent_k__BackingField",
+      "attribute": "Reanimated_Minion_Life_Percent",
+      "attributeId": 788,
+      "sourceField": "_ReanimatedMinionLifePercent",
+      "raw": "136 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v163 @ X8_v20+BC0], this._ReanimatedMinionLifePercent (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5b594",
+      "nativeMethodSha256": "404a90c62610574f9db9d1908597cd4c56615fb31ab98fe3e50a296b92245d6a",
+      "annotatedStartAddress": "0x02D5B594",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5b5e4",
+      "nativeMethodSha256": "b992561bdee2e7a36583125f2aef2493527a91195da3ea3ed79484d6fce2476b",
+      "annotatedStartAddress": "0x02D5B5E4",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5b7c4",
+      "nativeMethodSha256": "bd6bc2c7e8551efd1f0bc11cff22bcd85a19ff3014b554dd255a8802e23aadf8",
+      "annotatedStartAddress": "0x02D5B7C4",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.Reanimator+ReanimatorBuff",
+     "Game.Skills.Reanimator+ReanimatorBuff+<>c__DisplayClass1_0"
+    ],
+    "triggerHooks": [
+     {
+      "owner": "Game.Skills.Reanimator+ReanimatorBuff",
+      "signature": "System.Void OnPayload(Game.Payload payload)",
+      "annotatedStartAddress": "0x02D5B888",
+      "nativeMethodSha256": "e755ec8fc7dee2f7f0fec784b5ee7195845251d584b9dbbddcb998e2d3a6eba9"
+     },
+     {
+      "owner": "Game.Skills.Reanimator+ReanimatorBuff+<>c__DisplayClass1_0",
+      "signature": "System.Void <OnPayload>b__0(Game.HitPayload p)",
+      "annotatedStartAddress": "0x02D5BB00",
+      "nativeMethodSha256": "69281f7cc8588f3e27c6e4fabc63b2e44af883f3bcbf5436d8d892e3a3c660d6"
+     }
+    ]
+   }
   },
   {
    "name": "VileTouch",
@@ -3752,7 +7095,84 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_MorePoisonDamage",
+      "dumpOffset": "0x120"
+     },
+     {
+      "name": "_PoisonChanceOnHit",
+      "dumpOffset": "0x128"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_MorePoisonDamage",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     },
+     {
+      "name": "_PoisonChanceOnHit",
+      "nativeOffset": "0x128",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {},
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Poison_Chance_On_Hit",
+     "Weapon_Poison_Damage_Bonus_Percent_Final"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0xfb0",
+      "attributeField": "_Weapon_Poison_Damage_Bonus_Percent_Final_k__BackingField",
+      "attribute": "Weapon_Poison_Damage_Bonus_Percent_Final",
+      "attributeId": 88,
+      "sourceField": "_MorePoisonDamage",
+      "raw": "117 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v126 @ X8_v16+FB0], v130 @ X0_v17 (Game.GameAttributeValueDoubleArray)"
+     },
+     {
+      "attributeStaticOffset": "0x6b8",
+      "attributeField": "_Poison_Chance_On_Hit_k__BackingField",
+      "attribute": "Poison_Chance_On_Hit",
+      "attributeId": 428,
+      "sourceField": "_PoisonChanceOnHit",
+      "raw": "140 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v167 @ X8_v20+6B8], this._PoisonChanceOnHit (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5be54",
+      "nativeMethodSha256": "135dbbd5f1446a7d6f657360dfd62097dc9589bb3f982847a061c2b60dbd8996",
+      "annotatedStartAddress": "0x02D5BE54",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5be9c",
+      "nativeMethodSha256": "cbd26c14a714e059c71060f93f8eaa8db51c85c5445d5c8234e45cd9422664a2",
+      "annotatedStartAddress": "0x02D5BE9C",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5c08c",
+      "nativeMethodSha256": "9fab2adb03c132dd1f40a5846a759fba057eaf6ab220d78a7496f4d1ed8e54fb",
+      "annotatedStartAddress": "0x02D5C08C",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.VileTouch+VileTouchBuff"
+    ],
+    "triggerHooks": []
+   }
   },
   {
    "name": "WandMaster",
@@ -3785,7 +7205,74 @@
    "summon": null,
    "masteryCount": 0,
    "masteries": [],
-   "behaviorGaps": []
+   "behaviorGaps": [
+    "_MoreDamageWithWands [field_0x120]"
+   ],
+   "nativePassiveRecovery": {
+    "sourceAvailable": true,
+    "recoveryStatus": "native_source_indexed_manual_behavior_review_pending",
+    "fields": [
+     {
+      "name": "_MoreDamageWithWands",
+      "dumpOffset": "0x120"
+     }
+    ],
+    "nativeFieldAssignments": [
+     {
+      "name": "_MoreDamageWithWands",
+      "nativeOffset": "0x120",
+      "mappingConfidence": "source-order Cpp2IL assignment paired with native store to this"
+     }
+    ],
+    "initializerFormulas": {
+     "_MoreDamageWithWands": {
+      "rank1": 0.2,
+      "perRank": 0.01,
+      "expression": "(((rank-1.0)*0.01)+0.2)"
+     }
+    },
+    "suspiciousInitializerValues": {},
+    "applyAttributes": [
+     "Increased_Damage_With_Wands"
+    ],
+    "applyAttributeWrites": [
+     {
+      "attributeStaticOffset": "0x1c98",
+      "attributeField": "_Increased_Damage_With_Wands_k__BackingField",
+      "attribute": "Increased_Damage_With_Wands",
+      "attributeId": 771,
+      "sourceField": "_MoreDamageWithWands",
+      "raw": "113 CallVoid Buff.SetAttribute, v100 @ X0_v11 (Game.Buff), [v127 @ X8_v16+1C98], this._MoreDamageWithWands (System.Double)"
+     }
+    ],
+    "methods": {
+     "initialize": {
+      "signature": "InternalInitializePowerParameters(",
+      "nativeAddress": "0x2d5c260",
+      "nativeMethodSha256": "0c21859770202a719e0013e6fab6c1ae9a0213ef1a6e133322e67631be5fed6f",
+      "annotatedStartAddress": "0x02D5C260",
+      "annotationMatchesNativeAddress": true
+     },
+     "apply": {
+      "signature": "System.Void Apply()",
+      "nativeAddress": "0x2d5c2a8",
+      "nativeMethodSha256": "dc0cc14fd54befb65e856d81cdf5cd00ba44f59c3ebfb7f598093895839fa55c",
+      "annotatedStartAddress": "0x02D5C2A8",
+      "annotationMatchesNativeAddress": true
+     },
+     "remove": {
+      "signature": "System.Void Remove()",
+      "nativeAddress": "0x2d5c43c",
+      "nativeMethodSha256": "71dc509bcaeecd1b8f7fd638fb84e275d3a187f515610129a09d599568331010",
+      "annotatedStartAddress": "0x02D5C43C",
+      "annotationMatchesNativeAddress": true
+     }
+    },
+    "nestedTypes": [
+     "Game.Skills.WandMaster+WandMasterBuff"
+    ],
+    "triggerHooks": []
+   }
   }
  ]
 }

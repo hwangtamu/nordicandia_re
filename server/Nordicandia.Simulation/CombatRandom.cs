@@ -9,6 +9,8 @@ public sealed class CombatRandom
     private ulong state;
 
     public CombatRandom(ulong seed) => state = seed;
+    public ulong State => state;
+    public void RestoreState(ulong value) => state = value;
 
     public ulong NextUInt64()
     {

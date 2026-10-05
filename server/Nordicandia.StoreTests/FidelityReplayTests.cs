@@ -262,7 +262,7 @@ static class FidelityReplayTests
                         var inst = Make(fork, chain, 2);
                         inst.Monsters[0].X = 1; inst.Monsters[0].Z = 0;
                         inst.Monsters[1].X = 11.5; inst.Monsters[1].Z = 0;
-                        inst.Advance(0.05);
+                        inst.Advance(0.5);
                         got = inst.Monsters[0].MaxHp - inst.Monsters[0].Hp > 0
                             && inst.Monsters[1].Hp == inst.Monsters[1].MaxHp ? 0 : -1;
                         break;
@@ -272,7 +272,7 @@ static class FidelityReplayTests
                         var inst = Make(fork, chain, 2);
                         inst.Monsters[0].X = 1; inst.Monsters[0].Z = 0;
                         inst.Monsters[1].X = 5; inst.Monsters[1].Z = 0;
-                        inst.Advance(0.05);
+                        inst.Advance(0.5);
                         got = inst.Monsters[1].MaxHp - inst.Monsters[1].Hp;
                         break;
                     }

@@ -81,6 +81,18 @@ public sealed class CombatRegistry
     private static MonsterProfile[] NiflheimProfiles(int tier) =>
         ProfilesForWorldTier(tier).Select(p => p with { ExpMult = 1.8 }).ToArray();
 
+    /// <summary>W03: resolve the world's BossMonsterId through the extracted monster roster.
+    /// Boss rarity and exact resistance/phase tuning remain separate fidelity work.</summary>
+    private static MonsterProfile? BossProfileForWorldTier(int tier)
+    {
+        var bossName = WorldCatalog.ForTier(tier)?.BossName;
+        var monster = MonsterCatalog.ByName(bossName);
+        if (monster is not { } definition) return null;
+        return new MonsterProfile(definition.Name, Speed: 2.0,
+            Damage: MonsterCatalog.DamageBundle(definition.Name),
+            Ranged: definition.Ranged, Brain: definition.BrainName, Rarity: 6);
+    }
+
     /// <summary>W01/W04: the spawn pool for a world tier, built from that world's
     /// MonsterTypeSpawnWeights and the real monster roster (name, damage type, ranged, brain).
     /// Falls back to the small default archetype set when the world or its types are unknown.</summary>
@@ -89,11 +101,21 @@ public sealed class CombatRegistry
         var world = WorldCatalog.ForTier(tier);
         if (world is null) return MonsterProfiles;
         var pool = new List<MonsterProfile>();
-        foreach (var typeName in world.Value.SpawnWeights.Keys.OrderBy(k => k, StringComparer.Ordinal))
-            foreach (var monster in MonsterCatalog.ByType(typeName))
+        foreach (var (typeName, typeWeight) in world.Value.SpawnWeights.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+        {
+            if (typeWeight <= 0) continue;
+            var monsters = MonsterCatalog.ByType(typeName).ToList();
+            if (monsters.Count == 0) continue;
+            // MonsterTypeSpawnWeights define the total probability mass of the type. Until
+            // per-monster within-type weights are recovered, divide that mass evenly among
+            // its spawnable members rather than accidentally biasing populous types.
+            var memberWeight = (double)typeWeight / monsters.Count;
+            foreach (var monster in monsters)
                 pool.Add(new MonsterProfile(monster.Name, Speed: 2.4,
                     Damage: MonsterCatalog.DamageBundle(monster.Name),
-                    Ranged: monster.Ranged, Brain: monster.BrainName));
+                    Ranged: monster.Ranged, Brain: monster.BrainName, SpawnWeight: memberWeight,
+                    AvailableRarities: monster.AvailableRarities, SpawnGroup: typeName));
+        }
         return pool.Count >= 3 ? pool.ToArray() : MonsterProfiles;
     }
 
@@ -104,6 +126,13 @@ public sealed class CombatRegistry
         var tier = (int)map.GetValueOrDefault(9);
         if (tier <= 0) tier = (int)map.GetValueOrDefault(8);
         return Math.Max(1, tier);
+    }
+
+    private static int SelectedWorldTier(IReadOnlyDictionary<int, double> map)
+    {
+        var unlocked = WorldTier(map);
+        var selected = (int)map.GetValueOrDefault(8);
+        return selected <= 0 || selected > unlocked ? unlocked : selected;
     }
 
     /// <summary>W04: the theme kit for a world tier. The client ThemeId (1/2/3) selects the
@@ -154,10 +183,19 @@ public sealed class CombatRegistry
         public long PendingOfflineSeconds;
         // Niflheim portal run: while true the instance uses the scaled monster profiles.
         public bool Niflheim;
+        public bool Town;
         public int NiflheimPacks;
         public int NiflheimRunsCleared;
         public int LastDungeonsCleared;
+        // Native DungeonRunStarted/Completed carry tier, waypoint and duration. The web maps
+        // a cleared boss dungeon onto those persisted checkpoint fields.
+        public int CurrentWorldWaypoint = 1;
+        public int LastWorldProgressDungeonsCleared;
+        public double WorldRunElapsedSeconds;
         public readonly List<LootDropView> RecentLoot = new();
+        public readonly List<SerializedItem> PendingLootItems = new();
+        public bool PendingNiflheimReturn;
+        public bool PendingNiflheimCompletion;
     }
 
     public CombatInstance GetOrCreate(Guid owner, Guid characterId)
@@ -170,9 +208,11 @@ public sealed class CombatRegistry
             var (equipOffense, equipDefense, equipRecovery) = LootTable.EquipmentBonus(items);
             var seed = (ulong)(uint)characterId.GetHashCode() << 32 | (uint)characterId.GetHashCode();
             var loadout = store.GetLoadout(owner, characterId);
-            var basePowers = PowerCatalog.BuildPool(persisted.Class, loadout.Active, loadout.Passive);
+            var powerRanks = store.GetPowerRanks(owner, characterId);
+            var basePowers = PowerCatalog.BuildPool(persisted.Class, loadout.Active, loadout.Passive, powerRanks);
             var ranks = store.GetMasteryRanks(owner, characterId);
             var niflheim = store.IsNiflheimActive(owner, characterId);
+            var town = store.IsTownActive(owner, characterId);
             var attributeMap = CharacterAttributeMap(owner, characterId, basePowers);
             var stats = CharacterRatings.Apply(
                 CombatantStats.FromRealtime(
@@ -185,14 +225,29 @@ public sealed class CombatRegistry
             // to 1 across a restart (which would make the command log boundary reject fresh
             // commands from a client that already saw a higher version).
             var persistedVersion = store.GetCombatVersion(owner, characterId);
-            var worldTier = WorldTier(attributeMap);
-            var layout = MapLayout.Generate(21, 21, 5, seed ^ 0x4D41504C41594F55UL, ThemeForTier(worldTier));
+            var worldTier = SelectedWorldTier(attributeMap);
+            var savedWorld = store.GetWorldProgress(owner, characterId);
+            var currentWaypoint = savedWorld.Waypoints.GetValueOrDefault(worldTier).CurrentWaypoint;
+            if (currentWaypoint <= 0) currentWaypoint = 1;
+            var layout = WorldLayout(characterId, worldTier);
             var instance = new CombatInstance(stats, persisted.Experience, persisted.Silver, persisted.Opals,
                 (int)persisted.MonsterKills, seed,
                 monsterProfiles: niflheim ? NiflheimProfiles(worldTier) : ProfilesForWorldTier(worldTier),
                 classPowers: EffectivePowers(basePowers, ranks), initialVersion: persistedVersion, layout: layout,
-                classId: (int)persisted.Class);
+                classId: (int)persisted.Class, bossProfile: BossProfileForWorldTier(worldTier),
+                currentWorldTier: worldTier);
             instance.LootTableName = niflheim ? "Niflheim" : "Default";
+            var savedRun = niflheim ? store.GetNiflheimRun(owner, characterId) : null;
+            if (niflheim)
+            {
+                // Old saves have only the active flag; resume them at a minimum two-pack run.
+                // New saves restore the exact current pack, RNG and monster HP below.
+                if (savedRun is not null) instance.RestoreNiflheimRun(savedRun);
+                else instance.SetWorld(NiflheimProfiles(worldTier), packs: 2, layout: layout,
+                    worldBossProfile: BossProfileForWorldTier(worldTier), currentWorldTier: worldTier,
+                    nativeNiflheimRun: true);
+            }
+            if (town) instance.EnterTown();
             entries[characterId] = new Entry
             {
                 Instance = instance,
@@ -203,7 +258,12 @@ public sealed class CombatRegistry
                 EquipRecovery = equipRecovery,
                 PendingOfflineSeconds = store.GetOfflineWindow(owner, characterId),
                 Niflheim = niflheim,
+                NiflheimPacks = savedRun?.TotalPacks ?? (niflheim ? 2 : 0),
+                NiflheimRunsCleared = store.GetNiflheimRunsCleared(owner, characterId),
+                Town = town,
                 LastDungeonsCleared = instance.DungeonsCleared,
+                CurrentWorldWaypoint = currentWaypoint,
+                LastWorldProgressDungeonsCleared = instance.DungeonsCleared,
                 FlushedExperience = persisted.Experience,
                 FlushedSilver = persisted.Silver,
                 FlushedOpals = persisted.Opals,
@@ -220,8 +280,9 @@ public sealed class CombatRegistry
         {
             var entry = GetEntry(owner, characterId);
             AdvanceLocked(entry);
-            ApplyNiflheimCompletionLocked(owner, characterId, entry);
+            if (!entry.Niflheim) RecordWorldProgressLocked(owner, characterId, entry);
             CollectLootLocked(owner, characterId, entry);
+            ApplyNiflheimCompletionLocked(owner, characterId, entry);
             FlushLocked(owner, characterId, entry);
             return TakeState(entry);
         }
@@ -319,13 +380,120 @@ public sealed class CombatRegistry
     // ----- Niflheim portal (M3) -----
 
     /// <summary>Whether the character holds a portal and/or is inside a run.</summary>
+    public WebWorldProgress WorldProgress(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var saved = store.GetWorldProgress(owner, characterId);
+            var worlds = WorldCatalog.Entries
+                .Where(w => w.Tier is > 0)
+                .GroupBy(w => w.Tier!.Value)
+                .Select(g => g.First())
+                .OrderBy(w => w.Tier)
+                .Select(w =>
+                {
+                    var tier = w.Tier!.Value;
+                    var waypoint = saved.Waypoints.GetValueOrDefault(tier);
+                    var maxWaypoint = Math.Max(1, waypoint.MaxWaypoint);
+                    var currentWaypoint = Math.Clamp(waypoint.CurrentWaypoint <= 0 ? 1 : waypoint.CurrentWaypoint,
+                        1, maxWaypoint);
+                    return new WebWorldOption(tier, w.IntegerId, w.Name, w.BossName ?? "",
+                        tier <= saved.UnlockedTier, tier == saved.CurrentTier,
+                        currentWaypoint, maxWaypoint);
+                }).ToList();
+            return new WebWorldProgress(saved.CurrentTier, saved.UnlockedTier, worlds);
+        }
+    }
+
+    public (bool Applied, string Reason, WebCombatState State) SelectWorld(Guid owner, Guid characterId,
+        int tier, int waypoint = 0)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            if (entry.Niflheim) return (false, "in_niflheim", PeekState(entry));
+            var saved = store.GetWorldProgress(owner, characterId);
+            if (tier < 1 || tier > saved.UnlockedTier)
+                return (false, "world_locked", PeekState(entry));
+            if (WorldCatalog.ForTier(tier) is null)
+                return (false, "unknown_world", PeekState(entry));
+
+            var savedWaypoint = saved.Waypoints.GetValueOrDefault(tier);
+            var maxWaypoint = Math.Max(1, savedWaypoint.MaxWaypoint);
+            var selectedWaypoint = waypoint > 0 ? waypoint
+                : savedWaypoint.CurrentWaypoint > 0 ? savedWaypoint.CurrentWaypoint : 1;
+            if (selectedWaypoint < 1 || selectedWaypoint > maxWaypoint)
+                return (false, "checkpoint_locked", PeekState(entry));
+            SettleBeforeTravelLocked(owner, characterId, entry);
+            store.SetCurrentWorldTier(owner, characterId, tier);
+            store.SetCurrentWorldWaypoint(owner, characterId, tier, selectedWaypoint);
+            store.SetTownActive(owner, characterId, false);
+            entry.Town = false;
+            var layout = WorldLayout(characterId, tier);
+            entry.Instance.SetWorld(ProfilesForWorldTier(tier), layout: layout,
+                worldBossProfile: BossProfileForWorldTier(tier), currentWorldTier: tier);
+            entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
+            entry.LastWorldProgressDungeonsCleared = entry.Instance.DungeonsCleared;
+            entry.CurrentWorldWaypoint = selectedWaypoint;
+            entry.WorldRunElapsedSeconds = 0;
+            FlushLocked(owner, characterId, entry);
+            return (true, "ok", TakeState(entry));
+        }
+    }
+
+    public WebTownState TownState(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            return new WebTownState(entry.Town, entry.Instance.CurrentWorldTier, entry.CurrentWorldWaypoint);
+        }
+    }
+
+    public WebCombatState EnterTown(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            SettleBeforeTravelLocked(owner, characterId, entry);
+            if (entry.Niflheim) LeaveNiflheimLocked(owner, characterId, entry);
+            if (!entry.Town)
+            {
+                entry.Niflheim = false;
+                entry.Town = true;
+                store.SetNiflheimActive(owner, characterId, false);
+                store.SetTownActive(owner, characterId, true);
+                entry.Instance.EnterTown();
+                entry.WorldRunElapsedSeconds = 0;
+            }
+            FlushLocked(owner, characterId, entry);
+            return TakeState(entry);
+        }
+    }
+
+    public WebCombatState LeaveTown(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            if (!entry.Town) return TakeState(entry);
+            var saved = store.GetWorldProgress(owner, characterId);
+            var waypoint = saved.Waypoints.GetValueOrDefault(saved.CurrentTier);
+            var selectedWaypoint = waypoint.CurrentWaypoint > 0 ? waypoint.CurrentWaypoint : 1;
+            var (_, _, state) = SelectWorld(owner, characterId, saved.CurrentTier, selectedWaypoint);
+            return state;
+        }
+    }
+
     public WebPortalState Portal(Guid owner, Guid characterId)
     {
         lock (gate)
         {
             var entry = GetEntry(owner, characterId);
             var portal = store.GetItems(owner, characterId).FirstOrDefault(i => i != null && i.DefinitionIntegerId == PortalDefinitionIntegerId);
-            return new WebPortalState(entry.Niflheim, portal is not null, portal?.Id ?? Guid.Empty, entry.NiflheimRunsCleared, entry.NiflheimPacks);
+            return new WebPortalState(entry.Niflheim, portal is not null, portal?.Id ?? Guid.Empty,
+                entry.NiflheimRunsCleared, entry.NiflheimPacks, entry.Instance.NiflheimExitReady,
+                entry.Instance.NiflheimChestSize, entry.Instance.NiflheimChestOpened);
         }
     }
 
@@ -339,14 +507,26 @@ public sealed class CombatRegistry
             if (entry.Niflheim) return (false, "already_in_niflheim", PeekState(entry));
             var portal = store.GetItems(owner, characterId).FirstOrDefault(i => i != null && i.Id == itemId && i.DefinitionIntegerId == PortalDefinitionIntegerId);
             if (portal is null) return (false, "no_portal_item", PeekState(entry));
-            var (consumed, _) = store.ConsumeItem(owner, characterId, itemId, 1);
-            if (consumed <= 0) return (false, "consume_failed", PeekState(entry));
+            SettleBeforeTravelLocked(owner, characterId, entry);
             var packs = (int)LootTable.AttributeOf(portal, MerchantCatalog.NumMonsterPacksAttributeId);
-            store.SetNiflheimActive(owner, characterId, true);
+            var extraFinalPackMonsters = (int)LootTable.AttributeOf(portal, 2717); // Area_Contains_More_Bosses
+            var wasTown = entry.Town;
+            var portalTier = SelectedWorldTier(CharacterAttributeMap(owner, characterId, entry.BasePowers));
+            entry.Instance.SetWorld(NiflheimProfiles(portalTier), Math.Max(2, packs),
+                layout: WorldLayout(characterId, portalTier),
+                worldBossProfile: BossProfileForWorldTier(portalTier), currentWorldTier: portalTier,
+                nativeNiflheimRun: true, extraFinalPackMonsters: extraFinalPackMonsters);
+            if (!store.TryEnterNiflheim(owner, characterId, itemId, entry.Instance.CaptureNiflheimRun()!))
+            {
+                entry.Instance.SetWorld(ProfilesForWorldTier(portalTier), layout: WorldLayout(characterId, portalTier),
+                    worldBossProfile: BossProfileForWorldTier(portalTier), currentWorldTier: portalTier);
+                if (wasTown) entry.Instance.EnterTown();
+                return (false, "consume_failed", PeekState(entry));
+            }
+            entry.Town = false;
             entry.Niflheim = true;
-            entry.NiflheimPacks = packs;
-            var portalTier = WorldTier(CharacterAttributeMap(owner, characterId, entry.BasePowers));
-            entry.Instance.SetWorld(NiflheimProfiles(portalTier), packs > 0 ? packs : null);
+            entry.NiflheimPacks = Math.Max(2, packs);
+            entry.WorldRunElapsedSeconds = 0;
             entry.Instance.LootTableName = "Niflheim";
             entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
             FlushLocked(owner, characterId, entry);
@@ -354,16 +534,37 @@ public sealed class CombatRegistry
         }
     }
 
-    /// <summary>Leaves a Niflheim run and restores the normal dungeon (no item is consumed).</summary>
+    /// <summary>Leaves a Niflheim run for the safe town hub (no item is consumed).</summary>
     public WebCombatState ReturnPortal(Guid owner, Guid characterId)
     {
         lock (gate)
         {
             var entry = GetEntry(owner, characterId);
             if (!entry.Niflheim) return TakeState(entry);
-            LeaveNiflheimLocked(owner, characterId, entry);
+            SettleBeforeTravelLocked(owner, characterId, entry);
+            if (entry.Niflheim) LeaveNiflheimLocked(owner, characterId, entry);
             FlushLocked(owner, characterId, entry);
             return TakeState(entry);
+        }
+    }
+
+    /// <summary>Open the native exit chest once, keeping its drops and opened state in the same
+    /// durable progress transaction.</summary>
+    public (bool Applied, string Reason, WebCombatState State) OpenNiflheimChest(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var entry = GetEntry(owner, characterId);
+            if (!entry.Niflheim || !entry.Instance.NiflheimExitReady)
+                return (false, "exit_not_ready", PeekState(entry));
+            if (entry.Instance.NiflheimChestSize == 0)
+                return (false, "no_chest", PeekState(entry));
+            if (entry.Instance.NiflheimChestOpened)
+                return (false, "already_opened", PeekState(entry));
+            entry.Instance.OpenNiflheimChest();
+            CollectLootLocked(owner, characterId, entry);
+            FlushLocked(owner, characterId, entry);
+            return (true, "ok", TakeState(entry));
         }
     }
 
@@ -376,19 +577,24 @@ public sealed class CombatRegistry
         }
         if (entry.Instance.DungeonsCleared > entry.LastDungeonsCleared)
         {
-            entry.NiflheimRunsCleared++;
-            LeaveNiflheimLocked(owner, characterId, entry);
+            LeaveNiflheimLocked(owner, characterId, entry, completed: true);
         }
     }
 
-    private void LeaveNiflheimLocked(Guid owner, Guid characterId, Entry entry)
+    private void LeaveNiflheimLocked(Guid owner, Guid characterId, Entry entry, bool completed = false)
     {
-        store.SetNiflheimActive(owner, characterId, false);
+        completed |= entry.Instance.CompleteNiflheimExit();
+        entry.PendingNiflheimReturn = true;
+        entry.PendingNiflheimCompletion = completed;
+        if (completed) entry.NiflheimRunsCleared++;
         entry.Niflheim = false;
+        entry.NiflheimPacks = 0;
+        entry.Town = true;
         entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
-        // Return to the world-tier pool (not the default archetypes), matching the entry's world.
-        var map = CharacterAttributeMap(owner, characterId, entry.BasePowers);
-        entry.Instance.SetWorld(ProfilesForWorldTier(WorldTier(map)));
+        entry.LastWorldProgressDungeonsCleared = entry.Instance.DungeonsCleared;
+        entry.WorldRunElapsedSeconds = 0;
+        // The destination is town. LeaveTown later restores the selected tier/checkpoint.
+        entry.Instance.EnterTown();
         entry.Instance.LootTableName = "Default";
         entry.LastDungeonsCleared = entry.Instance.DungeonsCleared;
     }
@@ -447,9 +653,12 @@ public sealed class CombatRegistry
                     break;
             }
 
+            // Record clear events produced either by the elapsed simulation above or this command.
+            if (!entry.Niflheim) RecordWorldProgressLocked(owner, characterId, entry);
             // R2: simulation time comes only from the server clock (AdvanceLocked), never
             // from the act of sending a command. Commands only change intent.
             CollectLootLocked(owner, characterId, entry);
+            ApplyNiflheimCompletionLocked(owner, characterId, entry);
             FlushLocked(owner, characterId, entry);
             var state = TakeState(entry);
             store.AppendCommand(owner, characterId, new GameStore.CommandRecord
@@ -471,8 +680,9 @@ public sealed class CombatRegistry
         {
             var entry = GetEntry(owner, characterId);
             var items = store.GetItems(owner, characterId);
-            var rows = items.Where(i => i != null).Select(ToItemDetail).ToList();
-            return new WebInventory(rows, entry.Instance.Offense, entry.Instance.Defense, entry.Instance.Recovery);
+            var rows = items.Where(i => i != null).Select(i => ToItemDetail(i, entry.Instance.PlayerLevel)).ToList();
+            return new WebInventory(rows, entry.Instance.Offense, entry.Instance.Defense, entry.Instance.Recovery,
+                entry.Instance.PlayerLevel);
         }
     }
 
@@ -486,9 +696,26 @@ public sealed class CombatRegistry
             var stored = CharacterAttributeMap(owner, characterId, entry.BasePowers);
             var eval = CharacterAttributeEngine.Instance.Evaluate(stored);
             var (available, str, dex, intel, vit, con, agi, mind) = store.GetAttributeAllocation(owner, characterId);
+            // These values come from the same recovered attribute evaluator used by combat.
+            // Keep the browser's detail labels separate from the engine names.
+            var detailNames = new[] {
+                "AttackRating_Total", "Armor_Total", "Evasion_Total", "Crit_Chance_MainHand_Total",
+                "Crit_Damage_Total", "Attack_Speed_Percent_Total", "Attack_Range_MainHand_Total",
+                "Life_Max_Total", "Mana_Max_Total", "Life_Regen_Total", "Mana_Regen_Total",
+                "Dodge_Chance_Total", "Block_Chance_Total", "Resistance_Fire_Total_Capped",
+                "Resistance_Cold_Total_Capped", "Resistance_Lightning_Total_Capped", "Resistance_Poison_Total_Capped",
+                "Magic_Find_Percent_Total", "Item_Quantity_Bonus_Percent_Total", "Movement_Speed_Total",
+                "Weapon_Physical_Damage_Min_MainHand_Total", "Weapon_Physical_Damage_Delta_MainHand_Total",
+                "Weapon_Fire_Damage_Min_MainHand_Total", "Weapon_Fire_Damage_Delta_MainHand_Total",
+                "Weapon_Cold_Damage_Min_MainHand_Total", "Weapon_Cold_Damage_Delta_MainHand_Total",
+                "Weapon_Lightning_Damage_Min_MainHand_Total", "Weapon_Lightning_Damage_Delta_MainHand_Total",
+                "Weapon_Poison_Damage_Min_MainHand_Total", "Weapon_Poison_Damage_Delta_MainHand_Total"
+            };
+            var details = detailNames.ToDictionary(name => name, name => eval.Resolve(name));
             return new WebAttributes(available,
                 str, dex, intel, vit, con, agi, mind,
-                eval.Strength, eval.Dexterity, eval.Intelligence, eval.Vitality, eval.Constitution, eval.Agility, eval.Mindpower);
+                eval.Strength, eval.Dexterity, eval.Intelligence, eval.Vitality, eval.Constitution, eval.Agility, eval.Mindpower,
+                details);
         }
     }
 
@@ -521,7 +748,8 @@ public sealed class CombatRegistry
                 .Take(PowerCatalog.MaxPassiveSkills).ToList();
             if (activeNames.Count == 0) return (false, "need_active_skill");
             var (storedActive, storedPassive) = store.SetLoadout(owner, characterId, activeNames, passiveNames);
-            entry.BasePowers = PowerCatalog.BuildPool(persisted.Class, storedActive, storedPassive);
+            entry.BasePowers = PowerCatalog.BuildPool(persisted.Class, storedActive, storedPassive,
+                store.GetPowerRanks(owner, characterId));
             entry.Instance.UpdatePowers(EffectivePowers(entry.BasePowers, store.GetMasteryRanks(owner, characterId)));
             return (true, "ok");
         }
@@ -617,6 +845,7 @@ public sealed class CombatRegistry
 
         if (!equip)
         {
+            if (!LootTable.IsEquipped(item)) return (false, "not_equipped");
             store.ApplyItemOperations(owner, characterId, new List<ItemOperationEntry>
             {
                 new MoveItemOperationEntry { ItemId = itemId, ToSlot = ItemSlotTypes.Inventory, ToLocation = item.Location },
@@ -627,6 +856,7 @@ public sealed class CombatRegistry
 
         var slot = LootTable.EquipSlotOf(item);
         if (slot is < 0 or > 13) return (false, "not_equippable");
+        if (item.Slot != ItemSlotTypes.Inventory) return (false, "not_in_inventory");
         // Level requirement: the item's level must not exceed the character's by more than a
         // grace band (the web loot drops near the player's level; the band is Provisional).
         var requiredLevel = (int)LootTable.AttributeOf(item, LootTable.AttrRequiredLevel);
@@ -704,7 +934,47 @@ public sealed class CombatRegistry
         // step and usually kill the player.
         var elapsed = Math.Clamp((now - entry.LastAdvanceUtc).TotalSeconds, 0, MaxCatchUpSeconds);
         entry.Instance.Advance(elapsed);
+        if (!entry.Niflheim && !entry.Town) entry.WorldRunElapsedSeconds += elapsed;
         entry.LastAdvanceUtc = now;
+    }
+
+    private static MapLayout WorldLayout(Guid characterId, int tier)
+    {
+        var seed = (ulong)(uint)characterId.GetHashCode() << 32 | (uint)characterId.GetHashCode();
+        return MapLayout.Generate(21, 21, 5, seed ^ 0x4D41504C41594F55UL ^ (ulong)tier, ThemeForTier(tier));
+    }
+
+    private void SettleBeforeTravelLocked(Guid owner, Guid characterId, Entry entry)
+    {
+        // Charge elapsed time to the old scene, grant its drops, then discard transient state.
+        // In particular, time spent safely in town must never catch up in the destination fight.
+        AdvanceLocked(entry);
+        if (!entry.Niflheim && !entry.Town) RecordWorldProgressLocked(owner, characterId, entry);
+        CollectLootLocked(owner, characterId, entry);
+        ApplyNiflheimCompletionLocked(owner, characterId, entry);
+        FlushLocked(owner, characterId, entry);
+    }
+
+    /// <summary>W05: a cleared boss dungeon is the web counterpart of the native
+    /// OnDungeonRunCompleted(tier, waypoint, duration) progress event. It advances only the
+    /// selected tier's waypoint; tier unlock rules remain controlled by persisted native data.</summary>
+    private void RecordWorldProgressLocked(Guid owner, Guid characterId, Entry entry)
+    {
+        var clears = entry.Instance.DungeonsCleared - entry.LastWorldProgressDungeonsCleared;
+        if (clears <= 0) return;
+        var tier = entry.Instance.CurrentWorldTier;
+        for (var i = 0; i < clears; i++)
+        {
+            var waypoint = Math.Max(1, entry.CurrentWorldWaypoint);
+            var durationSeconds = clears == 1 ? entry.WorldRunElapsedSeconds : entry.WorldRunElapsedSeconds / clears;
+            store.ApplyWorldProgress(owner, characterId, tier, waypoint,
+                TimeSpan.FromSeconds(Math.Max(0, durationSeconds)));
+            var nextWaypoint = waypoint + 1;
+            store.SetCurrentWorldWaypoint(owner, characterId, tier, nextWaypoint);
+            entry.CurrentWorldWaypoint = nextWaypoint;
+            entry.WorldRunElapsedSeconds = Math.Max(0, entry.WorldRunElapsedSeconds - durationSeconds);
+        }
+        entry.LastWorldProgressDungeonsCleared = entry.Instance.DungeonsCleared;
     }
 
     private void CollectLootLocked(Guid owner, Guid characterId, Entry entry)
@@ -726,7 +996,7 @@ public sealed class CombatRegistry
                 items.Add(item);
             }
         }
-        store.GrantItems(owner, characterId, items);
+        entry.PendingLootItems.AddRange(items);
         foreach (var item in items)
         {
             var slot = LootTable.EquipSlotOf(item);
@@ -765,18 +1035,28 @@ public sealed class CombatRegistry
         var killsDelta = instance.Kills - entry.FlushedKills;
         var versionChanged = instance.Version != entry.FlushedVersion;
         if (instance.Experience == entry.FlushedExperience && instance.Silver == entry.FlushedSilver
-            && instance.Opals == entry.FlushedOpals && killsDelta == 0 && !versionChanged)
+            && instance.Opals == entry.FlushedOpals && killsDelta == 0 && !versionChanged
+            && entry.PendingLootItems.Count == 0 && !entry.PendingNiflheimReturn)
             return;
         // R1: persist the *base* stats only. Flushing the equipment-inclusive totals and then
         // re-adding EquipmentBonus on restore double-counted the gear.
         // P1: also persist the combat version so it survives a restart even when nothing but
         // the version changed (e.g. a rejected move still bumps it).
-        store.SaveRealtimeProgress(owner, characterId, instance.Experience, instance.Silver,
-            instance.Opals, new GameStore.CombatSnapshot(
+        var saved = store.SaveRealtimeProgress(owner, characterId, instance.Experience,
+            instance.Silver - entry.FlushedSilver, instance.Opals - entry.FlushedOpals,
+            new GameStore.CombatSnapshot(
                 instance.Offense - entry.EquipOffense,
                 instance.Defense - entry.EquipDefense,
                 instance.Recovery - entry.EquipRecovery,
-                Math.Max(0, killsDelta), 0), instance.Version);
+                Math.Max(0, killsDelta), 0), instance.Version, currencyDeltas: true,
+                updateNiflheimRun: entry.Niflheim || entry.PendingNiflheimReturn,
+                niflheimRun: entry.Niflheim ? instance.CaptureNiflheimRun() : null,
+                grantItems: entry.PendingLootItems, finishNiflheimInTown: entry.PendingNiflheimReturn,
+                completedNiflheim: entry.PendingNiflheimCompletion);
+        entry.PendingLootItems.Clear();
+        entry.PendingNiflheimReturn = false;
+        entry.PendingNiflheimCompletion = false;
+        instance.ReconcileWallet(saved.Silver, saved.Opals);
         entry.FlushedExperience = instance.Experience;
         entry.FlushedSilver = instance.Silver;
         entry.FlushedOpals = instance.Opals;
@@ -788,27 +1068,42 @@ public sealed class CombatRegistry
     {
         var loot = entry.RecentLoot.ToList();
         entry.RecentLoot.Clear();
-        return new WebCombatState(entry.Instance.Snapshot(), loot, BuildMap(entry));
+        var combat = entry.Instance.Snapshot() with { Events = entry.Instance.DrainEvents() };
+        return new WebCombatState(combat, loot, BuildMap(entry));
     }
 
-    /// <summary>Snapshot without consuming pending loot, for duplicate/rejected commands.</summary>
+    /// <summary>Snapshot without consuming pending loot or combat events, for duplicate/rejected commands.</summary>
     private static WebCombatState PeekState(Entry entry)
-        => new(entry.Instance.Snapshot(), Array.Empty<LootDropView>(), BuildMap(entry));
+    {
+        var combat = entry.Instance.Snapshot() with { Events = Array.Empty<Nordicandia.Simulation.CombatInstance.CombatEvent>() };
+        return new WebCombatState(combat, Array.Empty<LootDropView>(), BuildMap(entry));
+    }
 
-    private static WebItemDetail ToItemDetail(SerializedItem item)
+    private static WebItemDetail ToItemDetail(SerializedItem item, int playerLevel)
     {
         var equipped = LootTable.IsEquipped(item);
+        var equipSlot = LootTable.EquipSlotOf(item);
+        var requiredLevel = (int)LootTable.AttributeOf(item, LootTable.AttrRequiredLevel);
+        var reason = equipSlot is < 0 or > 13 ? "not_equippable"
+            : item.Slot != ItemSlotTypes.Inventory ? "not_in_inventory"
+            : requiredLevel > playerLevel + LevelRequirementGrace ? "level_requirement" : "ok";
+        var stack = (int)LootTable.AttributeOf(item, 19); // Item_Stack
         return new WebItemDetail(
             item.Id,
             item.Name,
+            item.DefinitionIntegerId,
             (int)item.Slot,
             (int)item.BaseRarity,
-            LootTable.EquipSlotOf(item),
+            equipSlot,
             equipped,
             LootTable.AttributeOf(item, LootTable.AttrOffense),
             LootTable.AttributeOf(item, LootTable.AttrDefense),
             LootTable.AttributeOf(item, LootTable.AttrRecovery),
-            AffixNames(item));
+            AffixNames(item),
+            requiredLevel,
+            Math.Max(1, stack),
+            !equipped && reason == "ok",
+            reason);
     }
 
     private static List<string> AffixNames(SerializedItem item)

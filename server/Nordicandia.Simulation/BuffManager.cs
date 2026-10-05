@@ -1,18 +1,29 @@
 namespace Nordicandia.Simulation;
 
+/// <summary>Element used when resolving a damage-over-time buff against mitigation.</summary>
+public enum DamageOverTimeType
+{
+    Physical,
+    Fire,
+    Cold,
+    Lightning,
+    Poison,
+}
+
 /// <summary>
 /// C02: web port of the client's Buff lifecycle (1.9.3).
 ///
 /// Recovered rules (disassembly):
-/// - <b>Unique key</b>: one active instance per (definition, source); the client's
-///   <c>BuffManager+DistinctComparer</c> and the Guid compared in
-///   <c>Buff.IsStrongerThan</c> (0x2b21c10) identify a buff by definition+source.
+/// - The web container keys instances by (definition, source) for its local model;
+///   the original DistinctComparer call chain is not yet sufficient evidence that this
+///   exactly matches the client's cross-source deduplication semantics.
 /// - <b>Stack(Buff)</b> (0x2b22f88): a stackable re-application increments the stack
 ///   counter; the duration is replaced <b>only if the new remaining duration is longer</b>
 ///   (<c>fcmp</c> + conditional replace), gated by <c>CanRefreshDurationOnStack</c>.
-/// - <b>IsStrongerThan(Buff)</b> (0x2b21c10): compare Guid, then remaining duration,
-///   then stack count. A non-stackable re-application replaces the old instance only
-///   when stronger.
+/// - Base <b>IsStrongerThan(Buff)</b> (0x2b21c10): compare Guid, then remaining duration,
+///   then stack count. <c>DebuffPoisoned</c> overrides this at 0x02B2F7A0 and first
+///   compares <c>Tick_Damage_Per_Second / TimeoutDuration</c>, falling back to the base
+///   comparison on a tie or zero duration.
 /// - <b>Tick</b>: <c>DebuffPoisoned.DoWork</c> ticks once per second;
 ///   <c>Tick_Damage_Per_Second * dt</c> is dealt as damage and cannot crit/fork/chain.
 ///   The elapsed time is clamped to the remaining duration so a critical tick
@@ -20,15 +31,14 @@ namespace Nordicandia.Simulation;
 /// - <b>Dispel / death removal</b>: buffs are removed on dispel and on death/world
 ///   change unless <c>IsPersistent</c>.
 ///
-/// Poison note: the web previously used a "max DPS + refresh" approximation (D07).
-/// With the recovered rules a fresh poison instance (full 1s duration) is stronger by
-/// duration than a partially ticked one, so re-application now replaces the instance
-/// (new DPS, full duration). Cross-source poison interaction still awaits the deferred
+/// Poison note: poison re-applications use the subclass rate comparison rather than
+/// the base Buff rule; a longer remaining duration alone does not make a weaker poison
+/// replace a stronger one. Cross-source identity/deduplication still awaits the deferred
 /// S-BUFF-1 field sample.
 /// </summary>
 public sealed class BuffInstance
 {
-    /// <summary>Unique key: <c>DefinitionId|Source</c>.</summary>
+    /// <summary>Web container key: <c>DefinitionId|Source</c> (original cross-source identity is unverified).</summary>
     public string Key => DefinitionId + "|" + Source;
 
     public string DefinitionId { get; init; } = "";
@@ -48,6 +58,8 @@ public sealed class BuffInstance
     public bool IsPersistent { get; init; }
     /// <summary>DoT damage per second (poison, burning...).</summary>
     public double TickDps { get; set; }
+    /// <summary>Damage element used to select armor/resistance mitigation for this DoT.</summary>
+    public DamageOverTimeType TickDamageType { get; init; } = DamageOverTimeType.Poison;
     /// <summary>Buff magnitude (e.g. offense bonus fraction).</summary>
     public double Magnitude { get; set; }
 
@@ -58,6 +70,15 @@ public sealed class BuffInstance
     /// </summary>
     public int CompareStrength(BuffInstance other)
     {
+        // Client DebuffPoisoned.IsStrongerThan (0x02B2F7A0) first compares the
+        // poison rate (Tick_Damage_Per_Second / TimeoutDuration) when both durations
+        // are non-zero; ties fall through to Buff.IsStrongerThan's remaining-time,
+        // then stack-count comparison.
+        if (DefinitionId == "poison" && other.DefinitionId == "poison" && Duration > 0 && other.Duration > 0)
+        {
+            var byPoisonRate = (TickDps / Duration).CompareTo(other.TickDps / other.Duration);
+            if (byPoisonRate != 0) return byPoisonRate;
+        }
         var byDuration = Remaining.CompareTo(other.Remaining);
         if (byDuration != 0) return byDuration;
         return Stacks.CompareTo(other.Stacks);

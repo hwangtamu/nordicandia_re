@@ -20,6 +20,12 @@ public sealed class PowerSyncEntry
     public int TrainingEnd { get; set; }
 }
 
+public sealed record StoredCombatPet(int DefinitionIntegerId, double Level, double Experience,
+    DateTime? LastDeathTime, bool IsAlive, int AdsLeftToWatch);
+
+public sealed record StoredPetRoster(int CurrentPetDefinitionIntegerId, IReadOnlyList<int> PetDefinitionIntegerIds,
+    int CurrentCombatPetDefinitionIntegerId, IReadOnlyList<StoredCombatPet> CombatPets);
+
 /// <summary>Single-process private-server storage. Every mutation is flushed before acknowledgement.</summary>
 public sealed class GameStore : IDisposable
 {
@@ -122,6 +128,8 @@ public sealed class GameStore : IDisposable
         // CombatInstance so the retained command log's boundary cannot regress across a
         // server restart (P1).
         public long CombatVersion { get; set; }
+        public NiflheimRunState? NiflheimRun { get; set; }
+        public int NiflheimRunsCleared { get; set; }
         // Server-controlled stale boundary. Raised only when a command record is evicted, so
         // a command whose id is gone *and* whose expected version is below the floor is
         // reliably rejected instead of re-executed (R4/P2), while genuine commands that still
@@ -134,6 +142,10 @@ public sealed class GameStore : IDisposable
         double Experience, int Silver, int Opals, int WorldTier, int WorldWaypoint,
         SharedNet.Constants.Game.GameMode GameMode, SharedNet.Constants.Game.CharacterClass Class,
         SharedNet.Constants.Game.CharacterRace Race, DateTime LastLogin);
+
+    /// <summary>Selected/unlocked world tier plus saved waypoint bounds for browser world navigation.</summary>
+    public sealed record StoredWorldProgress(int CurrentTier, int UnlockedTier,
+        IReadOnlyDictionary<int, (int CurrentWaypoint, int MaxWaypoint)> Waypoints);
 
     /// <summary>Snapshot of the progress fields the realtime socket is authoritative for.</summary>
     public readonly record struct RealtimeProgress(double Experience, int Silver, int Opals, DateTime UpdatedUtc)
@@ -549,16 +561,22 @@ public sealed class GameStore : IDisposable
     }
 
     public RealtimeProgress SaveRealtimeProgress(Guid owner, Guid id, double experience, int silver, int opals,
-        CombatSnapshot? combat = null, long combatVersion = 0)
+        CombatSnapshot? combat = null, long combatVersion = 0, bool currencyDeltas = false,
+        bool updateNiflheimRun = false, NiflheimRunState? niflheimRun = null,
+        IList<SerializedItem>? grantItems = null, bool finishNiflheimInTown = false,
+        bool completedNiflheim = false)
         => Change(s =>
         {
             var c = Owned(s, owner, id);
             c.HasRealtimeProgress = true;
             // Monotonic: never let a stale flush lower the persisted combat version.
             if (combatVersion > c.CombatVersion) c.CombatVersion = combatVersion;
+            if (updateNiflheimRun) c.NiflheimRun = niflheimRun is null ? null : CloneNiflheimRun(niflheimRun);
             c.Experience = Math.Max(0, experience);
-            c.Silver = Math.Max(0, silver);
-            c.Opals = Math.Max(0, opals);
+            // Web combat owns only its earned/spent delta. NPC and pet transactions may
+            // have changed the saved balance since the combat instance last flushed.
+            c.Silver = (int)Math.Clamp((currencyDeltas ? (long)c.Silver : 0) + silver, 0, int.MaxValue);
+            c.Opals = (int)Math.Clamp((currencyDeltas ? (long)c.Opals : 0) + opals, 0, int.MaxValue);
             c.LastRealtimeUpdate = Now;
             // Level is a pure function of total experience; keep the header (shown on the
             // character-select screen and used by the leaderboards) in sync with it.
@@ -568,6 +586,20 @@ public sealed class GameStore : IDisposable
             // Also keep the serialized character in sync so a relogin starts from the
             // authoritative level/experience instead of the creation-time values.
             var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+            if (grantItems is { Count: > 0 })
+            {
+                data.Items ??= new SerializedItems { Items = new() };
+                data.Items.Items ??= new();
+                foreach (var item in grantItems)
+                    if (item is not null) data.Items.Items.Add(item);
+            }
+            if (finishNiflheimInTown)
+            {
+                SetAttribute(data, WebFlagNiflheimActive, 0);
+                SetAttribute(data, WebFlagTownActive, 1);
+                c.NiflheimRun = null;
+                if (completedNiflheim && c.NiflheimRunsCleared < int.MaxValue) c.NiflheimRunsCleared++;
+            }
             SetAttribute(data, AttrLevel, header.Level);
             SetAttribute(data, AttrExperience, c.Experience);
             // Refresh the "last active" stamp on every realtime sync so the next login's
@@ -803,6 +835,24 @@ public sealed class GameStore : IDisposable
         return true;
     });
 
+    /// <summary>Reads the pet roster persisted for a character without exposing its mutable data blob.</summary>
+    public StoredPetRoster GetPetRoster(Guid owner, Guid id)
+    {
+        lock (gate)
+        {
+            var c = Owned(state, owner, id);
+            var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+            var pets = data.Pets;
+            var combatPets = data.CombatPets?.CombatPets ?? new List<SerializedCharacterData.SerializedCombatPet>();
+            return new StoredPetRoster(
+                pets?.CurrentPetDefinitionIntegerId ?? 0,
+                pets?.Pets?.Where(p => p != null).Select(p => p.DefinitionIntegerId).Distinct().ToArray() ?? Array.Empty<int>(),
+                data.CombatPets?.CurrentCombatPetDefinitionIntegerId ?? 0,
+                combatPets.Where(p => p != null).Select(p => new StoredCombatPet(p.DefinitionIntegerId,
+                    p.Level, p.Experience, p.LastDeathTime, p.IsAlive, p.AdsLeftToWatch)).ToArray());
+        }
+    }
+
     /// <summary>Reads the item list currently persisted for a character (used by tests).</summary>
     public List<SerializedItem> GetItems(Guid owner, Guid id)
     {
@@ -867,9 +917,9 @@ public sealed class GameStore : IDisposable
             new SerializedItems { Items = new() { output } });
     });
 
-    /// <summary>Partial disassembly implementation: maps eligible affixes to essence definitions.
-    /// The native candidate filter is recovered, but PerformDisassembleOffline's probabilities,
-    /// essence attribute construction and unique/set branches are not implemented yet.</summary>
+    /// <summary>Partial disassembly implementation: applies the recovered durability chance,
+    /// filters known Item Prefix/Suffix affixes, and creates a source-rarity essence affix with
+    /// required level. Exact affix level scaling/random stream and unique/set output branches remain open.</summary>
     public (bool Successful, SerializedItems SourceItems, SerializedItems Result) DisassembleItems(Guid owner, Guid characterId) => Change(s =>
     {
         var c = Owned(s, owner, characterId);
@@ -892,10 +942,22 @@ public sealed class GameStore : IDisposable
                 // ClientVerified: prefix/suffix, rarity >= 2, and no open-slot attribute
                 // (GameAttributes.IsOpenAffix checks Open_Prefix_Slot 389 / Open_Suffix_Slot 390).
                 if (affix is null || (int)affix.Rarity < 2) continue;
-                if (HasOpenSlotAttribute(affix)) continue;
+                if (OpenAffixSlots.IsOpen(affix)) continue;
+                var affixDefinition = AffixCatalog.Entries.FirstOrDefault(a => a.IntegerId == affix.DefinitionIntegerId);
+                if (affixDefinition.Name is null || !affixDefinition.IsPrefixOrSuffix
+                    || affixDefinition.Domain != AffixCatalog.DomainItem) continue;
                 if (EssenceCatalog.ForAffixDefinition(affix.DefinitionIntegerId) is not { } essence) continue;
-                // ExtractAffixEssence: the essence carries an affix at the source affix's rarity.
-                essences.Add(EssenceCatalog.CreateItem(essence, (int)affix.Rarity, affix.DefinitionIntegerId, 1));
+                // ExtractAffixEssence constructs a fresh Affix from the source definition at the
+                // source rarity and carries the source item's required level into its value context.
+                var requiredLevel = GetItemAttribute(source, SharedNet.Constants.Game.AttributeOrigin.Item, 20)
+                    ?? GetItemAttribute(source, SharedNet.Constants.Game.AttributeOrigin.Item, LootTable.AttrRequiredLevel)
+                    ?? 1;
+                var seedBytes = source.Id.ToByteArray();
+                var seed = BitConverter.ToUInt64(seedBytes, 0)
+                    ^ ((ulong)(uint)affix.DefinitionIntegerId << 32)
+                    ^ (uint)affix.Rarity;
+                essences.Add(EssenceCatalog.CreateItem(essence, (int)affix.Rarity,
+                    affix.DefinitionIntegerId, requiredLevel, seed));
             }
         }
         data.Items.Items.RemoveAll(i => i != null && i.Slot == SharedNet.Constants.Game.ItemSlotTypes.Blacksmith_SourceItem);
@@ -937,6 +999,22 @@ public sealed class GameStore : IDisposable
             var c = Owned(state, owner, id);
             return (new List<string>(c.LoadoutActive ?? new()),
                 new List<string>(c.LoadoutPassive ?? new()));
+        }
+    }
+
+    /// <summary>Persisted client power ranks (definition name -> rank), resolved from PowerHashSafe.</summary>
+    public Dictionary<string, int> GetPowerRanks(Guid owner, Guid id)
+    {
+        lock (gate)
+        {
+            var data = Unpack<SerializedCharacterData.SerializedData>(Owned(state, owner, id).Data);
+            var result = new Dictionary<string, int>(StringComparer.Ordinal);
+            foreach (var power in data.Powers?.Powers ?? new List<SerializedCharacterData.SerializedPower>())
+            {
+                if (power == null || !PowerCatalog.TryGetNameByHashSafe(power.PowerHashSafe, out var name)) continue;
+                result[name] = Math.Max(result.GetValueOrDefault(name, 1), (int)Math.Max(1, power.Power_Rank));
+            }
+            return result;
         }
     }
 
@@ -1339,12 +1417,20 @@ public sealed class GameStore : IDisposable
 
     public int UnlockPet(Guid owner, Guid characterId, int petDefinitionIntegerId, int opalCost) => Change(s =>
     {
+        var catalogPet = PetCatalog.ByIntegerId(petDefinitionIntegerId);
+        if (catalogPet is null || catalogPet.Kind != "Pet" || catalogPet.UnlockCurrency != "OP"
+            || catalogPet.UnlockCost != opalCost)
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid pet catalog price"));
         var c = Owned(s, owner, characterId);
         var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
         var pets = EnsurePets(data);
+        if (opalCost < 0)
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Pet unlock cost cannot be negative"));
         if (!pets.Pets.Any(p => p != null && p.DefinitionIntegerId == petDefinitionIntegerId))
         {
-            c.Opals -= Math.Clamp(opalCost, 0, c.Opals);
+            if (c.Opals < opalCost)
+                throw new RpcException(new Status(StatusCode.FailedPrecondition, "Not enough opals to unlock pet"));
+            c.Opals -= opalCost;
             pets.Pets.Add(new SerializedCharacterData.SerializedPet
             {
                 DefinitionIntegerId = petDefinitionIntegerId,
@@ -1398,14 +1484,24 @@ public sealed class GameStore : IDisposable
 
     public (int NewCurrency, bool PayWithOpals) UnlockCombatPet(Guid owner, Guid characterId, bool payWithOpals, int combatPetDefinitionIntegerId, int cost) => Change(s =>
     {
+        var catalogPet = PetCatalog.ByIntegerId(combatPetDefinitionIntegerId);
+        var expectedCurrency = payWithOpals ? "OP" : "SL";
+        if (catalogPet is null || catalogPet.Kind != "CombatPet" || catalogPet.UnlockCurrency != expectedCurrency
+            || catalogPet.UnlockCost != cost)
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid combat pet catalog price"));
         var c = Owned(s, owner, characterId);
         var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
         var pets = EnsureCombatPets(data);
+        if (cost < 0)
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Combat pet unlock cost cannot be negative"));
         if (!pets.CombatPets.Any(p => p != null && p.DefinitionIntegerId == combatPetDefinitionIntegerId))
         {
-            var spend = Math.Max(0, cost);
-            if (payWithOpals) c.Opals -= Math.Clamp(spend, 0, c.Opals);
-            else c.Silver -= Math.Clamp(spend, 0, c.Silver);
+            var balance = payWithOpals ? c.Opals : c.Silver;
+            if (balance < cost)
+                throw new RpcException(new Status(StatusCode.FailedPrecondition,
+                    payWithOpals ? "Not enough opals to unlock combat pet" : "Not enough silver to unlock combat pet"));
+            if (payWithOpals) c.Opals -= cost;
+            else c.Silver -= cost;
             pets.CombatPets.Add(new SerializedCharacterData.SerializedCombatPet
             {
                 DefinitionIntegerId = combatPetDefinitionIntegerId,
@@ -1601,18 +1697,6 @@ public sealed class GameStore : IDisposable
         double Attr(int id) => GetItemAttribute(item, SharedNet.Constants.Game.AttributeOrigin.Item, id) ?? 0;
         var total = Attr(30);
         return total != 0 ? total : Attr(27) + Attr(28) + Attr(29);
-    }
-
-    /// <summary>GameAttributes.IsOpenAffix: Open_Prefix_Slot (389) / Open_Suffix_Slot (390).</summary>
-    private static bool HasOpenSlotAttribute(SerializedAffix affix)
-    {
-        if (affix.Attributes?.Values == null) return false;
-        foreach (var map in affix.Attributes.Values.Values)
-        {
-            if (map == null) continue;
-            if (map.ContainsKey(389) || map.ContainsKey(390)) return true;
-        }
-        return false;
     }
 
     /// <summary>Server attribute id marking a blessed affix (the client stores the bless flag on
@@ -2105,6 +2189,53 @@ public sealed class GameStore : IDisposable
         return true;
     });
 
+    public StoredWorldProgress GetWorldProgress(Guid owner, Guid characterId)
+    {
+        lock (gate)
+        {
+            var data = Unpack<SerializedCharacterData.SerializedData>(Owned(state, owner, characterId).Data);
+            var unlocked = Math.Max(1, (int)(GetAttribute(data, AttrWorldTierUnlocked) ?? 0));
+            var selected = (int)(GetAttribute(data, AttrWorldTier) ?? 0);
+            if (selected <= 0 || selected > unlocked) selected = unlocked;
+            var waypoints = (data.Waypoints?.WaypointMap ?? new Dictionary<int, SerializedCharacterData.SerializedWorldTierWaypoint>())
+                .Where(pair => pair.Key > 0 && pair.Value != null)
+                .ToDictionary(pair => pair.Key,
+                    pair => (pair.Value.CurrentWaypoint, pair.Value.MaxWaypoint));
+            return new StoredWorldProgress(selected, unlocked, waypoints);
+        }
+    }
+
+    /// <summary>Persists the selected tier without granting a new unlock.</summary>
+    public void SetCurrentWorldTier(Guid owner, Guid characterId, int worldTier) => Change(s =>
+    {
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        SetAttribute(data, AttrWorldTier, Math.Max(1, worldTier));
+        c.Data = Pack(data);
+        return true;
+    });
+
+    /// <summary>Persists a selectable checkpoint without changing the character's unlocked tier.</summary>
+    public bool SetCurrentWorldWaypoint(Guid owner, Guid characterId, int worldTier, int worldWaypoint) => Change(s =>
+    {
+        if (worldTier <= 0 || worldWaypoint <= 0) return false;
+        var c = Owned(s, owner, characterId);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        var unlocked = Math.Max(1, (int)(GetAttribute(data, AttrWorldTierUnlocked) ?? 0));
+        if (worldTier > unlocked) return false;
+        data.Waypoints ??= new SerializedCharacterData.SerializedWaypoints { WaypointMap = new() };
+        data.Waypoints.WaypointMap ??= new Dictionary<int, SerializedCharacterData.SerializedWorldTierWaypoint>();
+        if (!data.Waypoints.WaypointMap.TryGetValue(worldTier, out var waypoint) || waypoint == null)
+            data.Waypoints.WaypointMap[worldTier] = waypoint = new SerializedCharacterData.SerializedWorldTierWaypoint
+            {
+                CurrentWaypoint = 1, MaxWaypoint = 1,
+            };
+        if (worldWaypoint > Math.Max(1, waypoint.MaxWaypoint)) return false;
+        waypoint.CurrentWaypoint = worldWaypoint;
+        c.Data = Pack(data);
+        return true;
+    });
+
     public WorldAnnouncement ApplyWorldProgress(Guid owner, Guid characterId, int worldTier, int worldWaypoint, TimeSpan duration, int depth = 0)        => Change(s =>
         {
             var c = Owned(s, owner, characterId);
@@ -2262,6 +2393,46 @@ public sealed class GameStore : IDisposable
     // Web-only character flags persisted in the Character-origin attribute map under ids >= 99000
     // (the client attribute engine ignores unknown ids, and they are filtered from the snapshot).
     private const int WebFlagNiflheimActive = 99020;
+    private const int WebFlagTownActive = 99021;
+
+    public NiflheimRunState? GetNiflheimRun(Guid owner, Guid id)
+    {
+        lock (gate)
+        {
+            var run = Owned(state, owner, id).NiflheimRun;
+            return run is null ? null : CloneNiflheimRun(run);
+        }
+    }
+
+    private static NiflheimRunState CloneNiflheimRun(NiflheimRunState run)
+        => JsonSerializer.Deserialize<NiflheimRunState>(JsonSerializer.Serialize(run, Json), Json)!;
+
+    public int GetNiflheimRunsCleared(Guid owner, Guid id)
+    {
+        lock (gate) return Owned(state, owner, id).NiflheimRunsCleared;
+    }
+
+    /// <summary>Consume the item and persist the initial run in one state transaction.
+    /// A process death cannot leave the item consumed without a resumable run.</summary>
+    public bool TryEnterNiflheim(Guid owner, Guid id, Guid itemId, NiflheimRunState run) => Change(s =>
+    {
+        if (run is null || run.TotalPacks < 2) return false;
+        var c = Owned(s, owner, id);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        if ((GetAttribute(data, WebFlagNiflheimActive) ?? 0) > 0) return false;
+        var item = data.Items?.Items?.FirstOrDefault(i => i != null && i.Id == itemId && i.DefinitionIntegerId == 159);
+        if (item is null) return false;
+        var stack = (int)(GetItemAttribute(item, SharedNet.Constants.Game.AttributeOrigin.Item, ItemStackAttributeId) ?? 1);
+        if (stack <= 0) stack = 1;
+        if (stack == 1) data.Items!.Items!.Remove(item);
+        else SetItemAttribute(item, SharedNet.Constants.Game.AttributeOrigin.Item, ItemStackAttributeId, stack - 1);
+        SetAttribute(data, WebFlagNiflheimActive, 1);
+        SetAttribute(data, WebFlagTownActive, 0);
+        c.NiflheimRun = CloneNiflheimRun(run);
+        c.Data = Pack(data);
+        return true;
+    });
+
 
     /// <summary>Active Aesir blessings as type -> remaining seconds (1=Odin, 2=Tyr, 3=Frigg,
     /// 4=Thor), pruning expired ones.</summary>
@@ -2273,6 +2444,25 @@ public sealed class GameStore : IDisposable
         foreach (var expired in c.Blessings.Where(kv => kv.Value <= now).Select(kv => kv.Key).ToList())
             c.Blessings.Remove(expired);
         return c.Blessings.ToDictionary(kv => kv.Key, kv => (kv.Value - now).TotalSeconds);
+    });
+
+    /// <summary>Whether the character is currently in the web town hub.</summary>
+    public bool IsTownActive(Guid owner, Guid id)
+    {
+        lock (gate)
+        {
+            var data = Unpack<SerializedCharacterData.SerializedData>(Owned(state, owner, id).Data);
+            return (GetAttribute(data, WebFlagTownActive) ?? 0) > 0;
+        }
+    }
+
+    public void SetTownActive(Guid owner, Guid id, bool active) => Change(s =>
+    {
+        var c = Owned(s, owner, id);
+        var data = Unpack<SerializedCharacterData.SerializedData>(c.Data);
+        SetAttribute(data, WebFlagTownActive, active ? 1 : 0);
+        c.Data = Pack(data);
+        return true;
     });
 
     /// <summary>Whether the character is currently inside a Niflheim portal run (web-only flag).</summary>

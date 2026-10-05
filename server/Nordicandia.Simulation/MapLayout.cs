@@ -117,6 +117,15 @@ public sealed class MapLayout
         return rows;
     }
 
+    /// <summary>Open movement grid for the non-combat town scene.</summary>
+    public static MapLayout OpenArea(int width, int height, string theme)
+    {
+        width = Math.Max(9, width);
+        height = Math.Max(9, height);
+        var floor = Enumerable.Repeat(true, width * height).ToArray();
+        return new MapLayout(width, height, floor, new List<(int X, int Z)> { (width / 2, height / 2) }, theme);
+    }
+
     /// <summary>Generate a room-and-corridor graph. Deterministic for a fixed seed.</summary>
     public static MapLayout Generate(int width, int height, int roomCount, ulong seed, string theme = "dungeon_default")
     {

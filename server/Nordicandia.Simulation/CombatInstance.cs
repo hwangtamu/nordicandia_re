@@ -12,11 +12,13 @@ public readonly record struct MonsterProfile(
     // Champion/elite monsters satisfy ImNotNormalMonster (needed by the curser brains).
     bool Champion = false,
     // D04: monster rarity (Monsters.json AvailableRarities / MonsterRarity enum:
-    // 0 Normal, 1 Magic, 2 Rare, 4 Champion, 6 Boss). Selects the finalMult stat curve and
+    // 0 Normal, 1 Champion, 2 Rare, 3 Minion, 4 Unique, 5 Hireling, 6 Boss). Selects the finalMult stat curve and
     // the attack-interval range. ExpMult is the world/global difficulty multiplier.
     int Rarity = 0, double ExpMult = 1.0,
     // Overrides the rarity-selected finalMult when > 0.
-    double FinalMult = 0);
+    double FinalMult = 0,
+    // W01: optional world spawn weighting; values are normalized at selection time.
+    double SpawnWeight = 1.0, IReadOnlyList<int>? AvailableRarities = null, string? SpawnGroup = null);
 
 /// <summary>One monster inside an authoritative combat instance.</summary>
 public sealed class CombatMonster
@@ -48,6 +50,7 @@ public sealed class CombatMonster
     public string Brain { get; set; }
     /// <summary>Champion/elite (satisfies ImNotNormalMonster).</summary>
     public bool Champion { get; set; }
+    public int Rarity { get; init; }
     /// <summary>Power selected by the brain for the current think window.</summary>
     public string BrainAction { get; set; }
     public double ActionTimer { get; set; }
@@ -82,7 +85,16 @@ public readonly record struct LootDrop(int Slot, int Rarity, int Level, bool Bos
 /// <summary>Read-only projection of an <see cref="CombatInstance"/> handed to callers/tests.</summary>
 public readonly record struct MonsterSnapshot(
     int Index, string Name, int Level, bool IsBoss, double X, double Z, double Hp, double MaxHp, bool Alive, double StunTimer,
-    string Action = "");
+    string Action = "", int Rarity = 0);
+
+public readonly record struct GroundEffectSnapshot(int Id, string Kind, double X, double Z,
+    double Radius, double Remaining);
+public readonly record struct MinionSnapshot(int Id, string Name, double X, double Z,
+    double Hp, double MaxHp, bool Alive);
+public readonly record struct ProjectileSnapshot(long Id, string Source, double X, double Z,
+    double DirX, double DirZ, double Radius, double Remaining);
+public readonly record struct TrapSnapshot(int Id, double X, double Z, double Radius, double Remaining);
+public readonly record struct ChannelSnapshot(string Name, double Radius, double Remaining);
 
 public readonly record struct CombatSnapshot(
     long Version,
@@ -105,7 +117,18 @@ public readonly record struct CombatSnapshot(
     bool BossAlive,
     IReadOnlyList<MonsterSnapshot> Monsters,
     int PacksRemaining = 0,
-    int TotalPacks = 0);
+    int TotalPacks = 0,
+    IReadOnlyList<GroundEffectSnapshot>? GroundEffects = null,
+    IReadOnlyList<MinionSnapshot>? Minions = null,
+    IReadOnlyList<ProjectileSnapshot>? Projectiles = null,
+    IReadOnlyList<TrapSnapshot>? Traps = null,
+    ChannelSnapshot? ActiveChannel = null,
+    IReadOnlyList<CombatInstance.CombatEvent>? Events = null,
+    bool InTown = false,
+    bool NiflheimExitReady = false,
+    double NiflheimExitX = 0, double NiflheimExitZ = 0,
+    int NiflheimChestSize = 0, bool NiflheimChestOpened = false,
+    double NiflheimChestX = 0, double NiflheimChestZ = 0);
 
 /// <summary>Result of a skill command.</summary>
 public readonly record struct SkillOutcome(bool Cast, double Damage, int TargetIndex, string Reason);
@@ -164,6 +187,7 @@ public sealed partial class CombatInstance
     private double playerSpeed = 6.5;
     private int monsterCount;
     private MonsterProfile[] profiles;
+    private MonsterProfile? bossProfile;
     private SkillProfile[] skills;
     private PassiveProfile[] passives;
 
@@ -188,11 +212,17 @@ public sealed partial class CombatInstance
 
     // Niflheim portal runs. Recovered from NiflheimPortalGameMode + GameWorld.GetRandomPackSize:
     // TotalPacks = max(Num_Monster_Packs, 2); every pack's size is a stochastic rounding of
-    // Rand.RangeExclusive(2*mult, 4*mult) (Area_Pack_Size_Bonus_Percent_Final), carrying the
+    // Rand.RangeExclusive(2*mult, 5*mult) (Area_Pack_Size_Bonus_Percent_Final), carrying the
     // fractional remainder into the next pack.
     private bool packMode;
     private int totalPacks;
     private int packsCleared;
+    private int finalPackExtraMonsters;
+    private bool nativeNiflheimTail;
+    private bool niflheimExitReady;
+    private int niflheimChestSize;
+    private bool niflheimChestOpened;
+    private double niflheimExitX, niflheimExitZ, niflheimChestX, niflheimChestZ;
     private double packSizeRemainder;
     private int packIndex;
     // Pack members spawn in one at a time (client: _SpawnDelay >= 0.1s), so a pack is not a
@@ -201,6 +231,87 @@ public sealed partial class CombatInstance
     private double packSpawnTimer;
     private double packOriginX;
     private double packOriginZ;
+
+    public NiflheimRunState? CaptureNiflheimRun()
+    {
+        if (!packMode) return null;
+        return new NiflheimRunState {
+            TotalPacks = totalPacks, PacksCleared = packsCleared, PackIndex = packIndex,
+            FinalPackExtraMonsters = finalPackExtraMonsters,
+            NativeTail = nativeNiflheimTail, ExitReady = niflheimExitReady,
+            ChestSize = niflheimChestSize, ChestOpened = niflheimChestOpened,
+            ExitX = niflheimExitX, ExitZ = niflheimExitZ,
+            ChestX = niflheimChestX, ChestZ = niflheimChestZ,
+            PackSizeRemainder = packSizeRemainder, PendingPackSize = pendingPackSize,
+            PackSpawnTimer = packSpawnTimer, PackOriginX = packOriginX, PackOriginZ = packOriginZ,
+            PendingPackSpawn = pendingPackSpawn, RandomState = rng.State,
+            PlayerX = PlayerX, PlayerZ = PlayerZ, PlayerHp = PlayerHp,
+            PlayerMana = PlayerMana, PlayerShield = PlayerShield,
+            PlayerRespawnTimer = playerRespawnTimer, AttackCooldown = attackCooldown,
+            SkillCooldowns = skillCooldowns.ToArray(), PlayerBuffs = PlayerBuffs.All.ToList(),
+            Monsters = monsters.ToList(), MonsterBuffs = monsters.Select(m => m.Buffs.All.ToList()).ToList(),
+        };
+    }
+
+    public void RestoreNiflheimRun(NiflheimRunState checkpoint)
+    {
+        if (checkpoint is null || checkpoint.TotalPacks is < 2 or > 1000
+            || checkpoint.PacksCleared < 0 || checkpoint.PacksCleared >= checkpoint.TotalPacks
+            || checkpoint.PendingPackSize is < 0 or > 24 || checkpoint.FinalPackExtraMonsters is < 0 or > 23
+            || checkpoint.ChestSize is < 0 or > 2
+            || checkpoint.ExitReady && (!checkpoint.NativeTail || checkpoint.PacksCleared != checkpoint.TotalPacks - 1)
+            || checkpoint.Monsters is null
+            || checkpoint.Monsters.Count > 24 || checkpoint.Monsters.Any(m => m is null))
+            throw new ArgumentException("Invalid Niflheim checkpoint", nameof(checkpoint));
+        ClearWorldEffects();
+        packMode = true;
+        totalPacks = checkpoint.TotalPacks;
+        packsCleared = checkpoint.PacksCleared;
+        finalPackExtraMonsters = checkpoint.FinalPackExtraMonsters;
+        nativeNiflheimTail = checkpoint.NativeTail;
+        niflheimExitReady = checkpoint.ExitReady;
+        niflheimChestSize = checkpoint.ChestSize;
+        niflheimChestOpened = checkpoint.ChestOpened;
+        niflheimExitX = checkpoint.ExitX;
+        niflheimExitZ = checkpoint.ExitZ;
+        niflheimChestX = checkpoint.ChestX;
+        niflheimChestZ = checkpoint.ChestZ;
+        packIndex = checkpoint.PackIndex;
+        packSizeRemainder = checkpoint.PackSizeRemainder;
+        pendingPackSize = checkpoint.PendingPackSize;
+        packSpawnTimer = checkpoint.PackSpawnTimer;
+        packOriginX = checkpoint.PackOriginX;
+        packOriginZ = checkpoint.PackOriginZ;
+        pendingPackSpawn = checkpoint.PendingPackSpawn;
+        rng.RestoreState(checkpoint.RandomState);
+        PlayerX = checkpoint.PlayerX;
+        PlayerZ = checkpoint.PlayerZ;
+        targetX = PlayerX;
+        targetZ = PlayerZ;
+        hasTarget = false;
+        playerPath = null;
+        PlayerHp = checkpoint.PlayerHp;
+        PlayerMana = checkpoint.PlayerMana;
+        PlayerShield = checkpoint.PlayerShield;
+        playerRespawnTimer = checkpoint.PlayerRespawnTimer;
+        attackCooldown = checkpoint.AttackCooldown;
+        if (checkpoint.SkillCooldowns?.Length == skillCooldowns.Length)
+            Array.Copy(checkpoint.SkillCooldowns, skillCooldowns, skillCooldowns.Length);
+        PlayerBuffs.Clear(includePersistent: true);
+        foreach (var buff in checkpoint.PlayerBuffs ?? new()) PlayerBuffs.Add(buff);
+        monsters.Clear();
+        for (var i = 0; i < checkpoint.Monsters.Count; i++)
+        {
+            var monster = checkpoint.Monsters[i];
+            monster.Path = null; // A* path is recalculated from the restored position.
+            monster.Buffs.Clear(includePersistent: true);
+            if (checkpoint.MonsterBuffs is { Count: > 0 } && i < checkpoint.MonsterBuffs.Count)
+                foreach (var buff in checkpoint.MonsterBuffs[i]) monster.Buffs.Add(buff);
+            monsters.Add(monster);
+        }
+        boss = null;
+        InTown = false;
+    }
     private const double PackMemberSpawnInterval = 0.1;
     // Deferred so a pack is never cleared/respawned while an iteration over `monsters` is live.
     private bool pendingPackSpawn;
@@ -217,7 +328,11 @@ public sealed partial class CombatInstance
     private CombatMonster curseLeechSource;
 
     public int TotalPacks => totalPacks;
-    public int PacksRemaining => Math.Max(0, totalPacks - packsCleared);
+    public int CombatPacks => Math.Max(0, totalPacks - (nativeNiflheimTail ? 1 : 0));
+    public int PacksRemaining => Math.Max(0, CombatPacks - packsCleared);
+    public bool NiflheimExitReady => packMode && niflheimExitReady;
+    public int NiflheimChestSize => NiflheimExitReady ? niflheimChestSize : 0;
+    public bool NiflheimChestOpened => niflheimChestOpened;
 
     public double PlayerX { get; private set; }
     public double PlayerZ { get; private set; }
@@ -260,9 +375,20 @@ public sealed partial class CombatInstance
     public double DeadlyStrikeChance { get; private set; }
     public double DamageTakenAmplifyPercent { get; private set; }
     public int PlayerLevel { get; private set; }
+    /// <summary>Selected world tier, used by brain conditions such as ImAboveOrEqualToTier4.</summary>
+    public int CurrentWorldTier { get; private set; } = 1;
+    public bool IsTierFourOrHigher => CurrentWorldTier >= 4;
+    public bool InTown { get; private set; }
     public double Experience { get; private set; }
     public int Silver { get; private set; }
     public int Opals { get; private set; }
+    /// <summary>Refresh balances after the registry atomically merges combat currency deltas
+    /// with external NPC purchases. This is part of the current snapshot/flush version.</summary>
+    public void ReconcileWallet(int silver, int opals)
+    {
+        Silver = Math.Max(0, silver);
+        Opals = Math.Max(0, opals);
+    }
     public int Kills { get; private set; }
     public int DungeonsCleared { get; private set; }
     public long Version { get; private set; }
@@ -271,7 +397,7 @@ public sealed partial class CombatInstance
     private readonly List<CombatMonster> monsters = new();
 
     /// <summary>W04: the dungeon layout whose spawn areas the packs use (null = the arena ring).</summary>
-    public MapLayout Layout { get; }
+    public MapLayout Layout { get; private set; }
     /// <summary>E02: the player's class (CharacterClass) for loot item-type weighting.</summary>
     public int ClassId { get; private set; }
     /// <summary>E02: the loot table (Droprates.LootTables name) new drops draw from.</summary>
@@ -289,7 +415,9 @@ public sealed partial class CombatInstance
         ClassPowerPool classPowers = null,
         long initialVersion = 1,
         MapLayout layout = null,
-        int classId = -1)
+        int classId = -1,
+        MonsterProfile? bossProfile = null,
+        int currentWorldTier = 1)
     {
         PlayerLevel = stats.Level;
         Offense = stats.Offense;
@@ -304,6 +432,8 @@ public sealed partial class CombatInstance
         profiles = monsterProfiles is { Count: > 0 }
             ? monsterProfiles.ToArray()
             : new[] { new MonsterProfile("Draugr") };
+        this.bossProfile = bossProfile;
+        CurrentWorldTier = Math.Max(1, currentWorldTier);
         var powers = classPowers ?? DefaultPool;
         skills = powers.Active.Take(MaxActiveSkills).ToArray();
         passives = powers.Passive.Take(MaxPassiveSkills).ToArray();
@@ -314,14 +444,7 @@ public sealed partial class CombatInstance
         PlayerMana = PlayerMaxMana;
         ClassId = classId;
         Layout = layout;
-        // W04: if the arena centre is a wall in this layout, start the player at the first room so
-        // monsters can path to it (otherwise auto-battle stalls outside the walls).
-        if (layout is { RoomCenters.Count: > 0 } && !layout.IsFloor(layout.Cell(0, 0, ArenaHalf).X, layout.Cell(0, 0, ArenaHalf).Z))
-        {
-            var (px, pz) = layout.World(layout.RoomCenters[0].X, layout.RoomCenters[0].Z, ArenaHalf);
-            PlayerX = px;
-            PlayerZ = pz;
-        }
+        PlacePlayerAtWorldEntrance();
         rng = new CombatRandom(seed == 0 ? 0x9E3779B97F4A7C15UL : seed);
         SpawnMonsters();
         // The version is a persistent, monotonically increasing counter. Restoring it from
@@ -330,8 +453,13 @@ public sealed partial class CombatInstance
         Version = Math.Max(1, initialVersion);
     }
 
+    private double championMonsterFindBonus, uniqueMonsterFindBonus;
+    private double emptyRosterRetryTimer;
+
     private void ApplyRatings(CombatantStats stats)
     {
+        championMonsterFindBonus = stats.ChampionMonsterFindBonus;
+        uniqueMonsterFindBonus = stats.UniqueMonsterFindBonus;
         AttackRating = stats.AttackRating;
         Armor = stats.Armor;
         Evasion = stats.Evasion;
@@ -376,7 +504,8 @@ public sealed partial class CombatInstance
         DodgeChance: DodgeChance, BlockChance: BlockChance, BlockedDamageMultiplier: BlockedDamageMultiplier,
         HitChanceBonus: HitChanceBonus, HitChanceCap: HitChanceCap, AlwaysHits: AlwaysHits,
         IgnoresCrits: IgnoresCrits, DeadlyStrikeChance: DeadlyStrikeChance,
-        DamageTakenAmplifyPercent: DamageTakenAmplifyPercent);
+        DamageTakenAmplifyPercent: DamageTakenAmplifyPercent,
+        ChampionMonsterFindBonus: championMonsterFindBonus, UniqueMonsterFindBonus: uniqueMonsterFindBonus);
 
     /// <summary>The player's typed damage (weapon bundle, or a physical bundle from the
     /// provisional Offense when no weapon attributes are present), including the passive/buff bonus.</summary>
@@ -467,17 +596,17 @@ public sealed partial class CombatInstance
                 x = Math.Cos(angle) * radius;
                 z = Math.Sin(angle) * radius;
             }
-            monsters.Add(CreateMonster(i, x, z, alive: true));
+            if (CreateMonster(monsters.Count, x, z, alive: true) is { } monster) monsters.Add(monster);
         }
     }
 
     /// <summary>Advanced by the client's GetRandomPackSize: next pack size is
-    /// <c>floor(remainder + Rand.RangeExclusive(2*mult, 4*mult))</c> with the fraction carried
+    /// <c>floor(remainder + Rand.RangeExclusive(2*mult, 5*mult))</c> with the fraction carried
     /// forward, so the long-run mean matches the multiplier. The web multiplier is 1.</summary>
     private int NextPackSize(double multiplier = 1)
     {
         var mult = Math.Max(0, multiplier);
-        var raw = mult * (2 + rng.NextDouble() * 2); // [2*mult, 4*mult)
+        var raw = mult * (2 + rng.NextDouble() * 3); // [2*mult, 5*mult)
         var total = packSizeRemainder + raw;
         var size = (int)Math.Floor(total);
         packSizeRemainder = Math.Round(total - size, 4);
@@ -488,7 +617,7 @@ public sealed partial class CombatInstance
     /// member appears immediately; the rest follow every 0.1s (client _SpawnDelay step).</summary>
     private void SpawnPack()
     {
-        if (packsCleared >= totalPacks) return;
+        if (packsCleared >= CombatPacks || niflheimExitReady) return;
         monsters.Clear();
         // Client packs spawn inside one of the dungeon's spawn areas. W04: when a MapLayout is
         // supplied, use its room anchors; otherwise fall back to the provisional ring of zones.
@@ -506,7 +635,10 @@ public sealed partial class CombatInstance
             packOriginX = cx;
             packOriginZ = cz;
         }
-        pendingPackSize = NextPackSize();
+        // Native remaining-count == 2 creates a special final pack of
+        // 1 + Area_Contains_More_Bosses. SpawnMonster still receives canRollBoss=false.
+        pendingPackSize = nativeNiflheimTail && packsCleared == CombatPacks - 1
+            ? 1 + finalPackExtraMonsters : NextPackSize();
         packSpawnTimer = 0;
         pendingPackSize--;
         SpawnOnePackMember();
@@ -529,14 +661,41 @@ public sealed partial class CombatInstance
         var z = Math.Clamp(packOriginZ + Math.Sin(angle) * r, -ArenaHalf, ArenaHalf);
         // W02: keep pack members on the floor (a random offset can land in a wall).
         var (px, pz) = ConstrainMove(packOriginX, packOriginZ, x, z);
-        monsters.Add(CreateMonster(index, px, pz, alive: true));
+        if (CreateMonster(index, px, pz, alive: true) is { } monster) monsters.Add(monster);
+    }
+
+    private MonsterProfile ChooseMonsterProfile(int index)
+    {
+        if (profiles.All(p => p.SpawnWeight == profiles[0].SpawnWeight))
+            return profiles[index % profiles.Length];
+        var total = profiles.Sum(p => Math.Max(0, p.SpawnWeight));
+        if (total <= 0) return profiles[index % profiles.Length];
+        var roll = rng.NextDouble() * total;
+        foreach (var profile in profiles)
+        {
+            roll -= Math.Max(0, profile.SpawnWeight);
+            if (roll < 0) return profile;
+        }
+        return profiles[^1];
     }
 
     private CombatMonster CreateMonster(int index, double x, double z, bool alive, MonsterProfile? overrideProfile = null)
     {
         var level = MonsterLevel;
-        var profile = overrideProfile ?? profiles[index % profiles.Length];
-        // D04: client Monster.Get* curves. finalMult is rarity-selected (Boss/Champion/normal);
+        MonsterProfile? selected = overrideProfile;
+        if (selected is null)
+        {
+            if (profiles.Any(p => p.AvailableRarities != null))
+            {
+                var rarity = MonsterSpawnRules.RollRarity(level, CurrentWorldTier, rng.NextDouble,
+                    champSpawnMult: 1 + championMonsterFindBonus, uniqueSpawnMult: 1 + uniqueMonsterFindBonus);
+                selected = MonsterSpawnRules.SelectProfile(profiles, rarity, rng);
+                if (selected is null) return null;
+            }
+            else selected = ChooseMonsterProfile(index); // Explicit legacy/test profiles.
+        }
+        var profile = selected.Value;
+        // D04: client Monster.Get* curves. finalMult is rarity-selected (Boss/Unique/normal);
         // armor/evasion roll Rand(0.96,1.01), life/force-field Rand(0.99,1.01) (per-spawn variance).
         var finalMult = profile.FinalMult > 0 ? profile.FinalMult : MonsterScaling.RarityFinalMult(profile.Rarity);
         var stats = MonsterScaling.Stats(level, profile.ExpMult, finalMult);
@@ -572,6 +731,7 @@ public sealed partial class CombatInstance
             PreferredDistance = profile.PreferredDistance > 0 ? profile.PreferredDistance : MonsterAttackRange * 0.5,
             Brain = profile.Brain ?? "Standard",
             Champion = profile.Champion,
+            Rarity = profile.Rarity,
             Alive = alive,
             AttackCooldown = rng.NextDouble() * 1.6,
             WanderTimer = rng.NextDouble() * 2,
@@ -581,27 +741,37 @@ public sealed partial class CombatInstance
     private CombatMonster CreateBoss()
     {
         var level = PlayerLevel + 3;
+        // The selected world's BossMonsterId resolves to a real monster definition in the
+        // server. Keep legacy stats/resistances as fallback where the catalog has no value.
+        var finalMult = MonsterScaling.RarityFinalMult(bossProfile?.Rarity ?? 6);
+        var maxHp = MonsterScaling.Life(level, 1, finalMult);
+        var weaponDamage = MonsterScaling.WeaponDamage(level, 1, finalMult);
+        var catalogDamage = bossProfile?.Damage ?? default;
+        var damage = catalogDamage == default
+            ? new DamageBundle(Physical: 0.5, Cold: 0.5).Scale(weaponDamage)
+            : catalogDamage.Scale(weaponDamage);
         return new CombatMonster
         {
             Index = BossIndex,
-            Name = "Frostbound Jarl",
-            Brain = "Boss_WolfKing",
+            Name = bossProfile?.Name ?? "Frostbound Jarl",
+            Brain = bossProfile?.Brain ?? "Boss_WolfKing",
             Level = level,
             IsBoss = true,
+            Rarity = 6,
             X = 0,
             Z = -12,
-            // D04: boss = rarity 6. The client selects a separate finalMult for bosses; its
-            // value is the client rarity table entry 0x13880D8 = 1.2 (ClientVerified).
-            MaxHp = MonsterScaling.Life(level, 1, MonsterScaling.RarityFinalMult(6)),
-            Hp = MonsterScaling.Life(level, 1, MonsterScaling.RarityFinalMult(6)),
-            Offense = MonsterScaling.WeaponDamage(level, 1, MonsterScaling.RarityFinalMult(6)),
-            Defense = MonsterScaling.Evasion(level, 1, MonsterScaling.RarityFinalMult(6)),
-            Armor = MonsterScaling.Armor(level, 1, MonsterScaling.RarityFinalMult(6)),
-            Evasion = MonsterScaling.Evasion(level, 1, MonsterScaling.RarityFinalMult(6)),
-            AttackRating = MonsterScaling.MaxAttackRating(level, 1, MonsterScaling.RarityFinalMult(6)),
-            Damage = new DamageBundle(Physical: 0.5, Cold: 0.5).Scale(MonsterScaling.WeaponDamage(level, 1, MonsterScaling.RarityFinalMult(6))),
+            // D04: boss rarity 6 uses the client finalMult table (1.2 at this baseline).
+            MaxHp = maxHp,
+            Hp = maxHp,
+            Offense = weaponDamage,
+            Defense = MonsterScaling.Evasion(level, 1, finalMult),
+            Armor = MonsterScaling.Armor(level, 1, finalMult),
+            Evasion = MonsterScaling.Evasion(level, 1, finalMult),
+            AttackRating = MonsterScaling.MaxAttackRating(level, 1, finalMult),
+            Damage = damage,
+            // Per-boss resistance extraction is not complete; retain the legacy fallback for now.
             Resistances = new ResistanceBundle(Fire: 0.2, Cold: 0.5, Lightning: 0.2, Poison: 0.2),
-            Speed = 2.0,
+            Speed = bossProfile?.Speed ?? 2.0,
             AttackInterval = 2.0,
             Alive = true,
             AttackCooldown = 1.5,
@@ -622,6 +792,12 @@ public sealed partial class CombatInstance
 
     private void Step(double dt)
     {
+        if (InTown)
+        {
+            UpdatePlayer(dt);
+            Version++;
+            return;
+        }
         if (playerRespawnTimer > 0)
         {
             playerRespawnTimer -= dt;
@@ -637,6 +813,7 @@ public sealed partial class CombatInstance
         if (PlayerHp > 0) UpdatePlayer(dt);
         UpdateMonsters(dt);
         if (boss is { Alive: true } && PlayerHp > 0) UpdateBoss(dt);
+        TickProjectiles(dt);
         TickMonsterBuffs(dt);
         TickClouds(dt);
         TickMinions(dt);
@@ -651,6 +828,16 @@ public sealed partial class CombatInstance
                 pendingPackSize--;
                 SpawnOnePackMember();
             }
+        }
+        if (packMode && !niflheimExitReady && pendingPackSize == 0 && !pendingPackSpawn)
+        {
+            if (monsters.Count == 0)
+            {
+                // All attempted definitions were ineligible: retry without awarding a pack.
+                packSpawnTimer += dt;
+                if (packSpawnTimer >= MonsterRespawnSeconds) SpawnPack();
+            }
+            else if (monsters.All(m => !m.Alive)) FinishPack(monsters[^1].Level);
         }
         if (pendingSummons > 0)
         {
@@ -758,8 +945,20 @@ public sealed partial class CombatInstance
 
     private void UpdateMonsters(double dt)
     {
-        foreach (var monster in monsters)
+        // A native spawn can return null for an empty eligible pool. Keep retrying the
+        // world's spawn sites instead of leaving an initially empty arena permanently inert.
+        if (!packMode && monsters.Count == 0 && profiles.Any(p => p.AvailableRarities != null))
         {
+            emptyRosterRetryTimer -= dt;
+            if (emptyRosterRetryTimer <= 0)
+            {
+                SpawnMonsters();
+                emptyRosterRetryTimer = MonsterRespawnSeconds;
+            }
+        }
+        for (var index = 0; index < monsters.Count; index++)
+        {
+            var monster = monsters[index];
             if (!monster.Alive)
             {
                 // Pack members are consumed when the pack is cleared; they do not respawn.
@@ -769,6 +968,15 @@ public sealed partial class CombatInstance
                 {
                     var angle = rng.NextDouble() * Math.PI * 2;
                     var radius = 10 + rng.NextDouble() * 6;
+                    if (profiles.Any(p => p.AvailableRarities != null))
+                    {
+                        // A new spawn gets a new rarity/definition; a failed eligible-pool roll
+                        // stays dead until the next respawn attempt rather than being downgraded.
+                        var replacement = CreateMonster(monster.Index, Math.Cos(angle) * radius, Math.Sin(angle) * radius, true);
+                        if (replacement != null) monsters[index] = replacement;
+                        else monster.RespawnTimer = MonsterRespawnSeconds;
+                        continue;
+                    }
                     monster.X = Math.Cos(angle) * radius;
                     monster.Z = Math.Sin(angle) * radius;
                     monster.Hp = monster.MaxHp;
@@ -818,9 +1026,9 @@ public sealed partial class CombatInstance
             "NotIntimidated" => true,
             "TargetNear" => inCombat,
             "TargetFar" => !inCombat,
-            "ImNotNormalMonster" => monster.IsBoss || monster.Champion,
+            "ImNotNormalMonster" => monster.IsBoss || monster.Rarity != 0 || monster.Champion,
             // The web slice has no world-tier progression; it represents the endgame.
-            "ImAboveOrEqualToTier4" => true,
+            "ImAboveOrEqualToTier4" => IsTierFourOrHigher,
             // W03: Boss phase conditions. CanEnrage is Inferred (life threshold not recovered);
             // StateIdle is the pre-combat idle state; the minion checks reuse hasMinions.
             "StateIdle" => stateWander,
@@ -1304,10 +1512,10 @@ public sealed partial class CombatInstance
         if (monster is null || !monster.Alive) return;
         monster.Buffs.Tick(dt, (buff, elapsed) =>
         {
-            if (buff.DefinitionId != "poison") return;
-            // DebuffPoisoned.DoWork sends Tick_Damage_Per_Second*dt as poison damage.
             // DoT cannot roll a new hit/crit, poison, fork or chain, or use the one-damage hit floor.
-            var damage = CombatModel.EffectiveElementalDamage(buff.TickDps * elapsed, monster.Resistances.Poison);
+            // Its typed damage uses physical armor or the matching elemental resistance.
+            var damage = CombatModel.EffectiveDamageOverTime(
+                buff.TickDps * elapsed, buff.TickDamageType, monster.Armor, monster.Resistances);
             DamageMonster(monster, damage);
         });
     }
@@ -1365,19 +1573,85 @@ public sealed partial class CombatInstance
         return amount;
     }
 
-    /// <summary>Switches the monster archetypes (e.g. entering/leaving a Niflheim portal) and
-    /// restarts the current wave. Progress (experience/currency/kills) is preserved. When
-    /// <paramref name="packs"/> is given it sizes the wave and the boss goal from the portal's
-    /// recovered NumMonsterPacks attribute.</summary>
-    public void SetWorld(IReadOnlyList<MonsterProfile> worldProfiles, int? packs = null)
+    /// <summary>Enter the safe hub; earned drops remain pending until the registry grants them.</summary>
+    public void EnterTown()
     {
+        if (InTown) return;
+        InTown = true;
+        PlayerHp = PlayerMaxHp;
+        PlayerMana = PlayerMaxMana;
+        PlayerShield = 0;
+        playerRespawnTimer = 0;
+        monsters.Clear();
+        boss = null;
+        dungeonKills = 0;
+        pendingPackSpawn = false;
+        pendingPackSize = 0;
+        packMode = false;
+        nativeNiflheimTail = false;
+        finalPackExtraMonsters = 0;
+        niflheimExitReady = false;
+        niflheimChestSize = 0;
+        niflheimChestOpened = false;
+        niflheimExitX = niflheimExitZ = niflheimChestX = niflheimChestZ = 0;
+        totalPacks = packsCleared = 0;
+        ClearWorldEffects();
+        PlayerBuffs.Clear();
+        curseLeechSource = null;
+        // Static scene geometry is rendered by the web client; the open grid provides safe
+        // movement across the exported Town footprint without dungeon walls.
+        Layout = MapLayout.OpenArea(41, 41, "town_hub");
+        PlacePlayerAtWorldEntrance();
+        Version++;
+    }
+
+    // All scene entry paths must reset movement against the destination's floor grid.
+    private void PlacePlayerAtWorldEntrance()
+    {
+        PlayerX = PlayerZ = 0;
+        hasTarget = false;
+        playerPath = null;
+        playerPathTimer = 0;
+        if (Layout is { RoomCenters.Count: > 0 }
+            && !Layout.IsFloor(Layout.Cell(0, 0, ArenaHalf).X, Layout.Cell(0, 0, ArenaHalf).Z))
+            (PlayerX, PlayerZ) = Layout.World(Layout.RoomCenters[0].X, Layout.RoomCenters[0].Z, ArenaHalf);
+        targetX = PlayerX;
+        targetZ = PlayerZ;
+    }
+
+    /// <summary>Switch the world and restart its wave, preserving earned progress.</summary>
+    public void SetWorld(IReadOnlyList<MonsterProfile> worldProfiles, int? packs = null, MapLayout? layout = null,
+        MonsterProfile? worldBossProfile = null, int? currentWorldTier = null,
+        bool nativeNiflheimRun = false, int extraFinalPackMonsters = 0)
+    {
+        InTown = false;
         if (worldProfiles is { Count: > 0 }) profiles = worldProfiles.ToArray();
+        bossProfile = worldBossProfile;
+        if (currentWorldTier is > 0) CurrentWorldTier = currentWorldTier.Value;
+        if (layout is not null) Layout = layout;
+        PlacePlayerAtWorldEntrance();
+        pendingPackSpawn = false;
+        pendingPackSize = 0;
+        nativeNiflheimTail = packs is > 0 && nativeNiflheimRun;
+        finalPackExtraMonsters = nativeNiflheimTail ? Math.Clamp(extraFinalPackMonsters, 0, 23) : 0;
+        niflheimExitReady = false;
+        niflheimChestSize = 0;
+        niflheimChestOpened = false;
+        niflheimExitX = niflheimExitZ = niflheimChestX = niflheimChestZ = 0;
+        packSpawnTimer = 0;
+        emptyRosterRetryTimer = 0;
+        // C02: world transitions remove non-persistent combat state, not just monsters.
+        PlayerBuffs.Clear();
+        curseLeechSource = null;
+        ClearWorldEffects();
+        foreach (var monster in monsters) monster.Buffs.Clear(includePersistent: true);
+        boss?.Buffs.Clear(includePersistent: true);
         boss = null;
         dungeonKills = 0;
         BossKillGoal = DefaultBossKillGoal;
         if (packs is > 0)
         {
-            // Recovered Niflheim run: TotalPacks packs, each a stochastic 2..4 monsters.
+            // Recovered Niflheim run: TotalPacks packs, each a stochastic 2..5 monsters.
             packMode = true;
             totalPacks = Math.Max(2, packs.Value);
             packsCleared = 0;
@@ -1409,6 +1683,7 @@ public sealed partial class CombatInstance
     /// <summary>Cast active skill <paramref name="skillId"/> (index into the class kit).</summary>
     public SkillOutcome UseSkill(int skillId = 0)
     {
+        if (InTown) return new SkillOutcome(false, 0, -1, "in_town");
         if (PlayerHp <= 0) return new SkillOutcome(false, 0, -1, "dead");
         if (skillId < 0 || skillId >= skills.Length) return new SkillOutcome(false, 0, -1, "unknown_skill");
         if (skillCooldowns[skillId] > 0) return new SkillOutcome(false, 0, -1, "cooldown");
@@ -1657,26 +1932,27 @@ public sealed partial class CombatInstance
                 {
                     BeginCast(skillId, skill);
                     var explosionMult = skill.Values.TryGetValue("Power_Weapon_Damage_Multiplier_2", out var m2) ? m2 : skill.Multiplier;
-                    var (expTotal, expFirst) = HitExplosiveProjectile(skill, explosionMult);
-                    if (expFirst < 0) return new SkillOutcome(false, 0, -1, "no_target");
-                    // InfernalBlast: 4s burn (poison DoT mechanics, fire flavor).
+                    Action<CombatMonster>? afterImpact = null;
                     if (skill.Name == "InfernalBlast")
                     {
-                        var target = monsters.FirstOrDefault(m => m.Index == expFirst)
-                            ?? (boss is { Alive: true } && boss.Index == expFirst ? boss : null);
-                        if (target is not null && target.Alive)
+                        afterImpact = target =>
                         {
+                            var burnDuration = skill.Values.TryGetValue("Power_Duration", out var duration)
+                                ? duration : 4.0;
                             target.Buffs.Add(new BuffInstance
                             {
-                                DefinitionId = "poison",
+                                DefinitionId = "burning",
                                 Source = "InfernalBlast",
-                                Duration = 4.0,
-                                Remaining = 4.0,
+                                Duration = burnDuration,
+                                Remaining = burnDuration,
                                 TickDps = PlayerDamageBundle().Total * 0.2,
+                                TickDamageType = DamageOverTimeType.Fire,
                             });
                             EmitEvent("debuff", target.Index, 0, "burn InfernalBlast");
-                        }
+                        };
                     }
+                    var (expTotal, expFirst) = HitExplosiveProjectile(skill, explosionMult, afterImpact);
+                    if (expFirst < 0) return new SkillOutcome(false, 0, -1, "no_target");
                     Version++;
                     return new SkillOutcome(true, expTotal, expFirst, "ok");
                 }
@@ -1696,32 +1972,17 @@ public sealed partial class CombatInstance
                     var buff = PlayerBuffs.Get("manaarrows", "ManaArrows");
                     if (buff is not null) buff.Magnitude -= 1;
                 }
-                var (total, first) = HitProjectile(skill, 14);
-                if (first < 0) return new SkillOutcome(false, 0, -1, "no_target");
-                BeginCast(skillId, skill);
-                // C06 batch 3: ManaArrows grants 4 mana per hit (provisional: per cast).
+                Action<CombatMonster>? afterHit = null;
+                if (skill.Name == "FrozenArrow")
+                    afterHit = primary => ExplodeAround(primary, skill, skill.Multiplier, "FrozenArrow");
                 if (skill.Name == "ManaArrows")
                 {
                     var manaPerHit = skill.Values.TryGetValue("Power_Mana_Arrows_Mana_Per_Hit", out var mph) ? mph : 4.0;
-                    PlayerMana = Math.Min(PlayerMaxMana, PlayerMana + manaPerHit);
+                    afterHit = _ => PlayerMana = Math.Min(PlayerMaxMana, PlayerMana + manaPerHit);
                 }
-                // C06: FrozenArrow explodes in 4y on hit (primary excluded, already hit).
-                if (skill.Name == "FrozenArrow")
-                {
-                    var primary = monsters.FirstOrDefault(m => m.Index == first)
-                        ?? (boss is { Alive: true } && boss.Index == first ? boss : null);
-                    if (primary is not null)
-                    {
-                        foreach (var m in AllCombatMonsters())
-                        {
-                            if (!m.Alive || ReferenceEquals(m, primary)) continue;
-                            var d = Math.Sqrt(Math.Pow(m.X - primary.X, 2) + Math.Pow(m.Z - primary.Z, 2));
-                            if (d > skill.Radius) continue;
-                            total += HitTarget(m, skill, skill.Multiplier);
-                        }
-                        EmitEvent("projectile", first, 0, $"explode FrozenArrow {primary.X:F1},{primary.Z:F1}");
-                    }
-                }
+                var (total, first) = HitProjectile(skill, 14, afterHit);
+                if (first < 0) return new SkillOutcome(false, 0, -1, "no_target");
+                BeginCast(skillId, skill);
                 Version++;
                 return new SkillOutcome(true, total, first, "ok");
             }
@@ -1749,10 +2010,26 @@ public sealed partial class CombatInstance
         }
     }
 
+    private double EffectiveCooldown(SkillProfile skill)
+    {
+        if (skill.Cooldown <= 0) return 0;
+        var cooldownModifier = passives?.Sum(p => p.AttributeBonuses?.GetValueOrDefault(96) ?? 0) ?? 0;
+        return Math.Max(0, skill.Cooldown * (1 + cooldownModifier));
+    }
+
     private void BeginCast(int skillId, SkillProfile skill)
     {
-        skillCooldowns[skillId] = skill.Cooldown;
+        skillCooldowns[skillId] = EffectiveCooldown(skill);
         PlayerMana = Math.Max(0, PlayerMana - skill.ManaCost);
+
+        // MeditationBuff.Brain_OnSkillStarted reads Power_Cooldown_Reset_Chance,
+        // rolls Calculator.CalculateChance, then removes the cooldown buff for this skill.
+        var resetChance = passives?.Sum(p => p.AttributeBonuses?.GetValueOrDefault(176) ?? 0) ?? 0;
+        if (CombatModel.RollChance(resetChance, rng))
+        {
+            skillCooldowns[skillId] = 0;
+            EmitEvent("cooldown-reset", skill.Slot, 0, skill.Name);
+        }
     }
 
     private static double StunSecondsOf(SkillProfile skill)
@@ -1829,20 +2106,35 @@ public sealed partial class CombatInstance
         foreach (var monster in monsters)
             rows.Add(new MonsterSnapshot(monster.Index, monster.Name, monster.Level, false,
                 Math.Round(monster.X, 3), Math.Round(monster.Z, 3), Math.Round(monster.Hp, 2), Math.Round(monster.MaxHp, 2), monster.Alive, Math.Round(monster.StunTimer, 2),
-                monster.BrainAction ?? ""));
+                monster.BrainAction ?? "", monster.Rarity));
         if (boss is { Alive: true })
             rows.Add(new MonsterSnapshot(boss.Index, boss.Name, boss.Level, true,
-                Math.Round(boss.X, 3), Math.Round(boss.Z, 3), Math.Round(boss.Hp, 2), Math.Round(boss.MaxHp, 2), true, Math.Round(boss.StunTimer, 2)));
+                Math.Round(boss.X, 3), Math.Round(boss.Z, 3), Math.Round(boss.Hp, 2), Math.Round(boss.MaxHp, 2), true, Math.Round(boss.StunTimer, 2), Rarity: boss.Rarity));
+
+        var groundEffects = clouds.Select(c => new GroundEffectSnapshot(c.Id, c.Kind,
+            Math.Round(c.X, 3), Math.Round(c.Z, 3), Math.Round(c.Radius, 2), Math.Round(c.Remaining, 2))).ToArray();
+        var minionRows = minions.Select(m => new MinionSnapshot(m.Id, m.Name,
+            Math.Round(m.X, 3), Math.Round(m.Z, 3), Math.Round(m.Hp, 2), Math.Round(m.MaxHp, 2), m.Alive)).ToArray();
+        var projectileRows = ActiveProjectiles.Select(p => new ProjectileSnapshot(p.Id, p.Source,
+            Math.Round(p.X, 3), Math.Round(p.Z, 3), Math.Round(p.DirX, 4), Math.Round(p.DirZ, 4),
+            Math.Round(p.Radius, 2), Math.Round(p.Remaining, 3))).ToArray();
+        var trapRows = traps.Select(t => new TrapSnapshot(t.Id,
+            Math.Round(t.X, 3), Math.Round(t.Z, 3), Math.Round(t.Radius, 2), Math.Round(t.Remaining, 2))).ToArray();
+        ChannelSnapshot? channelRow = activeChannel is null ? null : new ChannelSnapshot(activeChannel.Skill.Name,
+            Math.Round(activeChannel.Radius, 2), Math.Round(activeChannel.Remaining, 2));
 
         return new CombatSnapshot(Version, Math.Round(PlayerX, 3), Math.Round(PlayerZ, 3),
             Math.Round(PlayerHp, 2), Math.Round(PlayerMaxHp, 2),
             Math.Round(PlayerMana, 2), Math.Round(PlayerMaxMana, 2), Math.Round(PlayerShield, 2),
             PlayerLevel, Experience, Silver, Opals,
             Kills,
-            skills.Select((s, i) => new SkillStatus(s.Slot, s.Name, s.Effect, Math.Round(skillCooldowns[i], 2), s.Cooldown, s.ManaCost, s.Confidence, ChainsOf(s), SpecialOf(s))).ToList(),
+            skills.Select((s, i) => new SkillStatus(s.Slot, s.Name, s.Effect, Math.Round(skillCooldowns[i], 2), Math.Round(EffectiveCooldown(s), 2), s.ManaCost, s.Confidence, ChainsOf(s), SpecialOf(s))).ToList(),
             Math.Round(PlayerBuffs.RemainingOf("offense"), 2),
             DungeonsCleared, Math.Max(0, BossKillGoal - dungeonKills), boss is { Alive: true }, rows,
-            PacksRemaining, TotalPacks);
+            PacksRemaining, CombatPacks, groundEffects, minionRows, projectileRows, trapRows, channelRow,
+            Array.Empty<CombatEvent>(), InTown, NiflheimExitReady,
+            niflheimExitX, niflheimExitZ, NiflheimChestSize, niflheimChestOpened,
+            niflheimChestX, niflheimChestZ);
     }
 
     private void ClampToArena()

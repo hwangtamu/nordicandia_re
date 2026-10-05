@@ -12,7 +12,7 @@
   按升序取用并退还可由超额覆盖的低价值精华。
 * 产量不足不扣料、不产生物品；部分堆叠和无关源物品保留，重启/重复请求已测。
 * 原有加插槽 `sockets+1`、镶嵌入口与合成基础仍在；新词缀只填同类型开放槽。
-* 60条 `EssenceAffixId` 已导出，分解有精华输出，但**输出属性与概率未保真**。
+* 60条 `EssenceAffixId` 已导出；分解概率按 `min(1, Durability_Total)` 执行，精华现在会按来源 Affix 定义/稀有度生成属性、标记 `EssenceAdd` 并保留 required level。装备也写入客户端 `RequiredLevel` 属性 id 20（另保留网页装备门槛字段）。**原版随机数流、精华等级缩放与唯一/套装输出分支仍待校准。**
 * 24条离线商店价格恢复；5种网页药水已使用该目录，替换手填价格。
 
 ## E04 已恢复但未形成完整流程
@@ -26,9 +26,7 @@
 独特/套装输出分支。`GetDisassemblableAffixes` 无随机只说明筛选器确定性，
 **不能推出分解保证成功**。
 
-`ExtractAffixEssence` 的**精华重建已接入**（本轮）：`EssenceCatalog.CreateItem` 会按
-`new Affix(affixDefinition, targetRarity, source=3)` + `Item.AddAffix` 给精华附着
-来源词缀（原代码是固定 C、空 Affixes）；`DisassembleItems` 传入来源词缀定义与稀有度。
+`ExtractAffixEssence` 的**精华重建已接入**：`EssenceCatalog.CreateItem` 按来源定义/稀有度从已导出属性区间构建词缀值，写入 `AffixSource=EssenceAdd (3)`，并保留来源 required level；相同来源 seed 的网页值 roll 可重复。与原生 `new Affix(affixDefinition, targetRarity, source=3, requiredLevel, 0)` 对齐了结构，但 value-level/TagData 上下文还需验证。`DisassembleItems` 仅放行目录中的随机 Item Prefix/Suffix、扣除 open-slot marker 后传入来源词缀定义和稀有度。
 **分解概率已解并接入**：`PerformDisassembleOffline.MoveNext @0x29AE7EC` 读
 `GameAttributes` offset `0x318` = `Durability_Total`（属性 30 = 27+28+29，默认 0），
 `chance = min(1.0, Durability_Total)`，再 `Calculator.CalculateChance`（≤ 0 永不成功）。

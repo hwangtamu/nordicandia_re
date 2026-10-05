@@ -67,6 +67,59 @@ export interface MonsterState {
   maxHp: number;
   alive: boolean;
   stunTimer: number;
+  action: string;
+  rarity?: number;
+}
+
+export interface GroundEffectState {
+  id: number;
+  kind: string;
+  x: number;
+  z: number;
+  radius: number;
+  remaining: number;
+}
+
+export interface MinionState {
+  id: number;
+  name: string;
+  x: number;
+  z: number;
+  hp: number;
+  maxHp: number;
+  alive: boolean;
+}
+
+export interface ProjectileState {
+  id: number;
+  source: string;
+  x: number;
+  z: number;
+  dirX: number;
+  dirZ: number;
+  radius: number;
+  remaining: number;
+}
+
+export interface TrapState {
+  id: number;
+  x: number;
+  z: number;
+  radius: number;
+  remaining: number;
+}
+
+export interface ChannelState {
+  name: string;
+  radius: number;
+  remaining: number;
+}
+
+export interface CombatEvent {
+  type: string;
+  targetIndex: number;
+  amount: number;
+  detail: string;
 }
 
 export interface CombatSnapshot {
@@ -91,6 +144,20 @@ export interface CombatSnapshot {
   monsters: MonsterState[];
   packsRemaining: number;
   totalPacks: number;
+  niflheimExitReady: boolean;
+  niflheimExitX: number;
+  niflheimExitZ: number;
+  niflheimChestSize: number;
+  niflheimChestOpened: boolean;
+  niflheimChestX: number;
+  niflheimChestZ: number;
+  groundEffects: GroundEffectState[];
+  minions: MinionState[];
+  projectiles: ProjectileState[];
+  traps: TrapState[];
+  activeChannel: ChannelState | null;
+  events: CombatEvent[];
+  inTown: boolean;
 }
 
 export interface LootDrop {
@@ -125,9 +192,27 @@ export interface MapAnchor {
   z: number;
 }
 
+export interface WorldOption {
+  tier: number;
+  worldId: number;
+  name: string;
+  bossName: string;
+  unlocked: boolean;
+  selected: boolean;
+  currentWaypoint: number;
+  maxWaypoint: number;
+}
+
+export interface WorldProgress {
+  currentTier: number;
+  unlockedTier: number;
+  worlds: WorldOption[];
+}
+
 export interface WebItemDetail {
   id: string;
   name: string;
+  definitionIntegerId: number;
   slot: number;
   rarity: number;
   equipSlot: number;
@@ -136,6 +221,10 @@ export interface WebItemDetail {
   defense: number;
   recovery: number;
   affixes: string[];
+  requiredLevel: number;
+  stack: number;
+  canEquip: boolean;
+  equipReason: string;
 }
 
 export interface WebInventory {
@@ -143,6 +232,29 @@ export interface WebInventory {
   offense: number;
   defense: number;
   recovery: number;
+  characterLevel: number;
+}
+
+export interface WebPetOption {
+  definitionIntegerId: number;
+  name: string;
+  unlocked: boolean;
+  selected: boolean;
+  level: number;
+  experience: number;
+  isAlive: boolean;
+  lastDeathTime: string | null;
+  adsLeftToWatch: number;
+  unlockCost: number | null;
+  unlockCurrency: "OP" | "SL" | null;
+  effects: { name: string; attributeId: number; value: number }[];
+}
+
+export interface WebPetRoster {
+  pets: WebPetOption[];
+  combatPets: WebPetOption[];
+  silver: number;
+  opals: number;
 }
 
 export interface MasterySpec {
@@ -247,6 +359,28 @@ export const api = {
 
   inventory: (characterId: string) => request<WebInventory>(`/characters/${characterId}/inventory`),
 
+  pets: (characterId: string) => request<WebPetRoster>(`/characters/${characterId}/pets`),
+  selectPet: (characterId: string, definitionIntegerId: number) =>
+    request<WebPetRoster>(`/characters/${characterId}/pets/select`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ definitionIntegerId }),
+    }),
+  selectCombatPet: (characterId: string, definitionIntegerId: number) =>
+    request<WebPetRoster>(`/characters/${characterId}/combat-pets/select`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ definitionIntegerId }),
+    }),
+  unlockPet: (characterId: string, definitionIntegerId: number) =>
+    request<WebPetRoster>(`/characters/${characterId}/pets/unlock`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ definitionIntegerId }),
+    }),
+  unlockCombatPet: (characterId: string, definitionIntegerId: number) =>
+    request<WebPetRoster>(`/characters/${characterId}/combat-pets/unlock`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ definitionIntegerId }),
+    }),
+
   command: (
     characterId: string,
     commandId: string,
@@ -337,6 +471,23 @@ export const api = {
       body: JSON.stringify({ type, size }),
     }),
 
+  worlds: (characterId: string) => request<WorldProgress>(`/characters/${characterId}/worlds`),
+
+  selectWorld: (characterId: string, tier: number, waypoint = 0) =>
+    request<{ applied: boolean; reason: string; state: CombatEnvelope }>(`/characters/${characterId}/worlds/select`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tier, waypoint }),
+    }),
+
+  town: (characterId: string) => request<WebTownState>(`/characters/${characterId}/town`),
+
+  enterTown: (characterId: string) =>
+    request<{ state: CombatEnvelope }>(`/characters/${characterId}/town/enter`, { method: "POST" }),
+
+  leaveTown: (characterId: string) =>
+    request<{ state: CombatEnvelope }>(`/characters/${characterId}/town/leave`, { method: "POST" }),
+
   portal: (characterId: string) => request<WebPortalState>(`/characters/${characterId}/portal`),
 
   enterPortal: (characterId: string, itemId: string) =>
@@ -348,6 +499,9 @@ export const api = {
 
   returnPortal: (characterId: string) =>
     request<{ state: CombatEnvelope }>(`/characters/${characterId}/portal/return`, { method: "POST" }),
+
+  openNiflheimChest: (characterId: string) =>
+    request<{ applied: boolean; reason: string; state: CombatEnvelope }>(`/characters/${characterId}/portal/chest/open`, { method: "POST" }),
 
   allocateAttributes: (characterId: string, deltas: Partial<Record<AttributeKey, number>>) =>
     request<{ available: number; attributes: WebAttributes }>(`/characters/${characterId}/attributes`, {
@@ -364,6 +518,7 @@ export interface WebAttributes {
   strengthAllocated: number; dexterityAllocated: number; intelligenceAllocated: number; vitalityAllocated: number;
   constitutionAllocated: number; agilityAllocated: number; mindpowerAllocated: number;
   strength: number; dexterity: number; intelligence: number; vitality: number; constitution: number; agility: number; mindpower: number;
+  details: Record<string, number>;
 }
 
 export interface OfflineView {
@@ -394,12 +549,21 @@ export interface BlessingsView {
   opals: number;
 }
 
+export interface WebTownState {
+  inTown: boolean;
+  worldTier: number;
+  waypoint: number;
+}
+
 export interface WebPortalState {
   inNiflheim: boolean;
   hasPortal: boolean;
   portalItemId: string;
   runsCleared: number;
   packs: number;
+  exitReady: boolean;
+  chestSize: number;
+  chestOpened: boolean;
 }
 
 export interface MerchantProduct {

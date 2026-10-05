@@ -58,7 +58,8 @@ public readonly record struct CombatantStats(double Offense, double Defense, dou
     double DeadlyStrikeChance = 0,
     // Amplify_Damage_Taken_Percent (attribute 6, e.g. Mark of the Chosen): scales the
     // defender's taken damage after mitigation. Inferred placement; C01.
-    double DamageTakenAmplifyPercent = 0)
+    double DamageTakenAmplifyPercent = 0,
+    double ChampionMonsterFindBonus = 0, double UniqueMonsterFindBonus = 0)
 {
     public const double DeadlyStrikeCritMultiplier = 2.0;
     public static CombatantStats FromRealtime(double offense, double defense, double recovery, int level)
@@ -166,6 +167,18 @@ public static class CombatModel
     /// <see cref="ApplyDamageReduction"/>.</summary>
     public static double EffectiveElementalDamage(double rawDamage, double resistance)
         => ApplyDamageReduction(Math.Min(ResistanceCap, resistance), rawDamage);
+
+    /// <summary>Applies the mitigation channel associated with a typed DoT.</summary>
+    public static double EffectiveDamageOverTime(double rawDamage, DamageOverTimeType type,
+        double armor, ResistanceBundle resistances)
+        => type switch
+        {
+            DamageOverTimeType.Physical => Math.Max(0, rawDamage * (1 - PhysicalDamageReduction(armor, rawDamage))),
+            DamageOverTimeType.Fire => EffectiveElementalDamage(rawDamage, resistances.Fire),
+            DamageOverTimeType.Cold => EffectiveElementalDamage(rawDamage, resistances.Cold),
+            DamageOverTimeType.Lightning => EffectiveElementalDamage(rawDamage, resistances.Lightning),
+            _ => EffectiveElementalDamage(rawDamage, resistances.Poison),
+        };
 
     /// <summary>ClientVerified Elemental/ApplyWeaponDamageConversion (0x02BABF3C + 0x02BAC1F8).
     /// Moves <c>physical * percent</c> into each element, normalising when the percentages sum

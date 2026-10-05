@@ -36,7 +36,7 @@
 ## 尚存差异
 
 - 各世界解锁条件、checkpoint/WorldTier/WorldWaypoint 语义未提取（W05）。
-- Town 的 NPC 布局、传送点未提取（W05）。
+- Town 静态场景已从 `world_town_scenes_all` 导出；20 个原版 SpawnZone 位置进入 `town_scene.json` 并在网页映射当前可用站点。动态 NPC/动画、具体解锁/传送门流程仍未提取（W05/U02/P03）。
 
 ## 状态：已定位 / 已还原（目录）/ 待接入 / 对照未通过
 

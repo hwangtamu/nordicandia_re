@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text.Json;
 using Game;
+using Nordicandia.Simulation;
 using SharedNet.Constants.Game;
 
 namespace Nordicandia.Server.WebApi;
@@ -30,12 +31,49 @@ public static class EssenceCatalog
     /// <summary>An essence item (inventory, no implicit rolls). ClientVerified
     /// (TabBlacksmithDisassemble.ExtractAffixEssence @0x029ABFE8): the essence carries a new affix
     /// built from the source affix definition at <paramref name="targetRarity"/>.</summary>
-    public static SerializedItem CreateItem(Essence essence, int targetRarity, int affixDefinitionId, int level)
+    public static SerializedItem CreateItem(Essence essence, int targetRarity, int affixDefinitionId,
+        double requiredLevel, ulong seed = 0)
     {
         var rarity = (Rarity)Math.Clamp(targetRarity, 0, 11);
         var affixes = new List<SerializedAffix>();
         if (affixDefinitionId != 0)
-            affixes.Add(new SerializedAffix { DefinitionIntegerId = affixDefinitionId, Rarity = rarity });
+        {
+            var definition = AffixCatalog.Entries.FirstOrDefault(a => a.IntegerId == affixDefinitionId);
+            if (definition.Name is not null)
+            {
+                var rng = new CombatRandom(seed == 0 ? 0xD1B54A32D192ED03UL : seed);
+                var values = AffixCatalog.RollAll(definition, (int)rarity, rng);
+                var essenceType = ItemCatalog.Definitions.FirstOrDefault(i => i.IntegerId == essence.IntegerId).Type;
+                var tags = AffixCatalog.TagsForType(essenceType);
+                var multiplier = definition.ValueMultiplier(tags);
+                var attributes = new Dictionary<int, GameAttributeValue>();
+                foreach (var (attribute, value) in values)
+                    attributes[attribute.AttributeId] = new GameAttributeValue
+                    {
+                        Value = (int)Math.Round(value * multiplier),
+                        ValueD = Math.Round(value * multiplier, 4),
+                    };
+                attributes[LootTable.AttrAffixType] = new GameAttributeValue
+                {
+                    Value = definition.GenerationType,
+                    ValueD = definition.GenerationType,
+                };
+                affixes.Add(new SerializedAffix
+                {
+                    DefinitionIntegerId = affixDefinitionId,
+                    Rarity = rarity,
+                    AffixSource = AffixSources.EssenceAdd,
+                    Attributes = new SerializedAttributes
+                    {
+                        Values = new Dictionary<AttributeOrigin, Dictionary<int, GameAttributeValue>>
+                        {
+                            [AttributeOrigin.Item] = attributes,
+                        },
+                        MultiplicativeValues = new(),
+                    },
+                });
+            }
+        }
         return new SerializedItem
         {
             Id = Guid.NewGuid(),
@@ -50,7 +88,14 @@ public static class EssenceCatalog
                 {
                     [AttributeOrigin.Item] = new()
                     {
-                        [LootTable.AttrRequiredLevel] = new GameAttributeValue { Value = Math.Max(1, level), ValueD = Math.Max(1, level) },
+                        [20] = new GameAttributeValue
+                        {
+                            Value = (int)Math.Max(1, requiredLevel), ValueD = Math.Max(1, requiredLevel),
+                        },
+                        [LootTable.AttrRequiredLevel] = new GameAttributeValue
+                        {
+                            Value = (int)Math.Max(1, requiredLevel), ValueD = Math.Max(1, requiredLevel),
+                        },
                     },
                 },
                 MultiplicativeValues = new(),

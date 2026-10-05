@@ -33,7 +33,8 @@ public static partial class PowerCatalog
 
     /// <summary>Builds the equipped loadout from selected power names (6 active / 3 passive max).
     /// Unknown names are dropped; an empty selection falls back to the class starter kit.</summary>
-    public static ClassPowerPool BuildPool(int classId, IReadOnlyList<string> activeNames, IReadOnlyList<string> passiveNames)
+    public static ClassPowerPool BuildPool(int classId, IReadOnlyList<string> activeNames,
+        IReadOnlyList<string> passiveNames, IReadOnlyDictionary<string, int>? powerRanks = null)
     {
         var kit = DefaultPoolFor(classId);
         if (!PoolByClass.TryGetValue(classId, out var pool)) return kit;
@@ -48,7 +49,13 @@ public static partial class PowerCatalog
         {
             var passive = pool.Passive.FirstOrDefault(x => x.Name == name);
             if (passive is not null && passives.Count < MaxPassiveSkills)
-                passives.Add(passive with { AttributeBonuses = PowerParameterCatalog.AttributeBonuses(passive.Name) });
+            {
+                var rank = powerRanks?.GetValueOrDefault(passive.Name) ?? 1;
+                passives.Add(passive with
+                {
+                    AttributeBonuses = PowerParameterCatalog.AttributeBonuses(passive.Name, Math.Max(1, rank)),
+                });
+            }
         }
         if (active.Count == 0) active = kit.Active.ToList();
         if (passives.Count == 0) passives = kit.Passive.ToList();

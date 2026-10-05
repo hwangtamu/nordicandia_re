@@ -106,22 +106,29 @@ static class C06Batch3Tests
         inst2.Monsters[0].X = 3;
         inst2.Monsters[1].X = 10;
         var h1 = inst2.Monsters[1].Hp;
-        inst2.UseSkill(0);
-        Check(h1 - inst2.Monsters[1].Hp > 0, "iceblast: 15y explosion damages nearby");
+        var cast2 = inst2.UseSkill(0);
+        Check(cast2.Cast && inst2.Monsters[0].Hp == inst2.Monsters[0].MaxHp,
+            "iceblast: distant primary remains untouched until projectile flight");
+        inst2.Advance(1.0);
+        Check(h1 - inst2.Monsters[1].Hp > 0, "iceblast: impact explosion damages nearby");
         // Shadowbolt: 3.0x + 2.5y explosion.
         var inst3 = Create(6, "Shadowbolt", count: 2);
         inst3.Monsters[0].X = 3;
         inst3.Monsters[1].X = 5; // within 2.5y
         var h = inst3.Monsters[1].Hp;
         inst3.UseSkill(0);
-        Check(h - inst3.Monsters[1].Hp > 0, "shadowbolt: 2.5y explosion damages nearby");
+        inst3.Advance(1.0);
+        Check(h - inst3.Monsters[1].Hp > 0, "shadowbolt: 2.5y impact explosion damages nearby");
         // InfernalBlast: 7.0x + burn.
         var inst4 = Create(5, "InfernalBlast", count: 1);
         inst4.Monsters[0].X = 3;
         var cast4 = inst4.UseSkill(0);
-        Check(cast4.Cast, "infernal: cast succeeds");
-        Check(inst4.Monsters[0].Buffs.Has("poison", "InfernalBlast"),
-            "infernal: 4s burn applied");
+        Check(cast4.Cast && inst4.Monsters[0].Buffs.Count == 0,
+            "infernal: projectile cast does not apply impact effects before flight");
+        inst4.Advance(1.0);
+        Check(inst4.Monsters[0].Buffs.Has("burning", "InfernalBlast")
+            && inst4.Monsters[0].Buffs.Get("burning", "InfernalBlast")?.TickDamageType == DamageOverTimeType.Fire,
+            "infernal: impact applies a typed 4s fire burn");
     }
 
     private static void Decay()
@@ -195,8 +202,9 @@ static class C06Batch3Tests
         for (var i = 0; i < 6; i++) inst.Advance(5.0); // 30s > 25s cooldown
         var manaBefore = inst.PlayerMana;
         var cast2 = inst.UseSkill(0);
-        Check(cast2.Cast && cast2.Damage > 0, "manaarrows: second cast fires the projectile");
-        Check(inst.PlayerMana > manaBefore - 25, "manaarrows: hit grants mana (net positive)");
+        Check(cast2.Cast && inst.ActiveProjectiles.Count > 0, "manaarrows: second cast launches a persistent projectile");
+        inst.Advance(1.0);
+        Check(inst.PlayerMana > manaBefore - 25, "manaarrows: hit grants mana after impact (net positive)");
     }
 
     private static void Backflip()

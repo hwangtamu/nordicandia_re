@@ -240,6 +240,86 @@ public static class WebApiEndpoints
             return Results.Ok(new { applied, reason });
         });
 
+        // ----- Petkeeper NPCs -----
+
+        group.MapGet("/characters/{id:guid}/pets", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(ProjectPetRoster(user.UserId, id));
+        });
+
+        group.MapPost("/characters/{id:guid}/pets/select", (HttpContext ctx, Guid id, WebPetSelectRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var petId = req?.DefinitionIntegerId ?? 0;
+            if (PetCatalog.ByIntegerId(petId) is not { Kind: "Pet" })
+                return Results.BadRequest(new { error = "unknown_pet" });
+            if (!GameStore.Instance.GetPetRoster(user.UserId, id).PetDefinitionIntegerIds.Contains(petId))
+                return Results.Conflict(new { error = "pet_not_unlocked" });
+            GameStore.Instance.UpdatePet(user.UserId, id, petId);
+            return Results.Ok(ProjectPetRoster(user.UserId, id));
+        });
+
+        group.MapPost("/characters/{id:guid}/combat-pets/select", (HttpContext ctx, Guid id, WebPetSelectRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var petId = req?.DefinitionIntegerId ?? 0;
+            if (PetCatalog.ByIntegerId(petId) is not { Kind: "CombatPet" })
+                return Results.BadRequest(new { error = "unknown_combat_pet" });
+            if (!GameStore.Instance.GetPetRoster(user.UserId, id).CombatPets.Any(p => p.DefinitionIntegerId == petId))
+                return Results.Conflict(new { error = "combat_pet_not_unlocked" });
+            GameStore.Instance.UpdateCombatPet(user.UserId, id, petId);
+            return Results.Ok(ProjectPetRoster(user.UserId, id));
+        });
+
+        group.MapPost("/characters/{id:guid}/pets/unlock", (HttpContext ctx, Guid id, WebPetUnlockRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var pet = PetCatalog.ByIntegerId(req?.DefinitionIntegerId ?? 0);
+            if (pet is not { Kind: "Pet", UnlockCurrency: "OP", UnlockCost: not null })
+                return Results.BadRequest(new { error = "pet_not_purchasable" });
+            try
+            {
+                GameStore.Instance.UnlockPet(user.UserId, id, pet.IntegerId, pet.UnlockCost.Value);
+                return Results.Ok(ProjectPetRoster(user.UserId, id));
+            }
+            catch (Grpc.Core.RpcException ex) when (ex.StatusCode is Grpc.Core.StatusCode.FailedPrecondition or Grpc.Core.StatusCode.InvalidArgument)
+            {
+                return Results.Conflict(new { error = ex.Status.Detail });
+            }
+        });
+
+        group.MapPost("/characters/{id:guid}/combat-pets/unlock", (HttpContext ctx, Guid id, WebPetUnlockRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var pet = PetCatalog.ByIntegerId(req?.DefinitionIntegerId ?? 0);
+            if (pet is not { Kind: "CombatPet", UnlockCurrency: not null, UnlockCost: not null })
+                return Results.BadRequest(new { error = "combat_pet_not_purchasable" });
+            try
+            {
+                GameStore.Instance.UnlockCombatPet(user.UserId, id, pet.UnlockCurrency == "OP", pet.IntegerId, pet.UnlockCost.Value);
+                return Results.Ok(ProjectPetRoster(user.UserId, id));
+            }
+            catch (Grpc.Core.RpcException ex) when (ex.StatusCode is Grpc.Core.StatusCode.FailedPrecondition or Grpc.Core.StatusCode.InvalidArgument)
+            {
+                return Results.Conflict(new { error = ex.Status.Detail });
+            }
+        });
+
         // ----- NPC windows (blacksmith / merchant) -----
 
         // Blacksmith operations. Items are placed into the Blacksmith slots, the operation runs,
@@ -447,9 +527,58 @@ public static class WebApiEndpoints
             return Results.Ok(new { applied, reason, view, attributes = CombatRegistry.Instance.Attributes(user.UserId, id) });
         });
 
+        // ----- world selection / saved campaign progress (W05) -----
+
+        group.MapGet("/characters/{id:guid}/worlds", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(CombatRegistry.Instance.WorldProgress(user.UserId, id));
+        });
+
+        group.MapPost("/characters/{id:guid}/worlds/select", (HttpContext ctx, Guid id, WebWorldSelectRequest req) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var (applied, reason, state) = CombatRegistry.Instance.SelectWorld(user.UserId, id,
+                req?.Tier ?? 0, req?.Waypoint ?? 0);
+            return Results.Ok(new { applied, reason, state });
+        });
+
+        // ----- town / safe return path -----
+
+        group.MapGet("/characters/{id:guid}/town", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(CombatRegistry.Instance.TownState(user.UserId, id));
+        });
+
+        group.MapPost("/characters/{id:guid}/town/enter", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(new { state = CombatRegistry.Instance.EnterTown(user.UserId, id) });
+        });
+
+        group.MapPost("/characters/{id:guid}/town/leave", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            return Results.Ok(new { state = CombatRegistry.Instance.LeaveTown(user.UserId, id) });
+        });
+
         // ----- Niflheim portal (M3) -----
 
-        group.MapGet("/characters/{id:guid}/portal", (HttpContext ctx, Guid id) =>
+        group.MapGet("/characters/{id:guid}/portal",   (HttpContext ctx, Guid id) =>
         {
             var user = ResolveUser(ctx);
             if (user is null) return Results.Unauthorized();
@@ -475,6 +604,40 @@ public static class WebApiEndpoints
             if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
             return Results.Ok(new { state = CombatRegistry.Instance.ReturnPortal(user.UserId, id) });
         });
+
+        group.MapPost("/characters/{id:guid}/portal/chest/open", (HttpContext ctx, Guid id) =>
+        {
+            var user = ResolveUser(ctx);
+            if (user is null) return Results.Unauthorized();
+            if (!HasCsrfHeader(ctx)) return Results.BadRequest(new { error = "csrf_header_required" });
+            if (!GameStore.Instance.OwnsCharacter(user.UserId, id)) return Results.NotFound();
+            var (applied, reason, state) = CombatRegistry.Instance.OpenNiflheimChest(user.UserId, id);
+            return Results.Ok(new { applied, reason, state });
+        });
+    }
+
+    private static WebPetRoster ProjectPetRoster(Guid owner, Guid characterId)
+    {
+        var stored = GameStore.Instance.GetPetRoster(owner, characterId);
+        var balance = GameStore.Instance.GetRealtimeProgress(owner, characterId);
+        var ownedPets = stored.PetDefinitionIntegerIds.ToHashSet();
+        var combatPets = stored.CombatPets.GroupBy(p => p.DefinitionIntegerId)
+            .ToDictionary(group => group.Key, group => group.First());
+        WebPetEffect[] Effects(PetCatalog.Pet pet) => pet.Effects
+            .Where(e => e.AttributeId is not (421 or 968))
+            .Select(e => new WebPetEffect(e.Affix, e.AttributeId, e.Value)).ToArray();
+        var pets = PetCatalog.CompanionPets.OrderBy(p => p.Name)
+            .Select(p => new WebPetOption(p.IntegerId, p.Name, ownedPets.Contains(p.IntegerId),
+                ownedPets.Contains(p.IntegerId) && stored.CurrentPetDefinitionIntegerId == p.IntegerId,
+                p.UnlockCost, p.UnlockCurrency, Effects(p)));
+        var combat = PetCatalog.CombatPets.OrderBy(p => p.Name)
+            .Select(p => combatPets.TryGetValue(p.IntegerId, out var state)
+                ? new WebPetOption(p.IntegerId, p.Name, true, stored.CurrentCombatPetDefinitionIntegerId == p.IntegerId,
+                    p.UnlockCost, p.UnlockCurrency, Effects(p), state.Level, state.Experience,
+                    state.IsAlive, state.LastDeathTime, state.AdsLeftToWatch)
+                : new WebPetOption(p.IntegerId, p.Name, false, false,
+                    p.UnlockCost, p.UnlockCurrency, Effects(p)));
+        return new WebPetRoster(pets.ToArray(), combat.ToArray(), balance.Silver, balance.Opals);
     }
 
     private static IResult CreateSessionResponse(HttpContext ctx, Guid userId, string displayName)

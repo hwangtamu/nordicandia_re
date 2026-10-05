@@ -57,6 +57,8 @@ internal static class CharacterRatings
             IgnoresCrits = eval.Resolve("Ignores_Critical_Hits") > 0,
             // Deadly strike (axes): chance from Deadly_Strike_Chance_Total, x2 on a crit.
             DeadlyStrikeChance = eval.Resolve("Deadly_Strike_Chance_Total"),
+            ChampionMonsterFindBonus = eval.Resolve("ChampionMonster_Find_Bonus_Percent"),
+            UniqueMonsterFindBonus = eval.Resolve("UniqueMonster_Find_Bonus_Percent"),
         };
     }
 }

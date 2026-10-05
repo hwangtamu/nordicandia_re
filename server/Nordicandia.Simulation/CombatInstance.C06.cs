@@ -14,6 +14,7 @@ namespace Nordicandia.Simulation;
 /// </summary>
 public sealed class Trap
 {
+    public int Id;
     public double X, Z;
     public double Radius = 2.0;
     public double Remaining = 5.0;
@@ -36,6 +37,7 @@ public partial class CombatInstance
 {
     private readonly List<Trap> traps = new();
     private Channel activeChannel;
+    private int nextTrapId;
 
     /// <summary>Active traps (for tests/rendering).</summary>
     public IReadOnlyList<Trap> Traps => traps;
@@ -111,6 +113,7 @@ public partial class CombatInstance
     {
         traps.Add(new Trap
         {
+            Id = ++nextTrapId,
             X = x,
             Z = z,
             Radius = 2.0,
@@ -229,7 +232,7 @@ public partial class CombatInstance
     /// <summary>
     /// C06: Tornado — a moving vortex: 2y radius collider, 100% pierce, 2.3x per hit.
     /// Flies the standard 14y range with a fat collider (C03 flight). The client's 7s
-    /// wandering lifetime is not simulated; the web resolves the flight synchronously.
+    /// wandering lifetime is not simulated; the projectile itself now advances over fixed steps.
     /// </summary>
     private double HitTornado(SkillProfile skill, CombatMonster target)
     {

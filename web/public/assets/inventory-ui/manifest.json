@@ -1,0 +1,19 @@
+{
+  "source": "Android 1.9.3 UnityDataAssetPack.apk / packed assets",
+  "bundleSha256": "99c0a3ebeb559bccbe738ea791d288019b1fd505bf72be09d364570db520ac10",
+  "sprites": {
+    "Frame_InnerFrame": "/assets/inventory-ui/Frame_InnerFrame.png",
+    "Badge_mage": "/assets/inventory-ui/Badge_mage.png",
+    "Badge_warrior": "/assets/inventory-ui/Badge_warrior.png",
+    "Badge_hunter": "/assets/inventory-ui/Badge_hunter.png",
+    "Badge_barbarian": "/assets/inventory-ui/Badge_barbarian.png",
+    "Frame_Top_Gold": "/assets/inventory-ui/Frame_Top_Gold.png",
+    "Badge_priest": "/assets/inventory-ui/Badge_priest.png",
+    "Badge_necro": "/assets/inventory-ui/Badge_necro.png",
+    "Badge_assassin": "/assets/inventory-ui/Badge_assassin.png",
+    "Frame_Background": "/assets/inventory-ui/Frame_Background.png",
+    "GlowingBorder_Yellow": "/assets/inventory-ui/GlowingBorder_Yellow.png",
+    "UnitFrame_Avatar2": "/assets/inventory-ui/UnitFrame_Avatar2.png",
+    "Badge_paladin": "/assets/inventory-ui/Badge_paladin.png"
+  }
+}

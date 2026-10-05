@@ -16,6 +16,7 @@
   修正了网页原先手工设的 Fire。
 * 属性曲线/稀有度系数已在 D04/D05 接入，手工原型倍率已删。
 * `W01MonsterCatalogTests` 8 条。
+* 2026-10-04：`MonsterSpawnRules` 接入原版 Unique → Rare → Champion 顺序抽签、等级或 Tier ≥ 2 门槛、属性 12/164 加成及 AvailableRarities；初次生成和重生均生效。纠正 Champion=1、Unique=4；详见 [反汇编证据](MONSTER_SPAWN_RECOVERY.md)。工作区回归 840 PASS（含回放 58/58），web build 通过。
 
 ### W02 完整 AI 条件与状态迁移
 
@@ -51,11 +52,11 @@
 
 | 项 | 差距 |
 |---|---|
-| W01 | 怪物池已按世界类型接入；仍缺**密度/阶层**（需要地图与刷怪区） |
+| W01 | 世界类型权重与 Champion/Rare/Unique 概率、加成、资格筛选已接；类型内物种暂均分；仍缺**原版密度/区域生命周期、完整类型继承/角色筛选、精英附加属性** |
 | W02 | 目标丢失、寻路、碰撞、仇恨/逃离时机的**数值**；宠物/图腾动作 |
 | W03 | 各 Power 的精确定量参数（触发/时序/召唤上限）与 Boss **阶段**、清场 |
 | W04 | 地图图结构、场景块、碰撞、出入口、刷怪区体积（`DungeonMonsterSpawnArea` 的 `PathTypeIndex`/`IndexOnPath` 依赖地图路径系统） |
-| W05 | 城镇/地图解锁/checkpoint/WorldTier 选择、返回路径、跨重登恢复 |
+| W05 | 可选存档已解锁 Tier/waypoint；Boss clear 按 `OnDungeonRunCompleted(tier, waypoint, duration)` 保存 checkpoint/时间并开放下一 waypoint；Town 原生静态场景/SpawnZone 已导出，已实现站点连接当前 Blacksmith/Merchant/Offering/Portal UI，Niflheim return-to-town 已接。动态 NPC/对话、Tier 解锁、checkpoint 难度待办 |
 | W06 | `DungeonMonsterSpawnArea` 真实体积、世界修饰符、boss 包、完成/失败/返回 |
 | W07 | 逐 tier checkpoint 进度跟踪（tier 回退） |
 

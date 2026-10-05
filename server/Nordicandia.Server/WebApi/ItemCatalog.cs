@@ -117,6 +117,17 @@ public static class ItemCatalog
         new[] { "Shield", "Tome" },
     };
 
+    /// <summary>Recover an equipment slot for old/native items that lack the web-only
+    /// AttrEquipSlot attribute. A definition outside the equipment families is not gear.</summary>
+    public static int EquipSlotForDefinition(int definitionIntegerId)
+    {
+        var definition = Definitions.FirstOrDefault(d => d.IntegerId == definitionIntegerId);
+        if (definition.Name is null) return -1;
+        for (var slot = 0; slot < SlotTypes.Length; slot++)
+            if (SlotTypes[slot].Contains(definition.Type)) return slot;
+        return -1;
+    }
+
     private static readonly Lazy<IReadOnlyList<Definition>> All = new(Load);
     public static IReadOnlyList<Definition> Definitions => All.Value;
 

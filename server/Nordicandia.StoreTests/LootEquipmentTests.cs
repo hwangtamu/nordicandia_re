@@ -74,6 +74,35 @@ static class LootEquipmentTests
             Check(inventory.Offense >= before + offB - 0.001 && inventory.Offense < before + offA + offB + 0.001,
                 "m2 slots: only one slot bonus is counted");
 
+            // A portal has no equipment-slot attribute. Missing data must not silently
+            // default to Head (slot 0) and displace the actual helm.
+            var portalProduct = MerchantCatalog.Find(Guid.Parse("15900000-0000-0000-0000-000000000159"))!.Value;
+            var portal = MerchantCatalog.CreateItem(portalProduct);
+            store.GrantItems(owner, characterId, new List<SerializedItem> { portal });
+            var portalView = registry.Inventory(owner, characterId).Items.Single(i => i.Id == portal.Id);
+            Check(portalView.EquipSlot == -1 && !portalView.CanEquip
+                && portalView.EquipReason == "not_equippable",
+                "m2 equip: consumable portal is projected as non-equipment");
+            var rejected = registry.ApplyCommand(owner, characterId, "slot-portal", equipB.State.Combat.Version,
+                new WebCommandRequest("equip", ItemId: portal.Id));
+            Check(!rejected.Applied && rejected.Reason == "not_equippable"
+                && registry.Inventory(owner, characterId).Items.Single(i => i.Id == portal.Id).Slot == (int)ItemSlotTypes.Inventory,
+                "m2 equip: server rejects non-equipment instead of putting it in the Head slot");
+            var nativeHelmetDefinition = ItemCatalog.Definitions.First(d => d.Type == "HeavyHelmet");
+            var nativeHelmet = new SerializedItem
+            {
+                Id = Guid.NewGuid(), Name = nativeHelmetDefinition.Name,
+                DefinitionIntegerId = nativeHelmetDefinition.IntegerId, Slot = ItemSlotTypes.Inventory,
+            };
+            store.GrantItems(owner, characterId, new List<SerializedItem> { nativeHelmet });
+            var nativeView = registry.Inventory(owner, characterId).Items.Single(i => i.Id == nativeHelmet.Id);
+            Check(nativeView.EquipSlot == 0 && nativeView.CanEquip,
+                "m2 equip: native helmet without web slot metadata remains equippable by definition");
+            var nativeEquip = registry.ApplyCommand(owner, characterId, "slot-native-helmet", rejected.State.Combat.Version,
+                new WebCommandRequest("equip", ItemId: nativeHelmet.Id));
+            Check(nativeEquip.Applied && registry.Inventory(owner, characterId).Items.Single(i => i.Id == nativeHelmet.Id).Slot == (int)ItemSlotTypes.Head,
+                "m2 equip: native helmet can actually be equipped in the Head slot");
+
             // Affixes are generated and exposed.
             var looted = inventory.Items.First(i => i.Id == itemB.Id);
             Check(looted.Affixes.Count > 0, "m2 affixes: items carry named affixes");
@@ -110,7 +139,7 @@ static class LootEquipmentTests
             // toward the nearest monster each step (the web client's auto-move) so the random layout
             // seed cannot leave both sides idle outside aggro range.
             var loot = new List<WebItemDetail>();
-            for (var i = 0; i < 20; i++)
+            for (var i = 0; i < 30; i++)
             {
                 clock.Advance(TimeSpan.FromSeconds(5));
                 var snapshot = registry.Advance(owner, characterId);
@@ -132,6 +161,10 @@ static class LootEquipmentTests
             loot.AddRange(inventory.Items);
             Check(inventory.Items.Count > 0, "m2 loot: kills produced persistent items");
             Check(afterCombat.Combat.DungeonsCleared >= 1, "m2 dungeon: boss cleared at least once");
+            var worldProgress = store.GetWorldProgress(owner, characterId);
+            var checkpoint = worldProgress.Waypoints.GetValueOrDefault(worldProgress.CurrentTier);
+            Check(checkpoint.CurrentWaypoint >= 2 && checkpoint.MaxWaypoint >= 2,
+                "W05: boss clear persists the completed checkpoint and unlocks the next waypoint");
 
             var equippedCandidate = inventory.Items.First(i => i.EquipSlot is >= 0 and <= 13);
             Check(!equippedCandidate.Equipped, "m2 equip: candidate starts unequipped");

@@ -34,7 +34,23 @@ static class SkillSpecTests
         Check(unknown.Count == 0,
             $"skill specs: no skill silently lacks a prototype ({string.Join(",", unknown)})");
         var gapped = specs.Count(s => s.GetProperty("behaviorGaps").GetArrayLength() > 0);
-        Check(gapped == 29, $"skill specs: gap inventory is explicit ({gapped} skills with unimplemented attributes)");
+        Check(gapped == 44, $"skill specs: prototype and per-skill gaps are explicit ({gapped} skills)");
+        bool HasGap(string name, string attr) => specs.Single(s => s.GetProperty("name").GetString() == name)
+            .GetProperty("behaviorGaps").EnumerateArray().Any(a => a.GetString() == attr);
+        Check(!HasGap("PoisonCloud", "Power_Duration") && !HasGap("PoisonCloud", "Power_Slow_Effect_Percent")
+            && !HasGap("Intimidate", "Power_Intimidate_Opponent_All_Damage_Reduced_Percent"),
+            "skill specs: C05/C06 per-skill handlers are reflected instead of generic-prototype false gaps");
+        Check(HasGap("SummonDemon", "Power_Minion_Duration")
+            && HasGap("UnholyFocus", "Power_Unholy_Focus_Death_Attacks_On_Target_Instantly_Kills_Threshold")
+            && HasGap("DrainLife", "field_0x158"),
+            "skill specs: unimplemented summon/skill behavior and unknown fields remain visible");
+        Check(HasGap("Overkill", "_OverkillChance [field_0x120]"),
+            "skill specs: passive raw offsets are resolved to their IL2CPP member names without hiding the gap");
+        var overkill = specs.Single(s => s.GetProperty("name").GetString() == "Overkill")
+            .GetProperty("nativePassiveRecovery");
+        Check(overkill.GetProperty("sourceAvailable").GetBoolean()
+            && overkill.GetProperty("applyAttributes").EnumerateArray().Any(a => a.GetString() == "Overkill_Chance"),
+            "skill specs: passive behavior specs link the native Apply attribute evidence");
         Console.WriteLine($"INFO skill specs: {gapped} skills carry explicit behavior gaps; see docs/web/C04_SKILL_SPECS.md");
     }
 }

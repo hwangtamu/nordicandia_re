@@ -44,7 +44,7 @@ Normal = roundToEven(baseNormal / (1 + .01*p*f / (p + f)))
 毒伤经过目标毒抗性；最后一帧只计算剩余时长；死亡清空状态；不使用直接命中的最低 1 点伤害，
 也不再次触发命中、暴击、中毒或分叉。保证施毒属性已接入 `CharacterRatings`。
 
-完整 BuffManager 的替换/叠加规则仍未移植：网页目前保留最高 DPS 并刷新持续时间。
+后续 C02 已移植 BuffManager 生命周期，并按 `DebuffPoisoned.IsStrongerThan`（0x02B2F7A0）先比较 `Tick_Damage_Per_Second / TimeoutDuration`，再回退基类强弱规则；跨来源去重/交互仍待实机样本。
 毒目标暴击翻倍仍沿用现有网页命中分类；原版完整 Power 类型过滤未在本轮恢复。
 
 ## 分叉与链

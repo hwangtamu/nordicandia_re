@@ -7,8 +7,10 @@ import {
   ArcRotateCamera,
   Color3,
   Color4,
+  DirectionalLight,
   Engine,
   HemisphericLight,
+  Light,
   Matrix,
   Mesh,
   MeshBuilder,
@@ -17,6 +19,7 @@ import {
   PointLight,
   Scene,
   SceneLoader,
+  SpotLight,
   StandardMaterial,
   Texture,
   TransformNode,
@@ -24,7 +27,7 @@ import {
 } from "@babylonjs/core";
 import "@babylonjs/loaders/glTF";
 
-import { CombatEnvelope, CombatSnapshot, LootDrop, MapLayout, MonsterState } from "./api";
+import { CombatEnvelope, CombatEvent, CombatSnapshot, LootDrop, MapLayout, MonsterState } from "./api";
 import { ContentManifest, loadManifest, monsterIcon, raceIcon } from "./content";
 
 export interface HudState {
@@ -46,7 +49,9 @@ export interface HudState {
   bossKillsRemaining: number;
   packsRemaining: number;
   totalPacks: number;
+  niflheimExitReady: boolean;
   autoMove: boolean;
+  inTown: boolean;
   skills: { name: string; effect: string; ready: boolean; cooldown: number; manaCost: number }[];
   message: string;
 }
@@ -58,6 +63,9 @@ export interface WorldHooks {
   pollState: () => Promise<CombatEnvelope | null>;
   moveTo: (x: number, z: number) => void;
   castSkill: (skillId: number) => void;
+  onTownNpc: (npc: string) => void;
+  onNiflheimExit: () => void;
+  onNiflheimChest: () => void;
 }
 
 interface Entity {
@@ -68,6 +76,32 @@ interface Entity {
   moving: boolean;
   stepPhase: number;
   level: number;
+  monsterName?: string;
+  isBoss?: boolean;
+  rarity?: number;
+}
+
+interface TransientVisual {
+  mesh: Mesh;
+  material: StandardMaterial;
+  kind: string;
+}
+
+interface TownSpawnZone {
+  name: string;
+  x: number;
+  z: number;
+}
+
+interface TownSceneManifest {
+  spawnZones: TownSpawnZone[];
+  lights: { name: string; type: number; x: number; y: number; z: number; direction: number[];
+    color: number[]; intensity: number; range: number; spotAngle: number }[];
+}
+
+interface TownNpcLabel {
+  element: HTMLButtonElement;
+  position: Vector3;
 }
 
 const KIT = "/assets/kit/dungeon_default/";
@@ -85,9 +119,20 @@ export class World {
   private readonly hooks: WorldHooks;
   private readonly templates = new Map<string, TransformNode>();
   private readonly monsterEntities = new Map<number, Entity>();
+  private readonly transientEntities = new Map<string, TransientVisual>();
+  private readonly townNpcActions = new Map<Mesh, string>();
+  private exitPortalMesh: Mesh | null = null;
+  private exitChestMesh: Mesh | null = null;
+  private townNpcRoots: TransformNode[] = [];
+  private townNpcLabels: TownNpcLabel[] = [];
+  private townLights: Light[] = [];
   private mapTiles: TransformNode[] = [];
   private mapSignature = "";
   private ground: Nullable<Mesh> = null;
+  private townGround: Nullable<Mesh> = null;
+  private defaultRoomRoot: Nullable<TransformNode> = null;
+  private townSceneRoot: Nullable<TransformNode> = null;
+  private townSceneLoading: Promise<void> | null = null;
   private player!: Entity;
   private floaters: { el: HTMLDivElement; world: Vector3; born: number; ttl: number }[] = [];
   private latest: CombatSnapshot | null = null;
@@ -163,7 +208,7 @@ export class World {
     this.engine.stopRenderLoop();
     this.scene.dispose();
     this.engine.dispose();
-    this.overlay.querySelectorAll(".floater").forEach((el) => el.remove());
+    this.overlay.querySelectorAll(".floater, .town-npc").forEach((el) => el.remove());
     window.removeEventListener("resize", this.resizeHandler);
   }
 
@@ -227,10 +272,34 @@ export class World {
     return clone;
   }
 
-  /** W04: assemble the dungeon from the authoritative layout (floor cells + wall ring). */
+  /** W04/W05: assemble the authoritative grid or the exported Unity Town scene. */
   private buildMapLayout(layout: MapLayout): void {
-    this.mapTiles.forEach((t) => t.dispose(false, false));
+    this.mapTiles.forEach((t) => t.dispose(false, true));
     this.mapTiles = [];
+    if (layout.theme === "town_hub") {
+      this.camera.radius = 25;
+      this.defaultRoomRoot?.setEnabled(false);
+      if (this.ground) { this.ground.isVisible = false; this.ground.isPickable = false; }
+      this.scene.clearColor = new Color4(0.2, 0.27, 0.34, 1);
+      if (!this.townGround) {
+        this.townGround = MeshBuilder.CreateGround("town_input_ground",
+          { width: 2 * ROOM_HALF, height: 2 * ROOM_HALF }, this.scene);
+        const material = new StandardMaterial("town_input_ground_material", this.scene);
+        material.alpha = 0.001;
+        material.disableLighting = true;
+        this.townGround.material = material;
+        this.townGround.isPickable = true;
+      }
+      void this.showTownScene();
+      return;
+    }
+
+    this.townSceneRoot?.setEnabled(false);
+    this.camera.radius = 30;
+    if (this.townGround) { this.townGround.dispose(false, true); this.townGround = null; }
+    if (this.ground) { this.ground.isVisible = true; this.ground.isPickable = true; }
+    this.defaultRoomRoot?.setEnabled(false);
+    this.scene.clearColor = new Color4(0.05, 0.06, 0.08, 1);
     const tile = (2 * ROOM_HALF) / Math.max(layout.width, layout.height);
     const scale = Math.max(0.2, tile / FLOOR_SPACING);
     const at = (gx: number, gz: number) =>
@@ -257,7 +326,146 @@ export class World {
     }
   }
 
+  private async showTownScene(): Promise<void> {
+    if (!this.townSceneRoot && !this.townSceneLoading) {
+      this.townSceneLoading = (async () => {
+        const response = await fetch("/assets/kit/town/town_scene.json");
+        if (!response.ok) throw new Error("Town scene manifest missing");
+        const manifest = await response.json() as TownSceneManifest;
+        const imported = await SceneLoader.ImportMeshAsync("", "/assets/kit/town/", "town_scene.glb", this.scene);
+        const root = new TransformNode("town_scene_root", this.scene);
+        for (const mesh of imported.meshes) {
+          mesh.isPickable = false;
+          if (!mesh.parent) mesh.parent = root;
+        }
+        this.townSceneRoot = root;
+        this.createTownLights(manifest.lights ?? []);
+        this.createTownMarkers(manifest.spawnZones);
+      })().catch((error: unknown) => {
+        console.warn("[town] failed to load the original town scene", error);
+        if (this.latest?.inTown && this.ground) {
+          this.ground.isVisible = true;
+          this.ground.isPickable = true;
+          this.defaultRoomRoot?.setEnabled(true);
+        }
+      }).finally(() => { this.townSceneLoading = null; });
+    }
+    if (this.townSceneLoading) await this.townSceneLoading;
+    this.townSceneRoot?.setEnabled(Boolean(this.latest?.inTown));
+  }
+
+  private createTownLights(rows: TownSceneManifest["lights"]): void {
+    for (const light of this.townLights) light.dispose();
+    this.townLights = [];
+    for (const row of rows) {
+      const position = new Vector3(row.x, row.y, row.z);
+      const direction = new Vector3(row.direction[0], row.direction[1], row.direction[2]);
+      let light: Light;
+      if (row.type === 1) {
+        light = new DirectionalLight(`town_${row.name}`, direction, this.scene);
+      } else if (row.type === 0) {
+        light = new SpotLight(`town_${row.name}`, position, direction, row.spotAngle * Math.PI / 180, 2, this.scene);
+        light.range = row.range;
+      } else if (row.type === 2) {
+        const point = new PointLight(`town_${row.name}`, position, this.scene);
+        point.range = row.range;
+        light = point;
+      } else {
+        continue; // baked area lights have no stable web equivalent
+      }
+      light.diffuse = new Color3(row.color[0], row.color[1], row.color[2]);
+      light.intensity = Math.min(2, Math.max(0, row.intensity * 0.2));
+      light.parent = this.townSceneRoot;
+      this.townLights.push(light);
+    }
+  }
+
+  private createTownMarkers(spawnZones: TownSpawnZone[]): void {
+    const stations: Record<string, { action: string; label: string; icon: string; color: Color3 }> = {
+      Blacksmith: { action: "blacksmith", label: "Blacksmith", icon: "Blacksmith.png", color: new Color3(1, 0.58, 0.22) },
+      Disassembler: { action: "disassembler", label: "Disassembler", icon: "Blacksmith.png", color: new Color3(1, 0.58, 0.22) },
+      Merchant: { action: "merchant", label: "Merchant", icon: "Merchant.png", color: new Color3(0.92, 0.82, 0.3) },
+      Petkeeper: { action: "petkeeper", label: "Petkeeper", icon: "Petkeeper.png", color: new Color3(0.63, 0.85, 0.5) },
+      CombatPetkeeper: { action: "combat-petkeeper", label: "Combat Petkeeper", icon: "CombatPetKeeper.png", color: new Color3(0.65, 0.75, 1) },
+      BattlePetkeeper_1: { action: "combat-petkeeper", label: "Combat Petkeeper", icon: "CombatPetKeeper.png", color: new Color3(0.65, 0.75, 1) },
+      SetItemMerchant: { action: "set-merchant", label: "Set Merchant", icon: "SetMerchant.png", color: new Color3(0.8, 0.65, 1) },
+      Offering: { action: "offering", label: "Offering", icon: "Offering.png", color: new Color3(0.6, 0.85, 1) },
+      GiftStatue: { action: "offering", label: "Gift Statue", icon: "Offering.png", color: new Color3(0.6, 0.85, 1) },
+      PortalMaster: { action: "portal", label: "Portal Master", icon: "PortalMaster.png", color: new Color3(0.4, 0.8, 1) },
+      TownPortal: { action: "town-portal", label: "Town Portal", icon: "PortalMaster.png", color: new Color3(0.4, 0.8, 1) },
+      WorldPortal: { action: "worlds", label: "World Portal", icon: "PortalMaster.png", color: new Color3(0.4, 0.8, 1) },
+    };
+    this.clearTownMarkers();
+    for (const spawn of spawnZones) {
+      const station = stations[spawn.name];
+      if (!station) continue; // NPCs without an implemented non-placeholder function stay hidden.
+      const root = new TransformNode(`town_npc_${spawn.name}`, this.scene);
+      root.parent = this.townSceneRoot;
+      root.position = new Vector3(spawn.x, 0, spawn.z);
+      root.scaling.setAll(0.5);
+      this.addToken(root, `/assets/avatars/${station.icon}`, station.color);
+      const hotspot = MeshBuilder.CreateSphere(`town_npc_hotspot_${spawn.name}`, { diameter: 2.8, segments: 8 }, this.scene);
+      hotspot.parent = root;
+      hotspot.position.y = 0.9;
+      hotspot.isPickable = true;
+      const material = new StandardMaterial(`${hotspot.name}_material`, this.scene);
+      material.alpha = 0.001;
+      material.disableLighting = true;
+      hotspot.material = material;
+      this.townNpcActions.set(hotspot, station.action);
+      const label = document.createElement("button");
+      label.type = "button";
+      label.className = "town-npc";
+      label.dataset.action = station.action;
+      label.textContent = station.label;
+      label.addEventListener("click", (event) => {
+        event.stopPropagation();
+        this.hooks.onTownNpc(station.action);
+      });
+      this.overlay.appendChild(label);
+      this.townNpcLabels.push({ element: label, position: new Vector3(spawn.x, 2.5, spawn.z) });
+      this.townNpcRoots.push(root);
+    }
+  }
+
+  private updateTownNpcLabels(): void {
+    const townVisible = Boolean(this.latest?.inTown && this.townSceneRoot?.isEnabled());
+    const viewport = this.camera.viewport.toGlobal(this.engine.getRenderWidth(), this.engine.getRenderHeight());
+    const placed: { x: number; y: number; width: number; height: number }[] = [];
+    const offsets: [number, number][] = [[0, 0], [0, -32], [84, -12], [-84, -12],
+      [0, 32], [150, 0], [-150, 0], [84, 28], [-84, 28], [0, -64], [0, 64]];
+    for (const row of this.townNpcLabels) {
+      row.element.hidden = !townVisible;
+      if (!townVisible) continue;
+      const screen = Vector3.Project(row.position, Matrix.Identity(), this.scene.getTransformMatrix(), viewport);
+      const width = Math.max(72, (row.element.textContent ?? "").length * 7 + 20);
+      const height = 24;
+      let x = screen.x, y = screen.y;
+      for (const [dx, dy] of offsets) {
+        const candidateX = screen.x + dx;
+        const candidateY = screen.y + dy;
+        const collision = placed.some(p => Math.abs(p.x - candidateX) < (p.width + width) / 2 + 4
+          && Math.abs(p.y - candidateY) < (p.height + height) / 2 + 4);
+        if (!collision) { x = candidateX; y = candidateY; break; }
+      }
+      placed.push({ x, y, width, height });
+      row.element.style.transform = `translate(-50%, -100%) translate(${x}px, ${y}px)`;
+      const inView = screen.z >= 0 && screen.z <= 1;
+      row.element.style.opacity = inView ? "1" : "0";
+      row.element.style.pointerEvents = inView ? "auto" : "none";
+    }
+  }
+
+  private clearTownMarkers(): void {
+    for (const root of this.townNpcRoots) root.dispose(false, true);
+    for (const label of this.townNpcLabels) label.element.remove();
+    this.townNpcRoots = [];
+    this.townNpcLabels = [];
+    this.townNpcActions.clear();
+  }
+
   private buildRoom(): void {
+    this.defaultRoomRoot = new TransformNode("default_room_root", this.scene);
     const groundMat = new StandardMaterial("groundMat", this.scene);
     groundMat.diffuseColor = new Color3(0.22, 0.19, 0.16);
     groundMat.specularColor = new Color3(0, 0, 0);
@@ -269,29 +477,35 @@ export class World {
     const count = Math.floor((2 * ROOM_HALF) / FLOOR_SPACING) + 1;
     for (let ix = 0; ix < count; ix++) {
       for (let iz = 0; iz < count; iz++) {
-        this.instantiate("Floor_Slab_lrg", new Vector3(-ROOM_HALF + ix * FLOOR_SPACING, 0.02, -ROOM_HALF + iz * FLOOR_SPACING));
+        this.instantiateDefaultRoom("Floor_Slab_lrg", new Vector3(-ROOM_HALF + ix * FLOOR_SPACING, 0.02, -ROOM_HALF + iz * FLOOR_SPACING));
       }
     }
 
     const edge = ROOM_HALF + 3;
     for (let i = -2; i <= 2; i++) {
       const along = i * 4;
-      this.instantiate("MOD_Wall_01_O_straight_large", new Vector3(along - 2, 0, -edge), 0);
-      this.instantiate("MOD_Wall_01_O_straight_large", new Vector3(along - 2, 0, edge), Math.PI);
-      this.instantiate("MOD_Wall_01_O_straight_large", new Vector3(-edge, 0, along - 2), Math.PI / 2);
-      this.instantiate("MOD_Wall_01_O_straight_large", new Vector3(edge, 0, along - 2), -Math.PI / 2);
+      this.instantiateDefaultRoom("MOD_Wall_01_O_straight_large", new Vector3(along - 2, 0, -edge), 0);
+      this.instantiateDefaultRoom("MOD_Wall_01_O_straight_large", new Vector3(along - 2, 0, edge), Math.PI);
+      this.instantiateDefaultRoom("MOD_Wall_01_O_straight_large", new Vector3(-edge, 0, along - 2), Math.PI / 2);
+      this.instantiateDefaultRoom("MOD_Wall_01_O_straight_large", new Vector3(edge, 0, along - 2), -Math.PI / 2);
     }
     for (const [x, z] of [[-ROOM_HALF, -ROOM_HALF], [ROOM_HALF, -ROOM_HALF], [-ROOM_HALF, ROOM_HALF], [ROOM_HALF, ROOM_HALF]] as [number, number][]) {
-      this.instantiate("MOD_Column_01_large", new Vector3(x, 0, z));
+      this.instantiateDefaultRoom("MOD_Column_01_large", new Vector3(x, 0, z));
       this.addBrazier(x * 0.72, z * 0.72);
     }
     this.addBrazier(0, -ROOM_HALF + 2);
     this.addBrazier(0, ROOM_HALF - 2);
   }
 
+  private instantiateDefaultRoom(name: string, position: Vector3, rotationY = 0): void {
+    const item = this.instantiate(name, position, rotationY);
+    if (item && this.defaultRoomRoot) item.parent = this.defaultRoomRoot;
+  }
+
   private addBrazier(x: number, z: number): void {
-    this.instantiate("SM_PROP_brazier_dungeon_02", new Vector3(x, 0, z));
+    this.instantiateDefaultRoom("SM_PROP_brazier_dungeon_02", new Vector3(x, 0, z));
     const light = new PointLight(`brazier_${x}_${z}`, new Vector3(x, 1.4, z), this.scene);
+    light.parent = this.defaultRoomRoot;
     light.diffuse = new Color3(1, 0.6, 0.25);
     light.intensity = 1.6;
     light.range = 14;
@@ -337,23 +551,193 @@ export class World {
   }
 
   private buildMonsters(initial: CombatSnapshot): void {
-    for (const monster of initial.monsters) {
-      const root = new TransformNode(`monster_${monster.index}`, this.scene);
-      const matching = this.content.monsters.find((m) => m.name === monster.name);
-      const icon = monster.isBoss
-        ? monsterIcon(this.content, this.content.monsters[0])
-        : monsterIcon(this.content, matching ?? this.content.monsters[monster.index % this.content.monsters.length]);
-      this.addToken(root, icon, monster.isBoss ? new Color3(0.95, 0.75, 0.2) : new Color3(0.9, 0.25, 0.2));
-      if (monster.isBoss) root.scaling = new Vector3(1.6, 1.6, 1.6);
-      this.monsterEntities.set(monster.index, {
-        root,
-        target: new Vector3(monster.x, 0, monster.z),
-        lastHp: monster.hp,
-        alive: monster.alive,
-        moving: false,
-        stepPhase: Math.random() * Math.PI * 2,
-        level: monster.level,
-      });
+    this.syncMonsters(initial.monsters);
+  }
+
+  private createMonsterEntity(monster: MonsterState): Entity {
+    const root = new TransformNode(`monster_${monster.index}`, this.scene);
+    const matching = this.content.monsters.find((m) => m.name === monster.name);
+    const fallback = this.content.monsters.length > 0
+      ? this.content.monsters[monster.index % this.content.monsters.length]
+      : undefined;
+    const iconMonster = monster.isBoss ? this.content.monsters[0] : (matching ?? fallback);
+    const icon = iconMonster
+      ? monsterIcon(this.content, iconMonster)
+      : "/assets/avatars/MonstersAvatarIcons_48.png";
+    const rarityColor = monster.rarity === 1 ? new Color3(0.25, 0.55, 1)
+      : monster.rarity === 2 ? new Color3(1, 0.85, 0.25)
+      : monster.rarity === 4 ? new Color3(0.75, 0.35, 1) : new Color3(0.9, 0.25, 0.2);
+    this.addToken(root, icon, monster.isBoss ? new Color3(0.95, 0.75, 0.2) : rarityColor);
+    if (monster.isBoss) root.scaling = new Vector3(1.6, 1.6, 1.6);
+    return {
+      root,
+      target: new Vector3(monster.x, 0, monster.z),
+      lastHp: monster.hp,
+      alive: monster.alive,
+      moving: false,
+      stepPhase: Math.random() * Math.PI * 2,
+      level: monster.level,
+      monsterName: monster.name,
+      isBoss: monster.isBoss,
+      rarity: monster.rarity ?? 0,
+    };
+  }
+
+  private syncMonsters(monsters: MonsterState[]): void {
+    const present = new Set<number>();
+    for (const monster of monsters) {
+      present.add(monster.index);
+      let entity = this.monsterEntities.get(monster.index);
+      if (entity && (entity.monsterName !== monster.name || entity.isBoss !== monster.isBoss || entity.rarity !== (monster.rarity ?? 0))) {
+        entity.root.dispose(false, true);
+        this.monsterEntities.delete(monster.index);
+        entity = undefined;
+      }
+      if (!entity) {
+        entity = this.createMonsterEntity(monster);
+        this.monsterEntities.set(monster.index, entity);
+      }
+    }
+    for (const [index, entity] of this.monsterEntities) {
+      if (present.has(index)) continue;
+      entity.root.dispose(false, true);
+      this.monsterEntities.delete(index);
+    }
+  }
+
+  private createTransient(key: string, kind: string): TransientVisual {
+    let mesh: Mesh;
+    let color: Color3;
+    let alpha = 1;
+    if (kind === "cloud") {
+      mesh = MeshBuilder.CreateCylinder(key, { height: 0.08, diameter: 1, tessellation: 32 }, this.scene);
+      color = new Color3(0.2, 0.95, 0.55);
+      alpha = 0.28;
+    } else if (kind === "trap" || kind === "channel") {
+      mesh = MeshBuilder.CreateTorus(key, { diameter: 1, thickness: 0.07, tessellation: 24 }, this.scene);
+      color = kind === "trap" ? new Color3(1, 0.55, 0.12) : new Color3(0.35, 0.75, 1);
+      alpha = kind === "channel" ? 0.65 : 0.9;
+    } else {
+      mesh = MeshBuilder.CreateSphere(key, { diameter: 1, segments: 10 }, this.scene);
+      color = kind === "projectile" ? new Color3(0.3, 0.9, 1) : new Color3(0.75, 0.55, 1);
+    }
+    mesh.isPickable = false;
+    mesh.position.y = kind === "cloud" || kind === "trap" || kind === "channel" ? 0.08 : 0.55;
+    const material = new StandardMaterial(`${key}_material`, this.scene);
+    material.diffuseColor = color;
+    material.emissiveColor = color.scale(kind === "cloud" ? 0.45 : 0.8);
+    material.alpha = alpha;
+    material.disableLighting = true;
+    mesh.material = material;
+    return { mesh, material, kind };
+  }
+
+  private upsertTransient(key: string, kind: string, x: number, z: number, size: number): void {
+    let visual = this.transientEntities.get(key);
+    if (visual && visual.kind !== kind) {
+      visual.mesh.dispose(false, true);
+      this.transientEntities.delete(key);
+      visual = undefined;
+    }
+    if (!visual) {
+      visual = this.createTransient(key, kind);
+      this.transientEntities.set(key, visual);
+    }
+    visual.mesh.position.x = x;
+    visual.mesh.position.z = z;
+    if (kind === "cloud" || kind === "trap" || kind === "channel") {
+      visual.mesh.scaling.x = Math.max(0.2, size * 2);
+      visual.mesh.scaling.z = Math.max(0.2, size * 2);
+    } else {
+      const diameter = kind === "projectile" ? Math.max(0.25, size * 2) : 0.85;
+      visual.mesh.scaling.setAll(diameter);
+    }
+  }
+
+  private syncTransientEntities(state: CombatSnapshot): void {
+    const present = new Set<string>();
+    for (const effect of state.groundEffects ?? []) {
+      const key = `cloud:${effect.id}`;
+      present.add(key);
+      this.upsertTransient(key, "cloud", effect.x, effect.z, effect.radius);
+    }
+    for (const minion of state.minions ?? []) {
+      if (!minion.alive) continue;
+      const key = `minion:${minion.id}`;
+      present.add(key);
+      this.upsertTransient(key, "minion", minion.x, minion.z, 0.45);
+    }
+    for (const projectile of state.projectiles ?? []) {
+      const key = `projectile:${projectile.id}`;
+      present.add(key);
+      this.upsertTransient(key, "projectile", projectile.x, projectile.z, projectile.radius);
+    }
+    for (const trap of state.traps ?? []) {
+      const key = `trap:${trap.id}`;
+      present.add(key);
+      this.upsertTransient(key, "trap", trap.x, trap.z, trap.radius);
+    }
+    if (state.activeChannel) {
+      present.add("channel:active");
+      this.upsertTransient("channel:active", "channel", state.playerX, state.playerZ, state.activeChannel.radius);
+    }
+    for (const [key, visual] of this.transientEntities) {
+      if (present.has(key)) continue;
+      visual.mesh.dispose(false, true);
+      this.transientEntities.delete(key);
+    }
+  }
+
+  private presentEvents(events: CombatEvent[]): void {
+    for (const event of events) {
+      if (event.type === "heal" && event.amount > 0) {
+        this.addFloater(this.player.root.position, `+${Math.round(event.amount)}`, "#76e9b2");
+      } else if (event.type === "summon" && event.amount > 0) {
+        this.addFloater(this.player.root.position, `SUMMON ×${Math.round(event.amount)}`, "#c7a6ff");
+      } else if (event.type === "cooldown-reset") {
+        this.say(`${event.detail} cooldown reset`);
+      }
+    }
+  }
+
+  private syncNiflheimExit(state: CombatSnapshot): void {
+    if (!state.niflheimExitReady) {
+      this.exitPortalMesh?.dispose(false, true);
+      this.exitChestMesh?.dispose(false, true);
+      this.exitPortalMesh = this.exitChestMesh = null;
+      return;
+    }
+    if (!this.exitPortalMesh) {
+      const portal = MeshBuilder.CreateCylinder("niflheim_town_portal",
+        { diameter: 2.2, height: 0.08, tessellation: 32 }, this.scene);
+      portal.rotation.x = Math.PI / 2;
+      const material = new StandardMaterial("niflheim_town_portal_material", this.scene);
+      material.diffuseColor = new Color3(0.25, 0.7, 1);
+      material.emissiveColor = new Color3(0.15, 0.55, 1);
+      material.alpha = 0.55;
+      portal.material = material;
+      const ring = MeshBuilder.CreateTorus("niflheim_town_portal_ring",
+        { diameter: 2.2, thickness: 0.23, tessellation: 32 }, this.scene);
+      ring.parent = portal;
+      ring.isPickable = false;
+      ring.material = material;
+      this.exitPortalMesh = portal;
+    }
+    this.exitPortalMesh.position.set(state.niflheimExitX, 1.25, state.niflheimExitZ);
+    if (state.niflheimChestSize > 0 && !state.niflheimChestOpened) {
+      if (!this.exitChestMesh) {
+        const chest = MeshBuilder.CreateBox("niflheim_loot_chest",
+          { width: 1.3, height: 1.0, depth: 0.9 }, this.scene);
+        const material = new StandardMaterial("niflheim_loot_chest_material", this.scene);
+        material.diffuseColor = state.niflheimChestSize === 2 ? new Color3(0.8, 0.55, 0.15) : new Color3(0.48, 0.3, 0.14);
+        material.emissiveColor = new Color3(0.22, 0.14, 0.04);
+        chest.material = material;
+        this.exitChestMesh = chest;
+      }
+      this.exitChestMesh.position.set(state.niflheimChestX, 0.6, state.niflheimChestZ);
+    } else {
+      this.exitChestMesh?.dispose(false, true);
+      this.exitChestMesh = null;
     }
   }
 
@@ -364,10 +748,18 @@ export class World {
       if (info.type !== PointerEventTypes.POINTERDOWN) return;
       const event = info.event as PointerEvent;
       if (event.button !== 0) return;
-      const pick = this.scene.pick(this.scene.pointerX, this.scene.pointerY, (mesh) => mesh === this.ground);
-      if (pick?.hit && pick.pickedPoint) {
+      const pick = this.scene.pick(this.scene.pointerX, this.scene.pointerY, (mesh) =>
+        mesh === this.ground || mesh === this.townGround || this.townNpcActions.has(mesh as Mesh)
+        || mesh === this.exitPortalMesh || mesh === this.exitChestMesh);
+      if (!pick?.hit) return;
+      if (pick.pickedMesh === this.exitPortalMesh) { this.hooks.onNiflheimExit(); return; }
+      if (pick.pickedMesh === this.exitChestMesh) { this.hooks.onNiflheimChest(); return; }
+      const townNpc = pick.pickedMesh ? this.townNpcActions.get(pick.pickedMesh as Mesh) : undefined;
+      if (townNpc) {
+        this.hooks.onTownNpc(townNpc);
+      } else if (pick.pickedPoint) {
         this.hooks.moveTo(pick.pickedPoint.x, pick.pickedPoint.z);
-        this.say("Moving");
+        this.say(this.latest?.inTown ? "Moving in Town" : "Moving");
       }
     });
   }
@@ -399,6 +791,8 @@ export class World {
     if (previous && previous.playerHp > state.playerHp) {
       this.addFloater(this.player.root.position, `-${Math.round(previous.playerHp - state.playerHp)}`, "#ff6b6b");
     }
+    if (previous && !previous.inTown && state.inTown) this.say("Town hub · safe zone");
+    if (previous && previous.inTown && !state.inTown) this.say("Returned to the world");
     if (previous && previous.playerLevel < state.playerLevel) {
       this.say(`Level up! Level ${state.playerLevel}`);
     }
@@ -409,6 +803,10 @@ export class World {
       this.say(`Dungeon cleared! (${state.dungeonsCleared})`);
     }
     if (envelope.loot.length > 0) this.hooks.onLoot(envelope.loot);
+    this.syncMonsters(state.monsters);
+    this.syncNiflheimExit(state);
+    this.syncTransientEntities(state);
+    this.presentEvents(state.events ?? []);
 
     for (const monster of state.monsters) {
       const entity = this.monsterEntities.get(monster.index);
@@ -453,6 +851,7 @@ export class World {
 
     this.interpolate(this.player, dt);
     for (const monster of this.monsterEntities.values()) this.interpolate(monster, dt);
+    this.updateTownNpcLabels();
     this.updateFloaters();
 
     const target = this.player.target;
@@ -546,7 +945,9 @@ export class World {
       bossKillsRemaining: state.bossKillsRemaining,
       packsRemaining: state.packsRemaining,
       totalPacks: state.totalPacks,
+      niflheimExitReady: state.niflheimExitReady,
       autoMove: this.autoMove,
+      inTown: state.inTown,
       skills: (state.skills ?? []).map((skill) => ({ name: skill.name, effect: skill.effect, ready: skill.cooldown <= 0, cooldown: skill.cooldown, manaCost: skill.manaCost })),
       message: this.elapsed < this.messageUntil ? this.message : "",
     });

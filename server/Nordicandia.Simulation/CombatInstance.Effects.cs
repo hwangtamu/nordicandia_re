@@ -81,10 +81,11 @@ public sealed partial class CombatInstance
         return (total, first);
     }
 
-    /// <summary>Projectile unit (C03): fires a real projectile at the nearest monster in
-    /// range and simulates its flight geometrically — collision, hit-set, fork/chain/
-    /// pierce per HandleForkAndChain. Returns total damage and the aimed target index.</summary>
-    private (double total, int first) HitProjectile(SkillProfile skill, double range)
+    /// <summary>Projectile unit (C03): launches a persistent projectile at the nearest monster
+    /// in range. Flight, collision and damage resolve on later fixed steps; returns the aimed
+    /// target index and damage resolved synchronously (normally zero).</summary>
+    private (double total, int first) HitProjectile(SkillProfile skill, double range,
+        Action<CombatMonster>? afterHit = null)
     {
         var target = NearestAliveMonster(range);
         if (target is null) return (0, -1);
@@ -102,8 +103,25 @@ public sealed partial class CombatInstance
             new Projectile { X = PlayerX, Z = PlayerZ, Source = skill.Name },
             target.X, target.Z,
             (m, mult) => HitTarget(m, skill, skill.Multiplier * mult),
-            () => forkChance, () => chainChance, () => pierceChance);
+            () => forkChance, () => chainChance, () => pierceChance, afterHit);
         return (total, target.Index);
+    }
+
+    /// <summary>Applies an impact explosion around the actor actually struck by a projectile.</summary>
+    private double ExplodeAround(CombatMonster primary, SkillProfile skill, double multiplier, string source)
+    {
+        var radius = Math.Max(0, skill.Radius);
+        var total = 0.0;
+        foreach (var monster in AllCombatMonsters())
+        {
+            if (!monster.Alive || ReferenceEquals(monster, primary)) continue;
+            var dx = monster.X - primary.X;
+            var dz = monster.Z - primary.Z;
+            if (dx * dx + dz * dz > radius * radius) continue;
+            total += HitTarget(monster, skill, multiplier);
+        }
+        EmitEvent("projectile", primary.Index, total, $"explode {source} {primary.X:F1},{primary.Z:F1}");
+        return total;
     }
 
     // ------------------------------------------------------------------
@@ -186,6 +204,16 @@ public sealed partial class CombatInstance
         LevelUpIfNeeded();
         EmitEvent("death", monster.Index, 0, monster.Name);
 
+        // Niflheim monsters belong to their pack. Even if a future world modifier
+        // produces a Boss rarity, its death must advance this run, not a regular dungeon.
+        if (packMode)
+        {
+            if (rng.NextDouble() < TrashDropChance)
+                pendingDrops.Add(RollDrop(monster.Level, minRarity: 0));
+            if (pendingPackSize == 0 && monsters.All(m => !m.Alive)) FinishPack(monster.Level);
+            return;
+        }
+
         if (monster.IsBoss)
         {
             boss = null;
@@ -203,35 +231,69 @@ public sealed partial class CombatInstance
         if (rng.NextDouble() < TrashDropChance)
             pendingDrops.Add(RollDrop(monster.Level, minRarity: 0));
 
-        if (packMode)
-        {
-            // The pack is over once its last member dies (and every member has spawned);
-            // then spawn the next pack or finish the run.
-            if (pendingPackSize == 0 && monsters.All(m => !m.Alive))
-            {
-                packsCleared++;
-                if (packsCleared >= totalPacks)
-                {
-                    DungeonsCleared++;
-                    Silver += 50 + monster.Level * 25;
-                    pendingDrops.Add(RollDrop(monster.Level, minRarity: 4));
-                    pendingDrops.Add(RollDrop(monster.Level + 2, minRarity: 5));
-                    packMode = false;
-                    totalPacks = 0;
-                    packsCleared = 0;
-                }
-                else
-                {
-                    pendingPackSpawn = true;
-                }
-            }
-            return;
-        }
-
         dungeonKills++;
         if (dungeonKills >= BossKillGoal && boss is null)
             boss = CreateBoss();
 
         monster.RespawnTimer = MonsterRespawnSeconds;
+    }
+
+    private void FinishPack(int level)
+    {
+        packsCleared++;
+        if (nativeNiflheimTail && packsCleared >= CombatPacks)
+        {
+            // The final native count is an exit event, not another monster pack.
+            niflheimExitReady = true;
+            pendingPackSpawn = false;
+            pendingPackSize = 0;
+            niflheimExitX = PlayerX;
+            niflheimExitZ = PlayerZ;
+            if (rng.NextDouble() <= 0.2)
+            {
+                niflheimChestSize = (int)(rng.NextDouble() * 101) < 5 ? 2 : 1;
+                (niflheimChestX, niflheimChestZ) = ConstrainMove(PlayerX, PlayerZ, PlayerX + 2, PlayerZ);
+            }
+            Version++;
+            return;
+        }
+        if (packsCleared >= totalPacks)
+        {
+            DungeonsCleared++;
+            // NiflheimPortalGameMode.AddSilverForFinish calls GainSilver(5000).
+            Silver += 5000;
+            pendingDrops.Add(RollDrop(level, minRarity: 4));
+            pendingDrops.Add(RollDrop(level + 2, minRarity: 5));
+            packMode = false;
+            totalPacks = 0;
+            packsCleared = 0;
+        }
+        else pendingPackSpawn = true;
+    }
+
+    /// <summary>Open the optional exit chest. Native medium/large base loot rolls are 60–70
+    /// and 100–125 respectively; the wider quantity/magic-find pipeline remains provisional.</summary>
+    public int OpenNiflheimChest()
+    {
+        if (!NiflheimExitReady || niflheimChestSize == 0 || niflheimChestOpened) return 0;
+        niflheimChestOpened = true;
+        var min = niflheimChestSize == 2 ? 100 : 60;
+        var max = niflheimChestSize == 2 ? 125 : 70;
+        var count = min + (int)(rng.NextDouble() * (max - min + 1));
+        for (var i = 0; i < count; i++) pendingDrops.Add(RollDrop(PlayerLevel, minRarity: 0));
+        Version++;
+        return count;
+    }
+
+    /// <summary>Use the spawned TownPortal. An early return does not call this and earns no
+    /// completion reward.</summary>
+    public bool CompleteNiflheimExit()
+    {
+        if (!NiflheimExitReady) return false;
+        niflheimExitReady = false;
+        DungeonsCleared++;
+        Silver += 5000;
+        Version++;
+        return true;
     }
 }

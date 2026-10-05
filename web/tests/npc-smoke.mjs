@@ -1,5 +1,5 @@
 // NPC window smoke test: drive the web client against a running server + Vite dev server,
-// open the Blacksmith and Merchant windows, and assert they render without browser errors.
+// exercise Town stations (including pet price/catalog panels), and assert they render without browser errors.
 //
 // Prerequisites (see docs/web/M0_STATUS.md):
 //   server: NORD_WEB_DEV=1 NORD_WEB_PORT=5080 dotnet ...
@@ -14,6 +14,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "..", "..");
 const url = process.env.WEB_URL ?? "http://127.0.0.1:5173/";
 const out = process.env.OUT ?? path.join(repoRoot, "tmp", "web-npc", "npc.png");
+const npcShot = (name) => path.join(repoRoot, "tmp", "web-npc", `${name}.png`);
 
 function resolveChrome() {
   if (process.env.CHROME_PATH) return process.env.CHROME_PATH;
@@ -59,6 +60,14 @@ try {
   await page.waitForSelector("#npc:not([hidden])", { timeout: 5000 });
   const smithTabs = await page.$$eval("#npc-tabs .npc-tab", (rows) => rows.map((r) => r.textContent));
   const smithTitle = await page.textContent("#npc-title");
+  await page.waitForSelector("#npc-stage .npc-stage-heading");
+  await page.screenshot({ path: npcShot("blacksmith") });
+  await page.click("#npc-tabs [data-tab='essence']");
+  if (await page.locator("#npc-body [data-item]").count() >= 2) {
+    await page.locator("#npc-body [data-item]").nth(0).click();
+    await page.locator("#npc-body [data-item]").nth(1).click();
+    if (await page.locator("#npc-action").isDisabled()) throw new Error("Reforge target/source selection did not enable crafting");
+  }
   await page.click("#npc-tabs .npc-tab:last-child"); // Add Socket tab
   await page.waitForTimeout(300);
   const addSocketHint = await page.textContent("#npc-hint");
@@ -72,6 +81,15 @@ try {
   const merchantRows = await page.$$eval("#npc-body .npc-row", (rows) => rows.length);
   const buyButtons = await page.$$eval("#npc-body [data-buy]", (rows) => rows.length);
   const merchantTabs = await page.$$eval("#npc-tabs .npc-tab", (rows) => rows.map((r) => r.textContent));
+  await page.screenshot({ path: npcShot("merchant") });
+  await page.click("#npc-tabs [data-tab='trade']");
+  await page.waitForSelector("#npc-stage [data-trade]");
+  await page.locator("#npc-stage [data-trade]").first().click();
+  if (await page.locator("#npc-body [data-item]").count() > 0) {
+    await page.locator("#npc-body [data-item]").first().click();
+    if (await page.locator("#npc-action").isDisabled()) throw new Error("Trade did not accept a product and an inventory item");
+  }
+  await page.screenshot({ path: npcShot("trade") });
   await page.click("#npc-close");
 
   // Attribute panel.
@@ -111,6 +129,60 @@ try {
   await page.waitForTimeout(1000);
   const loadoutStatus = await page.textContent("#loadout-status");
 
+  // Town SpawnZones route into the corresponding functional NPC windows.
+  await page.click("#hud-town");
+  await page.waitForSelector(".town-npc[data-action='disassembler']", { timeout: 20000 });
+  await page.waitForTimeout(600);
+  await page.locator(".town-npc[data-action='disassembler']").evaluate((el) => el.click());
+  await page.waitForSelector("#npc:not([hidden])", { timeout: 5000 });
+  const disassemblerTab = await page.textContent("#npc-tabs .npc-tab.active");
+  if (await page.locator("#npc-body [data-item]").count() > 0) {
+    await page.locator("#npc-body [data-item]").first().click();
+    if (await page.locator("#npc-action").isDisabled()) throw new Error("Disassembly selection did not enable the action");
+  }
+  await page.screenshot({ path: npcShot("disassemble") });
+  await page.click("#npc-close");
+  await page.locator(".town-npc[data-action='set-merchant']").evaluate((el) => el.click());
+  await page.waitForSelector("#npc:not([hidden])", { timeout: 5000 });
+  const setMerchantTab = await page.textContent("#npc-tabs .npc-tab.active");
+  await page.click("#npc-close");
+
+  const townRoutes = [];
+  const clickTownNpc = async (action, panel, close, expectedTitle) => {
+    await page.locator(`.town-npc[data-action='${action}']`).first().evaluate((el) => el.click());
+    await page.waitForSelector(`#${panel}:not([hidden])`, { timeout: 5000 });
+    if (expectedTitle) {
+      const title = await page.textContent(expectedTitle.selector);
+      if (title !== expectedTitle.text) throw new Error(`${action} opened unexpected NPC view: ${title}`);
+    }
+    townRoutes.push(action);
+    await page.click(close);
+  };
+  await clickTownNpc("blacksmith", "npc", "#npc-close", { selector: "#npc-title", text: "Blacksmith" });
+  await clickTownNpc("disassembler", "npc", "#npc-close", { selector: "#npc-tabs .npc-tab.active", text: "Disassemble" });
+  await clickTownNpc("merchant", "npc", "#npc-close", { selector: "#npc-tabs .npc-tab.active", text: "Buy" });
+  await clickTownNpc("set-merchant", "npc", "#npc-close", { selector: "#npc-tabs .npc-tab.active", text: "Set" });
+  await page.locator(".town-npc[data-action='petkeeper']").first().evaluate((el) => el.click());
+  await page.waitForSelector("#pets:not([hidden])", { timeout: 5000 });
+  await page.waitForSelector("#pets-items .inv-row", { timeout: 5000 });
+  const companionPetRows = await page.$$eval("#pets-items .inv-row", (rows) => rows.length);
+  const companionPriceVisible = (await page.textContent("#pets-items"))?.includes("Unlock 600 opals") ?? false;
+  await page.click("#pets-close");
+  townRoutes.push("petkeeper");
+  await page.locator(".town-npc[data-action='combat-petkeeper']").first().evaluate((el) => el.click());
+  await page.waitForSelector("#pets:not([hidden])", { timeout: 5000 });
+  await page.waitForSelector("#pets-items .inv-row", { timeout: 5000 });
+  const combatPetRows = await page.$$eval("#pets-items .inv-row", (rows) => rows.length);
+  const combatSilverPriceVisible = (await page.textContent("#pets-items"))?.includes("Unlock 6000000 silver") ?? false;
+  await page.click("#pets-close");
+  townRoutes.push("combat-petkeeper");
+  await clickTownNpc("offering", "blessings", "#blessings-close");
+  await clickTownNpc("portal", "portal", "#portal-close");
+  await clickTownNpc("worlds", "worlds", "#worlds-close");
+  await page.locator(".town-npc[data-action='town-portal']").evaluate((el) => el.click());
+  await page.waitForFunction(() => document.querySelector("#hud-town")?.textContent?.includes("Town"));
+  townRoutes.push("town-portal");
+
   await page.screenshot({ path: out });
 
   console.log(`smith: ${smithTitle} tabs=[${smithTabs.join(", ")}]`);
@@ -120,6 +192,8 @@ try {
   console.log(`offerings: blessings=${blessingRows} buttons=${offeringButtons} opals=${blessingOpals}`);
   console.log(`portal: action=${portalAction} text=${(portalText ?? "").slice(0, 60)}`);
   console.log(`loadout: rows=${loadoutRows} points=${loadoutPoints} status=${loadoutStatus}`);
+  console.log(`Town SpawnZones: Disassembler=${disassemblerTab} SetItemMerchant=${setMerchantTab} routes=[${townRoutes.join(", ")}]`);
+  console.log(`Pets: companionRows=${companionPetRows} priced=${companionPriceVisible} combatRows=${combatPetRows} silverPrice=${combatSilverPriceVisible}`);
   console.log(`screenshot: ${out}`);
   const realErrors = errors.filter((e) => !e.includes("favicon"));
   if (smithTabs.length < 6) throw new Error("Blacksmith should expose its six tabs");
@@ -132,6 +206,11 @@ try {
   if (!portalText || !portalText.includes("portal")) throw new Error("Portal window did not render a status");
   if (loadoutRows < 6) throw new Error("Loadout should offer at least six active skills");
   if (loadoutStatus !== "Saved") throw new Error(`Loadout save did not apply (status: ${loadoutStatus})`);
+  if (disassemblerTab !== "Disassemble") throw new Error(`Disassembler spawn did not route to its function (tab: ${disassemblerTab})`);
+  if (setMerchantTab !== "Set") throw new Error(`SetItemMerchant spawn did not route to its function (tab: ${setMerchantTab})`);
+  if (companionPetRows !== 8 || !companionPriceVisible) throw new Error("Petkeeper did not expose the recovered companion catalog/prices");
+  if (combatPetRows !== 5 || !combatSilverPriceVisible) throw new Error("CombatPetkeeper did not expose the recovered combat-pet catalog/prices");
+  if (townRoutes.length !== 10) throw new Error(`Town station routing incomplete (${townRoutes.length}/10)`);
   if (realErrors.length) throw new Error("browser errors:\n" + realErrors.join("\n"));
   console.log("PASS npc smoke");
 } finally {

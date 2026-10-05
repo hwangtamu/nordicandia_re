@@ -157,7 +157,7 @@ static class LuckAndOnHitRecoveryTests
             fork.Monsters[i + 1].Z = 1.5 * Math.Sin(a);
             fork.Monsters[i + 1].Armor = 1e9;
         }
-        fork.Advance(0.05);
+        fork.Advance(0.15); // include the fixed-step flight of both fork children
         var losses = fork.Monsters.Select(m => m.MaxHp - m.Hp).ToArray();
         var victims = Enumerable.Range(1, 10).Where(i => losses[i] > 0).ToArray();
         Check(losses[0] > 130, "fork: primary takes the full hit");
@@ -169,7 +169,7 @@ static class LuckAndOnHitRecoveryTests
             "fork: exactly one fork fires and fork takes precedence over chain");
         var chain = Create(Stats with { ProjectileAutoAttack = true, ForkChance = 0, ChainChance = 1 }, count: 4);
         for (var i = 0; i < 4; i++) chain.Monsters[i].X = 1 + i;
-        chain.Advance(0.05);
+        chain.Advance(0.15); // chain retarget continues on later fixed steps
         var chainLosses = chain.Monsters.Select(m => m.MaxHp - m.Hp).ToArray();
         Check(chainLosses[0] > 130 && chainLosses[1] > 130 && chainLosses[2] == 0 && chainLosses[3] == 0,
             "chain: one retarget to the nearest other enemy within 10y at full damage (chance cleared after success)");
@@ -185,7 +185,7 @@ static class LuckAndOnHitRecoveryTests
             secondaryPoison.Monsters[i].X = 0.5 + 0.8 * Math.Cos(a);
             secondaryPoison.Monsters[i].Z = 0.8 * Math.Sin(a);
         }
-        secondaryPoison.Advance(0.05);
+        secondaryPoison.Advance(0.15);
         Check(secondaryPoison.Monsters.Count(m => m.Buffs.Has("poison", "player")) == 3,
             "fork: child hits apply on-hit poison without recursively forking");
     }
@@ -318,7 +318,7 @@ static class LuckAndOnHitRecoveryTests
         var stats = CombatantStats.FromRealtime(0, 1e6, 0, 10);
         var instance = new CombatInstance(stats, 0, 0, 0, 0, seed: 4, monsterCount: 1,
             monsterProfiles: new[] { new MonsterProfile("Curser", HpMult: 1e6, OffenseMult: 0,
-                Brain: "StandardCurseSlow", Champion: true) });
+                Brain: "StandardCurseSlow", Champion: true) }, currentWorldTier: 4);
         instance.MoveTo(0, 0);
         var slowed = false;
         for (var i = 0; i < 3000 && !slowed; i++)

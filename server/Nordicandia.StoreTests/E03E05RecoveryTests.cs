@@ -1,6 +1,7 @@
 using Game;
 using Nordicandia.Server.State;
 using Nordicandia.Server.WebApi;
+using Nordicandia.Simulation;
 using SharedNet.Constants.Game;
 using SharedNet.Api;
 
@@ -58,6 +59,7 @@ static class E03E05RecoveryTests
         Check(SmeltingRules.Titansteel(new[] { Material(594, 9), Material(589, 100) }).Output == 0,
             "E04: TitaniumOre shortage cannot create free Titansteel");
         StoreSmelting(titanium, steelInput);
+        StoreDisassembly();
         var expected = new Dictionary<string, (int Silver, int Opal)>
         {
             ["GreatElixirOfKnowledge"] = (1500000,150), ["GreatElixirOfQuantity"] = (1500000,150),
@@ -76,6 +78,52 @@ static class E03E05RecoveryTests
                 "E05: runtime merchant matches native offline price " + name);
         }
     }
+    private static void StoreDisassembly()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "nord-disassembly-" + Guid.NewGuid());
+        try
+        {
+            Guid owner, characterId;
+            SerializedItem source;
+            using (var store = new GameStore(directory))
+            {
+                owner = store.GetOrCreateUser("device:disassembly-recovery").UserId;
+                characterId = store.CreateCharacter(owner, new CreateCharacterRequest
+                {
+                    DisplayName = "disassemble",
+                    CharacterGameMode = GameMode.Normal,
+                    Data = new SerializedCharacterData { Data = Defaults.Create<SerializedCharacterData.SerializedData>() },
+                }).CharacterId;
+                source = LootTable.CreateItem(new LootDrop(12, 7, 37, false, 871UL));
+                source.Slot = ItemSlotTypes.Blacksmith_SourceItem;
+                source.BaseRarity = (Rarity)7;
+                source.Attributes.Values[AttributeOrigin.Item][LootTable.AttrRequiredLevel] =
+                    new GameAttributeValue { Value = 37, ValueD = 37 };
+                var definition = AffixCatalog.Entries.First(a => a.Name == "BaseWeaponFireDamage");
+                source.Affixes = new List<SerializedAffix>
+                {
+                    new() { DefinitionIntegerId = definition.IntegerId, Rarity = (Rarity)7 },
+                };
+                store.GrantItems(owner, characterId, new List<SerializedItem> { source });
+                var result = store.DisassembleItems(owner, characterId);
+                var essence = result.Result.Items.Single();
+                var extracted = essence.Affixes.Single();
+                var actualAttributes = extracted.Attributes.Values[AttributeOrigin.Item];
+                Check(result.Successful && essence.DefinitionIntegerId == EssenceCatalog.ForAffixDefinition(definition.IntegerId)!.Value.IntegerId
+                    && (int)essence.BaseRarity == 7 && extracted.DefinitionIntegerId == definition.IntegerId
+                    && (int)extracted.Rarity == 7,
+                    "E04: store disassembly creates the source essence and preserves the affix rarity");
+                Check(actualAttributes.Keys.Where(id => id != LootTable.AttrAffixType)
+                        .ToHashSet().SetEquals(definition.Attributes.Select(a => a.AttributeId))
+                    && (int)essence.Attributes.Values[AttributeOrigin.Item][LootTable.AttrRequiredLevel].ValueD == 37,
+                    "E04: extracted essence serializes all newly rolled affix attributes and source required level");
+                Check(!store.GetItems(owner, characterId).Any(i => i.Id == source.Id),
+                    "E04: disassembled source item is consumed atomically");
+            }
+        }
+        finally { if (Directory.Exists(directory)) Directory.Delete(directory, true); }
+    }
+
     private static void StoreSmelting(SerializedItem ore, SerializedItem steel)
     {
         var dir = Path.Combine(Path.GetTempPath(), "nord-smelting-" + Guid.NewGuid());

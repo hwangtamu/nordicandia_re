@@ -1,7 +1,7 @@
 # C05 — 首批 4 个代表技能贯通（2026-10-03）
 
 每职业一个代表技能，覆盖直接攻击 / 弹体 / 持续范围 / 召唤。
-每个技能完成：原版规格 → 服务端结算 → 前端表现 → 成长 → 重登 的完整对照。
+每个技能目标：原版规格 → 服务端结算 → 前端表现 → 成长 → 重登的完整对照。本轮将事件批次及云/仆从/弹体/陷阱/引导状态接入 WebApi 与通用前端标记；这只补传输和基础可视化，不表示技能专属 VFX 或原版场景对照通过。
 
 | # | 技能 | 职业 | 类型 | C04 状态 | C05 结论 |
 |---|------|------|------|----------|----------|
@@ -23,7 +23,7 @@
 
 - **原版规格**：4.5x 武器伤害，95% 穿透几率（`Power_Power_Shot_Pierce_Chance_Percent`），25 法力，8s 冷却。
 - **服务端结算**：C03 真实弹体（0.25y 步进、圆形碰撞、已命中集合），穿透走逐命中掷骰。
-- **前端表现**：`projectile` 事件（spawn/hit，Detail 带坐标）。
+- **前端表现**：`projectile` 事件（spawn/hit，Detail 带坐标）；本轮增加弹体权威位置/方向/剩余时间快照及通用飞行标记。
 - **剩余 gap**：`Base_Action_Speed`（施法时间）——全技能通用，`BeginCast` 目前只设冷却+扣蓝。留待后续系统级实现，不在 C05 范围内单独立项。
 - **测试**：`powershot` 3 条（命中主目标、spawn 事件、hit 事件）。
 
@@ -36,7 +36,7 @@ C04 时被折叠进 instant nova 原型，丢失两个真实属性。本轮实�
 - **施放**：`UseSkill` 的 nova 分支对 `PoisonCloud` 特判——在最近怪物处生成云（C06 再泛化为 cloud 原型）。
 - **结算**：`TickClouds(dt)` 每 1s 对云内怪物造成 0.9x 武器伤害（Poison 元素，走 `SkillDamageTypes`），并施加 `slow` debuff（20%，2s，云内刷新）。
 - **减速生效**：怪物 4 处移动改用 `EffectiveMonsterSpeed()`（原 `monster.Speed` × (1 − slow 层数)）。
-- **前端表现**：`cloud` 事件（spawn / tick / expire，Detail 带坐标与伤害）。
+- **前端表现**：`cloud` 事件（spawn / tick / expire，Detail 带坐标与伤害）；本轮增加带半径和剩余时间的权威快照及地面范围标记。
 - **关闭的 gaps**：`Power_Duration`、`Power_Slow_Effect_Percent`（C04 反静默清单 −2，剩余 27）。
 - **测试**：`poisoncloud` 7 条（生成云、半径/时长、tick 伤害、减速 debuff、云外不受影响、6s 消散、spawn/expire 事件）。
 
@@ -52,9 +52,9 @@ C04 时 summon 原型只给了一个 offense buff，没有实体。本轮实现�
   - 生命 = 玩家最大生命 × (1 + 0.5)
   - 攻击间隔 = 2.0s / (1 + 0.8)
 - **行为**：`TickMinions(dt)` 寻 30y 内最近怪物，近战范围外靠近、范围内攻击；目标死亡后转火。
-- **前端表现**：`summon` 事件（生成）+ `minion` 事件（仆从攻击，Detail 带伤害）。
+- **前端表现**：`summon` 事件（生成）+ `minion` 事件（仆从攻击，Detail 带伤害）；本轮增加仆从权威位置/生命快照及基础实体标记。
 - **已知简化**（文档化）：怪物 AI 暂不以仆从为目标（仆从不会被打死）；其他 7 个召唤技能仍走旧 buff 路径（C06 泛化）。
-- **测试**：`summon` 4 条（3 只生成、寻敌+转火、summon/minion 事件、伤害继承）。
+- **测试**：`summon` 4 条（3 只生成、寻敌+转火、summon/minion 事件、伤害继承）；新增 server→WebApi 事件单次消费和瞬时实体快照测试。
 
 ## 成长（Growth）
 
