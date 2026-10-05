@@ -29,6 +29,33 @@ from pathlib import Path
 FORCE_OFFLINE_WORKAROUND = False
 
 
+SEASON_TOGGLE_PATCHES = (
+    (0x26349A0, "34020036", "1f2003d5"),  # handle Normal becoming false
+    (0x26349C4, "1f010071", "0805080b"),  # hardcore * 3
+    (0x26349C8, "88008052", "08090011"),  # + 2
+    (0x26349D0, "08159f1a", "0801144b"),  # - normalIsOn
+)
+
+
+def patch_season_toggle(data):
+    """Make the Normal toggle's listener select Season when Normal turns off."""
+    result = bytearray(data)
+    phoff = struct.unpack_from("<Q", result, 32)[0]
+    entsize, count = struct.unpack_from("<HH", result, 54)
+    segments = []
+    for i in range(count):
+        typ, flags, off, va, _, size, _, _ = struct.unpack_from("<IIQQQQQQ", result, phoff + i * entsize)
+        if typ == 1 and flags & 1:
+            segments.append((va, off, size))
+    for va, old_hex, new_hex in SEASON_TOGGLE_PATCHES:
+        off = next(off + va - start for start, off, size in segments if start <= va < start + size)
+        old, new = bytes.fromhex(old_hex), bytes.fromhex(new_hex)
+        if result[off:off + len(old)] != old:
+            raise ValueError(f"Unexpected Season toggle instruction at {va:#x}")
+        result[off:off + len(old)] = new
+    return bytes(result)
+
+
 def patch(data):
     if hashlib.sha256(data).hexdigest() != "529bd257af0cd6e953fb50f51a69857f42f04eb70acab0586f8413d1f97afd1d":
         raise ValueError("Expected the original 1.9.3 ARM64 library; refusing unknown/already-patched input")
@@ -95,6 +122,13 @@ def patch(data):
     #    orr w9, w20, w0  ->  mov w9, w20
     replace(0x2633D5C, bytes.fromhex("8902002a"), bytes.fromhex("e903142a"))
 
+    # The retail build only registers an onValueChanged listener for the Normal
+    # toggle. Turning Normal off by tapping Season calls that listener with
+    # false, but it skips updating _SelectedGameMode; Next therefore still
+    # creates a Normal character. Handle both values in the existing listener:
+    # mode = (2 - normalIsOn) + (hardcoreIsOn * 3), giving 1/2/4/5.
+    # WindowSelectGameMode.<Start>b__... (normal toggle callback):
+
     # --- Offline profile reconcile -> enter world ---
     # OnPlayClicked signs the account into a local device profile and calls
     # UnityGame.LoadOfflineProfile. SynchronizeProfileStateMachine (SPSM) then
@@ -129,7 +163,7 @@ def patch(data):
         bytes.fromhex("ffc302d1fd7b05a9fc6f06a9fa6707a9f85f08a9f65709a9f44f0aa9153b01d0f40301aaf30300aa"),
         bytes.fromhex("fd7bbfa9e0031faa8ea62894880240f9085d40f9000140f9fd7bc1a8f44f41a9fe0742f8c0035fd6"),
     )
-    return bytes(result)
+    return patch_season_toggle(result)
 
 
 if __name__ == "__main__":
