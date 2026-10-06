@@ -53,6 +53,12 @@ export interface HudState {
   autoMove: boolean;
   inTown: boolean;
   skills: { name: string; effect: string; ready: boolean; cooldown: number; manaCost: number }[];
+  /**
+   * Monster the client is currently engaging. Display-only: the server snapshot has no
+   * target field, so this is the nearest living monster (bosses first), matching what the
+   * original target frame shows without inventing a server-side targeting rule.
+   */
+  target: { name: string; portrait: string; hp: number; maxHp: number; level: number; rarity: number; isBoss: boolean } | null;
   message: string;
 }
 
@@ -163,12 +169,14 @@ export class World {
     this.scene = new Scene(this.engine);
     this.scene.clearColor = new Color4(0.05, 0.06, 0.08, 1);
 
-    this.camera = new ArcRotateCamera("camera", -Math.PI / 2, 0.95, 30, Vector3.Zero(), this.scene);
-    this.camera.lowerBetaLimit = 0.7;
-    this.camera.upperBetaLimit = 1.15;
+    // The original is played from an almost top-down view: beta close to vertical keeps
+    // the arena filling the screen and portrait tokens readable from above.
+    this.camera = new ArcRotateCamera("camera", -Math.PI / 2, 0.44, 22, Vector3.Zero(), this.scene);
+    this.camera.lowerBetaLimit = 0.2;
+    this.camera.upperBetaLimit = 0.75;
     this.camera.lowerRadiusLimit = 16;
-    this.camera.upperRadiusLimit = 44;
-    this.camera.wheelPrecision = 8;
+    this.camera.upperRadiusLimit = 30;
+    this.camera.wheelPrecision = 12;
     this.camera.attachControl(canvas, true);
     this.camera.inputs.removeByType("ArcRotateCameraPointersInput");
 
@@ -176,6 +184,12 @@ export class World {
     ambient.intensity = 0.95;
     ambient.diffuse = new Color3(0.85, 0.82, 0.75);
     ambient.groundColor = new Color3(0.18, 0.16, 0.14);
+
+    // Depth fade: the original arena darkens toward the screen edge instead of showing a
+    // hard horizon, which also hides the unused floor around the generated map.
+    this.scene.fogMode = Scene.FOGMODE_EXP2;
+    this.scene.fogColor = new Color3(0.02, 0.025, 0.035);
+    this.scene.fogDensity = 0.022;
 
     this.playerRace = race;
   }
@@ -251,6 +265,9 @@ export class World {
             }
           });
           this.templates.set(name, root);
+          // The loaded root stays in the scene at the origin; only clones are placed, so
+          // the template itself must be hidden or every kit mesh stacks on the spawn point.
+          root.setEnabled(false);
         } catch (error) {
           console.warn(`[kit] failed to load ${name}`, error);
         }
@@ -268,7 +285,10 @@ export class World {
     if (scale !== 1) clone.scaling = new Vector3(scale, scale, scale);
     clone.getChildMeshes().forEach((mesh) => {
       mesh.isPickable = false;
+      // Clones inherit the disabled template state, so re-enable the placed copy.
+      mesh.setEnabled(true);
     });
+    clone.setEnabled(true);
     return clone;
   }
 
@@ -277,7 +297,7 @@ export class World {
     this.mapTiles.forEach((t) => t.dispose(false, true));
     this.mapTiles = [];
     if (layout.theme === "town_hub") {
-      this.camera.radius = 25;
+      this.camera.radius = 24;
       this.defaultRoomRoot?.setEnabled(false);
       if (this.ground) { this.ground.isVisible = false; this.ground.isPickable = false; }
       this.scene.clearColor = new Color4(0.2, 0.27, 0.34, 1);
@@ -295,7 +315,7 @@ export class World {
     }
 
     this.townSceneRoot?.setEnabled(false);
-    this.camera.radius = 30;
+    this.camera.radius = 22;
     if (this.townGround) { this.townGround.dispose(false, true); this.townGround = null; }
     if (this.ground) { this.ground.isVisible = true; this.ground.isPickable = true; }
     this.defaultRoomRoot?.setEnabled(false);
@@ -467,7 +487,7 @@ export class World {
   private buildRoom(): void {
     this.defaultRoomRoot = new TransformNode("default_room_root", this.scene);
     const groundMat = new StandardMaterial("groundMat", this.scene);
-    groundMat.diffuseColor = new Color3(0.22, 0.19, 0.16);
+    groundMat.diffuseColor = new Color3(0.11, 0.12, 0.14);
     groundMat.specularColor = new Color3(0, 0, 0);
     const ground = MeshBuilder.CreateGround("ground", { width: 2 * ROOM_HALF + 6, height: 2 * ROOM_HALF + 6 }, this.scene);
     ground.material = groundMat;
@@ -512,17 +532,23 @@ export class World {
   }
 
   private addToken(root: TransformNode, textureUrl: string, ringColor: Color3): void {
-    const disc = MeshBuilder.CreateCylinder(`${root.name}_disc`, { diameter: 2.1, height: 0.08, tessellation: 24 }, this.scene);
-    disc.parent = root;
-    disc.position.y = 0.05;
-    disc.isPickable = false;
-    const discMat = new StandardMaterial(`${root.name}_discMat`, this.scene);
-    discMat.diffuseColor = new Color3(0.05, 0.05, 0.06);
-    disc.material = discMat;
+    // Characters read as round portrait tokens with a soft drop shadow, matching the
+    // original top-down presentation where the avatar art faces the camera.
+    const shadow = MeshBuilder.CreateDisc(`${root.name}_shadow`, { radius: 0.82, tessellation: 28 }, this.scene);
+    shadow.parent = root;
+    shadow.rotation.x = Math.PI / 2;
+    shadow.position.y = 0.04;
+    shadow.isPickable = false;
+    const shadowMat = new StandardMaterial(`${root.name}_shadowMat`, this.scene);
+    shadowMat.diffuseColor = new Color3(0, 0, 0);
+    shadowMat.emissiveColor = new Color3(0, 0, 0);
+    shadowMat.specularColor = new Color3(0, 0, 0);
+    shadowMat.alpha = 0.45;
+    shadow.material = shadowMat;
 
-    const ring = MeshBuilder.CreateTorus(`${root.name}_ring`, { diameter: 2.5, thickness: 0.14, tessellation: 32 }, this.scene);
+    const ring = MeshBuilder.CreateTorus(`${root.name}_ring`, { diameter: 1.9, thickness: 0.13, tessellation: 32 }, this.scene);
     ring.parent = root;
-    ring.position.y = 0.12;
+    ring.position.y = 0.1;
     ring.isPickable = false;
     const ringMat = new StandardMaterial(`${root.name}_ringMat`, this.scene);
     ringMat.emissiveColor = ringColor;
@@ -530,16 +556,24 @@ export class World {
     ring.material = ringMat;
 
     const material = new StandardMaterial(`token_${textureUrl}`, this.scene);
-    material.diffuseTexture = new Texture(textureUrl, this.scene);
+    const portrait = new Texture(textureUrl, this.scene);
+    portrait.hasAlpha = true;
+    // Flat, unlit portraits: the original draws avatar art as bright sprites, and a lit
+    // plane seen from a top-down camera would go almost black on dark floors.
+    material.diffuseTexture = portrait;
     material.diffuseTexture.hasAlpha = true;
     material.useAlphaFromDiffuseTexture = true;
+    // Flat, unlit portraits: the original draws avatar art as bright sprites, and a lit
+    // plane seen from a top-down camera would go almost black on dark floors.
     material.specularColor = new Color3(0, 0, 0);
-    material.emissiveColor = new Color3(0.35, 0.35, 0.35);
+    // Flat lift instead of an emissive texture: an emissive map is added regardless of the
+    // alpha channel, which would draw the portrait's rectangular background.
+    material.emissiveColor = new Color3(0.5, 0.5, 0.5);
     material.backFaceCulling = false;
-    const face = MeshBuilder.CreatePlane(`${root.name}_face`, { size: 1.9 }, this.scene);
+    const face = MeshBuilder.CreatePlane(`${root.name}_face`, { size: 1.7 }, this.scene);
     face.parent = root;
-    face.rotation.x = Math.PI / 2;
-    face.position.y = 0.14;
+    face.position.y = 0.86;
+    face.billboardMode = Mesh.BILLBOARDMODE_ALL;
     face.isPickable = false;
     face.material = material;
   }
@@ -922,6 +956,35 @@ export class World {
     this.hudDirty = true;
   }
 
+  /**
+   * Display-only auto target for the HUD frame: the boss when one is alive, otherwise the
+   * nearest living monster. The snapshot carries no target field, so this never affects
+   * combat (the server remains authoritative) and is labelled as client-side in the code.
+   */
+  private currentTarget(): HudState["target"] {
+    const state = this.latest;
+    if (!state) return null;
+    const alive = state.monsters.filter((monster) => monster.alive && monster.hp > 0);
+    if (!alive.length) return null;
+    const boss = alive.find((monster) => monster.isBoss);
+    const chosen = boss ?? alive.reduce((best, monster) => {
+      const bestDistance = Math.hypot(best.x - state.playerX, best.z - state.playerZ);
+      const distance = Math.hypot(monster.x - state.playerX, monster.z - state.playerZ);
+      return distance < bestDistance ? monster : best;
+    }, alive[0]);
+    const definition = this.content.monsters.find((monster) => monster.name === chosen.name)
+      ?? (chosen.isBoss ? this.content.monsters[0] : undefined);
+    return {
+      name: chosen.name,
+      portrait: definition ? monsterIcon(this.content, definition) : "/assets/avatars/MonstersAvatarIcons_48.png",
+      hp: Math.round(chosen.hp),
+      maxHp: Math.round(Math.max(chosen.hp, 1)),
+      level: chosen.level,
+      rarity: chosen.rarity ?? 0,
+      isBoss: chosen.isBoss,
+    };
+  }
+
   private emitHud(): void {
     const state = this.latest;
     if (!state) return;
@@ -949,6 +1012,7 @@ export class World {
       autoMove: this.autoMove,
       inTown: state.inTown,
       skills: (state.skills ?? []).map((skill) => ({ name: skill.name, effect: skill.effect, ready: skill.cooldown <= 0, cooldown: skill.cooldown, manaCost: skill.manaCost })),
+      target: this.currentTarget(),
       message: this.elapsed < this.messageUntil ? this.message : "",
     });
   }

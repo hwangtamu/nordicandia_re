@@ -88,6 +88,106 @@ html, body, #app {
 #hud { position: fixed; inset: 0; pointer-events: none; user-select: none; }
 #hud button { pointer-events: auto; }
 
+/* --- combat HUD: framed player/target units, location banner, round action bar --- */
+.vignette {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 46%, rgba(0, 0, 0, 0.55) 100%);
+}
+.frame {
+  position: absolute; top: 10px; display: flex; gap: 8px; align-items: center;
+  padding: 6px 10px 6px 6px;
+  background: linear-gradient(180deg, rgba(24, 20, 18, 0.88), rgba(10, 10, 12, 0.86));
+  border: 1px solid rgba(201, 162, 74, 0.45);
+  border-radius: 6px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+.frame-player { left: 10px; width: 330px; }
+.frame-target { right: 10px; flex-direction: row; text-align: right; width: 320px; }
+.frame-body { flex: 1; min-width: 0; }
+.portrait {
+  position: relative; flex: none; width: 58px; height: 58px; border-radius: 50%;
+  background: url("/assets/inventory-ui/UnitFrame_Avatar2.png") center / 100% 100% no-repeat, #14100e;
+  box-shadow: 0 2px 8px #000;
+  overflow: visible;
+}
+.portrait img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.portrait.small { width: 50px; height: 50px; }
+.portrait-level {
+  position: absolute; left: 50%; bottom: -9px; transform: translateX(-50%);
+  min-width: 22px; padding: 1px 5px; border-radius: 9px;
+  background: linear-gradient(#4a3a12, #241a06); border: 1px solid var(--gold);
+  color: #ffe9b0; font-size: 11px; font-weight: 700; text-align: center;
+}
+.frame-meta { margin-top: 3px; color: #9fb2b6; font-size: 10px; }
+.target-name { color: #f0d9a8; font-size: 14px; font-weight: 700; text-shadow: 0 1px 2px #000; }
+.frame .boss { margin-top: 3px; color: #e0b45a; font-weight: 700; font-size: 10px; }
+.frame-target[data-rarity="1"] { border-color: #4f8fe0; }
+.frame-target[data-rarity="2"] { border-color: #d8b53a; }
+.frame-target[data-rarity="4"] { border-color: #b06ae0; }
+.bar.enemy > div { background: linear-gradient(#c0392b, #6e1a12); }
+
+.location-banner {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  padding: 7px 34px; min-width: 260px; text-align: center;
+  background: linear-gradient(180deg, #6d2418, #3a1109);
+  border: 2px solid rgba(201, 162, 74, 0.65); border-radius: 4px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65);
+  color: #ffe3b8; font-size: 17px; font-weight: 700; letter-spacing: 0.06em;
+  text-shadow: 0 2px 3px #000;
+}
+.hud-meta {
+  position: absolute; top: 132px; left: 14px; width: 320px;
+  font-size: 11px; color: #9fb2b6; text-shadow: 0 1px 2px #000;
+}
+.hud-meta .source { font-size: 10px; color: #6d7a7e; }
+
+.hud-bottom {
+  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  max-width: 96vw; z-index: 10;
+}
+.action-bar { display: flex; align-items: center; gap: 9px; }
+.round-skill {
+  position: relative; width: 62px; height: 62px; padding: 0; border-radius: 50%;
+  border: 3px ridge #7d3a22;
+  background: radial-gradient(circle at 34% 28%, #8d3a1f, #2a1008 72%);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(0, 0, 0, 0.6);
+  cursor: pointer; color: #f3d9b2;
+}
+.round-skill img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; opacity: 0.94; }
+.round-skill .cooldown {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  border-radius: 50%; background: transparent;
+  color: #ffe9c4; font-size: 15px; font-weight: 700; text-shadow: 0 2px 3px #000;
+}
+.round-skill.ready .cooldown {
+  align-items: end; padding-bottom: 4px; font-size: 11px; font-weight: 600;
+}
+.round-skill small { position: absolute; right: -3px; bottom: -3px; padding: 0 4px; border-radius: 6px; background: #1a1410; color: #c9b48a; font-size: 10px; }
+.round-skill.ready:hover { filter: brightness(1.15); }
+.round-skill.disabled { cursor: default; }
+.round-skill.disabled .cooldown { background: rgba(0, 0, 0, 0.62); font-size: 15px; }
+.round-toggle {
+  width: 74px; height: 74px; padding: 0; border-radius: 50%;
+  border: 3px ridge #4a5c22;
+  background: radial-gradient(circle at 34% 28%, #5d7a26, #1b2409 74%);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(0, 0, 0, 0.55);
+  color: #eaf3cf; font-size: 11px; font-weight: 700; line-height: 1.1; cursor: pointer;
+}
+.round-toggle strong { display: block; font-size: 15px; color: #b6f06a; }
+.round-toggle small { display: block; font-size: 9px; color: #a8bb86; }
+.menu-rail {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 5px;
+  max-width: min(940px, 94vw);
+}
+.rail {
+  padding: 4px 9px; border-radius: 12px;
+  background: rgba(10, 12, 14, 0.78); border: 1px solid rgba(201, 162, 74, 0.3);
+  color: #d8cfbb; font-size: 11px; cursor: pointer;
+}
+.rail small { margin-left: 4px; color: #8b8069; font-size: 9px; }
+.rail:hover { background: rgba(52, 40, 18, 0.9); }
+
 .hud-top-left { position: absolute; top: 14px; left: 14px; width: 280px; }
 .name-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; }
 .name-row #hud-name { font-weight: 700; color: var(--gold); }
@@ -120,9 +220,9 @@ html, body, #app {
 .hud-top-right .source { font-size: 10px; color: #6d7a7e; }
 
 .hud-bottom {
-  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
-  display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
-  max-width: 94vw; z-index: 10;
+  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  max-width: 96vw; z-index: 10;
 }
 .skill {
   min-width: 130px;

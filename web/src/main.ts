@@ -44,21 +44,36 @@ app.innerHTML = `
     <div id="boot-status" class="status"></div>
   </div>
   <div id="hud" hidden>
-    <div class="hud-top-left">
-      <div class="name-row"><span id="hud-name">—</span><span id="hud-class"></span></div>
-      <div class="bar hp"><div id="hud-hp-fill"></div><span id="hud-hp-text"></span></div>
-      <div class="bar mana"><div id="hud-mana-fill"></div><span id="hud-mana-text"></span></div>
-      <div class="bar xp"><div id="hud-xp-fill"></div><span id="hud-xp-text"></span></div>
+    <div class="vignette"></div>
+    <div class="frame frame-player">
+      <div class="portrait">
+        <img id="hud-portrait" alt="" />
+        <span class="portrait-level" id="hud-level">1</span>
+      </div>
+      <div class="frame-body">
+        <div class="name-row"><span id="hud-name">—</span><span id="hud-class"></span></div>
+        <div class="bar hp"><div id="hud-hp-fill"></div><span id="hud-hp-text"></span></div>
+        <div class="bar mana"><div id="hud-mana-fill"></div><span id="hud-mana-text"></span></div>
+        <div class="bar xp"><div id="hud-xp-fill"></div><span id="hud-xp-text"></span></div>
+        <div class="frame-meta"><span id="hud-silver">0</span> silver · <span id="hud-opals">0</span> opals</div>
+        <div class="frame-meta"><span id="hud-kills">0</span> kills · <span id="hud-alive">0</span> monsters</div>
+        <div id="hud-boss" class="boss hidden">Boss in <span id="hud-boss-count">0</span> kills</div>
+        <div id="hud-packs" class="boss hidden">Packs <span id="hud-packs-count">0</span></div>
+      </div>
+    </div>
+    <div class="location-banner"><span id="hud-location">—</span></div>
+    <div class="hud-meta">
       <div class="passive" id="hud-passive"></div>
       <div class="stats"><span id="hud-stats">OFF 0 · DEF 0 · REC 0</span></div>
+      <div class="source">content <span id="hud-content">…</span> · cleared <span id="hud-dungeons">0</span></div>
     </div>
-    <div class="hud-top-right">
-      <div>Lv <b id="hud-level">1</b> · <span id="hud-dungeons">0</span> cleared</div>
-      <div><span id="hud-silver">0</span> silver · <span id="hud-opals">0</span> opals</div>
-      <div><span id="hud-kills">0</span> kills · <span id="hud-alive">0</span> monsters</div>
-      <div id="hud-boss" class="boss hidden">Boss in <span id="hud-boss-count">0</span> kills</div>
-      <div id="hud-packs" class="boss hidden">Packs <span id="hud-packs-count">0</span></div>
-      <div class="source">content <span id="hud-content">…</span></div>
+    <div class="frame frame-target" id="hud-target-frame" hidden>
+      <div class="frame-body">
+        <div class="target-name" id="hud-target-name">—</div>
+        <div class="bar enemy"><div id="hud-target-fill"></div><span id="hud-target-text"></span></div>
+        <div class="frame-meta" id="hud-target-meta"></div>
+      </div>
+      <div class="portrait small"><img id="hud-target-portrait" alt="" /></div>
     </div>
     <div id="loot-feed" class="loot-feed"></div>
     <div id="inventory" class="inventory inventory-gear hidden">
@@ -206,23 +221,27 @@ app.innerHTML = `
       </div>
     </div>
     <div class="hud-bottom">
-      <button id="hud-skill" class="skill">Skill 1 <small>1</small></button>
-      <button id="hud-skill-2" class="skill">Skill 2 <small>2</small></button>
-      <button id="hud-skill-3" class="skill">Skill 3 <small>3</small></button>
-      <button id="hud-skill-4" class="skill hidden">Skill 4 <small>4</small></button>
-      <button id="hud-skill-5" class="skill hidden">Skill 5 <small>5</small></button>
-      <button id="hud-skill-6" class="skill hidden">Skill 6 <small>6</small></button>
-      <button id="hud-loadout" class="skill alt">Loadout <small>L</small></button>
-      <button id="hud-auto" class="skill alt">Auto-move: ON <small>Tab</small></button>
-      <button id="hud-bag" class="skill alt">Bag <small>B</small></button>
-      <button id="hud-powers" class="skill alt">Skills <small>P</small></button>
-      <button id="hud-smith" class="skill alt">Blacksmith <small>K</small></button>
-      <button id="hud-merchant" class="skill alt">Merchant <small>M</small></button>
-      <button id="hud-attrs" class="skill alt">Attrs <small>C</small></button>
-      <button id="hud-blessings" class="skill alt">Offerings <small>O</small></button>
-      <button id="hud-portal" class="skill alt">Portal <small>N</small></button>
-      <button id="hud-worlds" class="skill alt">Worlds <small>W</small></button>
-      <button id="hud-town" class="skill alt">Town <small>T</small></button>
+      <div class="action-bar">
+        <button id="hud-skill" class="round-skill" data-slot="1"><img alt="" /><span class="cooldown"></span><small>1</small></button>
+        <button id="hud-skill-2" class="round-skill" data-slot="2"><img alt="" /><span class="cooldown"></span><small>2</small></button>
+        <button id="hud-skill-3" class="round-skill" data-slot="3"><img alt="" /><span class="cooldown"></span><small>3</small></button>
+        <button id="hud-skill-4" class="round-skill hidden" data-slot="4"><img alt="" /><span class="cooldown"></span><small>4</small></button>
+        <button id="hud-skill-5" class="round-skill hidden" data-slot="5"><img alt="" /><span class="cooldown"></span><small>5</small></button>
+        <button id="hud-skill-6" class="round-skill hidden" data-slot="6"><img alt="" /><span class="cooldown"></span><small>6</small></button>
+        <button id="hud-auto" class="round-toggle">Auto Move<strong id="hud-auto-state">ON</strong><small>Tab</small></button>
+      </div>
+      <div class="menu-rail">
+        <button id="hud-bag" class="rail">Bag <small>B</small></button>
+        <button id="hud-powers" class="rail">Skills <small>P</small></button>
+        <button id="hud-loadout" class="rail">Loadout <small>L</small></button>
+        <button id="hud-worlds" class="rail">Worlds <small>W</small></button>
+        <button id="hud-town" class="rail">Town <small>T</small></button>
+        <button id="hud-smith" class="rail">Blacksmith <small>K</small></button>
+        <button id="hud-merchant" class="rail">Merchant <small>M</small></button>
+        <button id="hud-attrs" class="rail">Attrs <small>C</small></button>
+        <button id="hud-blessings" class="rail">Offerings <small>O</small></button>
+        <button id="hud-portal" class="rail">Portal <small>N</small></button>
+      </div>
     </div>
     <div id="hud-message" class="toast"></div>
   </div>
@@ -342,6 +361,7 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
     `${className(content, selected.class)} · Lv ${snapshot.level}`;
   invCharacterNameEl.textContent = selected.displayName;
   invCharacterAvatarEl.src = raceIcon(content, selected.race);
+  (document.getElementById("hud-portrait") as HTMLImageElement).src = raceIcon(content, selected.race);
   invRaceNameEl.textContent = content.races.find((race) => race.integerId === selected.race)?.name ?? "Adventurer";
   invClassNameEl.textContent = className(content, selected.class);
   invRaceBadgeEl.src = raceIcon(content, selected.race);
@@ -734,6 +754,8 @@ async function startGame(snapshot: Snapshot, selected: CharacterSummary): Promis
     Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, Digit5: 4, Digit6: 5,
     Numpad1: 0, Numpad2: 1, Numpad3: 2, Numpad4: 3, Numpad5: 4, Numpad6: 5,
   };
+  // The banner needs the selected world name; the handler is assigned above.
+  void worldsRefreshHandler?.();
   window.addEventListener("keydown", (event) => {
     if (event.code === "Space") {
       event.preventDefault();
@@ -1371,6 +1393,7 @@ function toggleWorlds(force?: boolean): void {
 
 function renderWorlds(): void {
   const progress = worldsCache;
+  renderLocationBanner();
   if (!progress) { worldsItemsEl.innerHTML = `<div class="inv-empty">Loading…</div>`; return; }
   worldsTierEl.textContent = `Tier ${progress.currentTier} · unlocked ${progress.unlockedTier}`;
   worldsItemsEl.innerHTML = "";
@@ -1791,11 +1814,39 @@ function renderHud(hudState: HudState): void {
       power?.masteries?.length ? `Masteries: ${power.masteries.length}` : "",
       power?.confidence ? `[${power.confidence}]` : ""].filter(Boolean).join("\n");
     const mana = skill.manaCost ? `  ${Math.round(skill.manaCost)}m` : "";
-    if (description) button.title = description;
+    if (description) button.title = `${name}${mana}${description ? `\n${description}` : ""}`;
     button.classList.toggle("disabled", !ready || hudState.inTown);
     button.disabled = hudState.inTown || !ready;
-    button.textContent = ready ? `${name}${mana}` : `${name} ${Math.ceil(skill.cooldown)}s`;
+    button.classList.toggle("ready", ready && !hudState.inTown);
+    const icon = powerIcon(name, pooled?.icon ?? power?.icon ?? null);
+    const image = button.querySelector("img") as HTMLImageElement | null;
+    if (image && image.dataset.icon !== (icon ?? "")) {
+      image.dataset.icon = icon ?? "";
+      if (icon) image.src = icon; else image.removeAttribute("src");
+    }
+    const cooldown = button.querySelector(".cooldown") as HTMLElement;
+    cooldown.textContent = ready ? (skill.manaCost ? `${Math.round(skill.manaCost)}m` : "") : `${Math.ceil(skill.cooldown)}s`;
   });
+  const autoState = document.getElementById("hud-auto-state") as HTMLElement;
+  autoState.textContent = hudState.autoMove ? "ON" : "OFF";
+  const target = hudState.target;
+  const targetFrame = document.getElementById("hud-target-frame") as HTMLElement;
+  targetFrame.classList.toggle("hidden", !target);
+  if (target) {
+    (document.getElementById("hud-target-name") as HTMLElement).textContent = target.name;
+    const targetPercent = Math.max(0, Math.min(100, (target.hp / Math.max(1, target.maxHp)) * 100));
+    (document.getElementById("hud-target-fill") as HTMLElement).style.width = `${targetPercent}%`;
+    (document.getElementById("hud-target-text") as HTMLElement).textContent =
+      `${formatCompact(target.hp)} / ${formatCompact(target.maxHp)}`;
+    (document.getElementById("hud-target-meta") as HTMLElement).textContent =
+      `Level ${target.level}${target.isBoss ? " · Boss" : ` · ${RARITY_NAMES[target.rarity] ?? "F"}`}`;
+    const targetPortrait = document.getElementById("hud-target-portrait") as HTMLImageElement;
+    if (targetPortrait.dataset.icon !== target.portrait) {
+      targetPortrait.dataset.icon = target.portrait;
+      targetPortrait.src = target.portrait;
+    }
+    targetFrame.dataset.rarity = String(target.rarity);
+  }
   const message = document.getElementById("hud-message") as HTMLElement;
   message.textContent = hudState.message;
   message.classList.toggle("show", Boolean(hudState.message));
@@ -1806,6 +1857,33 @@ function showHudMessage(text: string): void {
   message.textContent = text;
   message.classList.add("show");
   window.setTimeout(() => message.classList.remove("show"), 1500);
+}
+
+/** 1.23M-style short numbers, used where the original frame shows abbreviated values. */
+function formatCompact(value: number): string {
+  const magnitude = Math.abs(value);
+  if (magnitude >= 1e9) return `${(value / 1e9).toFixed(2)}B`;
+  if (magnitude >= 1e6) return `${(value / 1e6).toFixed(2)}M`;
+  if (magnitude >= 1e4) return `${(value / 1e3).toFixed(1)}K`;
+  return String(Math.round(value));
+}
+
+/** Exported original skill art: /assets/power-icons/<Power>.png, keyed by power name. */
+function powerIcon(name: string, icon: string | null): string | null {
+  const candidate = icon ?? name;
+  if (!candidate || /[\\/]/.test(candidate)) return null;
+  return `/assets/power-icons/${candidate}.png`;
+}
+
+/** Location banner: the selected world's client name, or the current scene when unknown. */
+function renderLocationBanner(): void {
+  const banner = document.getElementById("hud-location") as HTMLElement;
+  const selected = worldsCache?.worlds.find((world) => world.selected);
+  if (selected) {
+    banner.textContent = `${selected.tier} - ${selected.name}`;
+    return;
+  }
+  banner.textContent = worldsCache ? "World" : "—";
 }
 
 function escapeHtml(value: string): string {
